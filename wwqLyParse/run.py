@@ -35,7 +35,12 @@ def Parse(input_text):
 	for parser in parsers:
 		for filter in parser.getfilters():
 			if re.search(filter,input_text):
-				return parser.Parse(input_text)
+				try:
+					result = parser.Parse(input_text)
+					if result is not (None or []):
+						return result
+				except Exception as e:
+					print(e)
 	return []
 
 

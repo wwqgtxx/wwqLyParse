@@ -44,11 +44,16 @@ class AnyPageParser(common.Parser):
 				continue
 			if re.search('(list|mall|about|help|shop|map)',url):
 				continue
+			if re.search('(下载|播放)',no):
+				continue
+			unsure = False
+			
 			info = {
 				"name": name,
 				"no": no,
 				"subtitle": subtitle,
-				"url": url
+				"url": url,
+				"unsure": unsure			
 			}
 			data["data"].append(info)
 			i = i+1

@@ -114,12 +114,11 @@ class ListParser(common.Parser):
 			return vlist
 	
 		html = PyQuery(self.getUrl(input_text))
+		title = html('h1.main_title').children('a').text()
 		for a in html('div.crumb-item').children('a'):
 			a = PyQuery(a)
 			if a.attr('href') == input_text:
-				title = a.text()
-		if (title is None) or title == "": 
-			title = html('h1.main_title').children('a').text()
+				title = a.text()	
 		i =0
 		data = {
 			"data": [],

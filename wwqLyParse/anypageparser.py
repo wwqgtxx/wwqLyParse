@@ -42,7 +42,7 @@ class AnyPageParser(common.Parser):
 				continue
 			if not re.match('^(http|https)://.+\.html',url):
 				continue
-			if re.search('list',url):
+			if re.search('(list|mall|about|help|shop|map)',url):
 				continue
 			info = {
 				"name": name,

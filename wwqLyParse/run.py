@@ -22,16 +22,17 @@ except Exception as e:
 version = {
     'port_version' : "0.4.0", 
     'type' : 'parse', 
-    'version' : '0.0.3', 
+    'version' : '0.0.4', 
     'uuid' : '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter' : [],
-    'name' : 'WWQ列表解析插件', 
+    'name' : 'WWQ整页列表解析插件', 
     'author' : 'wwqgtxx', 
     'copyright' : 'wwqgtxx', 
     'license' : 'GPLV3', 
     'home' : '', 
     'note' : ''
 }
+version['name'] = version['name']+version['version']
 
 parsers = [listparser.ListParser(),indexparser.IndexParser(),anypageparser.AnyPageParser()]
 
@@ -61,6 +62,7 @@ def debug(data):
 #print (GetVersion())
 #print (Parse('http://www.iqiyi.com/lib/m_209445514.html?src=search'))
 #print (Parse('http://www.iqiyi.com/a_19rrhacdwt.html'))
+#print (Parse('http://www.iqiyi.com/a_19rrhaare5.html'))
 #print (Parse('http://www.le.com'))
 #print (Parse('http://www.le.com/comic/10010294.html'))
 #print (Parse('http://www.mgtv.com/v/1/1/'))

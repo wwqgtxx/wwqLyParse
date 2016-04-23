@@ -14,7 +14,7 @@ version = {
     'type' : 'parse', 
     'version' : '0.0.2', 
     'uuid' : '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
-    'filter' : ['www.iqiyi.com/lib/m','www.iqiyi.com/a_'],
+    'filter' : [],
     'name' : 'WWQ列表解析插件', 
     'author' : 'wwqgtxx', 
     'copyright' : 'wwqgtxx', 

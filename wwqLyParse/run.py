@@ -22,7 +22,7 @@ except Exception as e:
 version = {
     'port_version' : "0.4.0", 
     'type' : 'parse', 
-    'version' : '0.0.6', 
+    'version' : '0.0.7', 
     'uuid' : '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter' : [],
     'name' : 'WWQ整页列表解析插件', 
@@ -71,7 +71,8 @@ def main():
 	#debug(Parse('http://www.youku.com/'))
 	#debug(Parse('http://tv.sohu.com/drama/'))
 	#debug(Parse('http://mv.yinyuetai.com/'))
-	debug(Parse('http://v.qq.com/tv/'))
+	#debug(Parse('http://v.qq.com/tv/'))
+	debug(Parse('http://www.pptv.com/'))
 	
 	
 

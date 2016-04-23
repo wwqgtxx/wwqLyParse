@@ -40,9 +40,11 @@ class AnyPageParser(common.Parser):
 			url = a.attr('href')
 			if url is None:
 				continue
+			if name is None or name == "":
+				continue
 			if not re.match('(^(http|https)://.+\.(shtml|html))|(^(http|https)://.+/video/)',url):
 				continue
-			if re.search('(list|mall|about|help|shop|map|vip|faq|support|download|copyright|contract|product|tencent|upload|v.qq.com/u/)',url):
+			if re.search('(list|mall|about|help|shop|map|vip|faq|support|download|copyright|contract|product|tencent|upload|common|index.html|v.qq.com/u/|open.baidu.com)',url):
 				continue
 			if re.search('(下载|播 放|播放|投诉|评论|(\d{1,2}:\d{1,2}))',no):
 				continue

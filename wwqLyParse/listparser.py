@@ -12,9 +12,7 @@ try:
 except Exception as e:
     import common
 
-RE_GET_AID = ' albumId: ([0-9]+),'	# albumId: 202340701,
-# http://cache.video.qiyi.com/jp/avlist/202340701/2/
-URL_JS_API_PORT = 'http://cache.video.qiyi.com/jp/avlist/'
+
 
 class ListParser(common.Parser):
 
@@ -30,7 +28,10 @@ class ListParser(common.Parser):
 		
 	def Parse_a(self,input_text):
 		# modity from sceext2's list271.py
-		def get_list_info(html_text, raw_url=None):			
+		def get_list_info_api1(html_text):
+			RE_GET_AID = ' albumId: ([0-9]+),'	# albumId: 202340701,
+			# http://cache.video.qiyi.com/jp/avlist/202340701/2/
+			URL_JS_API_PORT = 'http://cache.video.qiyi.com/jp/avlist/'
 			# get info from 271 javascript API port
 			def get_info_from_js_port(html_text):
 				# get album id
@@ -48,6 +49,7 @@ class ListParser(common.Parser):
 			# make js API port URL
 			def make_port_url(aid, page_n):
 				url = URL_JS_API_PORT + str(aid) + '/' + str(page_n) + '/'
+				#print(url)
 				return url
 
 			# get vinfo list, get full list from js API port
@@ -101,7 +103,7 @@ class ListParser(common.Parser):
 				# get video info done
 				return out
 			# get info from js API port
-			info2 = get_info_from_js_port(html_text)			
+			info2 = get_info_from_js_port(html_text)
 			# replace vlist with js port data
 			vlist = []
 			for i in info2:
@@ -112,6 +114,114 @@ class ListParser(common.Parser):
 				vlist.append(one)
 			# done
 			return vlist
+		
+		def get_list_info_api2(html_text):
+			RE_GET_AID = ' albumId: ([0-9]+),'	# albumId: 203342201,
+			# http://cache.video.qiyi.com/jp/sdvlst/6/203342201/
+			URL_JS_API_PORT = 'http://cache.video.qiyi.com/jp/sdvlst/6/'
+			# get info from 271 javascript API port
+			def get_info_from_js_port(html_text):
+				# get album id
+				aid = get_aid(html_text)
+				# get info list
+				vlist = get_vinfo_list(aid)
+				# done
+				return vlist
+
+			# get album id
+			def get_aid(html_text):
+				m = re.findall(RE_GET_AID, html_text)
+				return m[0]
+
+			# make js API port URL
+			def make_port_url(aid):
+				url = URL_JS_API_PORT + str(aid) + '/'
+				#print(url)
+				return url
+
+			# get vinfo list, get full list from js API port
+			def get_vinfo_list(aid):
+				vlist = []
+				# make request url
+				url = make_port_url(aid)
+				# get text
+				raw_text = self.getUrl(url)
+				# get list
+				vlist = parse_one_page(raw_text)
+				# get full vinfo list done
+				return vlist
+
+			# parse one page info, parse raw info
+			def parse_one_page(raw_text):
+				# remove 'var tvInfoJs={' before json text, and json just ended with '}'
+				json_text = '{' + raw_text.split('{', 1)[1]
+				# load as json text
+				info = json.loads(json_text)
+				
+				# check code, '"code":"A00000"' is OK, and '"code":"A00004"' is out of index
+				if info['code'] == 'A00004':
+					return []	# just return null result
+				
+				# get and parse video info items
+				vlist = info['data']
+				out = []	# output info
+				for v in vlist:
+					one = {}
+					
+					one['no'] = v['desc']
+					one['title'] = v['desc']
+					one['subtitle'] = v['shortTitle']
+					one['url'] = v['vUrl']
+					
+					# get more info
+					one['vid'] = v['vid']
+					one['time_s'] = v['timeLength']
+					one['tvid'] = v['tvId']
+					
+					out.append(one)
+				# get video info done
+				return out
+			# get info from js API port
+			info2 = get_info_from_js_port(html_text)
+			# replace vlist with js port data
+			vlist = []
+			for i in info2:
+				one = {}
+				one['no'] = i['no']
+				one['subtitle'] = i['subtitle']
+				one['url'] = i['url']
+				vlist.append(one)
+			# done
+			return vlist
+		
+		def get_list_info_html(html):
+			print("get_list_info_html")
+			data = []
+			album_items = html('ul.site-piclist').children('li')
+			for album_item in album_items:
+				album_item = PyQuery(album_item)
+				site_piclist_info = PyQuery(album_item.children('div.site-piclist_info'))
+				site_piclist_info_title = PyQuery(site_piclist_info.children('p.site-piclist_info_title'))
+				site_piclist_info_title_a = PyQuery(site_piclist_info_title.children('a'))
+				site_piclist_info_title_fs12 = PyQuery(site_piclist_info.children('p.fs12'))
+				site_piclist_info_title_fs12_a = PyQuery(site_piclist_info_title_fs12.children('a'))
+				no = site_piclist_info_title_a.text()
+				#if re.search("预告",no):
+					#continue
+				name = site_piclist_info_title_fs12_a.text()
+				url = site_piclist_info_title_fs12_a.attr('href')
+				if url is None:
+					continue
+				subtitle = site_piclist_info_title_fs12_a.text()
+				info = {
+					"name": name,
+					"no": no,
+					"subtitle": subtitle,
+					"url": url
+				}
+				data.append(info)
+				i = i+1
+			return data
 	
 		html = PyQuery(self.getUrl(input_text))
 		title = html('h1.main_title').children('a').text()
@@ -128,36 +238,23 @@ class ListParser(common.Parser):
 			"type": "list"
 		}
 		try:
-			data["data"] = get_list_info(self.getUrl(input_text))
-			data["total"] = len(data["data"])
+			data["data"] = get_list_info_api1(self.getUrl(input_text))
 		except Exception as e:
+			print(e)
+		if data["data"] == []:
+			try:
+				data["data"] = get_list_info_api2(self.getUrl(input_text))
+			except Exception as e:
+				import traceback  
+				traceback.print_exc()  
+				#print(e)
+		if data["data"] == []:
+			try:
+				data["data"] = get_list_info_html(self.getUrl(input_text))
+			except Exception as e:
 				print(e)
-				album_items = html('ul.site-piclist').children('li')
-				for album_item in album_items:
-					album_item = PyQuery(album_item)
-					site_piclist_info = PyQuery(album_item.children('div.site-piclist_info'))
-					site_piclist_info_title = PyQuery(site_piclist_info.children('p.site-piclist_info_title'))
-					site_piclist_info_title_a = PyQuery(site_piclist_info_title.children('a'))
-					site_piclist_info_title_fs12 = PyQuery(site_piclist_info.children('p.fs12'))
-					site_piclist_info_title_fs12_a = PyQuery(site_piclist_info_title_fs12.children('a'))
-					no = site_piclist_info_title_a.text()
-					#if re.search("预告",no):
-						#continue
-					name = site_piclist_info_title_fs12_a.text()
-					url = site_piclist_info_title_fs12_a.attr('href')
-					if url is None:
-						continue
-					subtitle = site_piclist_info_title_fs12_a.text()
-					info = {
-						"name": name,
-						"no": no,
-						"subtitle": subtitle,
-						"url": url
-					}
-					data["data"].append(info)
-					i = i+1
-				total = i
-				data["total"] = total
+			
+		data["total"] = len(data["data"])
 		
 		return data
 

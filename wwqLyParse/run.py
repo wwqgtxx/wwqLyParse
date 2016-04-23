@@ -22,7 +22,7 @@ except Exception as e:
 version = {
     'port_version' : "0.4.0", 
     'type' : 'parse', 
-    'version' : '0.0.7', 
+    'version' : '0.0.8', 
     'uuid' : '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter' : [],
     'name' : 'WWQ整页列表解析插件', 
@@ -62,7 +62,8 @@ def main():
 	#debug(GetVersion())
 	#debug(Parse('http://www.iqiyi.com/lib/m_209445514.html?src=search'))
 	#debug(Parse('http://www.iqiyi.com/a_19rrhacdwt.html#vfrm=2-4-0-1'))
-	#debug(Parse('http://www.iqiyi.com/a_19rrhaare5.html'))
+	#debug(Parse('http://www.iqiyi.com/a_19rrhaare5.html'))\
+	debug(Parse('http://www.iqiyi.com/a_19rrhbhf6d.html#vfrm=2-3-0-1'))
 	#debug(Parse('http://www.le.com'))
 	#debug(Parse('http://www.le.com/comic/10010294.html'))
 	#debug(Parse('http://www.mgtv.com/v/1/1/'))
@@ -72,7 +73,7 @@ def main():
 	#debug(Parse('http://tv.sohu.com/drama/'))
 	#debug(Parse('http://mv.yinyuetai.com/'))
 	#debug(Parse('http://v.qq.com/tv/'))
-	debug(Parse('http://www.pptv.com/'))
+	#debug(Parse('http://www.pptv.com/'))
 	
 	
 

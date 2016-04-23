@@ -30,7 +30,7 @@ class IndexParser(common.Parser):
 			"more": False,
 			"title": title,
 			"total": i,
-			"type": "list"
+			"type": "collection"
 		}
 		for item in items:
 			a = PyQuery(item).children('a')

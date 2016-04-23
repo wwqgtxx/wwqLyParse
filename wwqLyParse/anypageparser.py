@@ -28,7 +28,7 @@ class AnyPageParser(common.Parser):
 			"more": False,
 			"title": title,
 			"total": i,
-			"type": "list"
+			"type": "collection"
 		}
 		for item in items:
 			a = PyQuery(item)
@@ -44,7 +44,7 @@ class AnyPageParser(common.Parser):
 				continue
 			if re.search('(list|mall|about|help|shop|map)',url):
 				continue
-			if re.search('(下载|播放)',no):
+			if re.search('(下载|播放|评论)',no):
 				continue
 			unsure = False
 			

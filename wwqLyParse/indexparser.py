@@ -14,7 +14,7 @@ except Exception as e:
 
 class IndexParser(common.Parser):
 
-	filters = ['http://www.le.com']
+	filters = ['www.le.com']
 		
 	def Parse(self,input_text):
 		if re.match('http://www.le.com',input_text):

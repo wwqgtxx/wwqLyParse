@@ -31,7 +31,8 @@ version = {
 parsers = [listparser.ListParser(),indexparser.IndexParser()]
 
 for parser in parsers:
-	version['filter'].append(parser.getfilters())
+	for filter in parser.getfilters():
+		version['filter'].append(filter)
 
 def GetVersion():
     return version
@@ -52,6 +53,6 @@ def Parse(input_text):
 #print (GetVersion())
 #print (Parse('http://www.iqiyi.com/lib/m_209445514.html?src=search'))
 #print (Parse('http://www.iqiyi.com/a_19rrhacdwt.html'))
-print (Parse('http://www.le.com'))
+#print (Parse('http://www.le.com'))
 
 

@@ -49,7 +49,7 @@ def Parse(input_text):
 			if re.search(filter,input_text):
 				try:
 					result = parser.Parse(input_text)
-					if result is not (None or []):
+					if (result is not None) and (result != []) and (result["data"] is not None) and (result["data"] != []):
 						return result
 				except Exception as e:
 					print(e)

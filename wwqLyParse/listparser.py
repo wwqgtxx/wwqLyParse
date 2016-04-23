@@ -195,7 +195,7 @@ class ListParser(common.Parser):
 			return vlist
 		
 		def get_list_info_html(html):
-			print("get_list_info_html")
+			#print("get_list_info_html")
 			data = []
 			album_items = html('ul.site-piclist').children('li')
 			for album_item in album_items:
@@ -245,9 +245,9 @@ class ListParser(common.Parser):
 			try:
 				data["data"] = get_list_info_api2(self.getUrl(input_text))
 			except Exception as e:
-				import traceback  
-				traceback.print_exc()  
-				#print(e)
+				#import traceback  
+				#traceback.print_exc()  
+				print(e)
 		if data["data"] == []:
 			try:
 				data["data"] = get_list_info_html(self.getUrl(input_text))

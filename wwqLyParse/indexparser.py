@@ -14,10 +14,10 @@ except Exception as e:
 
 class IndexParser(common.Parser):
 
-	filters = ['www.le.com']
+	filters = ['^http://www.le.com$']
 		
 	def Parse(self,input_text):
-		if re.match('http://www.le.com',input_text):
+		if re.match('^http://www.le.com$',input_text):
 			return self.Parse_le(input_text)
 		
 	def Parse_le(self,input_text):

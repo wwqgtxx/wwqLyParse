@@ -68,7 +68,11 @@ def main():
 	#debug(Parse('http://www.mgtv.com/v/1/1/'))
 	#debug(Parse('http://tv.le.com/'))
 	#debug(Parse('http://search.pptv.com/s_video?kw=%E5%B1%B1%E6%B5%B7%E7%BB%8F%E4%B9%8B%E8%B5%A4%E5%BD%B1%E4%BC%A0%E8%AF%B4'))
-	debug(Parse('http://www.youku.com/'))
+	#debug(Parse('http://www.youku.com/'))
+	#debug(Parse('http://tv.sohu.com/drama/'))
+	#debug(Parse('http://mv.yinyuetai.com/'))
+	debug(Parse('http://v.qq.com/tv/'))
+	
 	
 
 if __name__ == '__main__':

@@ -19,12 +19,6 @@ class IndexParser(common.Parser):
 	def Parse(self,input_text):
 		if re.match('http://www.le.com',input_text):
 			return self.Parse_le(input_text)
-	def getUrl(self,url):
-		req = urllib.request.Request(url)
-		f = urllib.request.urlopen(req)
-		s = f.read()
-		s = s.decode('utf-8','ignore')
-		return s
 		
 	def Parse_le(self,input_text):
 		html = PyQuery(self.getUrl(input_text))

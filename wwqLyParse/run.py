@@ -13,6 +13,11 @@ try:
     from . import indexparser
 except Exception as e:
     import indexparser
+	
+try:
+    from . import anypageparser
+except Exception as e:
+    import anypageparser
 
 version = {
     'port_version' : "0.4.0", 
@@ -28,7 +33,7 @@ version = {
     'note' : ''
 }
 
-parsers = [listparser.ListParser(),indexparser.IndexParser()]
+parsers = [listparser.ListParser(),indexparser.IndexParser(),anypageparser.AnyPageParser()]
 
 for parser in parsers:
 	for filter in parser.getfilters():
@@ -48,11 +53,18 @@ def Parse(input_text):
 				except Exception as e:
 					print(e)
 	return []
+	
+def debug(data):
+	print(json.dumps(data, ensure_ascii = False))
 
 
 #print (GetVersion())
 #print (Parse('http://www.iqiyi.com/lib/m_209445514.html?src=search'))
 #print (Parse('http://www.iqiyi.com/a_19rrhacdwt.html'))
 #print (Parse('http://www.le.com'))
+#print (Parse('http://www.mgtv.com/v/1/1/'))
+#print (Parse('http://tv.le.com/'))
+#print (Parse('http://search.pptv.com/s_video?kw=%E5%B1%B1%E6%B5%B7%E7%BB%8F%E4%B9%8B%E8%B5%A4%E5%BD%B1%E4%BC%A0%E8%AF%B4'))
+
 
 

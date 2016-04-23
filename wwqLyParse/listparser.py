@@ -21,12 +21,6 @@ class ListParser(common.Parser):
 			return self.Parse_lib_m(input_text)
 		if re.search('www.iqiyi.com/a_',input_text):
 			return self.Parse_a(input_text)
-	def getUrl(self,url):
-		req = urllib.request.Request(url)
-		f = urllib.request.urlopen(req)
-		s = f.read()
-		s = s.decode('utf-8','ignore')
-		return s
 		
 	def Parse_a(self,input_text):
 		html = PyQuery(self.getUrl(input_text))

@@ -9,6 +9,11 @@ try:
 except Exception as e:
     import listparser
 
+try:
+    from . import indexparser
+except Exception as e:
+    import indexparser
+
 version = {
     'port_version' : "0.4.0", 
     'type' : 'parse', 
@@ -23,7 +28,7 @@ version = {
     'note' : ''
 }
 
-parsers = [listparser.ListParser()]
+parsers = [listparser.ListParser(),indexparser.IndexParser()]
 
 for parser in parsers:
 	version['filter'].append(parser.getfilters())
@@ -47,4 +52,6 @@ def Parse(input_text):
 #print (GetVersion())
 #print (Parse('http://www.iqiyi.com/lib/m_209445514.html?src=search'))
 #print (Parse('http://www.iqiyi.com/a_19rrhacdwt.html'))
+print (Parse('http://www.le.com'))
+
 

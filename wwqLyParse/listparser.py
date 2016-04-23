@@ -117,7 +117,7 @@ class ListParser(common.Parser):
 		title = html('h1.main_title').children('a').text()
 		for a in html('div.crumb-item').children('a'):
 			a = PyQuery(a)
-			if a.attr('href') == input_text:
+			if a.attr('href') in input_text:
 				title = a.text()	
 		i =0
 		data = {

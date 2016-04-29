@@ -12,16 +12,13 @@ try:
 except Exception as e:
     import common
 	
-try:
-    from . import listparser
-except Exception as e:
-    import listparser
+
 
 class AnyPageParser(common.Parser):
 
 	filters = ['^(http|https)\://([a-zA-Z0-9\.\-]+(\:[a-zA-Z0-9\.&amp;%\$\-]+)*@)*((25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])|localhost|([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2,5}))(\:[0-9]+)*(/($|[a-zA-Z0-9\.\,\?\'\\\+&amp;%\$#\=~_\-]+))*$']
 	
-	list_parser = listparser.ListParser()
+	
 	TWICE_PARSE = False	
 		
 	def Parse(self,input_text):
@@ -69,11 +66,16 @@ class AnyPageParser(common.Parser):
 			urls.append(url)
 			
 			if self.TWICE_PARSE:
-				for filter in self.list_parser.getfilters():
+				try:
+					from . import listparser
+				except Exception as e:
+					import listparser
+				list_parser = listparser.ListParser()
+				for filter in list_parser.getfilters():
 					if re.search(filter,url):
 						try:
 							print(url)
-							result = self.list_parser.Parse(url)
+							result = list_parser.Parse(url)
 							if (result is not None) and (result != []) and (result["data"] is not None) and (result["data"] != []):
 								data["data"].extend(result["data"])
 								url = None

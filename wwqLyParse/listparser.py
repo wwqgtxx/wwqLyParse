@@ -222,7 +222,7 @@ class ListParser(common.Parser):
 				data.append(info)
 				i = i+1
 			return data
-	
+		#print("2"+input_text)
 		html = PyQuery(self.getUrl(input_text))
 		title = html('h1.main_title').children('a').text()
 		for a in html('div.crumb-item').children('a'):
@@ -240,6 +240,8 @@ class ListParser(common.Parser):
 		try:
 			data["data"] = get_list_info_api1(self.getUrl(input_text))
 		except Exception as e:
+			#import traceback  
+			#traceback.print_exc()  
 			print(e)
 		if data["data"] == []:
 			try:
@@ -250,8 +252,10 @@ class ListParser(common.Parser):
 				print(e)
 		if data["data"] == []:
 			try:
-				data["data"] = get_list_info_html(self.getUrl(input_text))
+				data["data"] = get_list_info_html(html)
 			except Exception as e:
+				#import traceback  
+				#traceback.print_exc()  
 				print(e)
 			
 		data["total"] = len(data["data"])

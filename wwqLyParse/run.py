@@ -22,7 +22,7 @@ except Exception as e:
 version = {
     'port_version' : "0.4.0", 
     'type' : 'parse', 
-    'version' : '0.0.8', 
+    'version' : '0.0.9', 
     'uuid' : '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter' : [],
     'name' : 'WWQ整页列表解析插件', 
@@ -52,7 +52,9 @@ def Parse(input_text):
 					if (result is not None) and (result != []) and (result["data"] is not None) and (result["data"] != []):
 						return result
 				except Exception as e:
-					print(e)
+					#print(e)
+					import traceback  
+					traceback.print_exc()  
 	return []
 	
 def debug(input):
@@ -63,7 +65,7 @@ def main():
 	#debug(Parse('http://www.iqiyi.com/lib/m_209445514.html?src=search'))
 	#debug(Parse('http://www.iqiyi.com/a_19rrhacdwt.html#vfrm=2-4-0-1'))
 	#debug(Parse('http://www.iqiyi.com/a_19rrhaare5.html'))\
-	debug(Parse('http://www.iqiyi.com/a_19rrhbhf6d.html#vfrm=2-3-0-1'))
+	#debug(Parse('http://www.iqiyi.com/a_19rrhbhf6d.html#vfrm=2-3-0-1'))
 	#debug(Parse('http://www.le.com'))
 	#debug(Parse('http://www.le.com/comic/10010294.html'))
 	#debug(Parse('http://www.mgtv.com/v/1/1/'))
@@ -74,6 +76,9 @@ def main():
 	#debug(Parse('http://mv.yinyuetai.com/'))
 	#debug(Parse('http://v.qq.com/tv/'))
 	#debug(Parse('http://www.pptv.com/'))
+	#debug(Parse('http://yyfm.xyz/video/album/1300046802.html'))
+	debug(Parse('http://list.iqiyi.com/www/2/----------------iqiyi--.html'))
+	
 	
 	
 

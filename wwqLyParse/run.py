@@ -5,19 +5,11 @@
 import re
 
 try:
-    from . import listparser
-except Exception as e:
-    import listparser
-
-try:
-    from . import indexparser
-except Exception as e:
-    import indexparser
-    
-try:
-    from . import anypageparser
-except Exception as e:
-    import anypageparser
+    from .parsers import listparser,indexparser,anypageparser
+except Exception:
+    import parsers.listparser as listparser
+    import parsers.indexparser as indexparser
+    import parsers.anypageparser as anypageparser
 
 version = {
     'port_version' : "0.4.0", 

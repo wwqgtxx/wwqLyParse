@@ -8,10 +8,9 @@ import urllib.request,io,os,sys,json,re
 from pyquery.pyquery import PyQuery
 
 try:
-    from . import common
+    from .. import common
 except Exception as e:
     import common
-
 
 
 class ListParser(common.Parser):

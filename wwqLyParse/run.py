@@ -5,28 +5,31 @@
 import re
 
 try:
-    from .parsers import listparser,indexparser,anypageparser
+    from .parsers import listparser,indexparser,anypageparser,yougetparser
 except Exception:
     import parsers.listparser as listparser
     import parsers.indexparser as indexparser
     import parsers.anypageparser as anypageparser
+    import parsers.yougetparser as yougetparser
 
 version = {
     'port_version' : "0.4.0", 
     'type' : 'parse', 
-    'version' : '0.0.9', 
+    'version' : '0.1.0', 
     'uuid' : '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter' : [],
-    'name' : 'WWQ整页列表解析插件', 
+    'name' : 'WWQ猎影解析插件', 
     'author' : 'wwqgtxx', 
     'copyright' : 'wwqgtxx', 
     'license' : 'GPLV3', 
     'home' : '', 
     'note' : ''
 }
-version['name'] = version['name']+version['version']
 
-parsers = [listparser.ListParser(),indexparser.IndexParser(),anypageparser.AnyPageParser()]
+version['name'] = version['name']+version['version']+"[Include "+yougetparser.YouGetParser().getYouGetVersion()+"]"
+
+parsers = [listparser.ListParser(),indexparser.IndexParser(),yougetparser.YouGetParser(),anypageparser.AnyPageParser()]
+
 
 for parser in parsers:
     for filter in parser.getfilters():
@@ -41,7 +44,28 @@ def Parse(input_text):
             if re.search(filter,input_text):
                 try:
                     result = parser.Parse(input_text)
-                    if (result is not None) and (result != []) and (result["data"] is not None) and (result["data"] != []):
+                    if (result is not None) and (result != []):
+                        if "error" in result:
+                            print(result["error"])
+                            continue
+                        if ("data" in result) and (result["data"] is not None) and (result["data"] != []):
+                            return result
+                except Exception as e:
+                    #print(e)
+                    import traceback  
+                    traceback.print_exc()  
+    return []
+
+def ParseURL(input_text,label,min=None,max=None):
+    for parser in parsers:
+        for filter in parser.getfilters():
+            if re.search(filter,input_text):
+                try:
+                    result = parser.ParseURL(input_text,label,min,max)
+                    if (result is not None) and (result != []):
+                        if "error" in result:
+                            print(result["error"])
+                            continue
                         return result
                 except Exception as e:
                     #print(e)
@@ -69,7 +93,10 @@ def main():
     #debug(Parse('http://v.qq.com/tv/'))
     #debug(Parse('http://www.pptv.com/'))
     #debug(Parse('http://yyfm.xyz/video/album/1300046802.html'))
-    debug(Parse('http://list.iqiyi.com/www/2/----------------iqiyi--.html'))
+    #debug(Parse('http://list.iqiyi.com/www/2/----------------iqiyi--.html'))
+    #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html'))
+    debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","4_fullhd_全高清"))
+    #debug(Parse('http://v.pptv.com/show/NWR29Yzj2hh7ibWE.html?rcc_src=S1'))
     
     
     

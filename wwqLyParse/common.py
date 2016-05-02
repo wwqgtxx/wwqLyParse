@@ -7,7 +7,7 @@ class Parser(object):
     filters = []
     def Parse(self,url):
         pass
-    def ParseURL(self,url):
+    def ParseURL(self,url,label,min=None,max=None):
         pass
     def getfilters(self):
         return self.filters

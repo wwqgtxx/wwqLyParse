@@ -10,8 +10,6 @@ try:
 except Exception as e:
     from lib import conf,bridge
 
-from pyquery.pyquery import PyQuery
-
 try:
     from .. import common
 except Exception as e:
@@ -21,7 +19,7 @@ except Exception as e:
 
 class YouGetParser(common.Parser):
 
-    filters = ['^http://.+', '^lyp-you-get::.+', ]
+    filters = ['^(http|https)://.+']
         
     # print exception function
     def _print_exception(self,e):
@@ -128,7 +126,7 @@ class YouGetParser(common.Parser):
         _format = stream['_format']
         _id = stream['_id']
         quality = stream['video_profile']
-        l = ('_').join([str(_id), _format, quality])
+        l = ('_').join([str(_id), _format, quality, self.byte2size(stream['size'], False)])
         size = self.byte2size(stream['size'], True)
         ext = stream['container']
         return l, size, ext

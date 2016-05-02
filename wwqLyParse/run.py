@@ -15,7 +15,7 @@ except Exception:
 version = {
     'port_version' : "0.4.0", 
     'type' : 'parse', 
-    'version' : '0.1.0', 
+    'version' : '0.1.1', 
     'uuid' : '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter' : [],
     'name' : 'WWQ猎影解析插件', 
@@ -94,9 +94,11 @@ def main():
     #debug(Parse('http://www.pptv.com/'))
     #debug(Parse('http://yyfm.xyz/video/album/1300046802.html'))
     #debug(Parse('http://list.iqiyi.com/www/2/----------------iqiyi--.html'))
-    #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html'))
-    debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","4_fullhd_全高清"))
-    #debug(Parse('http://v.pptv.com/show/NWR29Yzj2hh7ibWE.html?rcc_src=S1'))
+    debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html'))
+    debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","4_fullhd_全高清_895.21 MB"))
+    #debug(Parse('http://v.pptv.com/show/NWR29Yzj2hh7ibWE.html?rcc_src=S1')) #don't support
+    #debug(Parse('http://www.bilibili.com/video/av2557971/')) #don't support
+    
     
     
     

@@ -5,12 +5,13 @@
 import re
 
 try:
-    from .parsers import listparser,indexparser,anypageparser,yougetparser
+    from .parsers import listparser,indexparser,anypageparser,yougetparser,lyppvparser
 except Exception:
     import parsers.listparser as listparser
     import parsers.indexparser as indexparser
     import parsers.anypageparser as anypageparser
     import parsers.yougetparser as yougetparser
+    import parsers.lyppvparser as lyppvparser
 
 version = {
     'port_version' : "0.4.0", 
@@ -27,7 +28,7 @@ version = {
 }
 
 
-parsers = [listparser.ListParser(),indexparser.IndexParser(),yougetparser.YouGetParser(),anypageparser.AnyPageParser()]
+parsers = [listparser.ListParser(),indexparser.IndexParser(),lyppvparser.LypPvParser(),yougetparser.YouGetParser(),anypageparser.AnyPageParser()]
 
 
 for parser in parsers:

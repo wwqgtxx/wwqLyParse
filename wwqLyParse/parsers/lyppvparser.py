@@ -25,7 +25,9 @@ class LypPvParser(common.Parser):
     def Parse(self,url,types=None):
         if (types is not None) and ("formats" not in types):
             return
-        return run.Parse(url)
+        out = run.Parse(url)
+        out["caption"]= "负锐解析"
+        return out
 
     def ParseURL(self,url,label,min=None,max=None):
         return run.ParseURL(url,label,min,max)

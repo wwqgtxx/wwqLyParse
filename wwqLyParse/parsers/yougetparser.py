@@ -70,7 +70,7 @@ class YouGetParser(common.Parser):
         # try to decode
         stdout = bridge.try_decode(stdout)
         stderr = bridge.try_decode(stderr)
-        print(stdout)
+        #print(stdout)
         return stdout, stderr
 
     # make a 2.3 number, with given length after .

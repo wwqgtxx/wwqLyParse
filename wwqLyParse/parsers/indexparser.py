@@ -16,9 +16,10 @@ class IndexParser(common.Parser):
 
     filters = ['^http://www.le.com$']
         
-    def Parse(self,input_text):
-        if re.match('^http://www.le.com$',input_text):
-            return self.Parse_le(input_text)
+    def Parse(self,input_text,types=None):
+        if (types is None) or ("collection" in types):
+            if re.match('^http://www.le.com$',input_text):
+                return self.Parse_le(input_text)
         
     def Parse_le(self,input_text):
         html = PyQuery(self.getUrl(input_text))
@@ -46,7 +47,8 @@ class IndexParser(common.Parser):
                 "name": name,
                 "no": no,
                 "subtitle": subtitle,
-                "url": url
+                "url": url,
+                "caption": "首页地址列表"  
             }
             data["data"].append(info)
             i = i+1

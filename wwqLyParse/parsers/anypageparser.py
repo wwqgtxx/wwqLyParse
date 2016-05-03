@@ -21,7 +21,9 @@ class AnyPageParser(common.Parser):
     
     TWICE_PARSE = False    
         
-    def Parse(self,input_text):
+    def Parse(self,input_text,types=None):
+        if (types is not None) and ("collection" not in types):
+            return
         html = PyQuery(self.getUrl(input_text))
         items = html('a')
         title = html('title').text()
@@ -96,10 +98,11 @@ class AnyPageParser(common.Parser):
                 "no": no,
                 "subtitle": subtitle,
                 "url": url,
-                "unsure": unsure            
+                "unsure": unsure           
             }
             data["data"].append(info)
         data["total"] = len(data["data"])
+        data["caption"] = "全页地址列表"
         return data
 
 

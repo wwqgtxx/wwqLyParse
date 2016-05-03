@@ -5,7 +5,7 @@ import urllib.request,io,os,sys,json,re,gzip
 
 class Parser(object):
     filters = []
-    def Parse(self,url):
+    def Parse(self,url,types=None):
         pass
     def ParseURL(self,url,label,min=None,max=None):
         pass

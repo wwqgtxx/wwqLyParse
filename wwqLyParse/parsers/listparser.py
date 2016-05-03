@@ -15,13 +15,16 @@ except Exception as e:
 
 class ListParser(common.Parser):
 
-    filters = ['www.iqiyi.com/lib/m','www.iqiyi.com/a_']
+    filters = ['www.iqiyi.com/lib/m','www.iqiyi.com/a_','www.iqiyi.com/v_']
         
-    def Parse(self,input_text):
-        if re.search('www.iqiyi.com/lib/m',input_text):
-            return self.Parse_lib_m(input_text)
-        if re.search('www.iqiyi.com/a_',input_text):
-            return self.Parse_a(input_text)
+    def Parse(self,input_text,types=None):
+        if (types is None) or ("list" in types):
+            if re.search('www.iqiyi.com/lib/m',input_text):
+                return self.Parse_lib_m(input_text)
+            if re.search('www.iqiyi.com/a_',input_text):
+                return self.Parse_a(input_text)
+            if re.search('www.iqiyi.com/v_',input_text):
+                return self.Parse_v(input_text)
     
 
         
@@ -234,7 +237,8 @@ class ListParser(common.Parser):
             "more": False,
             "title": title,
             "total": i,
-            "type": "list"
+            "type": "list",
+            "caption": "271视频全集"
         }
         try:
             data["data"] = get_list_info_api1(self.getUrl(input_text))
@@ -296,7 +300,8 @@ class ListParser(common.Parser):
             "more": False,
             "title": '',
             "total": 0,
-            "type": "list"
+            "type": "list",
+            "caption": "271视频全集"
         }
         
         data_doc_id = html('span.play_source').attr('data-doc-id')
@@ -321,3 +326,13 @@ class ListParser(common.Parser):
         #print(ejson)
         return data
 
+    def Parse_v(self,input_text):
+        print(input_text)
+        html = PyQuery(self.getUrl(input_text))
+        datainfo_navlist = PyQuery(html("#datainfo-navlist"))
+        for a in datainfo_navlist.children('a'):
+            a = PyQuery(a)
+            url = a.attr("href")
+            if re.search('www.iqiyi.com/(a_|lib/m)',url):
+                return self.Parse(url)
+    

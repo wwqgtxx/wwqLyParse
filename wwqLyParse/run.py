@@ -15,7 +15,7 @@ except Exception:
 version = {
     'port_version' : "0.4.0", 
     'type' : 'parse', 
-    'version' : '0.1.1', 
+    'version' : '0.1.2', 
     'uuid' : '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter' : [],
     'name' : 'WWQ猎影解析插件', 
@@ -26,7 +26,6 @@ version = {
     'note' : ''
 }
 
-version['name'] = version['name']+version['version']+"[Include "+yougetparser.YouGetParser().getYouGetVersion()+"]"
 
 parsers = [listparser.ListParser(),indexparser.IndexParser(),yougetparser.YouGetParser(),anypageparser.AnyPageParser()]
 
@@ -36,25 +35,28 @@ for parser in parsers:
         version['filter'].append(filter)
 
 def GetVersion():
+    version['name'] = version['name']+version['version']+"[Include "+yougetparser.YouGetParser().getYouGetVersion()+"]"
     return version
     
-def Parse(input_text):
+def Parse(input_text,types=None):
+    results = []
     for parser in parsers:
         for filter in parser.getfilters():
             if re.search(filter,input_text):
                 try:
-                    result = parser.Parse(input_text)
+                    print(parser)
+                    result = parser.Parse(input_text,types)
                     if (result is not None) and (result != []):
                         if "error" in result:
                             print(result["error"])
                             continue
                         if ("data" in result) and (result["data"] is not None) and (result["data"] != []):
-                            return result
+                            results.append(result)
                 except Exception as e:
                     #print(e)
                     import traceback  
                     traceback.print_exc()  
-    return []
+    return results
 
 def ParseURL(input_text,label,min=None,max=None):
     for parser in parsers:
@@ -94,8 +96,8 @@ def main():
     #debug(Parse('http://www.pptv.com/'))
     #debug(Parse('http://yyfm.xyz/video/album/1300046802.html'))
     #debug(Parse('http://list.iqiyi.com/www/2/----------------iqiyi--.html'))
-    debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html'))
-    debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","4_fullhd_全高清_895.21 MB"))
+    debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html',"formats"))
+    #debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","4_fullhd_全高清_895.21 MB"))
     #debug(Parse('http://v.pptv.com/show/NWR29Yzj2hh7ibWE.html?rcc_src=S1')) #don't support
     #debug(Parse('http://www.bilibili.com/video/av2557971/')) #don't support
     

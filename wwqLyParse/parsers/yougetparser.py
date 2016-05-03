@@ -160,6 +160,7 @@ class YouGetParser(common.Parser):
             one['ext'] = ext
             one['size'] = size
             out['data'].append(one)
+            out["caption"]= "you-get解析"
         return out
 
     # parse for parse_url
@@ -196,7 +197,9 @@ class YouGetParser(common.Parser):
                 raw_text = rest
 
     # parse functions
-    def Parse(self,url):
+    def Parse(self,url,types=None):
+        if (types is not None) and ("formats" not in types):
+            return
         yarg = self._make_you_get_arg(url)
         stdout, stderr = self._run_you(yarg)
         # try to decode

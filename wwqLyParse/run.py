@@ -14,7 +14,7 @@ except Exception:
     import parsers.lyppvparser as lyppvparser
 
 version = {
-    'port_version' : "0.4.0", 
+    'port_version' : "0.5.0", 
     'type' : 'parse', 
     'version' : '0.1.2', 
     'uuid' : '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',

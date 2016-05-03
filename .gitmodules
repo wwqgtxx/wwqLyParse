@@ -1,3 +1,6 @@
 [submodule "wwqLyParse/you-get"]
 	path = wwqLyParse/you-get
 	url = https://github.com/soimort/you-get.git
+[submodule "wwqLyParse/lyp_pv"]
+	path = wwqLyParse/lyp_pv
+	url = https://github.com/wwqgtxx/lyp_pv.git

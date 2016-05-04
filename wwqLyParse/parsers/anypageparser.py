@@ -72,7 +72,12 @@ class AnyPageParser(common.Parser):
                     from . import listparser
                 except Exception as e:
                     import listparser
+                try:
+                    from .. import run
+                except Exception as e:
+                    import run
                 list_parser = listparser.ListParser()
+                url = run.urlHandle(url)
                 for filter in list_parser.getfilters():
                     if re.search(filter,url):
                         try:

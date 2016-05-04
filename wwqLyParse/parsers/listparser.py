@@ -15,7 +15,7 @@ except Exception as e:
 
 class ListParser(common.Parser):
 
-    filters = ['www.iqiyi.com/lib/m','www.iqiyi.com/a_','www.iqiyi.com/v_']
+    filters = ['www.iqiyi.com/(lib/m|a_|v_)']
         
     def Parse(self,input_text,types=None):
         if (types is None) or ("list" in types):

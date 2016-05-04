@@ -25,15 +25,33 @@ class LypPvParser(common.Parser):
 
     # parse functions
     def Parse(self,url,types=None):
+        if (types is not None) and ("formats" not in types):
+            return
         try:
             from ..lyp_pv import run
         except Exception as e:
             from lyp_pv import run
-        if (types is not None) and ("formats" not in types):
-            return
+        if re.search('www.iqiyi.com/(lib/m|a_)',url):
+            return []
         print("call lyp_pv.run.Parse("+url+")")
         out = run.Parse(url)
         for data in out['data']:
+            data['label'] = re.compile('\(\d\)\s*').sub('',str(data['label']))
+            parts = data['label'].split('_')
+            num = int(parts[0])
+            if num == -3:
+                parts[0] = "0"
+            elif num == -1:
+                parts[0] = "1"
+            elif num == 0:
+                parts[0] = "2"
+            elif num == 2:
+                parts[0] = "3"
+            elif num == 4:
+                parts[0] = "4"
+            elif num == 6:
+                parts[0] = "5"
+            data['label']=('_').join(parts)
             data['label'] = data['label'] + ("@lyppv")
         out["caption"]= "负锐解析"
         out.pop("icon")

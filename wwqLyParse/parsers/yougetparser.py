@@ -162,6 +162,7 @@ class YouGetParser(common.Parser):
             one['size'] = size
             out['data'].append(one)
         out["caption"]= "you-get解析"
+        out['sorted']= True
         return out
 
     # parse for parse_url
@@ -201,6 +202,8 @@ class YouGetParser(common.Parser):
     def Parse(self,url,types=None):
         if (types is not None) and ("formats" not in types):
             return
+        if re.search('www.iqiyi.com/(lib/m|a_)',url):
+            return []
         yarg = self._make_you_get_arg(url)
         stdout, stderr = self._run_you(yarg)
         #print(stdout)

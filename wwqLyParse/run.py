@@ -126,8 +126,9 @@ def main():
     #debug(Parse('http://yyfm.xyz/video/album/1300046802.html'))
     #debug(Parse('http://list.iqiyi.com/www/2/----------------iqiyi--.html'))
     #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html'))
-    debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html',"formats"))
+    #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html',"formats"))
     #debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","4_fullhd_全高清_895.21 MB@youget"))
+    debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","4_1080p_1920x1080_2746.0kbps_44:30.660_7_flv_@lyppv"))
     #debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","(1)  4_1080p_1920x1080_2746.0kbps_44:30.660_7_flv_@lyppv"))
     #debug(Parse('http://v.pptv.com/show/NWR29Yzj2hh7ibWE.html?rcc_src=S1'))
     #debug(Parse('http://www.bilibili.com/video/av2557971/')) #don't support

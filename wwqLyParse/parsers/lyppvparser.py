@@ -64,6 +64,22 @@ class LypPvParser(common.Parser):
             from ..lyp_pv import run
         except Exception as e:
             from lyp_pv import run
+        parts = label.split('_')
+        num = int(parts[0])
+        if num == 0:
+            parts[0] = "-3"
+        elif num == 1:
+            parts[0] = "-1"
+        elif num == 0:
+            parts[0] = "0"
+        elif num == 3:
+            parts[0] = "2"
+        elif num == 4:
+            parts[0] = "4"
+        elif num == 5:
+            parts[0] = "6"
+        label=('_').join(parts)
+        label = "() "+label
         print("call lyp_pv.run.ParseURL("+url+","+label+","+str(min)+","+str(max)+")")
         return run.ParseURL(url,label,min,max)
         

@@ -157,10 +157,11 @@ class YouGetParser(common.Parser):
             one = {}
             label, size, ext = self._make_label(s)
             one['label'] = label
+            one['label'] = one['label'] + ("@youget")
             one['ext'] = ext
             one['size'] = size
             out['data'].append(one)
-            out["caption"]= "you-get解析"
+        out["caption"]= "you-get解析"
         return out
 
     # parse for parse_url
@@ -219,6 +220,7 @@ class YouGetParser(common.Parser):
         return out
 
     def ParseURL(self,url,label,min=None,max=None):
+        assert "@youget" in label
         _format = self._parse_label(label)
         yarg = self._make_you_get_arg(url, _format)
         stdout, stderr = self._run_you(yarg)

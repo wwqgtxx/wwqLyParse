@@ -90,6 +90,7 @@ def ParseURL(input_text,label,min=None,max=None):
         for filter in parser.getfilters():
             if re.search(filter,input_text):
                 try:
+                    print(parser)
                     result = parser.ParseURL(input_text,label,min,max)
                     if (result is not None) and (result != []):
                         if "error" in result:
@@ -125,11 +126,12 @@ def main():
     #debug(Parse('http://yyfm.xyz/video/album/1300046802.html'))
     #debug(Parse('http://list.iqiyi.com/www/2/----------------iqiyi--.html'))
     #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html'))
-    #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html',"formats"))
-    #debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","4_fullhd_全高清_895.21 MB"))
+    debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html',"formats"))
+    #debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","4_fullhd_全高清_895.21 MB@youget"))
+    #debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","(1)  4_1080p_1920x1080_2746.0kbps_44:30.660_7_flv_@lyppv"))
     #debug(Parse('http://v.pptv.com/show/NWR29Yzj2hh7ibWE.html?rcc_src=S1'))
     #debug(Parse('http://www.bilibili.com/video/av2557971/')) #don't support
-    debug(Parse('http://v.baidu.com/link?url=dm_10tBNoD-LLAMb79CB_p0kxozuoJcW0SiN3eycdo6CdO3GZgQm26uOzZh9fqcNSWZmz9aU9YYCCfT0NmZoGfEMoznyHhz3st-QvlOeyArYdIbhzBbdIrmntA4h1HsSampAs4Z3c17r_exztVgUuHZqChPeZZQ4tlmM5&page=tvplaydetail&vfm=bdvtx&frp=v.baidu.com%2Ftv_intro%2F&bl=jp_video',"formats"))
+    #debug(Parse('http://v.baidu.com/link?url=dm_10tBNoD-LLAMb79CB_p0kxozuoJcW0SiN3eycdo6CdO3GZgQm26uOzZh9fqcNSWZmz9aU9YYCCfT0NmZoGfEMoznyHhz3st-QvlOeyArYdIbhzBbdIrmntA4h1HsSampAs4Z3c17r_exztVgUuHZqChPeZZQ4tlmM5&page=tvplaydetail&vfm=bdvtx&frp=v.baidu.com%2Ftv_intro%2F&bl=jp_video',"formats"))
 
 
 if __name__ == '__main__':

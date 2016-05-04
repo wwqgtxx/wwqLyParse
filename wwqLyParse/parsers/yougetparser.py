@@ -202,6 +202,7 @@ class YouGetParser(common.Parser):
             return
         yarg = self._make_you_get_arg(url)
         stdout, stderr = self._run_you(yarg)
+        #print(stdout)
         # try to decode
         try:
             info = self._try_parse_json(stdout)

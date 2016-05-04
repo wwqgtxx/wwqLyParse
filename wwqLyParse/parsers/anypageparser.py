@@ -24,7 +24,7 @@ class AnyPageParser(common.Parser):
     def Parse(self,input_text,types=None):
         if (types is not None) and ("collection" not in types):
             return
-        html = PyQuery(self.getUrl(input_text))
+        html = PyQuery(common.getUrl(input_text))
         items = html('a')
         title = html('title').text()
         data = {

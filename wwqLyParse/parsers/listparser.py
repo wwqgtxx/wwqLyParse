@@ -64,7 +64,7 @@ class ListParser(common.Parser):
                     page_n += 1
                     url = make_port_url(aid, page_n)
                     # get text
-                    raw_text = self.getUrl(url)
+                    raw_text = common.getUrl(url)
                     # get list
                     sub_list = parse_one_page(raw_text)
                     if len(sub_list) > 0:
@@ -147,7 +147,7 @@ class ListParser(common.Parser):
                 # make request url
                 url = make_port_url(aid)
                 # get text
-                raw_text = self.getUrl(url)
+                raw_text = common.getUrl(url)
                 # get list
                 vlist = parse_one_page(raw_text)
                 # get full vinfo list done
@@ -225,7 +225,7 @@ class ListParser(common.Parser):
                 i = i+1
             return data
         #print("2"+input_text)
-        html = PyQuery(self.getUrl(input_text))
+        html = PyQuery(common.getUrl(input_text))
         title = html('h1.main_title').children('a').text()
         for a in html('div.crumb-item').children('a'):
             a = PyQuery(a)
@@ -241,14 +241,14 @@ class ListParser(common.Parser):
             "caption": "271视频全集"
         }
         try:
-            data["data"] = get_list_info_api1(self.getUrl(input_text))
+            data["data"] = get_list_info_api1(common.getUrl(input_text))
         except Exception as e:
             #import traceback  
             #traceback.print_exc()  
             print(e)
         if data["data"] == []:
             try:
-                data["data"] = get_list_info_api2(self.getUrl(input_text))
+                data["data"] = get_list_info_api2(common.getUrl(input_text))
             except Exception as e:
                 #import traceback  
                 #traceback.print_exc()  
@@ -266,7 +266,7 @@ class ListParser(common.Parser):
         return data
 
     def Parse_lib_m(self,input_text):
-        html = PyQuery(self.getUrl(input_text))
+        html = PyQuery(common.getUrl(input_text))
         
         """
         album_items = html('div.clearfix').children('li.album_item')
@@ -306,7 +306,7 @@ class ListParser(common.Parser):
         
         data_doc_id = html('span.play_source').attr('data-doc-id')
         ejson_url = 'http://rq.video.iqiyi.com/aries/e.json?site=iqiyi&docId='+data_doc_id+'&count=100000'
-        ejson = json.loads(self.getUrl(ejson_url))
+        ejson = json.loads(common.getUrl(ejson_url))
         ejson_datas = ejson["data"]["objs"]
         data["total"] = ejson_datas["info"]["total_video_number"]
         data["title"] = ejson_datas["info"]["album_title"]
@@ -328,7 +328,7 @@ class ListParser(common.Parser):
 
     def Parse_v(self,input_text):
         print(input_text)
-        html = PyQuery(self.getUrl(input_text))
+        html = PyQuery(common.getUrl(input_text))
         datainfo_navlist = PyQuery(html("#datainfo-navlist"))
         for a in datainfo_navlist.children('a'):
             a = PyQuery(a)

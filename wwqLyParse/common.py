@@ -37,5 +37,10 @@ class Parser(object):
         pass
     def getfilters(self):
         return self.filters
-    def getUrl(self,oUrl, encoding = 'utf-8' , headers = {}, data = None, method = None) :
-        return getUrl(oUrl, encoding , headers, data, method)
+        
+class UrlHandle():
+    filters = []
+    def urlHandle(url):
+        pass
+    def getfilters(self):
+        return self.filters

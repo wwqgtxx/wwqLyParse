@@ -13,10 +13,17 @@ except Exception:
     import parsers.yougetparser as yougetparser
     import parsers.lyppvparser as lyppvparser
 
+try:
+    from .urlhandles import postfixurlhandle,jumpurlhandle
+except Exception:
+    import urlhandles.postfixurlhandle as postfixurlhandle
+    import urlhandles.jumpurlhandle as jumpurlhandle
+
+
 version = {
     'port_version' : "0.5.0", 
     'type' : 'parse', 
-    'version' : '0.1.2', 
+    'version' : '0.1.3', 
     'uuid' : '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter' : [],
     'name' : 'WWQ猎影解析插件', 
@@ -29,17 +36,35 @@ version = {
 
 
 parsers = [listparser.ListParser(),indexparser.IndexParser(),lyppvparser.LypPvParser(),yougetparser.YouGetParser(),anypageparser.AnyPageParser()]
+urlhandles = [jumpurlhandle.JumpUrlHandle(),postfixurlhandle.PostfixUrlHandle()]
 
+def urlHandle(input_text):
+    for urlhandle in urlhandles:
+        for filter in urlhandle.getfilters():
+            if re.match(filter,input_text):
+                try:
+                    print(urlhandle)
+                    result = urlhandle.urlHandle(input_text)
+                    if (result is not None) and (result is not ""):
+                        input_text = result
+                except Exception as e:
+                    #print(e)
+                    import traceback  
+                    traceback.print_exc()  
+    return input_text
 
-for parser in parsers:
-    for filter in parser.getfilters():
-        version['filter'].append(filter)
-
-def GetVersion():
+def GetVersion(): 
+    for parser in parsers:
+        for filter in parser.getfilters():
+            version['filter'].append(filter)
+    for urlhandle in urlhandles:
+        for filter in urlhandle.getfilters():
+            version['filter'].append(filter)
     version['name'] = version['name']+version['version']+"[Include "+yougetparser.YouGetParser().getYouGetVersion()+"]"
     return version
     
 def Parse(input_text,types=None):
+    input_text = urlHandle(input_text)
     results = []
     for parser in parsers:
         for filter in parser.getfilters():
@@ -60,6 +85,7 @@ def Parse(input_text,types=None):
     return results
 
 def ParseURL(input_text,label,min=None,max=None):
+    input_text = urlHandle(input_text)
     for parser in parsers:
         for filter in parser.getfilters():
             if re.search(filter,input_text):
@@ -98,15 +124,13 @@ def main():
     #debug(Parse('http://www.pptv.com/'))
     #debug(Parse('http://yyfm.xyz/video/album/1300046802.html'))
     #debug(Parse('http://list.iqiyi.com/www/2/----------------iqiyi--.html'))
-    debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html'))
+    #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html'))
     #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html',"formats"))
     #debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","4_fullhd_全高清_895.21 MB"))
-    #debug(Parse('http://v.pptv.com/show/NWR29Yzj2hh7ibWE.html?rcc_src=S1')) #don't support
+    #debug(Parse('http://v.pptv.com/show/NWR29Yzj2hh7ibWE.html?rcc_src=S1'))
     #debug(Parse('http://www.bilibili.com/video/av2557971/')) #don't support
-    
-    
-    
-    
+    debug(Parse('http://v.baidu.com/link?url=dm_10tBNoD-LLAMb79CB_p0kxozuoJcW0SiN3eycdo6CdO3GZgQm26uOzZh9fqcNSWZmz9aU9YYCCfT0NmZoGfEMoznyHhz3st-QvlOeyArYdIbhzBbdIrmntA4h1HsSampAs4Z3c17r_exztVgUuHZqChPeZZQ4tlmM5&page=tvplaydetail&vfm=bdvtx&frp=v.baidu.com%2Ftv_intro%2F&bl=jp_video',"formats"))
+
 
 if __name__ == '__main__':
     main()

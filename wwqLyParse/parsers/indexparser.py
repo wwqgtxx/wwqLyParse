@@ -22,7 +22,7 @@ class IndexParser(common.Parser):
                 return self.Parse_le(input_text)
         
     def Parse_le(self,input_text):
-        html = PyQuery(self.getUrl(input_text))
+        html = PyQuery(common.getUrl(input_text))
         items = html('dt.d_tit')
         title = "LETV"
         i =0

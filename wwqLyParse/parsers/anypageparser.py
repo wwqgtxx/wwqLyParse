@@ -94,9 +94,10 @@ class AnyPageParser(common.Parser):
                             #import traceback  
                             #traceback.print_exc() 
                 if url is None:
-                    continue    
-
-
+                    continue
+                    
+            if re.search('www.iqiyi.com/a_',url):
+                unsure = True
                 
             info = {
                 "name": name,

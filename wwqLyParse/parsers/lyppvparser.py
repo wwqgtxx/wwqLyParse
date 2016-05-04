@@ -30,6 +30,8 @@ class LypPvParser(common.Parser):
         for data in out['data']:
             data['label'] = data['label'] + ("@lyppv")
         out["caption"]= "负锐解析"
+        out.pop("icon")
+        out.pop("warning")
         return out
 
     def ParseURL(self,url,label,min=None,max=None):

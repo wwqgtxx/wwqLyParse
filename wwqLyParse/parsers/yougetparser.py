@@ -230,7 +230,15 @@ class YouGetParser(common.Parser):
         return out
         
     def getYouGetVersion(self):
-        stdout, stderr = self._run_you(['--version'])
-        return stderr.split(',')[0]
+        try:
+            stdout, stderr = self._run_you(['--version'])
+            if "Errno" in stderr:
+                return ""
+            return stderr.split(',')[0]
+        except Exception as e:
+            #print(e)
+            import traceback  
+            traceback.print_exc()  
+        return ""
 
 

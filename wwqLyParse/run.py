@@ -5,13 +5,15 @@
 import re
 
 try:
-    from .parsers import listparser,indexparser,anypageparser,yougetparser,lyppvparser
+    from .parsers import listparser,indexparser,anypageparser,yougetparser,lyppvparser,mvtvparser
 except Exception:
     import parsers.listparser as listparser
     import parsers.indexparser as indexparser
     import parsers.anypageparser as anypageparser
     import parsers.yougetparser as yougetparser
     import parsers.lyppvparser as lyppvparser
+    import parsers.mvtvparser as mvtvparser
+    
 
 try:
     from .urlhandles import postfixurlhandle,jumpurlhandle
@@ -23,7 +25,7 @@ except Exception:
 version = {
     'port_version' : "0.5.0", 
     'type' : 'parse', 
-    'version' : '0.1.4', 
+    'version' : '0.1.5', 
     'uuid' : '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter' : [],
     'name' : 'WWQ猎影解析插件', 
@@ -35,7 +37,7 @@ version = {
 }
 
 
-parsers = [listparser.ListParser(),indexparser.IndexParser(),lyppvparser.LypPvParser(),yougetparser.YouGetParser(),anypageparser.AnyPageParser()]
+parsers = [listparser.ListParser(),indexparser.IndexParser(),mvtvparser.MgTVParser(),lyppvparser.LypPvParser(),yougetparser.YouGetParser(),anypageparser.AnyPageParser()]
 urlhandles = [jumpurlhandle.JumpUrlHandle(),postfixurlhandle.PostfixUrlHandle()]
 
 def urlHandle(input_text):
@@ -128,11 +130,13 @@ def main():
     #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html'))
     #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html',"formats"))
     #debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","4_fullhd_全高清_895.21 MB@youget"))
-    debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","4_1080p_1920x1080_2746.0kbps_44:30.660_7_flv_@lyppv"))
+    #debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","4_1080p_1920x1080_2746.0kbps_44:30.660_7_flv_@lyppv"))
     #debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","(1)  4_1080p_1920x1080_2746.0kbps_44:30.660_7_flv_@lyppv"))
     #debug(Parse('http://v.pptv.com/show/NWR29Yzj2hh7ibWE.html?rcc_src=S1'))
     #debug(Parse('http://www.bilibili.com/video/av2557971/')) #don't support
     #debug(Parse('http://v.baidu.com/link?url=dm_10tBNoD-LLAMb79CB_p0kxozuoJcW0SiN3eycdo6CdO3GZgQm26uOzZh9fqcNSWZmz9aU9YYCCfT0NmZoGfEMoznyHhz3st-QvlOeyArYdIbhzBbdIrmntA4h1HsSampAs4Z3c17r_exztVgUuHZqChPeZZQ4tlmM5&page=tvplaydetail&vfm=bdvtx&frp=v.baidu.com%2Ftv_intro%2F&bl=jp_video',"formats"))
+    debug(Parse('http://www.mgtv.com/v/1/291976/c/3137384.html',"formats"))
+    debug(ParseURL('http://www.mgtv.com/v/1/291976/c/3137384.html',"0"))
 
 
 if __name__ == '__main__':

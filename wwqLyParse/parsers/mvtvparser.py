@@ -12,20 +12,21 @@ try:
 except Exception as e:
     import common
 
+JUDGE_VIP = True
 
 class MgTVParser(common.Parser):
 
     filters = ['http://www.mgtv.com/v/']
-        
+    
    
     def Parse(self,input_text,types=None):
         if (types is None) or ("formats" in types):
             data = {
                 "type" : "formats",
                 "name" : "",   
-                #"icon" : "http://xxx.cn/xxx.jpg",
-                #"provider" : "芒果TV",
-                "caption" : "标题",
+                "icon" : "http://xxx.cn/xxx.jpg",
+                "provider" : "芒果TV",
+                "caption" : "芒果TV解析",
                 #"warning" : "提示信息",
                 "sorted" : 1,
                 "data" : []
@@ -38,17 +39,40 @@ class MgTVParser(common.Parser):
             if ejson["status"] != 200:
                 return
             edata = ejson["data"]
+            #don't parse vip
+            if JUDGE_VIP and (edata["user"]["isvip"] != "0"):
+                return
+            einfo = edata["info"]
             estream = edata["stream"]
             estream_domain = edata["stream_domain"]
-            for i in range(0, len(estream)):
-                info = { 
-                    "label" : i,   
-                    "code" : i,
+            data["name"] = einfo["title"]
+            data["icon"] = einfo["thumb"]
+            length = len(estream)
+            #1=标清，2=高清,3=超清
+            if length >= 3:
+                data["data"].append({ 
+                    "label" : "超清",   
+                    "code" : 3,
                     #"ext" : "",   
                     #"size" : "",
                     #"type" : "",
-                }
-                data["data"].append(info)
+                })
+            if length >= 2:
+                data["data"].append({ 
+                    "label" : "高清",   
+                    "code" : 2,
+                    #"ext" : "",   
+                    #"size" : "",
+                    #"type" : "",
+                })
+            if length >= 1:
+                data["data"].append({ 
+                    "label" : "标清",   
+                    "code" : 1,
+                    #"ext" : "",   
+                    #"size" : "",
+                    #"type" : "",
+                })
             return data
 
     def ParseURL(self,input_text,label,min=None,max=None):
@@ -76,7 +100,7 @@ class MgTVParser(common.Parser):
         edata = ejson["data"]
         estream = edata["stream"]
         estream_domain = edata["stream_domain"]
-        i = int(label)
+        i = int(label)-1
         stream = estream[i]
         stream_domain = estream_domain[i]
         host = str(stream_domain)

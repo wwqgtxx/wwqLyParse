@@ -73,6 +73,7 @@ def Parse(input_text,types=None):
             if (result is not None) and (result != []):
                 if "error" in result:
                     print(result["error"])
+                    return
                 if ("data" in result) and (result["data"] is not None) and (result["data"] != []):
                     queue.put({"result":result,"parser":parser})
         except Exception as e:
@@ -104,23 +105,42 @@ def Parse(input_text,types=None):
     return results
 
 def ParseURL(input_text,label,min=None,max=None):
+    def run(queue,parser,input_text,label,min,max):
+        try:
+            print(parser)
+            result = parser.ParseURL(input_text,label,min,max)
+            if (result is not None) and (result != []):
+                if "error" in result:
+                    print(result["error"])
+                    return
+                queue.put({"result":result,"parser":parser})
+        except Exception as e:
+            #print(e)
+            import traceback  
+            traceback.print_exc() 
+            
     input_text = urlHandle(input_text)
+    results = []
+    parser_threads = []
+    t_results = []
+    q_results = queue.Queue()
+
     for parser in parsers:
         for filter in parser.getfilters():
             if re.search(filter,input_text):
-                try:
-                    print(parser)
-                    result = parser.ParseURL(input_text,label,min,max)
-                    if (result is not None) and (result != []):
-                        if "error" in result:
-                            print(result["error"])
-                            continue
-                        return result
-                except Exception as e:
-                    #print(e)
-                    import traceback  
-                    traceback.print_exc()  
-    return []
+                parser_threads.append(threading.Thread(target=run, name=str(parser), args=(q_results,parser,input_text,label,min,max)))
+    for parser_thread in parser_threads:
+        parser_thread.start()
+    for parser_thread in parser_threads:
+        parser_thread.join()
+    while not q_results.empty():
+        t_results.append(q_results.get())
+    for parser in parsers:
+        for t_result in t_results:
+            if t_result["parser"] is parser:
+                results.append(t_result["result"])
+        
+    return results[0]
     
 def debug(input):
     print("\n------------------------------------------------------------\n")

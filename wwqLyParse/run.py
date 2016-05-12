@@ -74,7 +74,7 @@ def Parse(input_text,types=None):
                 if "error" in result:
                     print(result["error"])
                 if ("data" in result) and (result["data"] is not None) and (result["data"] != []):
-                    queue.put(result)
+                    queue.put({"result":result,"parser":parser})
         except Exception as e:
             #print(e)
             import traceback  
@@ -83,6 +83,7 @@ def Parse(input_text,types=None):
     input_text = urlHandle(input_text)
     results = []
     parser_threads = []
+    t_results = []
     q_results = queue.Queue()
 
     for parser in parsers:
@@ -94,7 +95,12 @@ def Parse(input_text,types=None):
     for parser_thread in parser_threads:
         parser_thread.join()
     while not q_results.empty():
-        results.append(q_results.get())
+        t_results.append(q_results.get())
+    for parser in parsers:
+        for t_result in t_results:
+            if t_result["parser"] is parser:
+                results.append(t_result["result"])
+        
     return results
 
 def ParseURL(input_text,label,min=None,max=None):

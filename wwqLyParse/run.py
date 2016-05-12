@@ -25,7 +25,7 @@ except Exception:
 version = {
     'port_version' : "0.5.0", 
     'type' : 'parse', 
-    'version' : '0.1.5', 
+    'version' : '0.1.6', 
     'uuid' : '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter' : [],
     'name' : 'WWQ猎影解析插件', 
@@ -88,10 +88,9 @@ def Parse(input_text,types=None):
     for parser in parsers:
         for filter in parser.getfilters():
             if re.search(filter,input_text):
-                parser_thread = threading.Thread(target=run, name=str(parser), args=(q_results,parser,input_text,types))
-                parser_thread.start()
-                parser_threads.append(parser_thread)
-                
+                parser_threads.append(threading.Thread(target=run, name=str(parser), args=(q_results,parser,input_text,types)))
+    for parser_thread in parser_threads:
+        parser_thread.start()
     for parser_thread in parser_threads:
         parser_thread.join()
     while not q_results.empty():

@@ -3,7 +3,7 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 
 
-import urllib.request,io,os,sys,json,re
+import urllib.request,io,os,sys,json,re,threading,queue
 
 from pyquery.pyquery import PyQuery
 
@@ -225,7 +225,17 @@ class ListParser(common.Parser):
                 i = i+1
             return data
         #print("2"+input_text)
-        html = PyQuery(common.getUrl(input_text))
+        def run(queue,get_list_info,html_text):
+            try:
+                result = get_list_info(html_text)
+                if result != []:
+                    queue.put(result)
+            except Exception as e:
+                #import traceback  
+                #traceback.print_exc()  
+                print(e)
+        html_text = common.getUrl(input_text)
+        html = PyQuery(html_text)
         title = html('h1.main_title').children('a').text()
         for a in html('div.crumb-item').children('a'):
             a = PyQuery(a)
@@ -240,19 +250,18 @@ class ListParser(common.Parser):
             "type": "list",
             "caption": "271视频全集"
         }
-        try:
-            data["data"] = get_list_info_api1(common.getUrl(input_text))
-        except Exception as e:
-            #import traceback  
-            #traceback.print_exc()  
-            print(e)
-        if data["data"] == []:
-            try:
-                data["data"] = get_list_info_api2(common.getUrl(input_text))
-            except Exception as e:
-                #import traceback  
-                #traceback.print_exc()  
-                print(e)
+        results = []
+        parser_threads = []
+        q_results = queue.Queue()
+        parser_threads.append(threading.Thread(target=run, args=(q_results,get_list_info_api1,html_text)))
+        parser_threads.append(threading.Thread(target=run, args=(q_results,get_list_info_api2,html_text)))
+        for parser_thread in parser_threads:
+            parser_thread.start()
+        for parser_thread in parser_threads:
+            parser_thread.join()
+        while not q_results.empty():
+            data["data"] =q_results.get()
+            break
         if data["data"] == []:
             try:
                 data["data"] = get_list_info_html(html)

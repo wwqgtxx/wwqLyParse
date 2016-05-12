@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
 
-import re
+import re,threading,queue,sys
 
 try:
     from .parsers import listparser,indexparser,anypageparser,yougetparser,lyppvparser,mvtvparser
@@ -66,24 +66,36 @@ def GetVersion():
     return version
     
 def Parse(input_text,types=None):
+    def run(queue,parser,input_text,types):
+        try:
+            print(parser)
+            result = parser.Parse(input_text,types)
+            if (result is not None) and (result != []):
+                if "error" in result:
+                    print(result["error"])
+                if ("data" in result) and (result["data"] is not None) and (result["data"] != []):
+                    queue.put(result)
+        except Exception as e:
+            #print(e)
+            import traceback  
+            traceback.print_exc() 
+            
     input_text = urlHandle(input_text)
     results = []
+    parser_threads = []
+    q_results = queue.Queue()
+
     for parser in parsers:
         for filter in parser.getfilters():
             if re.search(filter,input_text):
-                try:
-                    print(parser)
-                    result = parser.Parse(input_text,types)
-                    if (result is not None) and (result != []):
-                        if "error" in result:
-                            print(result["error"])
-                            continue
-                        if ("data" in result) and (result["data"] is not None) and (result["data"] != []):
-                            results.append(result)
-                except Exception as e:
-                    #print(e)
-                    import traceback  
-                    traceback.print_exc()  
+                parser_thread = threading.Thread(target=run, name=str(parser), args=(q_results,parser,input_text,types))
+                parser_thread.start()
+                parser_threads.append(parser_thread)
+                
+    for parser_thread in parser_threads:
+        parser_thread.join()
+    while not q_results.empty():
+        results.append(q_results.get())
     return results
 
 def ParseURL(input_text,label,min=None,max=None):
@@ -127,7 +139,7 @@ def main():
     #debug(Parse('http://www.pptv.com/'))
     #debug(Parse('http://yyfm.xyz/video/album/1300046802.html'))
     #debug(Parse('http://list.iqiyi.com/www/2/----------------iqiyi--.html'))
-    #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html'))
+    debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html#vfrm=2-3-0-1'))
     #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html',"formats"))
     #debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","4_fullhd_全高清_895.21 MB@youget"))
     #debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","4_1080p_1920x1080_2746.0kbps_44:30.660_7_flv_@lyppv"))
@@ -135,8 +147,8 @@ def main():
     #debug(Parse('http://v.pptv.com/show/NWR29Yzj2hh7ibWE.html?rcc_src=S1'))
     #debug(Parse('http://www.bilibili.com/video/av2557971/')) #don't support
     #debug(Parse('http://v.baidu.com/link?url=dm_10tBNoD-LLAMb79CB_p0kxozuoJcW0SiN3eycdo6CdO3GZgQm26uOzZh9fqcNSWZmz9aU9YYCCfT0NmZoGfEMoznyHhz3st-QvlOeyArYdIbhzBbdIrmntA4h1HsSampAs4Z3c17r_exztVgUuHZqChPeZZQ4tlmM5&page=tvplaydetail&vfm=bdvtx&frp=v.baidu.com%2Ftv_intro%2F&bl=jp_video',"formats"))
-    debug(Parse('http://www.mgtv.com/v/1/291976/c/3137384.html',"formats"))
-    debug(ParseURL('http://www.mgtv.com/v/1/291976/c/3137384.html',"1"))
+    #debug(Parse('http://www.mgtv.com/v/1/291976/c/3137384.html',"formats"))
+    #debug(ParseURL('http://www.mgtv.com/v/1/291976/c/3137384.html',"1"))
 
 
 if __name__ == '__main__':

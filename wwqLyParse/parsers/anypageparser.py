@@ -68,7 +68,7 @@ class AnyPageParser(common.Parser):
             urls.append(url)
 
                     
-            if re.search('www.iqiyi.com/a_',url):
+            if re.search('(www.iqiyi.com/a_)|(www.le.com/comic)',url):
                 unsure = True
                 
             info = {

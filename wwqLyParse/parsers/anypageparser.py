@@ -3,7 +3,7 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 
 
-import urllib.request,io,os,sys,json,re
+import urllib.request,io,os,sys,json,re,threading,queue
 
 from pyquery.pyquery import PyQuery
 
@@ -66,35 +66,7 @@ class AnyPageParser(common.Parser):
                 continue
             
             urls.append(url)
-            
-            if self.TWICE_PARSE:
-                try:
-                    from . import listparser
-                except Exception as e:
-                    import listparser
-                try:
-                    from .. import run
-                except Exception as e:
-                    import run
-                list_parser = listparser.ListParser()
-                url = run.urlHandle(url)
-                for filter in list_parser.getfilters():
-                    if re.search(filter,url):
-                        try:
-                            print(url)
-                            result = list_parser.Parse(url)
-                            if (result is not None) and (result != []) and (result["data"] is not None) and (result["data"] != []):
-                                data["data"].extend(result["data"])
-                                url = None
-                                result = None
-                                break
-                        except Exception as e:
-                            #continue
-                            print(e)
-                            #import traceback  
-                            #traceback.print_exc() 
-                if url is None:
-                    continue
+
                     
             if re.search('www.iqiyi.com/a_',url):
                 unsure = True
@@ -107,6 +79,52 @@ class AnyPageParser(common.Parser):
                 "unsure": unsure           
             }
             data["data"].append(info)
+        if self.TWICE_PARSE:
+            try:
+                from . import listparser
+            except Exception as e:
+                import listparser
+            try:
+                from .. import run
+            except Exception as e:
+                import run
+            def runlist_parser(queue,parser,url):
+                url2 = urlHandle(url)
+                try:
+                    result = parser.Parse(url2)
+                    if (result is not None) and (result != []) and (result["data"] is not None) and (result["data"] != []):
+                        queue.put({"data":result["data"],"url":url})
+                except Exception as e:
+                    #continue
+                    print(e)
+                    #import traceback  
+                    #traceback.print_exc() 
+            list_parser = listparser.ListParser()
+            urlHandle = run.urlHandle
+            parser_threads = []
+            parse_urls = []
+            t_results = []
+            q_results = queue.Queue()
+            for url in urls:
+                for filter in list_parser.getfilters():
+                    if re.search(filter,url):
+                        parser_threads.append(threading.Thread(target=runlist_parser, args=(q_results,list_parser,url)))
+            for parser_thread in parser_threads:
+                parser_thread.start()
+            for parser_thread in parser_threads:
+                parser_thread.join()
+            while not q_results.empty():
+                t_results.append(q_results.get())
+                
+            oldddata = data["data"]
+            data["data"] = []
+            for t_result in t_results:
+                parse_urls.append(t_result["url"])
+                data["data"].extend(t_result["data"])
+            for ddata in oldddata:
+                if ddata["url"] not in parse_urls:
+                    #print(ddata["url"])
+                    data["data"].append(ddata)
         data["total"] = len(data["data"])
         data["caption"] = "全页地址列表"
         return data

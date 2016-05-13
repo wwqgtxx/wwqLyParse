@@ -19,7 +19,7 @@ class AnyPageParser(common.Parser):
     filters = ['^(http|https)://.+']
     
     
-    TWICE_PARSE = False    
+    TWICE_PARSE = True    
         
     def Parse(self,input_text,types=None):
         if (types is not None) and ("collection" not in types):
@@ -93,7 +93,7 @@ class AnyPageParser(common.Parser):
                 try:
                     result = parser.Parse(url2)
                     if (result is not None) and (result != []) and (result["data"] is not None) and (result["data"] != []):
-                        queue.put({"data":result["data"],"url":url})
+                        queue.put({"result":result,"url":url})
                 except Exception as e:
                     #continue
                     print(e)
@@ -120,7 +120,9 @@ class AnyPageParser(common.Parser):
             data["data"] = []
             for t_result in t_results:
                 parse_urls.append(t_result["url"])
-                data["data"].extend(t_result["data"])
+                for tdata in t_result["result"]["data"]:
+                    tdata["no"] = t_result["result"]["title"] +" "+ tdata["no"]
+                data["data"].extend(t_result["result"]["data"])
             for ddata in oldddata:
                 if ddata["url"] not in parse_urls:
                     #print(ddata["url"])

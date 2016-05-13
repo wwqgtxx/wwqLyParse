@@ -25,7 +25,7 @@ except Exception:
 version = {
     'port_version' : "0.5.0", 
     'type' : 'parse', 
-    'version' : '0.1.9', 
+    'version' : '0.2.0', 
     'uuid' : '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter' : [],
     'name' : 'WWQ猎影解析插件', 
@@ -153,7 +153,7 @@ def main():
     #debug(Parse('http://www.iqiyi.com/a_19rrhaare5.html'))
     #debug(Parse('http://www.iqiyi.com/a_19rrhbhf6d.html#vfrm=2-3-0-1'))
     #debug(Parse('http://www.le.com'))
-    debug(Parse('http://www.letv.com/comic/10010294.html'))
+    #debug(Parse('http://www.letv.com/comic/10010294.html'))
     #debug(Parse('http://www.mgtv.com/v/1/1/'))
     #debug(Parse('http://tv.le.com/'))
     #debug(Parse('http://search.pptv.com/s_video?kw=%E5%B1%B1%E6%B5%B7%E7%BB%8F%E4%B9%8B%E8%B5%A4%E5%BD%B1%E4%BC%A0%E8%AF%B4'))
@@ -163,7 +163,8 @@ def main():
     #debug(Parse('http://v.qq.com/tv/'))
     #debug(Parse('http://www.pptv.com/'))
     #debug(Parse('http://yyfm.xyz/video/album/1300046802.html'))
-    #debug(Parse('http://list.iqiyi.com/www/2/----------------iqiyi--.html'))
+    debug(Parse('http://list.iqiyi.com/www/2/----------------iqiyi--.html'))
+    #debug(Parse('http://www.iqiyi.com/a_19rrhb8fjp.html',"list"))
     #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html#vfrm=2-3-0-1'))
     #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html',"formats"))
     #debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","4_fullhd_全高清_895.21 MB@youget"))

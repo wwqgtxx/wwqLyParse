@@ -59,14 +59,22 @@ class ListParser(common.Parser):
                 vlist = []
                 # request each page
                 page_n = 0
+                urls = []
                 while True:
                     # make request url
                     page_n += 1
                     url = make_port_url(aid, page_n)
                     # get text
                     raw_text = common.getUrl(url)
+                    
                     # get list
                     sub_list = parse_one_page(raw_text)
+                    for sub in sub_list:
+                        url = sub['url']
+                        if url in urls:
+                            sub_list = []
+                        else:
+                            urls.append(url)
                     if len(sub_list) > 0:
                         vlist += sub_list
                     else:    # no more data

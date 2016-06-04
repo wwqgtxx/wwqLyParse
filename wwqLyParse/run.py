@@ -25,7 +25,7 @@ except Exception:
 version = {
     'port_version' : "0.5.0", 
     'type' : 'parse', 
-    'version' : '0.2.0', 
+    'version' : '0.2.1', 
     'uuid' : '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter' : [],
     'name' : 'WWQ猎影解析插件', 
@@ -92,6 +92,7 @@ def Parse(input_text,types=None,parsers = parsers,urlhandles = urlhandles):
             if re.search(filter,input_text):
                 parser_threads.append(threading.Thread(target=run, name=str(parser), args=(q_results,parser,input_text,types)))
     for parser_thread in parser_threads:
+        parser_thread.setDaemon(True)
         parser_thread.start()
     for parser_thread in parser_threads:
         parser_thread.join()
@@ -130,6 +131,7 @@ def ParseURL(input_text,label,min=None,max=None,parsers = parsers,urlhandles = u
             if re.search(filter,input_text):
                 parser_threads.append(threading.Thread(target=run, name=str(parser), args=(q_results,parser,input_text,label,min,max)))
     for parser_thread in parser_threads:
+        parser_thread.setDaemon(True)
         parser_thread.start()
     for parser_thread in parser_threads:
         parser_thread.join()

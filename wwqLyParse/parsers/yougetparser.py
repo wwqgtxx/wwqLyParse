@@ -230,6 +230,9 @@ class YouGetParser(common.Parser):
         # just load json, without ERROR check
         info = self._try_parse_json(stdout)
         out = self._parse_parse_url(info, _format)
+        if "iqiyi" in url:
+            for item in out:
+                item["unfixIp"] = True
         return out
         
     def getYouGetVersion(self):

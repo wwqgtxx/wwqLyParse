@@ -49,7 +49,7 @@ class LypPvParser(common.Parser):
                 parts[0] = "3"
             elif num == 4:
                 parts[0] = "4"
-            elif num == 6:
+            elif num == 7:
                 parts[0] = "5"
             data['label']=('_').join(parts)
             data['label'] = data['label'] + ("@lyppv")
@@ -77,11 +77,15 @@ class LypPvParser(common.Parser):
         elif num == 4:
             parts[0] = "4"
         elif num == 5:
-            parts[0] = "6"
+            parts[0] = "7"
         label=('_').join(parts)
         label = "() "+label
         print("call lyp_pv.run.ParseURL("+url+","+label+","+str(min)+","+str(max)+")")
-        return run.ParseURL(url,label,min,max)
+        result = run.ParseURL(url,label,min,max)
+        if "iqiyi" in url:
+            for item in result:
+                item["unfixIp"] = True
+        return result
         
     def getLypPvVersion(self):
         try:

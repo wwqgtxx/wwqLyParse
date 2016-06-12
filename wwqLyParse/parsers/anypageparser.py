@@ -20,6 +20,7 @@ class AnyPageParser(common.Parser):
     
     
     TWICE_PARSE = True    
+    TWICE_PARSE_TIMEOUT = 5    
         
     def Parse(self,input_text,types=None):
         if (types is not None) and ("collection" not in types):
@@ -85,9 +86,9 @@ class AnyPageParser(common.Parser):
             except Exception as e:
                 import listparser
             try:
-                from .. import run
+                from .. import main
             except Exception as e:
-                import run
+                import main
             #run.Parse(input_text,types=None,parsers = parsers,urlhandles = urlhandles)
             def runlist_parser(queue,parser,url):
                 url2 = urlHandle(url)
@@ -101,7 +102,7 @@ class AnyPageParser(common.Parser):
                     #import traceback  
                     #traceback.print_exc() 
             list_parser = listparser.ListParser()
-            urlHandle = run.urlHandle
+            urlHandle = main.urlHandle
             parser_threads = []
             parse_urls = []
             t_results = []
@@ -113,7 +114,7 @@ class AnyPageParser(common.Parser):
             for parser_thread in parser_threads:
                 parser_thread.start()
             for parser_thread in parser_threads:
-                parser_thread.join()
+                parser_thread.join(TWICE_PARSE_TIMEOUT)
             while not q_results.empty():
                 t_results.append(q_results.get())
                 

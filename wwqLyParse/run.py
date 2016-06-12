@@ -2,158 +2,114 @@
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
 
-import re,threading,queue,sys
+import urllib.request,json,sys,subprocess
+
+import os
+import socket
 
 try:
-    from .parsers import listparser,indexparser,anypageparser,yougetparser,lyppvparser,mvtvparser
-except Exception:
-    import parsers.listparser as listparser
-    import parsers.indexparser as indexparser
-    import parsers.anypageparser as anypageparser
-    import parsers.yougetparser as yougetparser
-    import parsers.lyppvparser as lyppvparser
-    import parsers.mvtvparser as mvtvparser
+    from .lib import bridge
+except Exception as e:
+    from lib import bridge
     
-
-try:
-    from .urlhandles import postfixurlhandle,jumpurlhandle
-except Exception:
-    import urlhandles.postfixurlhandle as postfixurlhandle
-    import urlhandles.jumpurlhandle as jumpurlhandle
-
-
-version = {
-    'port_version' : "0.5.0", 
-    'type' : 'parse', 
-    'version' : '0.2.1', 
-    'uuid' : '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
-    'filter' : [],
-    'name' : 'WWQ猎影解析插件', 
-    'author' : 'wwqgtxx', 
-    'copyright' : 'wwqgtxx', 
-    'license' : 'GPLV3', 
-    'home' : '', 
-    'note' : ''
-}
-
-
-parsers = [listparser.ListParser(),indexparser.IndexParser(),mvtvparser.MgTVParser(),lyppvparser.LypPvParser(),yougetparser.YouGetParser(),anypageparser.AnyPageParser()]
-urlhandles = [jumpurlhandle.BaiduLinkUrlHandle(),jumpurlhandle.MgtvUrlHandle(),jumpurlhandle.LetvUrlHandle(),postfixurlhandle.PostfixUrlHandle()]
-
-def urlHandle(input_text):
-    for urlhandle in urlhandles:
-        for filter in urlhandle.getfilters():
-            if re.match(filter,input_text):
-                try:
-                    print(urlhandle)
-                    result = urlhandle.urlHandle(input_text)
-                    if (result is not None) and (result is not ""):
-                        input_text = result
-                except Exception as e:
-                    #print(e)
-                    import traceback  
-                    traceback.print_exc()  
-    return input_text
-
-def GetVersion(): 
-    for parser in parsers:
-        for filter in parser.getfilters():
-            version['filter'].append(filter)
-    for urlhandle in urlhandles:
-        for filter in urlhandle.getfilters():
-            version['filter'].append(filter)
-    version['name'] = version['name']+version['version']+"[Include "+yougetparser.YouGetParser().getYouGetVersion()+"&"+lyppvparser.LypPvParser().getLypPvVersion()+"]"
-    return version
-    
-def Parse(input_text,types=None,parsers = parsers,urlhandles = urlhandles):
-    def run(queue,parser,input_text,types):
-        try:
-            print(parser)
-            result = parser.Parse(input_text,types)
-            if (result is not None) and (result != []):
-                if "error" in result:
-                    print(result["error"])
-                    return
-                if ("data" in result) and (result["data"] is not None) and (result["data"] != []):
-                    queue.put({"result":result,"parser":parser})
-        except Exception as e:
-            #print(e)
-            import traceback  
-            traceback.print_exc() 
-            
-    input_text = urlHandle(input_text)
-    results = []
-    parser_threads = []
-    t_results = []
-    q_results = queue.Queue()
-
-    for parser in parsers:
-        for filter in parser.getfilters():
-            if re.search(filter,input_text):
-                parser_threads.append(threading.Thread(target=run, name=str(parser), args=(q_results,parser,input_text,types)))
-    for parser_thread in parser_threads:
-        parser_thread.setDaemon(True)
-        parser_thread.start()
-    for parser_thread in parser_threads:
-        parser_thread.join()
-    while not q_results.empty():
-        t_results.append(q_results.get())
-    for parser in parsers:
-        for t_result in t_results:
-            if t_result["parser"] is parser:
-                results.append(t_result["result"])
+def IsOpen(ip,port):
+    s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+    try:
+        s.connect((ip,int(port)))
+        s.shutdown(2)
+        print('%d is open' % port)
+        return True
+    except:
+        print('%d is down' % port)
+        return False
         
+def _run_main():
+    y_bin = bridge.pn(bridge.pjoin(bridge.get_root_path(), './main.py'))
+    py_bin = sys.executable
+    args = [py_bin,'--normal', y_bin]
+    PIPE = subprocess.PIPE
+    print(args)
+    p = subprocess.Popen(args, stdout=PIPE, stderr=PIPE, shell=False,cwd=bridge.get_root_path())
+
+def init():
+    if not IsOpen("127.0.0.1",5000):
+        return _run_main()
+        
+def closeServer():
+    if IsOpen("127.0.0.1",5000):
+        url = 'http://localhost:5000/close'
+        values = {}
+        data = urllib.parse.urlencode(values).encode(encoding='UTF8')
+        req = urllib.request.Request(url, data)
+        try:
+            response = urllib.request.urlopen(req)
+        except:
+            response = None;
+
+def GetVersion(debug=False): 
+    if (not debug):
+        closeServer()
+    init()
+    url = 'http://localhost:5000/GetVersion'
+    #user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
+    values = {}
+    data = urllib.parse.urlencode(values).encode(encoding='UTF8')
+    req = urllib.request.Request(url, data)
+    #req.add_header('Referer', 'http://www.python.org/')
+    response = urllib.request.urlopen(req)
+    the_page = response.read()
+    results = json.loads(the_page.decode('UTF8'))
+    if (not debug):
+        closeServer()
+    return results
+    
+def Parse(input_text,types=None):
+    init()
+    url = 'http://localhost:5000/Parse'
+    #user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
+    values = {}
+    values["input_text"] = input_text
+    if types is not None:
+        values["types"] = types
+    data = urllib.parse.urlencode(values).encode(encoding='UTF8')
+    req = urllib.request.Request(url, data)
+    print(data)
+    response = urllib.request.urlopen(req)
+    the_page = response.read()
+    results = json.loads(the_page.decode('UTF8'))
     return results
 
-def ParseURL(input_text,label,min=None,max=None,parsers = parsers,urlhandles = urlhandles):
-    def run(queue,parser,input_text,label,min,max):
-        try:
-            print(parser)
-            result = parser.ParseURL(input_text,label,min,max)
-            if (result is not None) and (result != []):
-                if "error" in result:
-                    print(result["error"])
-                    return
-                queue.put({"result":result,"parser":parser})
-        except Exception as e:
-            #print(e)
-            import traceback  
-            traceback.print_exc() 
-            
-    input_text = urlHandle(input_text)
-    results = []
-    parser_threads = []
-    t_results = []
-    q_results = queue.Queue()
+def ParseURL(input_text,label,min=None,max=None):
+    init()
+    url = 'http://localhost:5000/ParseURL'
+    #user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
+    values = {}
+    values["input_text"] = input_text
+    values["label"] = label
+    if min is not None:
+        values["min"] = min
+    if max is not None:
+        values["max"] = max
+    data = urllib.parse.urlencode(values).encode(encoding='UTF8')
+    req = urllib.request.Request(url, data)
+    #req.add_header('Referer', 'http://www.python.org/')
+    response = urllib.request.urlopen(req)
+    the_page = response.read()
+    results = json.loads(the_page.decode('UTF8'))
+    return results
+    
 
-    for parser in parsers:
-        for filter in parser.getfilters():
-            if re.search(filter,input_text):
-                parser_threads.append(threading.Thread(target=run, name=str(parser), args=(q_results,parser,input_text,label,min,max)))
-    for parser_thread in parser_threads:
-        parser_thread.setDaemon(True)
-        parser_thread.start()
-    for parser_thread in parser_threads:
-        parser_thread.join()
-    while not q_results.empty():
-        t_results.append(q_results.get())
-    for parser in parsers:
-        for t_result in t_results:
-            if t_result["parser"] is parser:
-                results.append(t_result["result"])
-        
-    return results[0]
     
 def debug(input):
     print("\n------------------------------------------------------------\n")
     print (((str(input))).encode('gbk', 'ignore').decode('gbk') )
     
 def main(): 
-    #debug(GetVersion())
+    debug(GetVersion(debug=True))
     #debug(Parse('http://www.iqiyi.com/lib/m_209445514.html?src=search'))
     #debug(Parse('http://www.iqiyi.com/a_19rrhacdwt.html#vfrm=2-4-0-1'))
     #debug(Parse('http://www.iqiyi.com/a_19rrhaare5.html'))
-    #debug(Parse('http://www.iqiyi.com/a_19rrhbhf6d.html#vfrm=2-3-0-1'))
+    debug(Parse('http://www.iqiyi.com/a_19rrhbhf6d.html#vfrm=2-3-0-1'))
     #debug(Parse('http://www.le.com'))
     #debug(Parse('http://www.letv.com/comic/10010294.html'))
     #debug(Parse('http://www.mgtv.com/v/1/1/'))
@@ -165,21 +121,23 @@ def main():
     #debug(Parse('http://v.qq.com/tv/'))
     #debug(Parse('http://www.pptv.com/'))
     #debug(Parse('http://yyfm.xyz/video/album/1300046802.html'))
-    debug(Parse('http://list.iqiyi.com/www/2/----------------iqiyi--.html'))
+    #debug(Parse('http://list.iqiyi.com/www/2/----------------iqiyi--.html'))
     #debug(Parse('http://www.iqiyi.com/a_19rrhb8fjp.html',"list"))
     #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html#vfrm=2-3-0-1'))
     #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html',"formats"))
+    #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html'))
     #debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","4_fullhd_全高清_895.21 MB@youget"))
     #debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","4_1080p_1920x1080_2746.0kbps_44:30.660_7_flv_@lyppv"))
     #debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","(1)  4_1080p_1920x1080_2746.0kbps_44:30.660_7_flv_@lyppv"))
     #debug(Parse('http://v.pptv.com/show/NWR29Yzj2hh7ibWE.html?rcc_src=S1'))
     #debug(Parse('http://www.bilibili.com/video/av2557971/')) #don't support
     #debug(Parse('http://v.baidu.com/link?url=dm_10tBNoD-LLAMb79CB_p0kxozuoJcW0SiN3eycdo6CdO3GZgQm26uOzZh9fqcNSWZmz9aU9YYCCfT0NmZoGfEMoznyHhz3st-QvlOeyArYdIbhzBbdIrmntA4h1HsSampAs4Z3c17r_exztVgUuHZqChPeZZQ4tlmM5&page=tvplaydetail&vfm=bdvtx&frp=v.baidu.com%2Ftv_intro%2F&bl=jp_video',"formats"))
-    #debug(Parse('http://www.hunantv.com/v/1/291976/c/3137384.html',"formats",parsers = [mvtvparser.MgTVParser()]))
+    debug(Parse('http://www.hunantv.com/v/1/291976/c/3137384.html'))
     #debug(ParseURL('http://www.mgtv.com/v/1/291976/c/3137384.html',"1",parsers = [mvtvparser.MgTVParser()]))
 
 
 if __name__ == '__main__':
+    #app.run()
     main()
 
 

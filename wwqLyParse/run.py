@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
 
-import urllib.request,json,sys,subprocess
+import urllib.request,json,sys,subprocess,time
 
 import os
 import socket
@@ -27,13 +27,21 @@ def _run_main():
     y_bin = bridge.pn(bridge.pjoin(bridge.get_root_path(), './main.py'))
     py_bin = sys.executable
     args = [py_bin,'--normal', y_bin]
-    PIPE = subprocess.PIPE
     print(args)
-    p = subprocess.Popen(args, stdout=PIPE, stderr=PIPE, shell=False,cwd=bridge.get_root_path())
+    p = subprocess.Popen(args, shell=False,cwd=bridge.get_root_path(),close_fds=True)
 
 def init():
-    if not IsOpen("127.0.0.1",5000):
-        return _run_main()
+    for n in range(3):
+        if not IsOpen("127.0.0.1",5000):
+            _run_main()
+        else:
+            return
+        for i in range(5):
+            if not IsOpen("127.0.0.1",5000):
+                time.sleep(1+i)
+            else:
+                return
+    raise Exception("can't init server")
         
 def closeServer():
     if IsOpen("127.0.0.1",5000):
@@ -45,6 +53,9 @@ def closeServer():
             response = urllib.request.urlopen(req)
         except:
             response = None;
+            
+def Cleanup():
+    closeServer()
 
 def GetVersion(debug=False): 
     if (not debug):

@@ -183,7 +183,7 @@ def parse():
         info=sys.exc_info()
         result = {"type" : "error","error" : info}
     jjson = json.dumps(result);
-    #debug(jjson)
+    debug(jjson)
     return jjson
         
     
@@ -199,7 +199,7 @@ def parseUrl():
         info=sys.exc_info()
         result = {"type" : "error","error" : info}
     jjson = json.dumps(result);
-    #debug(jjson)
+    debug(jjson)
     return jjson
     
 

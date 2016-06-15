@@ -23,6 +23,7 @@ class AnyPageParser(common.Parser):
     TWICE_PARSE_TIMEOUT = 5    
         
     def Parse(self,input_text,types=None):
+        global TWICE_PARSE_TIMEOUT
         if (types is not None) and ("collection" not in types):
             return
         html = PyQuery(common.getUrl(input_text))
@@ -52,7 +53,7 @@ class AnyPageParser(common.Parser):
                 url = 'direct:'+url
             if not re.match('(^(http|https)://.+\.(shtml|html|mp4|mkv|ts|avi))|(^(http|https)://.+/video/)',url):
                 continue
-            if re.search('(list|mall|about|help|shop|map|vip|faq|support|download|copyright|contract|product|tencent|upload|common|index.html|v.qq.com/u/|open.baidu.com|www.iqiyi.com/lib/s_|www.iqiyi.com/dv/|top.iqiyi.com)',url):
+            if re.search('[^\?](list|mall|about|help|shop|map|vip|faq|support|download|copyright|contract|product|tencent|upload|common|index.html|v.qq.com/u/|open.baidu.com|www.iqiyi.com/lib/s_|www.iqiyi.com/dv/|top.iqiyi.com)',url):
                 continue
             if re.search('(下载|播 放|播放|投诉|评论|(\d{1,2}:\d{1,2}))',no):
                 continue
@@ -114,7 +115,7 @@ class AnyPageParser(common.Parser):
             for parser_thread in parser_threads:
                 parser_thread.start()
             for parser_thread in parser_threads:
-                parser_thread.join(TWICE_PARSE_TIMEOUT)
+                parser_thread.join(self.TWICE_PARSE_TIMEOUT)
             while not q_results.empty():
                 t_results.append(q_results.get())
                 
@@ -129,6 +130,13 @@ class AnyPageParser(common.Parser):
                 if ddata["url"] not in parse_urls:
                     #print(ddata["url"])
                     data["data"].append(ddata)
+        oldddata = data["data"]
+        data["data"] = []
+        parsed_urls = []
+        for ddata in oldddata:
+            if ddata["url"] not in parsed_urls:
+                data["data"].append(ddata)
+                parsed_urls.append(ddata["url"])
         data["total"] = len(data["data"])
         data["caption"] = "全页地址列表"
         return data

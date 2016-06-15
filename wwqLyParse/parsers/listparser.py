@@ -241,7 +241,7 @@ class ListParser(common.Parser):
             except Exception as e:
                 #import traceback  
                 #traceback.print_exc()  
-                print(e)
+                print(str(get_list_info)+str(e))
         html_text = common.getUrl(input_text)
         html = PyQuery(html_text)
         title = html('h1.main_title').children('a').text()
@@ -276,7 +276,7 @@ class ListParser(common.Parser):
             except Exception as e:
                 #import traceback  
                 #traceback.print_exc()  
-                print(e)
+                print(str(get_list_info_html)+e)
             
         data["total"] = len(data["data"])
         

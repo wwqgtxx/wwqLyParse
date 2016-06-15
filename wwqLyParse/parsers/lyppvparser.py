@@ -35,27 +35,28 @@ class LypPvParser(common.Parser):
             return []
         print("call lyp_pv.run.Parse("+url+")")
         out = run.Parse(url)
-        for data in out['data']:
-            data['label'] = re.compile('\(\d\)\s*').sub('',str(data['label']))
-            parts = data['label'].split('_')
-            num = int(parts[0])
-            if num == -3:
-                parts[0] = "0"
-            elif num == -1:
-                parts[0] = "1"
-            elif num == 0:
-                parts[0] = "2"
-            elif num == 2:
-                parts[0] = "3"
-            elif num == 4:
-                parts[0] = "4"
-            elif num == 7:
-                parts[0] = "5"
-            data['label']=('_').join(parts)
-            data['label'] = data['label'] + ("@lyppv")
-        out["caption"]= "负锐解析"
-        out.pop("icon")
-        out.pop("warning")
+        if "data" in out:
+            for data in out['data']:
+                data['label'] = re.compile('\(\d\)\s*').sub('',str(data['label']))
+                parts = data['label'].split('_')
+                num = int(parts[0])
+                if num == -3:
+                    parts[0] = "0"
+                elif num == -1:
+                    parts[0] = "1"
+                elif num == 0:
+                    parts[0] = "2"
+                elif num == 2:
+                    parts[0] = "3"
+                elif num == 4:
+                    parts[0] = "4"
+                elif num == 7:
+                    parts[0] = "5"
+                data['label']=('_').join(parts)
+                data['label'] = data['label'] + ("@lyppv")
+            out["caption"]= "负锐解析"
+            out.pop("icon")
+            out.pop("warning")
         return out
 
     def ParseURL(self,url,label,min=None,max=None):

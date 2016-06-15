@@ -4,15 +4,19 @@
 import urllib.request,io,os,sys,json,re,gzip,time
 
 urlcache = {}
+URLCACHE_MAX = 1000
 def getUrl(oUrl, encoding = 'utf-8' , headers = {}, data = None, method = None) :
+    global urlcache
+    global URLCACHE_MAX
+    urlcache_temp =  urlcache
     url_json = {"oUrl":oUrl,"encoding":encoding,"headers":headers,"data":data,"method":method}
     url_json = json.dumps(url_json,sort_keys=True, ensure_ascii=False)
-    if url_json in urlcache:
-        item = urlcache[url_json]
+    if url_json in urlcache_temp:
+        item = urlcache_temp[url_json]
         html_text = item["html_text"]
         item["lasttimestap"] = int(time.time())
         print("cache get:"+url_json)
-        if (len(urlcache)>100):
+        if (len(urlcache_temp)>URLCACHE_MAX):
             cleanUrlcache()
         return html_text
     print("normal get:"+url_json)
@@ -34,8 +38,12 @@ def getUrl(oUrl, encoding = 'utf-8' , headers = {}, data = None, method = None) 
         return html_text
 
 def cleanUrlcache():
+    global urlcache
+    global URLCACHE_MAX
     sortedDict = sorted(urlcache.items(), key=lambda d: d[1]["lasttimestap"], reverse=True)
-    newDict = sortedDict[:100] # 从数组中取索引start开始到end-1的记录
+    newDict = {}
+    for (k, v) in sortedDict[:int(URLCACHE_MAX - URLCACHE_MAX/10)]:# 从数组中取索引start开始到end-1的记录
+        newDict[k] = v
     urlcache = newDict
     print("urlcache has been cleaned")
         

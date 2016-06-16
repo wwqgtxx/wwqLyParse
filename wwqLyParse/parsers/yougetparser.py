@@ -126,8 +126,13 @@ class YouGetParser(common.Parser):
         _format = stream['_format']
         _id = stream['_id']
         quality = stream['video_profile']
-        l = ('_').join([str(_id), _format, quality, self.byte2size(stream['size'], False)])
-        size = self.byte2size(stream['size'], True)
+        try:
+            size_str = self.byte2size(stream['size'], False)
+            size = self.byte2size(stream['size'], True)
+        except:
+            size_str = "0"
+            size = 0
+        l = ('_').join([str(_id), _format, quality, size_str])
         ext = stream['container']
         return l, size, ext
 

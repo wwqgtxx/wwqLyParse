@@ -132,7 +132,7 @@ def main():
     #debug(Parse('http://v.qq.com/tv/'))
     #debug(Parse('http://www.pptv.com/'))
     #debug(Parse('http://yyfm.xyz/video/album/1300046802.html'))
-    debug(Parse('http://www.iqiyi.com/playlist392712002.html',"collection"))
+    #debug(Parse('http://www.iqiyi.com/playlist392712002.html',"collection"))
     #debug(Parse('http://list.iqiyi.com/www/2/----------------iqiyi--.html'))
     #debug(Parse('http://www.iqiyi.com/a_19rrhb8fjp.html',"list"))
     #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html#vfrm=2-3-0-1'))
@@ -144,7 +144,7 @@ def main():
     #debug(Parse('http://v.pptv.com/show/NWR29Yzj2hh7ibWE.html?rcc_src=S1'))
     #debug(Parse('http://www.bilibili.com/video/av2557971/')) #don't support
     #debug(Parse('http://v.baidu.com/link?url=dm_10tBNoD-LLAMb79CB_p0kxozuoJcW0SiN3eycdo6CdO3GZgQm26uOzZh9fqcNSWZmz9aU9YYCCfT0NmZoGfEMoznyHhz3st-QvlOeyArYdIbhzBbdIrmntA4h1HsSampAs4Z3c17r_exztVgUuHZqChPeZZQ4tlmM5&page=tvplaydetail&vfm=bdvtx&frp=v.baidu.com%2Ftv_intro%2F&bl=jp_video',"formats"))
-    #debug(Parse('http://www.hunantv.com/v/1/291976/c/3137384.html'))
+    debug(Parse('http://www.hunantv.com/v/1/291976/c/3137384.html'))
     #debug(ParseURL('http://www.mgtv.com/v/1/291976/c/3137384.html',"1"))
 
 

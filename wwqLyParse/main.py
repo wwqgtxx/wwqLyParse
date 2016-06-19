@@ -9,9 +9,6 @@
 
 #monkey.patch_all()
 
-import sys
-sys.path.insert(0, 'extra_lib.zip')
-
 import re,threading,queue,sys,json,os
 try:
     from flask import Flask,request

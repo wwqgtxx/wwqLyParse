@@ -5,12 +5,9 @@
 
 import urllib,io,os,sys,json,re,math,subprocess,time
 
-from pyquery.pyquery import PyQuery
 from uuid import uuid4
 from random import random,randint
-import json
 from math import floor
-from zlib import decompress
 import hashlib
 
 try:
@@ -100,24 +97,14 @@ class IQiYiParser(Parser):
         return hashlib.new("md5",bytes(t+tp+rid,"utf-8")).hexdigest()
             
     def getvf(self,vmsreq):
-        #import urllib
         url = 'http://127.0.0.1:48271/handwich_bridge/call?core=cmd5&f=calc&a='+urllib.parse.quote(json.dumps([vmsreq,vmsreq]))
-        #req = urllib.request.Request(url,method='GET')
-        #response = urllib.request.urlopen(req)
-        #the_page = response.read()
-        #results = json.loads(the_page.decode('UTF8'))
         results = json.loads(getUrl(url,allowCache = False))
         return results[1]
     
     def getVMS(self,tvid, videoid):
         #tm ->the flash run time for md5 usage
         #um -> vip 1 normal 0
-        #authkey -> for password protected video ,replace '' with your password
-        #puid user.passportid may empty?
-        #TODO: support password protected video
-        #tvid, vid = self.vid
         vid = videoid
-        #tm, sc, src = mix(tvid)
         tm = str(randint(2000,4000))
         uid = ''#self.gen_uid
         
@@ -247,7 +234,6 @@ class IQiYiParser(Parser):
                     baseurl = [x for x in inio_baseurl]
                     baseurl.insert(-1,key)
                     url="/".join(baseurl)+vlink+'?su='+gen_uid+'&qyid='+uuid4().hex+'&client=&z=&bt=&ct=&tn='+str(randint(10000,20000))
-                    trueurl = json.loads(getUrl(url))["l"]
                     result = json.loads(getUrl(url))["l"]
                     #print(result)
                     urls.append(result)

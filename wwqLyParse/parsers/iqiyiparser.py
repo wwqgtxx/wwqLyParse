@@ -135,12 +135,12 @@ class IQiYiParser(Parser):
         
     def getInfo(self,url):
         html = getUrl(url)
-        tvid = self.r1(r'#curid=(.+)_', url) or \
-               self.r1(r'tvid=([^&]+)', url) or \
-               self.r1(r'data-player-tvid="([^"]+)"', html)
-        videoid = self.r1(r'#curid=.+_(.*)$', url) or \
-                  self.r1(r'vid=([^&]+)', url) or \
-                  self.r1(r'data-player-videoid="([^"]+)"', html)
+        tvid = r1(r'#curid=(.+)_', url) or \
+               r1(r'tvid=([^&]+)', url) or \
+               r1(r'data-player-tvid="([^"]+)"', html)
+        videoid = r1(r'#curid=.+_(.*)$', url) or \
+                  r1(r'vid=([^&]+)', url) or \
+                  r1(r'data-player-videoid="([^"]+)"', html)
         #self.vid = (tvid, videoid)
 
         info = self.getVMS(tvid, videoid)

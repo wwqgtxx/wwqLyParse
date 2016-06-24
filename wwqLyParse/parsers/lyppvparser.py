@@ -7,13 +7,13 @@ import urllib.request,io,os,sys,json,re,math,subprocess,traceback
 
 
 try:
-    from .. import common
+    from ..common import *
 except Exception as e:
-    import common
+    from common import *
     
 
 
-class LypPvParser(common.Parser):
+class LypPvParser(Parser):
     try:
         try:
             from ..lyp_pv import run

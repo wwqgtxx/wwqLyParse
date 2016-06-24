@@ -60,7 +60,7 @@ def IsOpen(ip,port):
         print('%d is down' % port)
         return False
         
-def gen_bitrate(self,size_byte, time_s, unit_k=1024):
+def gen_bitrate(size_byte, time_s, unit_k=1024):
         if (size_byte <= 0) or (time_s <= 0):
             return '-1'	# can not gen bitrate
         raw_rate = size_byte * 8 / time_s	# bps
@@ -69,7 +69,7 @@ def gen_bitrate(self,size_byte, time_s, unit_k=1024):
         return bitrate
    
 # make a 2.3 number, with given length after .
-def num_len(self,n, l=3):
+def num_len(n, l=3):
     t = str(float(n))
     p = t.split('.')
     if l < 1:
@@ -83,7 +83,7 @@ def num_len(self,n, l=3):
     return t
 
 # byte to size
-def byte2size(self,size_byte, flag_add_byte=False):
+def byte2size(size_byte, flag_add_byte=False):
     
     unit_list = [
         'Byte', 
@@ -117,7 +117,7 @@ def byte2size(self,size_byte, flag_add_byte=False):
     return size_str
     
 # DEPRECATED in favor of match1()
-def r1(self,pattern, text):
+def r1(pattern, text):
     m = re.search(pattern, text)
     if m:
         return m.group(1)

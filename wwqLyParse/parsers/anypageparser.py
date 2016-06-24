@@ -8,13 +8,13 @@ import urllib.request,io,os,sys,json,re,threading,queue
 from pyquery.pyquery import PyQuery
 
 try:
-    from .. import common
+    from ..common import *
 except Exception as e:
-    import common
+    from common import *
     
 
 
-class AnyPageParser(common.Parser):
+class AnyPageParser(Parser):
 
     filters = ['^(http|https)://.+']
     
@@ -26,7 +26,7 @@ class AnyPageParser(common.Parser):
         global TWICE_PARSE_TIMEOUT
         if (types is not None) and ("collection" not in types):
             return
-        html = PyQuery(common.getUrl(input_text))
+        html = PyQuery(getUrl(input_text))
         items = html('a')
         title = html('title').text()
         data = {

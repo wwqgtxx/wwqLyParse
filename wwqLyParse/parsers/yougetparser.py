@@ -11,13 +11,13 @@ except Exception as e:
     from lib import conf,bridge
 
 try:
-    from .. import common
+    from ..common import *
 except Exception as e:
-    import common
+    from common import *
     
 
 
-class YouGetParser(common.Parser):
+class YouGetParser(Parser):
 
     filters = ['^(http|https)://.+']
         
@@ -207,6 +207,8 @@ class YouGetParser(common.Parser):
     def Parse(self,url,types=None):
         if (types is not None) and ("formats" not in types):
             return
+        if ('www.iqiyi.com' in url):
+            return []
         if re.search('www.iqiyi.com/(lib/m|a_)',url):
             return []
         yarg = self._make_you_get_arg(url)

@@ -8,13 +8,13 @@ import urllib.request,io,os,sys,json,re
 from pyquery.pyquery import PyQuery
 
 try:
-    from .. import common
+    from ..common import *
 except Exception as e:
-    import common
+    from common import *
 
 JUDGE_VIP = True
 
-class MgTVParser(common.Parser):
+class MgTVParser(Parser):
 
     filters = ['http://www.mgtv.com/v/']
     
@@ -33,7 +33,7 @@ class MgTVParser(common.Parser):
             }
             id = re.match('^http://[^\s]+/[^\s]+/([^\s]+)\.html',input_text).group(1)
             ejson_url = 'http://v.api.mgtv.com/player/video?retry=1&video_id=' + id
-            ejson = common.getUrl(ejson_url)
+            ejson = getUrl(ejson_url)
             #print(ejson)
             ejson = json.loads(ejson)
             if ejson["status"] != 200:
@@ -93,7 +93,7 @@ class MgTVParser(common.Parser):
         }
         id = re.match('^http://[^\s]+/[^\s]+/([^\s]+)\.html',input_text).group(1)
         ejson_url = 'http://v.api.mgtv.com/player/video?retry=1&video_id=' + id
-        ejson = common.getUrl(ejson_url)
+        ejson = getUrl(ejson_url)
         ejson = json.loads(ejson)
         if ejson["status"] != 200:
             return
@@ -109,7 +109,7 @@ class MgTVParser(common.Parser):
         a = aurl[0].strip('/playlist.m3u8')
         b = aurl[1].split('&')
         u = host+'/'+a+'?pno=1031&'+b[3]+'&'+b[4]
-        op1 = common.getUrl(u)
+        op1 = getUrl(u)
         data1 = json.loads(op1)
         eurl = data1['info']
         data["urls"] = eurl

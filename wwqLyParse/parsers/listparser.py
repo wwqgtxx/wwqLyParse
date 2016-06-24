@@ -8,12 +8,12 @@ import urllib.request,io,os,sys,json,re,threading,queue
 from pyquery.pyquery import PyQuery
 
 try:
-    from .. import common
+    from ..common import *
 except Exception as e:
-    import common
+    from common import *
 
 
-class ListParser(common.Parser):
+class ListParser(Parser):
 
     filters = ['www.iqiyi.com/(lib/m|a_|v_)']
         
@@ -65,7 +65,7 @@ class ListParser(common.Parser):
                     page_n += 1
                     url = make_port_url(aid, page_n)
                     # get text
-                    raw_text = common.getUrl(url)
+                    raw_text = getUrl(url)
                     
                     # get list
                     sub_list = parse_one_page(raw_text)
@@ -155,7 +155,7 @@ class ListParser(common.Parser):
                 # make request url
                 url = make_port_url(aid)
                 # get text
-                raw_text = common.getUrl(url)
+                raw_text = getUrl(url)
                 # get list
                 vlist = parse_one_page(raw_text)
                 # get full vinfo list done
@@ -242,7 +242,7 @@ class ListParser(common.Parser):
                 #import traceback  
                 #traceback.print_exc()  
                 print(str(get_list_info)+str(e))
-        html_text = common.getUrl(input_text)
+        html_text = getUrl(input_text)
         html = PyQuery(html_text)
         title = html('h1.main_title').children('a').text()
         for a in html('div.crumb-item').children('a'):
@@ -283,7 +283,7 @@ class ListParser(common.Parser):
         return data
 
     def Parse_lib_m(self,input_text):
-        html = PyQuery(common.getUrl(input_text))
+        html = PyQuery(getUrl(input_text))
         
         """
         album_items = html('div.clearfix').children('li.album_item')
@@ -323,7 +323,7 @@ class ListParser(common.Parser):
         
         data_doc_id = html('span.play_source').attr('data-doc-id')
         ejson_url = 'http://rq.video.iqiyi.com/aries/e.json?site=iqiyi&docId='+data_doc_id+'&count=100000'
-        ejson = json.loads(common.getUrl(ejson_url))
+        ejson = json.loads(getUrl(ejson_url))
         ejson_datas = ejson["data"]["objs"]
         data["total"] = ejson_datas["info"]["total_video_number"]
         data["title"] = ejson_datas["info"]["album_title"]
@@ -345,7 +345,7 @@ class ListParser(common.Parser):
 
     def Parse_v(self,input_text):
         print(input_text)
-        html = PyQuery(common.getUrl(input_text))
+        html = PyQuery(getUrl(input_text))
         datainfo_navlist = PyQuery(html("#datainfo-navlist"))
         for a in datainfo_navlist.children('a'):
             a = PyQuery(a)

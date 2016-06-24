@@ -8,11 +8,11 @@ import urllib.request,io,os,sys,json,re
 from pyquery.pyquery import PyQuery
 
 try:
-    from .. import common
+    from ..common import *
 except Exception as e:
-    import common
+    from common import *
 
-class IndexParser(common.Parser):
+class IndexParser(Parser):
 
     filters = ['^http://www.le.com$']
         
@@ -22,7 +22,7 @@ class IndexParser(common.Parser):
                 return self.Parse_le(input_text)
         
     def Parse_le(self,input_text):
-        html = PyQuery(common.getUrl(input_text))
+        html = PyQuery(getUrl(input_text))
         items = html('dt.d_tit')
         title = "LETV"
         i =0

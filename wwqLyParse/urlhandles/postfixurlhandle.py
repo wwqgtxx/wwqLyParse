@@ -8,18 +8,18 @@ import urllib.request,io,os,sys,json,re,threading,queue
 from pyquery.pyquery import PyQuery
 
 try:
-    from .. import common
+    from ..common import *
 except Exception as e:
-    import common
+    from common import *
 
 
-class PostfixUrlHandle(common.UrlHandle):
+class PostfixUrlHandle(UrlHandle):
 
     filters = ['^(http|https)://[^\s]+/[^\s]+\.[s]{0,1}html(\?|#)[^\s]+']
         
     def urlHandle(self,url):
         def getUrl(queue,url):
-            queue.put(common.getUrl(url))
+            queue.put(getUrl(url))
         result =  re.match('^(http|https)://[^\s]+/[^\s]+\.[s]{0,1}html',url).group()
         q_results = queue.Queue()
         htmls = []

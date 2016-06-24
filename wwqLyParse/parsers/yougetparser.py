@@ -73,62 +73,14 @@ class YouGetParser(Parser):
         #print(stdout)
         return stdout, stderr
 
-    # make a 2.3 number, with given length after .
-    def num_len(self,n, l=3):
-        t = str(float(n))
-        p = t.split('.')
-        if l < 1:
-            return p[0]
-        if len(p[1]) > l:
-            p[1] = p[1][:l]
-        while len(p[1]) < l:
-            p[1] += '0'
-        t = ('.').join(p)
-        # done
-        return t
-
-    # byte to size
-    def byte2size(self,size_byte, flag_add_byte=False):
-        
-        unit_list = [
-            'Byte', 
-            'KB', 
-            'MB', 
-            'GB', 
-            'TB', 
-            'PB', 
-            'EB', 
-        ]
-        
-        # check size_byte
-        size_byte = int(size_byte)
-        if size_byte < 1024:
-            return size_byte + unit_list[0]
-        
-        # get unit
-        unit_i = math.floor(math.log(size_byte, 1024))
-        unit = unit_list[unit_i]
-        size_n = size_byte / pow(1024, unit_i)
-        
-        size_t = self.num_len(size_n, 2)
-        
-        # make final size_str
-        size_str = size_t + ' ' + unit
-        
-        # check flag
-        if flag_add_byte:
-            size_str += ' (' + str(size_byte) + ' Byte)'
-        # done
-        return size_str
-
     # make label
     def _make_label(self,stream):
         _format = stream['_format']
         _id = stream['_id']
         quality = stream['video_profile']
         try:
-            size_str = self.byte2size(stream['size'], False)
-            size = self.byte2size(stream['size'], True)
+            size_str = byte2size(stream['size'], False)
+            size = byte2size(stream['size'], True)
         except:
             size_str = "0"
             size = 0

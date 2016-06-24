@@ -163,7 +163,7 @@ class IQiYiParser(Parser):
                 "name" : "",   
                 "icon" : "",
                 "provider" : "爱奇艺",
-                "caption" : "爱奇艺视频解析",
+                "caption" : "WWQ爱奇艺视频解析",
                 #"warning" : "提示信息",
                 "sorted" : 1,
                 "data" : []

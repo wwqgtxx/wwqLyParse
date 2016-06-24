@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.5
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
-import urllib.request,io,os,sys,json,re,gzip,time,socket
+import urllib.request,io,os,sys,json,re,gzip,time,socket,math
 
 urlcache = {}
 URLCACHE_MAX = 1000
@@ -20,7 +20,9 @@ def getUrl(oUrl, encoding = 'utf-8' , headers = {}, data = None, method = None,a
             if (len(urlcache_temp)>URLCACHE_MAX):
                 cleanUrlcache()
             return html_text
-    print("normal get:"+url_json)
+        print("normal get:"+url_json)
+    else:
+        print("nocache get:"+url_json)
     # url 包含中文时 parse.quote_from_bytes(oUrl.encode('utf-8'), ':/&%?=+')
     req = urllib.request.Request( oUrl, headers= headers, data = data, method = method )
     with urllib.request.urlopen(req ) as  response:
@@ -61,12 +63,12 @@ def IsOpen(ip,port):
         return False
         
 def gen_bitrate(size_byte, time_s, unit_k=1024):
-        if (size_byte <= 0) or (time_s <= 0):
-            return '-1'	# can not gen bitrate
-        raw_rate = size_byte * 8 / time_s	# bps
-        kbps = raw_rate / unit_k
-        bitrate = str(round(kbps, 1)) + 'kbps'
-        return bitrate
+    if (size_byte <= 0) or (time_s <= 0):
+        return '-1'	# can not gen bitrate
+    raw_rate = size_byte * 8 / time_s	# bps
+    kbps = raw_rate / unit_k
+    bitrate = str(round(kbps, 1)) + 'kbps'
+    return bitrate
    
 # make a 2.3 number, with given length after .
 def num_len(n, l=3):

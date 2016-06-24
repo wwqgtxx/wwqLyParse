@@ -117,7 +117,7 @@ def debug(input):
     
 def main(): 
     debug(GetVersion(debug=True))
-    #debug(Parse('http://www.iqiyi.com/lib/m_209445514.html?src=search'))
+    debug(Parse('http://www.iqiyi.com/lib/m_209445514.html?src=search'))
     #debug(Parse('http://www.iqiyi.com/a_19rrhacdwt.html#vfrm=2-4-0-1'))
     #debug(Parse('http://www.iqiyi.com/a_19rrhaare5.html'))
     #debug(Parse('http://www.iqiyi.com/a_19rrhbhf6d.html#vfrm=2-3-0-1'))
@@ -136,7 +136,7 @@ def main():
     #debug(Parse('http://list.iqiyi.com/www/2/----------------iqiyi--.html'))
     #debug(Parse('http://www.iqiyi.com/a_19rrhb8fjp.html',"list"))
     #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html#vfrm=2-3-0-1'))
-    debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html',"formats"))
+    #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html',"formats"))
     #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html'))
     #debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","4_fullhd_全高清_895.21 MB@youget"))
     #debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","4_1080p_1920x1080_2746.0kbps_44:30.660_7_flv_@lyppv"))

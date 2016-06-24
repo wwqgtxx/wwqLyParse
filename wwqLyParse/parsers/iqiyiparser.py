@@ -143,6 +143,8 @@ class IQiYiParser(Parser):
     
    
     def Parse(self,input_text,types=None):
+        if (re.search('www.iqiyi.com/(lib/m|a_)',input_text)):
+            return
         if (types is None) or ("formats" in types):
             self.init()
             data = {

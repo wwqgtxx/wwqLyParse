@@ -26,6 +26,8 @@ class AnyPageParser(Parser):
         global TWICE_PARSE_TIMEOUT
         if (types is not None) and ("collection" not in types):
             return
+        if (re.search('www.iqiyi.com/(lib/m|a_|v_)',input_text)):
+            return
         html = PyQuery(getUrl(input_text))
         items = html('a')
         title = html('title').text()

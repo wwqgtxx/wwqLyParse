@@ -29,7 +29,7 @@ except Exception as e:
 
 class IQiYiParser(Parser):
 
-    filters = ['http://www.iqiyi.com/v_']
+    filters = ['http://www.iqiyi.com/']
     
     stream_types = [
         {'id': '4k', 'container': 'f4v', 'video_profile': '(6)4K'},

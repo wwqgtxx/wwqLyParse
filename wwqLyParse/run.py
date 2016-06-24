@@ -116,7 +116,8 @@ def debug(input):
     print (((str(input))).encode('gbk', 'ignore').decode('gbk') )
     
 def main(): 
-    debug(GetVersion(debug=True))
+    #debug(GetVersion(debug=True))
+    Cleanup()
     debug(Parse('http://www.iqiyi.com/lib/m_209445514.html?src=search'))
     #debug(Parse('http://www.iqiyi.com/a_19rrhacdwt.html#vfrm=2-4-0-1'))
     #debug(Parse('http://www.iqiyi.com/a_19rrhaare5.html'))

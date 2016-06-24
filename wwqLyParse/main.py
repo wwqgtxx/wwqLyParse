@@ -25,6 +25,7 @@ except Exception:
     import parsers.yougetparser as yougetparser
     import parsers.lyppvparser as lyppvparser
     import parsers.mvtvparser as mvtvparser
+    import parsers.iqiyiparser as iqiyiparser
     
 
 try:
@@ -37,7 +38,7 @@ except Exception:
 version = {
     'port_version' : "0.5.0", 
     'type' : 'parse', 
-    'version' : '0.2.5', 
+    'version' : '0.3.0', 
     'uuid' : '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter' : [],
     'name' : 'WWQ猎影解析插件', 
@@ -49,7 +50,7 @@ version = {
 }
 
 
-parsers = [listparser.ListParser(),indexparser.IndexParser(),mvtvparser.MgTVParser(),lyppvparser.LypPvParser(),yougetparser.YouGetParser(),anypageparser.AnyPageParser()]
+parsers = [listparser.ListParser(),indexparser.IndexParser(),iqiyiparser.IQiYiParser(),mvtvparser.MgTVParser(),lyppvparser.LypPvParser(),yougetparser.YouGetParser(),anypageparser.AnyPageParser()]
 urlhandles = [jumpurlhandle.BaiduLinkUrlHandle(),jumpurlhandle.MgtvUrlHandle(),jumpurlhandle.LetvUrlHandle(),postfixurlhandle.PostfixUrlHandle()]
 
 def urlHandle(input_text):
@@ -164,7 +165,11 @@ def debug(input):
     print (((str(input))).encode('gbk', 'ignore').decode('gbk') )
     
 @app.route('/close',methods=['POST','GET'])
-def Close(): 
+def Close():
+    for parser in parsers:
+        parser.closeParser()
+    for urlhandle in urlhandles:
+        urlhandle.closeUrlHandle()
     os._exit(0)
     return ""
     

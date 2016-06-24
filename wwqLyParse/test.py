@@ -2,12 +2,8 @@
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
 
-from flask import Flask
-app = Flask(__name__)
-
-@app.route('/hello/<meid>/<metype>',methods=['POST','GET'])
-def hello(meid,metype):
-    return meid+"Hello World!"+metype
 
 if __name__ == "__main__":
-    app.run()
+    import parsers.iqiyiparser
+    #print(parsers.iqiyiparser.IQiYiParser().Parse("http://www.iqiyi.com/v_19rrl8pmn8.html"))
+    print(parsers.iqiyiparser.IQiYiParser().ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","fullhd"))

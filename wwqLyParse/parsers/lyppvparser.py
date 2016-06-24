@@ -27,6 +27,8 @@ class LypPvParser(common.Parser):
     def Parse(self,url,types=None):
         if (types is not None) and ("formats" not in types):
             return
+        if ('www.iqiyi.com' in url):
+            return []
         try:
             from ..lyp_pv import run
         except Exception as e:

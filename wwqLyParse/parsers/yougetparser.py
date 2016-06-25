@@ -20,6 +20,7 @@ except Exception as e:
 class YouGetParser(Parser):
 
     filters = ['^(http|https)://.+']
+    bin = './you-get/you-get'
         
     # print exception function
     def _print_exception(self,e):
@@ -50,7 +51,7 @@ class YouGetParser(Parser):
             return []	# use system default proxy
 
     # make you-get arg
-    def _make_you_get_arg(self,url, _format=None):
+    def _make_arg(self,url, _format=None):
         arg = self._make_proxy_arg()
         # NOTE ignore __default__ format
         if _format and (_format != '__default__'):
@@ -59,8 +60,8 @@ class YouGetParser(Parser):
         return arg
 
     # run you-get
-    def _run_you(self,arg):
-        y_bin = bridge.pn(bridge.pjoin(bridge.get_root_path(), conf.bin_you_get))
+    def _run(self,arg):
+        y_bin = bridge.pn(bridge.pjoin(bridge.get_root_path(),self.bin))
         py_bin = sys.executable
         args = [py_bin, y_bin] + arg
         PIPE = subprocess.PIPE
@@ -114,12 +115,9 @@ class YouGetParser(Parser):
             one = {}
             label, size, ext = self._make_label(s)
             one['label'] = label
-            one['label'] = one['label'] + ("@youget")
             one['ext'] = ext
             one['size'] = size
             out['data'].append(one)
-        out["caption"]= "you-get解析"
-        out['sorted']= True
         return out
 
     # parse for parse_url
@@ -156,22 +154,16 @@ class YouGetParser(Parser):
                 raw_text = rest
 
     # parse functions
-    def Parse(self,url,types=None):
-        if (types is not None) and ("formats" not in types):
-            return
-        if ('www.iqiyi.com' in url):
-            return []
-        if re.search('www.iqiyi.com/(lib/m|a_)',url):
-            return []
-        yarg = self._make_you_get_arg(url)
-        stdout, stderr = self._run_you(yarg)
+    def _Parse(self,url,types=None):
+        yarg = self._make_arg(url)
+        stdout, stderr = self._run(yarg)
         #print(stdout)
         # try to decode
         try:
             info = self._try_parse_json(stdout)
         except Exception as e:
             # NOTE make custom Error info
-            e_text = 'you-get return [[stderr]] \n' + stderr
+            e_text = str(self)+'return [[stderr]] \n' + stderr
             e_text += '\n [[stdout]] \n' + stdout
             e_text += '\n ERROR info \n' + self._print_exception(e)
             return {
@@ -180,15 +172,34 @@ class YouGetParser(Parser):
         # parse it
         out = self._parse_parse(info)
         return out
+    
+    def Parse(self,url,types=None):
+        if (types is not None) and ("formats" not in types):
+            return
+        if ('www.iqiyi.com' in url):
+            return []
+        if re.search('www.iqiyi.com/(lib/m|a_)',url):
+            return []
+        out =  self._Parse(url,types)
+        if "data" in out:
+            for data in out['data']:
+                data['label'] = data['label'] + ("@youget")
+            out["caption"]= "you-get解析"
+            out['sorted']= True
+        return out
 
-    def ParseURL(self,url,label,min=None,max=None):
-        assert "@youget" in label
+    def _ParseURL(self,url,label,min=None,max=None):
         _format = self._parse_label(label)
-        yarg = self._make_you_get_arg(url, _format)
-        stdout, stderr = self._run_you(yarg)
+        yarg = self._make_arg(url, _format)
+        stdout, stderr = self._run(yarg)
         # just load json, without ERROR check
         info = self._try_parse_json(stdout)
         out = self._parse_parse_url(info, _format)
+        return out
+        
+    def ParseURL(self,url,label,min=None,max=None):
+        assert "@youget" in label
+        out = self._ParseURL(url,label,min,max)
         if "iqiyi" in url:
             for item in out:
                 item["unfixIp"] = True
@@ -196,7 +207,7 @@ class YouGetParser(Parser):
         
     def getYouGetVersion(self):
         try:
-            stdout, stderr = self._run_you(['--version'])
+            stdout, stderr = self._run(['--version'])
             if "Errno" in stderr:
                 return ""
             return stderr.split(',')[0]

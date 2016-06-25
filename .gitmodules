@@ -4,3 +4,6 @@
 [submodule "wwqLyParse/lyp_pv"]
 	path = wwqLyParse/lyp_pv
 	url = https://github.com/wwqgtxx/lyp_pv.git
+[submodule "wwqLyParse/ykdl"]
+	path = wwqLyParse/ykdl
+	url = https://github.com/zhangn1985/ykdl.git

@@ -76,12 +76,18 @@ def process(url,values,willRefused=False,needresult = True,needjson = True):
             #print(e)
             import traceback  
             traceback.print_exc() 
+    raise Exception("can't process "+str(url)+str(values))
         
 def closeServer():
     if IsOpen("127.0.0.1",5000):
         url = 'http://localhost:5000/close'
         values = {}
         process(url,values,willRefused = True)
+        while True:
+            if not IsOpen("127.0.0.1",5000):
+                return
+            time.sleep(1)
+              
 
             
 def Cleanup():
@@ -100,31 +106,45 @@ def GetVersion(debug=False):
     return results
     
 def Parse(input_text,types=None):
-    init()
-    url = 'http://localhost:5000/Parse'
-    #user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
-    values = {}
-    values["input_text"] = input_text
-    if types is not None:
-        values["types"] = types
-    results = process(url,values)
-    return results
+    for n in range(3):
+        try:
+            init()
+            url = 'http://localhost:5000/Parse'
+            #user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
+            values = {}
+            values["input_text"] = input_text
+            if types is not None:
+                values["types"] = types
+            results = process(url,values)
+            return results
+        except Exception as e:
+            #print(e)
+            import traceback  
+            traceback.print_exc()
+            error = e
+    raise e
 
 def ParseURL(input_text,label,min=None,max=None):
-    init()
-    url = 'http://localhost:5000/ParseURL'
-    #user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
-    values = {}
-    values["input_text"] = input_text
-    values["label"] = label
-    if min is not None:
-        values["min"] = min
-    if max is not None:
-        values["max"] = max
-    results = process(url,values)
-    return results
-    
-
+    for n in range(3):
+        try:
+            init()
+            url = 'http://localhost:5000/ParseURL'
+            #user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
+            values = {}
+            values["input_text"] = input_text
+            values["label"] = label
+            if min is not None:
+                values["min"] = min
+            if max is not None:
+                values["max"] = max
+            results = process(url,values)
+            return results
+        except Exception as e:
+            #print(e)
+            import traceback  
+            traceback.print_exc() 
+            error = e
+    raise e
     
 def debug(input):
     print("\n------------------------------------------------------------\n")

@@ -40,7 +40,7 @@ except Exception:
 version = {
     'port_version' : "0.5.0", 
     'type' : 'parse', 
-    'version' : '0.3.2', 
+    'version' : '0.3.3', 
     'uuid' : '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter' : [],
     'name' : 'WWQ猎影解析插件', 

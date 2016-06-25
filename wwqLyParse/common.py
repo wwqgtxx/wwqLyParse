@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.5
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
-import urllib.request,io,os,sys,json,re,gzip,time,socket,math
+import urllib.request,io,os,sys,json,re,gzip,time,socket,math,urllib.error
 
 urlcache = {}
 URLCACHE_MAX = 1000
@@ -34,21 +34,33 @@ def getUrl(oUrl, encoding = 'utf-8' , headers = {}, data = None, method = None,a
         print("nocache get:"+url_json)
     # url 包含中文时 parse.quote_from_bytes(oUrl.encode('utf-8'), ':/&%?=+')
     req = urllib.request.Request( oUrl, headers= headers, data = data, method = method )
-    with urllib.request.urlopen(req ) as  response:
-        headers = response.info()
-        cType = headers.get('Content-Type','')
-        match = re.search('charset\s*=\s*(\w+)', cType)
-        if match:
-            encoding = match.group(1)
-        blob = response.read()
-        if headers.get('Content-Encoding','') == 'gzip':
-            data=gzip.decompress(blob)
-            html_text = data.decode(encoding,'ignore')
-        else:
-            html_text = blob.decode(encoding,'ignore')
-        if allowCache:
-            urlcache[url_json] = {"html_text":html_text,"lasttimestap":int(time.time())}
-        return html_text
+    for i in range(10):
+        try:
+            with urllib.request.urlopen(req ) as  response:
+                headers = response.info()
+                cType = headers.get('Content-Type','')
+                match = re.search('charset\s*=\s*(\w+)', cType)
+                if match:
+                    encoding = match.group(1)
+                blob = response.read()
+                if headers.get('Content-Encoding','') == 'gzip':
+                    data=gzip.decompress(blob)
+                    html_text = data.decode(encoding,'ignore')
+                else:
+                    html_text = blob.decode(encoding,'ignore')
+                if allowCache:
+                    urlcache[url_json] = {"html_text":html_text,"lasttimestap":int(time.time())}
+                return html_text
+        except socket.timeout:
+            print('request attempt %s timeout' % str(i + 1))
+        except urllib.error.URLError:
+            print('request attempt %s URLError' % str(i + 1))
+        except:
+            #print(e)
+            import traceback  
+            traceback.print_exc()
+            
+    
         
 def url_size(url, headers = {}):
     if headers:

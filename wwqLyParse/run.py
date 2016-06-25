@@ -36,23 +36,53 @@ def init():
             _run_main()
         else:
             return
-        for i in range(5):
+        for i in range(10):
             if not IsOpen("127.0.0.1",5000):
                 time.sleep(1+i)
             else:
                 return
     raise Exception("can't init server")
+    
+            
+def process(url,values,willRefused=False,needresult = True,needjson = True):
+    data = urllib.parse.urlencode(values).encode(encoding='UTF8')
+    print(data)
+    req = urllib.request.Request(url, data)
+    #req.add_header('Referer', 'http://www.python.org/')
+    for n in range(3):
+        try:
+            if willRefused:
+                try:
+                    urllib.request.urlopen(req)
+                    return
+                except:
+                    return
+            for i in range(10):
+                try:
+                    response = urllib.request.urlopen(req)
+                    break
+                except socket.timeout:
+                    print('request attempt %s timeout' % str(i + 1))
+            if needresult:
+                the_page = response.read()
+                if needjson:
+                    results = json.loads(the_page.decode('UTF8'))
+                else:
+                    the_page.decode('UTF8')
+                return results
+            else:
+                return
+        except Exception as e:
+            #print(e)
+            import traceback  
+            traceback.print_exc() 
         
 def closeServer():
     if IsOpen("127.0.0.1",5000):
         url = 'http://localhost:5000/close'
         values = {}
-        data = urllib.parse.urlencode(values).encode(encoding='UTF8')
-        req = urllib.request.Request(url, data)
-        try:
-            response = urllib.request.urlopen(req)
-        except:
-            response = None;
+        process(url,values,willRefused = True)
+
             
 def Cleanup():
     closeServer()
@@ -64,12 +94,7 @@ def GetVersion(debug=False):
     url = 'http://localhost:5000/GetVersion'
     #user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
     values = {}
-    data = urllib.parse.urlencode(values).encode(encoding='UTF8')
-    req = urllib.request.Request(url, data)
-    #req.add_header('Referer', 'http://www.python.org/')
-    response = urllib.request.urlopen(req)
-    the_page = response.read()
-    results = json.loads(the_page.decode('UTF8'))
+    results = process(url,values)
     if (not debug):
         closeServer()
     return results
@@ -82,12 +107,7 @@ def Parse(input_text,types=None):
     values["input_text"] = input_text
     if types is not None:
         values["types"] = types
-    data = urllib.parse.urlencode(values).encode(encoding='UTF8')
-    req = urllib.request.Request(url, data)
-    print(data)
-    response = urllib.request.urlopen(req)
-    the_page = response.read()
-    results = json.loads(the_page.decode('UTF8'))
+    results = process(url,values)
     return results
 
 def ParseURL(input_text,label,min=None,max=None):
@@ -101,12 +121,7 @@ def ParseURL(input_text,label,min=None,max=None):
         values["min"] = min
     if max is not None:
         values["max"] = max
-    data = urllib.parse.urlencode(values).encode(encoding='UTF8')
-    req = urllib.request.Request(url, data)
-    #req.add_header('Referer', 'http://www.python.org/')
-    response = urllib.request.urlopen(req)
-    the_page = response.read()
-    results = json.loads(the_page.decode('UTF8'))
+    results = process(url,values)
     return results
     
 
@@ -138,7 +153,7 @@ def main():
     #debug(Parse('http://www.iqiyi.com/a_19rrhb8fjp.html',"list"))
     #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html#vfrm=2-3-0-1'))
     #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html',"formats"))
-    #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html'))
+    debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html'))
     #debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","4_fullhd_全高清_895.21 MB@youget"))
     #debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","4_1080p_1920x1080_2746.0kbps_44:30.660_7_flv_@lyppv"))
     #debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","(1)  4_1080p_1920x1080_2746.0kbps_44:30.660_7_flv_@lyppv"))
@@ -147,7 +162,7 @@ def main():
     #debug(Parse('http://v.baidu.com/link?url=dm_10tBNoD-LLAMb79CB_p0kxozuoJcW0SiN3eycdo6CdO3GZgQm26uOzZh9fqcNSWZmz9aU9YYCCfT0NmZoGfEMoznyHhz3st-QvlOeyArYdIbhzBbdIrmntA4h1HsSampAs4Z3c17r_exztVgUuHZqChPeZZQ4tlmM5&page=tvplaydetail&vfm=bdvtx&frp=v.baidu.com%2Ftv_intro%2F&bl=jp_video',"formats"))
     #debug(Parse('http://www.hunantv.com/v/1/291976/c/3137384.html'))
     #debug(ParseURL('http://www.mgtv.com/v/1/291976/c/3137384.html',"1"))
-    debug(Parse('http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474'))
+    #debug(Parse('http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474'))
     Cleanup()
 
 

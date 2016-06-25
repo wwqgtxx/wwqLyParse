@@ -9,7 +9,7 @@
 
 #monkey.patch_all()
 
-import re,threading,queue,sys,json,os
+import re,threading,queue,sys,json,os,time
 try:
     from flask import Flask,request
 except Exception:
@@ -168,11 +168,14 @@ def debug(input):
     
 @app.route('/close',methods=['POST','GET'])
 def Close():
+    def exit():
+        time.sleep(1)
+        os._exit(0)
     for parser in parsers:
         parser.closeParser()
     for urlhandle in urlhandles:
         urlhandle.closeUrlHandle()
-    os._exit(0)
+    threading.Thread(target=exit).start()
     return ""
     
 @app.route('/GetVersion',methods=['POST','GET'])

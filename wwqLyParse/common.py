@@ -6,6 +6,15 @@ import urllib.request,io,os,sys,json,re,gzip,time,socket,math
 urlcache = {}
 URLCACHE_MAX = 1000
 def getUrl(oUrl, encoding = 'utf-8' , headers = {}, data = None, method = None,allowCache = True) :
+    def cleanUrlcache():
+        global urlcache
+        global URLCACHE_MAX
+        sortedDict = sorted(urlcache.items(), key=lambda d: d[1]["lasttimestap"], reverse=True)
+        newDict = {}
+        for (k, v) in sortedDict[:int(URLCACHE_MAX - URLCACHE_MAX/10)]:# 从数组中取索引start开始到end-1的记录
+            newDict[k] = v
+        urlcache = newDict
+        print("urlcache has been cleaned")
     url_json = {"oUrl":oUrl,"encoding":encoding,"headers":headers,"data":data,"method":method}
     url_json = json.dumps(url_json,sort_keys=True, ensure_ascii=False)
     if allowCache:
@@ -40,16 +49,16 @@ def getUrl(oUrl, encoding = 'utf-8' , headers = {}, data = None, method = None,a
         if allowCache:
             urlcache[url_json] = {"html_text":html_text,"lasttimestap":int(time.time())}
         return html_text
+        
+def url_size(url, headers = {}):
+    if headers:
+        response = urllib.request.urlopen(request.Request(url, headers = headers), None)
+    else:
+        response = urllib.request.urlopen(url)
 
-def cleanUrlcache():
-    global urlcache
-    global URLCACHE_MAX
-    sortedDict = sorted(urlcache.items(), key=lambda d: d[1]["lasttimestap"], reverse=True)
-    newDict = {}
-    for (k, v) in sortedDict[:int(URLCACHE_MAX - URLCACHE_MAX/10)]:# 从数组中取索引start开始到end-1的记录
-        newDict[k] = v
-    urlcache = newDict
-    print("urlcache has been cleaned")
+    size = response.headers['content-length']
+    return int(size) if size!=None else float('inf')
+
     
 def IsOpen(ip,port):
     s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)

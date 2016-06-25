@@ -4,6 +4,6 @@
 
 
 if __name__ == "__main__":
-    import parsers.iqiyiparser
-    print(parsers.iqiyiparser.IQiYiParser().Parse("http://www.iqiyi.com/a_19rrhacdwt.html"))
+    import parsers.iqiyimparser
+    print(parsers.iqiyimparser.IQiYiMParser().Parse("http://www.iqiyi.com/v_19rrl8pmn8.html"))
     #print(parsers.iqiyiparser.IQiYiParser().ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","fullhd"))

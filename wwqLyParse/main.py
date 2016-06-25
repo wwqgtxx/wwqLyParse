@@ -17,7 +17,7 @@ except Exception:
 app = Flask(__name__)
 
 try:
-    from .parsers import listparser,indexparser,anypageparser,yougetparser,lyppvparser,mvtvparser
+    from .parsers import listparser,indexparser,anypageparser,yougetparser,lyppvparser,mvtvparser,iqiyiparser,iqiyimparser
 except Exception:
     import parsers.listparser as listparser
     import parsers.indexparser as indexparser
@@ -26,6 +26,7 @@ except Exception:
     import parsers.lyppvparser as lyppvparser
     import parsers.mvtvparser as mvtvparser
     import parsers.iqiyiparser as iqiyiparser
+    import parsers.iqiyimparser as iqiyimparser
     
 
 try:
@@ -38,7 +39,7 @@ except Exception:
 version = {
     'port_version' : "0.5.0", 
     'type' : 'parse', 
-    'version' : '0.3.0', 
+    'version' : '0.3.1', 
     'uuid' : '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter' : [],
     'name' : 'WWQ猎影解析插件', 
@@ -50,7 +51,7 @@ version = {
 }
 
 
-parsers = [listparser.ListParser(),indexparser.IndexParser(),iqiyiparser.IQiYiParser(),mvtvparser.MgTVParser(),lyppvparser.LypPvParser(),yougetparser.YouGetParser(),anypageparser.AnyPageParser()]
+parsers = [listparser.ListParser(),indexparser.IndexParser(),iqiyiparser.IQiYiParser(),iqiyimparser.IQiYiMParser(),mvtvparser.MgTVParser(),lyppvparser.LypPvParser(),yougetparser.YouGetParser(),anypageparser.AnyPageParser()]
 urlhandles = [jumpurlhandle.BaiduLinkUrlHandle(),jumpurlhandle.MgtvUrlHandle(),jumpurlhandle.LetvUrlHandle(),postfixurlhandle.PostfixUrlHandle()]
 
 def urlHandle(input_text):

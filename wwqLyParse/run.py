@@ -83,11 +83,11 @@ def closeServer():
         url = 'http://localhost:5000/close'
         values = {}
         process(url,values,willRefused = True)
-        while True:
+        for n in range(30):
             if not IsOpen("127.0.0.1",5000):
                 return
             time.sleep(1)
-              
+        raise Exception("can't closeServer")
 
             
 def Cleanup():
@@ -151,8 +151,8 @@ def debug(input):
     print (((str(input))).encode('gbk', 'ignore').decode('gbk') )
     
 def main(): 
-    #debug(GetVersion(debug=True))
-    Cleanup()
+    debug(GetVersion(debug=False))
+    #Cleanup()
     #debug(Parse('http://www.iqiyi.com/lib/m_209445514.html?src=search'))
     #debug(Parse('http://www.iqiyi.com/a_19rrhacdwt.html#vfrm=2-4-0-1'))
     #debug(Parse('http://www.iqiyi.com/a_19rrhaare5.html'))

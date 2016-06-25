@@ -40,7 +40,7 @@ except Exception:
 version = {
     'port_version' : "0.5.0", 
     'type' : 'parse', 
-    'version' : '0.3.3', 
+    'version' : '0.3.4', 
     'uuid' : '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter' : [],
     'name' : 'WWQ猎影解析插件', 
@@ -216,7 +216,7 @@ def parseUrl():
 
 if __name__ == '__main__':
     initVersion()
-    app.run(debug=True, use_reloader=False,threaded=True)
+    app.run(debug=False, use_reloader=False,threaded=True)
     
     #main()
 

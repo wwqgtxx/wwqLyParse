@@ -55,9 +55,13 @@ class YKDLParser(yougetparser.YouGetParser):
     def ParseURL(self,url,label,min=None,max=None):
         assert "@ykdl" in label
         out = self._ParseURL(url,label,min,max)
-        if "iqiyi" in url:
-            for item in out:
+        for item in out:
+            if "iqiyi" in url:
                 item["unfixIp"] = True
+            if not isinstance(item['urls'],list):
+                if "m3u8" in item['urls']:
+                    item['protocol'] = "m3u8"
+                    item['urls'] = "file:///" + item['urls']
         return out
         
 

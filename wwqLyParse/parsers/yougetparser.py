@@ -132,7 +132,7 @@ class YouGetParser(Parser):
             one = {}
             one['protocol'] = 'http'
             one['args'] = {}
-            one['value'] = u
+            one['urls'] = u
             # check referer
             if referer:
                 one['args'] = {

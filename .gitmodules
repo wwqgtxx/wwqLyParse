@@ -1,9 +1,9 @@
-[submodule "wwqLyParse/you-get"]
-	path = wwqLyParse/you-get
-	url = https://github.com/soimort/you-get.git
 [submodule "wwqLyParse/lyp_pv"]
 	path = wwqLyParse/lyp_pv
 	url = https://github.com/wwqgtxx/lyp_pv.git
 [submodule "wwqLyParse/ykdl"]
 	path = wwqLyParse/ykdl
-	url = https://github.com/zhangn1985/ykdl.git
+	url = git@github.com:wwqgtxx/ykdl.git
+[submodule "wwqLyParse/you-get"]
+	path = wwqLyParse/you-get
+	url = git@github.com:wwqgtxx/you-get.git

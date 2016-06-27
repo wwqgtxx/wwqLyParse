@@ -54,7 +54,11 @@ def checkEmbedPython():
         useEmbedPython = False
         return
     y_bin = bridge.pn(bridge.pjoin(bridge.get_root_path(), './printok.py'))
-    py_bin = bridge.pn(bridge.pjoin(bridge.get_root_path(), EMBED_PYTHON))
+    try:
+        py_bin = bridge.pn(bridge.pjoin(bridge.get_root_path(), EMBED_PYTHON))
+    except:
+        useEmbedPython = False
+        return
     args = [py_bin, y_bin]
     print(args)
     PIPE = subprocess.PIPE
@@ -100,9 +104,14 @@ def init():
             _run_main()
         else:
             return
-        for i in range(5):
+        for i in range(100):
             if not IsOpen("127.0.0.1",5000):
-                time.sleep(1+i)
+                time.sleep(0.05)
+            else:
+                return
+        for i in range(10):
+            if not IsOpen("127.0.0.1",5000):
+                time.sleep(1)
             else:
                 return
         global useEmbedPython
@@ -150,7 +159,11 @@ def closeServer():
             url = 'http://localhost:5000/close'
             values = {}
             process(url,values,willRefused = True)
-            for n in range(15):
+            for n in range(100):
+                if not IsOpen("127.0.0.1",5000):
+                    return
+                time.sleep(0.05)
+            for n in range(10):
                 if not IsOpen("127.0.0.1",5000):
                     return
                 time.sleep(1)

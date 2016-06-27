@@ -5,8 +5,6 @@
 
 import urllib.request,io,os,sys,json,re,threading,queue
 
-from pyquery.pyquery import PyQuery
-
 try:
     from ..common import *
 except Exception as e:

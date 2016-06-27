@@ -177,7 +177,7 @@ def debug(input):
 @app.route('/close',methods=['POST','GET'])
 def Close():
     def exit():
-        time.sleep(1)
+        time.sleep(0.001)
         os._exit(0)
     for parser in parsers:
         parser.closeParser()

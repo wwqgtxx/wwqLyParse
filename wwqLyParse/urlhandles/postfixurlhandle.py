@@ -20,6 +20,8 @@ class PostfixUrlHandle(UrlHandle):
     def urlHandle(self,url):
         def _getUrl(queue,url):
             queue.put(getUrl(url))
+        if (re.match('http://v.qq.com/cover/y/[^\s]+\.html\?vid=[^\s]+',url)):
+            return url
         result =  re.match('^(http|https)://[^\s]+/[^\s]+\.[s]{0,1}html',url).group()
         q_results = queue.Queue()
         htmls = []

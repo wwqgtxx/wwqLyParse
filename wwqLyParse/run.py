@@ -14,13 +14,6 @@ except Exception as e:
     
 useEmbedPython = True
 
-def makePython():
-    global EMBED_PYTHON
-    if isX64():
-        EMBED_PYTHON = "./lib/python-3.5.2-embed-amd64/wwqLyParse64.exe"
-    else:
-        EMBED_PYTHON = "./lib/python-3.5.2-embed-win32/wwqLyParse32.exe"
-
 def get_systeminfo():
     args = "systeminfo"
     PIPE = subprocess.PIPE
@@ -30,6 +23,7 @@ def get_systeminfo():
     stderr = bridge.try_decode(stderr)
     global systeminfo
     systeminfo = stdout
+get_systeminfo()
         
 def isX64():
     if ("x64-based PC" in systeminfo):
@@ -45,6 +39,15 @@ def isXP():
         return True
     else:
         return False
+
+def makePython():
+    global EMBED_PYTHON
+    if isX64():
+        EMBED_PYTHON = "./lib/python-3.5.2-embed-amd64/wwqLyParse64.exe"
+    else:
+        EMBED_PYTHON = "./lib/python-3.5.2-embed-win32/wwqLyParse32.exe"
+makePython()
+
         
 def IsOpen(ip,port):
     s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -234,8 +237,6 @@ def main():
 
 
 if __name__ == '__main__':  
-    get_systeminfo()
-    makePython()
     #app.run()
     main()
 

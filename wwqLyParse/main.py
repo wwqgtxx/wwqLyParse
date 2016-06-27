@@ -9,6 +9,9 @@
 
 #monkey.patch_all()
 
+import sys
+sys.path.insert(0, './lib/flask_lib')
+
 import re,threading,queue,sys,json,os,time
 try:
     from flask import Flask,request
@@ -40,7 +43,7 @@ except Exception:
 version = {
     'port_version' : "0.5.0", 
     'type' : 'parse', 
-    'version' : '0.3.4', 
+    'version' : '0.3.5', 
     'uuid' : '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter' : [],
     'name' : 'WWQ猎影解析插件', 

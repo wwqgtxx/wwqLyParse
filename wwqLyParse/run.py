@@ -12,6 +12,40 @@ try:
 except Exception as e:
     from lib import bridge
     
+useEmbedPython = True
+
+def makePython():
+    global EMBED_PYTHON
+    if isX64():
+        EMBED_PYTHON = "./lib/python-3.5.2-embed-amd64/wwqLyParse64.exe"
+    else:
+        EMBED_PYTHON = "./lib/python-3.5.2-embed-win32/wwqLyParse32.exe"
+
+def get_systeminfo():
+    args = "systeminfo"
+    PIPE = subprocess.PIPE
+    p = subprocess.Popen(args, stdout=PIPE, stderr=PIPE, shell=False)
+    stdout, stderr = p.communicate()
+    stdout = bridge.try_decode(stdout)
+    stderr = bridge.try_decode(stderr)
+    global systeminfo
+    systeminfo = stdout
+        
+def isX64():
+    if ("x64-based PC" in systeminfo):
+        print("x64")
+        return True
+    elif ("x86-based PC" in systeminfo):
+        print("x86")
+        return False
+        
+def isXP():
+    if ("Windows XP" in systeminfo):
+        print("XP")
+        return True
+    else:
+        return False
+        
 def IsOpen(ip,port):
     s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
     try:
@@ -22,25 +56,35 @@ def IsOpen(ip,port):
     except:
         print('%d is down' % port)
         return False
+
         
 def _run_main():
     y_bin = bridge.pn(bridge.pjoin(bridge.get_root_path(), './main.py'))
-    py_bin = sys.executable
-    args = [py_bin,'--normal', y_bin]
+    if (useEmbedPython and not isXP()):
+        py_bin = bridge.pn(bridge.pjoin(bridge.get_root_path(), EMBED_PYTHON))
+    else:
+        print("disable Embed Python")
+        py_bin = sys.executable
+    if "PyRun.exe" in py_bin:
+        args = [py_bin,'--normal', y_bin]
+    else:
+        args = [py_bin, y_bin]
     print(args)
     p = subprocess.Popen(args, shell=False,cwd=bridge.get_root_path(),close_fds=True)
 
 def init():
-    for n in range(3):
+    for n in range(2):
         if not IsOpen("127.0.0.1",5000):
             _run_main()
         else:
             return
-        for i in range(10):
+        for i in range(5):
             if not IsOpen("127.0.0.1",5000):
                 time.sleep(1+i)
             else:
                 return
+        global useEmbedPython
+        useEmbedPython = False
     raise Exception("can't init server")
     
             
@@ -79,15 +123,17 @@ def process(url,values,willRefused=False,needresult = True,needjson = True):
     raise Exception("can't process "+str(url)+str(values))
         
 def closeServer():
-    if IsOpen("127.0.0.1",5000):
-        url = 'http://localhost:5000/close'
-        values = {}
-        process(url,values,willRefused = True)
-        for n in range(30):
-            if not IsOpen("127.0.0.1",5000):
-                return
-            time.sleep(1)
-        raise Exception("can't closeServer")
+    for n in range(2):
+        if IsOpen("127.0.0.1",5000):
+            url = 'http://localhost:5000/close'
+            values = {}
+            process(url,values,willRefused = True)
+            for n in range(15):
+                if not IsOpen("127.0.0.1",5000):
+                    return
+                time.sleep(1)
+        return
+    raise Exception("can't closeServer")
 
             
 def Cleanup():
@@ -183,10 +229,13 @@ def main():
     #debug(Parse('http://www.hunantv.com/v/1/291976/c/3137384.html'))
     #debug(ParseURL('http://www.mgtv.com/v/1/291976/c/3137384.html',"1"))
     #debug(Parse('http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474'))
+    #debug(Parse('http://v.qq.com/cover/y/yxpn9yol52go2i6.html?vid=f0141icyptp'))
     Cleanup()
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  
+    get_systeminfo()
+    makePython()
     #app.run()
     main()
 

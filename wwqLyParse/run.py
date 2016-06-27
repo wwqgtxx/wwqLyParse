@@ -48,6 +48,24 @@ def makePython():
         EMBED_PYTHON = "./lib/python-3.5.2-embed-win32/wwqLyParse32.exe"
 makePython()
 
+def checkEmbedPython():
+    if isXP:
+        global useEmbedPython
+        useEmbedPython = False
+        return
+    y_bin = bridge.pn(bridge.pjoin(bridge.get_root_path(), './printok.py'))
+    py_bin = bridge.pn(bridge.pjoin(bridge.get_root_path(), EMBED_PYTHON))
+    args = [py_bin, y_bin]
+    print(args)
+    PIPE = subprocess.PIPE
+    p = subprocess.Popen(args, stdout=PIPE, stderr=PIPE, shell=False)
+    stdout, stderr = p.communicate()
+    stdout = bridge.try_decode(stdout)
+    stderr = bridge.try_decode(stderr)
+    if "ok" not in stdout:
+        global useEmbedPython
+        useEmbedPython = False
+checkEmbedPython()
         
 def IsOpen(ip,port):
     s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -63,10 +81,11 @@ def IsOpen(ip,port):
         
 def _run_main():
     y_bin = bridge.pn(bridge.pjoin(bridge.get_root_path(), './main.py'))
-    if (useEmbedPython and not isXP()):
+    if useEmbedPython:
+        print("use Embed Python")
         py_bin = bridge.pn(bridge.pjoin(bridge.get_root_path(), EMBED_PYTHON))
     else:
-        print("disable Embed Python")
+        print("don't use Embed Python")
         py_bin = sys.executable
     if "PyRun.exe" in py_bin:
         args = [py_bin,'--normal', y_bin]

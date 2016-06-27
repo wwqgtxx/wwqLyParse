@@ -11,8 +11,6 @@ try:
     from .lib import bridge
 except Exception as e:
     from lib import bridge
-    
-useEmbedPython = True
 
 def get_systeminfo():
     args = "systeminfo"
@@ -46,11 +44,13 @@ def makePython():
         EMBED_PYTHON = "./lib/python-3.5.2-embed-amd64/wwqLyParse64.exe"
     else:
         EMBED_PYTHON = "./lib/python-3.5.2-embed-win32/wwqLyParse32.exe"
+    print("set EMBED_PYTHON = " + EMBED_PYTHON)
 makePython()
 
 def checkEmbedPython():
-    if isXP:
-        global useEmbedPython
+    global useEmbedPython
+    useEmbedPython = True
+    if isXP():
         useEmbedPython = False
         return
     y_bin = bridge.pn(bridge.pjoin(bridge.get_root_path(), './printok.py'))
@@ -62,8 +62,8 @@ def checkEmbedPython():
     stdout, stderr = p.communicate()
     stdout = bridge.try_decode(stdout)
     stderr = bridge.try_decode(stderr)
+    print(stdout)
     if "ok" not in stdout:
-        global useEmbedPython
         useEmbedPython = False
 checkEmbedPython()
         

@@ -55,14 +55,12 @@ class LypPvParser(Parser):
                 elif num == 7:
                     parts[0] = "5"
                 data['label']=('_').join(parts)
-                data['label'] = data['label'] + ("@lyppv")
             out["caption"]= "负锐解析"
             out.pop("icon")
             out.pop("warning")
         return out
 
     def ParseURL(self,url,label,min=None,max=None):
-        assert "@lyppv" in label
         try:
             from ..lyp_pv import run
         except Exception as e:

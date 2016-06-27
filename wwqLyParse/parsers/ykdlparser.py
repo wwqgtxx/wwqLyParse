@@ -46,14 +46,11 @@ class YKDLParser(yougetparser.YouGetParser):
             return []
         out =  self._Parse(url,types)
         if "data" in out:
-            for data in out['data']:
-                data['label'] = data['label'] + ("@ykdl")
             out["caption"]= "YouKuDownLoader解析"
             out['sorted']= True
         return out
 
     def ParseURL(self,url,label,min=None,max=None):
-        assert "@ykdl" in label
         out = self._ParseURL(url,label,min,max)
         for item in out:
             if "iqiyi" in url:

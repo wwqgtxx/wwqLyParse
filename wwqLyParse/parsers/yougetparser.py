@@ -182,8 +182,6 @@ class YouGetParser(Parser):
             return []
         out =  self._Parse(url,types)
         if "data" in out:
-            for data in out['data']:
-                data['label'] = data['label'] + ("@youget")
             out["caption"]= "you-get解析"
             out['sorted']= True
         return out
@@ -198,7 +196,6 @@ class YouGetParser(Parser):
         return out
         
     def ParseURL(self,url,label,min=None,max=None):
-        assert "@youget" in label
         out = self._ParseURL(url,label,min,max)
         if "iqiyi" in url:
             for item in out:

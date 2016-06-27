@@ -48,7 +48,7 @@ except Exception:
 version = {
     'port_version' : "0.5.0", 
     'type' : 'parse', 
-    'version' : '0.3.6', 
+    'version' : '0.3.7', 
     'uuid' : '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter' : [],
     'name' : 'WWQ猎影解析插件', 
@@ -101,6 +101,11 @@ def Parse(input_text,types=None,parsers = parsers,urlhandles = urlhandles):
                     print(result["error"])
                     return
                 if ("data" in result) and (result["data"] is not None) and (result["data"] != []):
+                    for data in result['data']:
+                        if ('label' in data) and (data['label'] is not None) and (data['label'] != ""):
+                            data['label'] = str(data['label']) + "@" + parser.__class__.__name__
+                        if ('code' in data) and (data['code'] is not None) and (data['code'] != ""):
+                            data['code'] = str(data['code']) + "@" + parser.__class__.__name__
                     queue.put({"result":result,"parser":parser})
         except Exception as e:
             #print(e)
@@ -145,7 +150,11 @@ def ParseURL(input_text,label,min=None,max=None,parsers = parsers,urlhandles = u
             #print(e)
             import traceback  
             traceback.print_exc() 
-            
+    
+    t_label = label.split("@")
+    label = t_label[0]
+    parser_name = t_label[1]
+    
     input_text = urlHandle(input_text)
     results = []
     parser_threads = []
@@ -153,9 +162,10 @@ def ParseURL(input_text,label,min=None,max=None,parsers = parsers,urlhandles = u
     q_results = queue.Queue()
 
     for parser in parsers:
-        for filter in parser.getfilters():
-            if re.search(filter,input_text):
-                parser_threads.append(threading.Thread(target=run, name=str(parser), args=(q_results,parser,input_text,label,min,max)))
+        if (parser_name == parser.__class__.__name__):
+            for filter in parser.getfilters():
+                if re.search(filter,input_text):
+                    parser_threads.append(threading.Thread(target=run, name=str(parser), args=(q_results,parser,input_text,label,min,max)))
     for parser_thread in parser_threads:
         parser_thread.setDaemon(True)
         parser_thread.start()
@@ -167,7 +177,8 @@ def ParseURL(input_text,label,min=None,max=None,parsers = parsers,urlhandles = u
         for t_result in t_results:
             if t_result["parser"] is parser:
                 results.append(t_result["result"])
-        
+    if results == []:
+        return []
     return results[0]
     
 def debug(input):

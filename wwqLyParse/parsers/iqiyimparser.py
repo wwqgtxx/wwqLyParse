@@ -192,7 +192,7 @@ class IQiYiMParser(Parser):
                                 "urls" :  info['data']['m3u'],
                                 "duration" : time_s*1e3,
                                 "length" : size,
-                                "maxDown" : 1,
+                                #"maxDown" : 1,
                                 "unfixIp" : True
                             }]
                         })

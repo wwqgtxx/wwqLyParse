@@ -13,14 +13,17 @@ except Exception as e:
     from lib import bridge
 
 def get_systeminfo():
-    args = "systeminfo"
-    PIPE = subprocess.PIPE
-    p = subprocess.Popen(args, stdout=PIPE, stderr=PIPE, shell=False)
-    stdout, stderr = p.communicate()
-    stdout = bridge.try_decode(stdout)
-    stderr = bridge.try_decode(stderr)
-    global systeminfo
-    systeminfo = stdout
+    try:
+        args = "systeminfo"
+        PIPE = subprocess.PIPE
+        p = subprocess.Popen(args, stdout=PIPE, stderr=PIPE, shell=False)
+        stdout, stderr = p.communicate()
+        stdout = bridge.try_decode(stdout)
+        stderr = bridge.try_decode(stderr)
+        global systeminfo
+        systeminfo = stdout
+    except:
+        systeminfo = ""
 get_systeminfo()
         
 def isX64():
@@ -30,10 +33,20 @@ def isX64():
     elif ("x86-based PC" in systeminfo):
         print("x86")
         return False
+    else:
+        print("UnKnow")
+        return False
         
 def isXP():
     if ("Windows XP" in systeminfo):
         print("XP")
+        return True
+    else:
+        return False
+
+def is2003():
+    if ("Server 2003" in systeminfo):
+        print("2003")
         return True
     else:
         return False
@@ -50,7 +63,7 @@ makePython()
 def checkEmbedPython():
     global useEmbedPython
     useEmbedPython = True
-    if isXP():
+    if (isXP() or is2003() or (systeminfo =="")):
         useEmbedPython = False
         return
     y_bin = bridge.pn(bridge.pjoin(bridge.get_root_path(), './printok.py'))

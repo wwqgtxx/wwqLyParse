@@ -61,14 +61,14 @@ class IQiYiParser(Parser):
                     time.sleep(1+i)
                 else:
                     url = 'http://127.0.0.1:48271/handwich_bridge/load_core?id=cmd5&path='+urllib.parse.quote(bridge.pn(bridge.pjoin(bridge.get_root_path(), './lib/kill_271_cmd5/kill_271_cmd5.swf')))
-                    getUrl(url,allowCache = False)
+                    getUrl(url,allowCache = False,usePool = False)
                     return
         raise Exception("can't init server")
         
     def closeServer(self):
         if IsOpen("127.0.0.1",48271):
             url = 'http://127.0.0.1:48271/handwich_bridge/exit'
-            getUrl(url,allowCache = False)
+            getUrl(url,allowCache = False,usePool = False)
         
     def getVRSXORCode(self,arg1,arg2):
         loc3=arg2 %3
@@ -92,13 +92,13 @@ class IQiYiParser(Parser):
     
     def getDispathKey(self,rid):
         tp=")(*&^flash@#$%a"  #magic from swf
-        time=json.loads(getUrl("http://data.video.qiyi.com/t?tn="+str(random())))["t"]
+        time=json.loads(getUrl("http://data.video.qiyi.com/t?tn="+str(random())),allowCache = False)["t"]
         t=str(int(floor(int(time)/(10*60.0))))
         return hashlib.new("md5",bytes(t+tp+rid,"utf-8")).hexdigest()
             
     def getvf(self,vmsreq):
         url = 'http://127.0.0.1:48271/handwich_bridge/call?core=cmd5&f=calc&a='+urllib.parse.quote(json.dumps([vmsreq,vmsreq]))
-        results = json.loads(getUrl(url,allowCache = False))
+        results = json.loads(getUrl(url,allowCache = False,usePool = False))
         return results[1]
     
     def getVMS(self,tvid, videoid):
@@ -236,7 +236,7 @@ class IQiYiParser(Parser):
                     baseurl = [x for x in inio_baseurl]
                     baseurl.insert(-1,key)
                     url="/".join(baseurl)+vlink+'?su='+gen_uid+'&qyid='+uuid4().hex+'&client=&z=&bt=&ct=&tn='+str(randint(10000,20000))
-                    result = json.loads(getUrl(url))["l"]
+                    result = json.loads(getUrl(url,allowCache = False))["l"]
                     #print(result)
                     urls.append(result)
         #download should be complete in 10 minutes

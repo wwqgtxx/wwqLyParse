@@ -3,11 +3,11 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 
 try:
-    from gevent import monkey
-    monkey.patch_all()
-    print("gevent.monkey.patch_all()")
-except Exception:
-    gevent = None
+    from ..common import *
+except Exception as e:
+    from common import *
+   
+pool = Pool()
 
 try:
     from .lib import bridge
@@ -121,10 +121,7 @@ def Parse(input_text,types=None,parsers = parsers,urlhandles = urlhandles):
     for parser in parsers:
         for filter in parser.getfilters():
             if re.search(filter,input_text):
-                parser_threads.append(threading.Thread(target=run, name=str(parser), args=(q_results,parser,input_text,types)))
-    for parser_thread in parser_threads:
-        parser_thread.setDaemon(True)
-        parser_thread.start()
+                parser_threads.append(pool.spawn(run,q_results,parser,input_text,types))
     for parser_thread in parser_threads:
         parser_thread.join()
     while not q_results.empty():
@@ -133,7 +130,6 @@ def Parse(input_text,types=None,parsers = parsers,urlhandles = urlhandles):
         for t_result in t_results:
             if t_result["parser"] is parser:
                 results.append(t_result["result"])
-        
     return results
 
 def ParseURL(input_text,label,min=None,max=None,parsers = parsers,urlhandles = urlhandles):
@@ -165,10 +161,7 @@ def ParseURL(input_text,label,min=None,max=None,parsers = parsers,urlhandles = u
         if (parser_name == parser.__class__.__name__):
             for filter in parser.getfilters():
                 if re.search(filter,input_text):
-                    parser_threads.append(threading.Thread(target=run, name=str(parser), args=(q_results,parser,input_text,label,min,max)))
-    for parser_thread in parser_threads:
-        parser_thread.setDaemon(True)
-        parser_thread.start()
+                    parser_threads.append(pool.spawn(run,q_results,parser,input_text,label,min,max))
     for parser_thread in parser_threads:
         parser_thread.join()
     while not q_results.empty():
@@ -235,6 +228,7 @@ def parseUrl():
 
 if __name__ == '__main__':
     initVersion()
+    print("\n------------------------------------------------------------\n")
     app.run(debug=False, use_reloader=False,threaded=True)
     
     #main()

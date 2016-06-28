@@ -1,29 +1,31 @@
 #!/usr/bin/env python3.5
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
-import urllib.request,io,os,sys,json,re,gzip,time,socket,math,urllib.error,http.client,gc,threading
+try:
+    from gevent import monkey
+    monkey.patch_all()
+    print("gevent.monkey.patch_all()")
+    from gevent.pool import Pool
+    from gevent.queue import Queue
+    print("use gevent.pool")
+except Exception:
+    gevent = None
+    from simplepool import Pool
+    from queue import Queue
+    print("use simple pool")
+    
+import urllib.request,io,os,sys,json,re,gzip,time,socket,math,urllib.error,http.client,gc,threading,urllib
 
 urlcache = {}
 URLCACHE_MAX = 1000
 URLCACHE_POOL = 20
-
-try:
-    from gevent.pool import Pool
-    from gevent.queue import Queue
-    pool_getUrl = Pool(URLCACHE_POOL)
-    pool_cleanUrlcache = Pool(1)
-    print("use gevent.pool")
-except Exception:
-    pool_getUrl = None
-    pool_cleanUrlcache = None
-    lock = threading.Lock()
+    
+pool_getUrl = Pool(URLCACHE_POOL)
+pool_cleanUrlcache = Pool(1)
     
 
 def getUrl(oUrl, encoding = 'utf-8' , headers = {}, data = None, method = None,allowCache = True,usePool = True,pool = pool_getUrl) :
     def cleanUrlcache():
-        if (pool_cleanUrlcache is None):
-            global lock
-            lock.acquire()
         global urlcache
         if (len(urlcache)<=URLCACHE_MAX):
             return
@@ -36,9 +38,7 @@ def getUrl(oUrl, encoding = 'utf-8' , headers = {}, data = None, method = None,a
         urlcache = newDict
         gc.collect()
         print("urlcache has been cleaned")
-        if (pool_cleanUrlcache is None):
-            lock.release()
-    def _getUrl(oUrl, encoding, headers, data, method,allowCache):
+    def _getUrl(result_queue,oUrl, encoding, headers, data, method,allowCache):
         url_json = {"oUrl":oUrl,"encoding":encoding,"headers":headers,"data":data,"method":method}
         url_json = json.dumps(url_json,sort_keys=True, ensure_ascii=False)
         if allowCache:
@@ -51,12 +51,10 @@ def getUrl(oUrl, encoding = 'utf-8' , headers = {}, data = None, method = None,a
                 item["lasttimestap"] = int(time.time())
                 print("cache get:"+url_json)
                 if (len(urlcache_temp)>URLCACHE_MAX):
-                    if (pool_cleanUrlcache is None):
-                        threading.Thread(target=cleanUrlcache).start()
-                    else:
-                        pool_cleanUrlcache.spawn(cleanUrlcache)
+                    pool_cleanUrlcache.spawn(cleanUrlcache)
                 del urlcache_temp
-                return html_text
+                result_queue.put(html_text)
+                return
             print("normal get:"+url_json)
         else:
             print("nocache get:"+url_json)
@@ -78,7 +76,8 @@ def getUrl(oUrl, encoding = 'utf-8' , headers = {}, data = None, method = None,a
                         html_text = blob.decode(encoding,'ignore')
                     if allowCache:
                         urlcache[url_json] = {"html_text":html_text,"lasttimestap":int(time.time())}
-                    return html_text
+                    result_queue.put(html_text)
+                    return
             except socket.timeout:
                 print('request attempt %s timeout' % str(i + 1))
             except urllib.error.URLError:
@@ -91,14 +90,10 @@ def getUrl(oUrl, encoding = 'utf-8' , headers = {}, data = None, method = None,a
                 #print(e)
                 import traceback  
                 traceback.print_exc()
-    def doGeventGet(queue,oUrl, encoding, headers, data, method,allowCache):
-        queue.put(_getUrl(oUrl, encoding, headers, data, method,allowCache))
-    if ((pool is not None) and usePool):
-        queue = Queue()
-        pool.spawn(doGeventGet,queue,oUrl, encoding, headers, data, method,allowCache)
-        return queue.get()
-    else:
-        return _getUrl(oUrl, encoding, headers, data, method,allowCache)
+    
+    queue = Queue(1)
+    pool.spawn(_getUrl,queue,oUrl, encoding, headers, data, method,allowCache)
+    return queue.get()
         
 def url_size(url, headers = {}):
     if headers:

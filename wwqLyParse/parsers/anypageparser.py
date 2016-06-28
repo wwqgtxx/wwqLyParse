@@ -3,7 +3,7 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 
 
-import urllib.request,io,os,sys,json,re,threading,queue
+import urllib.request,io,os,sys,json,re,threading
 
 from pyquery.pyquery import PyQuery
 
@@ -109,13 +109,11 @@ class AnyPageParser(Parser):
             parser_threads = []
             parse_urls = []
             t_results = []
-            q_results = queue.Queue()
+            q_results = Queue()
             for url in urls:
                 for filter in list_parser.getfilters():
                     if re.search(filter,url):
-                        parser_threads.append(threading.Thread(target=runlist_parser, args=(q_results,list_parser,url)))
-            for parser_thread in parser_threads:
-                parser_thread.start()
+                        parser_threads.append(main.pool.spawn(runlist_parser,q_results,list_parser,url))
             for parser_thread in parser_threads:
                 parser_thread.join(self.TWICE_PARSE_TIMEOUT)
             while not q_results.empty():

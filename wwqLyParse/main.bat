@@ -1,3 +1,3 @@
 @set PYTHONDONTWRITEBYTECODE=x
-@"./lib/python-3.5.2-embed-amd64/wwqLyParse64.exe" main.py
+@"C:\Program Files (x86)\LieYing\Plugin\PyRun.exe" main.py
 @pause

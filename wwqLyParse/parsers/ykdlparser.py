@@ -56,7 +56,7 @@ class YKDLParser(yougetparser.YouGetParser):
             if "iqiyi" in url:
                 item["unfixIp"] = True
             if not isinstance(item['urls'],list):
-                if "m3u8" in item['urls']:
+                if "m3u8" in item['urls'] and ":\\Users\\" in item['urls']:
                     item['protocol'] = "m3u8"
                     item['urls'] = "file:///" + item['urls']
         return out

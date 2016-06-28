@@ -104,7 +104,7 @@ class AnyPageParser(Parser):
                     print(e)
                     #import traceback  
                     #traceback.print_exc() 
-            list_parser = listparser.ListParser()
+            list_parser = listparser.ListParser(pool = Pool(20))
             urlHandle = main.urlHandle
             parser_threads = []
             parse_urls = []

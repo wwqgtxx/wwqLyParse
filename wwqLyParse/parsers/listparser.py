@@ -16,6 +16,9 @@ except Exception as e:
 class ListParser(Parser):
 
     filters = ['www.iqiyi.com/(lib/m|a_|v_)']
+    
+    def __init__(self,pool=pool_getUrl):
+        self.pool = pool
         
     def Parse(self,input_text,types=None):
         if (types is None) or ("list" in types):
@@ -65,7 +68,7 @@ class ListParser(Parser):
                     page_n += 1
                     url = make_port_url(aid, page_n)
                     # get text
-                    raw_text = getUrl(url)
+                    raw_text = getUrl(url,pool = self.pool)
                     
                     # get list
                     sub_list = parse_one_page(raw_text)
@@ -155,7 +158,7 @@ class ListParser(Parser):
                 # make request url
                 url = make_port_url(aid)
                 # get text
-                raw_text = getUrl(url)
+                raw_text = getUrl(url,pool = self.pool)
                 # get list
                 vlist = parse_one_page(raw_text)
                 # get full vinfo list done
@@ -242,7 +245,7 @@ class ListParser(Parser):
                 #import traceback  
                 #traceback.print_exc()  
                 print(str(get_list_info)+str(e))
-        html_text = getUrl(input_text)
+        html_text = getUrl(input_text,pool = self.pool)
         html = PyQuery(html_text)
         title = html('h1.main_title').children('a').text()
         for a in html('div.crumb-item').children('a'):
@@ -283,7 +286,7 @@ class ListParser(Parser):
         return data
 
     def Parse_lib_m(self,input_text):
-        html = PyQuery(getUrl(input_text))
+        html = PyQuery(getUrl(input_text,pool = self.pool))
         
         """
         album_items = html('div.clearfix').children('li.album_item')
@@ -323,7 +326,7 @@ class ListParser(Parser):
         
         data_doc_id = html('span.play_source').attr('data-doc-id')
         ejson_url = 'http://rq.video.iqiyi.com/aries/e.json?site=iqiyi&docId='+data_doc_id+'&count=100000'
-        ejson = json.loads(getUrl(ejson_url))
+        ejson = json.loads(getUrl(ejson_url,pool = self.pool))
         ejson_datas = ejson["data"]["objs"]
         data["total"] = ejson_datas["info"]["total_video_number"]
         data["title"] = ejson_datas["info"]["album_title"]
@@ -345,7 +348,7 @@ class ListParser(Parser):
 
     def Parse_v(self,input_text):
         print(input_text)
-        html = PyQuery(getUrl(input_text))
+        html = PyQuery(getUrl(input_text,pool = self.pool))
         datainfo_navlist = PyQuery(html("#datainfo-navlist"))
         for a in datainfo_navlist.children('a'):
             a = PyQuery(a)

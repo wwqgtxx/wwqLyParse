@@ -92,7 +92,7 @@ class IQiYiParser(Parser):
     
     def getDispathKey(self,rid):
         tp=")(*&^flash@#$%a"  #magic from swf
-        time=json.loads(getUrl("http://data.video.qiyi.com/t?tn="+str(random())),allowCache = False)["t"]
+        time=json.loads(getUrl("http://data.video.qiyi.com/t?tn="+str(random()),allowCache = False))["t"]
         t=str(int(floor(int(time)/(10*60.0))))
         return hashlib.new("md5",bytes(t+tp+rid,"utf-8")).hexdigest()
             

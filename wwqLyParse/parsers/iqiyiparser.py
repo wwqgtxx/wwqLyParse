@@ -246,7 +246,7 @@ class IQiYiParser(Parser):
             data = {
                 "protocol" : "http", 
                 "urls" :  url,
-                "maxDown" : 1,
+                #"maxDown" : 1,
                 "unfixIp" : True
             }
             datas.append(data)

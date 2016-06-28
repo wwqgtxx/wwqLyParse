@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
 
-#try:
-#    from .gevent import monkey
-#except Exception:
-#    from gevent import monkey
-
-#monkey.patch_all()
+try:
+    from gevent import monkey
+    monkey.patch_all()
+    print("gevent.monkey.patch_all()")
+except Exception:
+    gevent = None
 
 try:
     from .lib import bridge
@@ -48,7 +48,7 @@ except Exception:
 version = {
     'port_version' : "0.5.0", 
     'type' : 'parse', 
-    'version' : '0.3.7', 
+    'version' : '0.3.8', 
     'uuid' : '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter' : [],
     'name' : 'WWQ猎影解析插件', 

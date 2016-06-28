@@ -1,19 +1,22 @@
 #!/usr/bin/env python3.5
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
-import urllib.request,io,os,sys,json,re,gzip,time,socket,math,urllib.error
+import urllib.request,io,os,sys,json,re,gzip,time,socket,math,urllib.error,http.client,gc
 
 urlcache = {}
 URLCACHE_MAX = 1000
 def getUrl(oUrl, encoding = 'utf-8' , headers = {}, data = None, method = None,allowCache = True) :
     def cleanUrlcache():
         global urlcache
-        global URLCACHE_MAX
         sortedDict = sorted(urlcache.items(), key=lambda d: d[1]["lasttimestap"], reverse=True)
         newDict = {}
         for (k, v) in sortedDict[:int(URLCACHE_MAX - URLCACHE_MAX/10)]:# 从数组中取索引start开始到end-1的记录
             newDict[k] = v
+        del sortedDict
+        del urlcache
+        global urlcache
         urlcache = newDict
+        gc.collect()
         print("urlcache has been cleaned")
     url_json = {"oUrl":oUrl,"encoding":encoding,"headers":headers,"data":data,"method":method}
     url_json = json.dumps(url_json,sort_keys=True, ensure_ascii=False)
@@ -28,6 +31,7 @@ def getUrl(oUrl, encoding = 'utf-8' , headers = {}, data = None, method = None,a
             print("cache get:"+url_json)
             if (len(urlcache_temp)>URLCACHE_MAX):
                 cleanUrlcache()
+            del urlcache_temp
             return html_text
         print("normal get:"+url_json)
     else:
@@ -55,6 +59,10 @@ def getUrl(oUrl, encoding = 'utf-8' , headers = {}, data = None, method = None,a
             print('request attempt %s timeout' % str(i + 1))
         except urllib.error.URLError:
             print('request attempt %s URLError' % str(i + 1))
+        except http.client.RemoteDisconnected:
+            print('request attempt %s RemoteDisconnected' % str(i + 1))
+        except http.client.IncompleteRead:
+            print('request attempt %s IncompleteRead' % str(i + 1))
         except:
             #print(e)
             import traceback  

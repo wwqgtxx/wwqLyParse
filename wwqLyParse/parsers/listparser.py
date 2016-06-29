@@ -3,7 +3,7 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 
 
-import urllib.request,io,os,sys,json,re,threading,queue
+import urllib.request,io,os,sys,json,re,threading,queue,logging
 
 from pyquery.pyquery import PyQuery
 
@@ -244,7 +244,7 @@ class ListParser(Parser):
             except Exception as e:
                 #import traceback  
                 #traceback.print_exc()  
-                print(str(get_list_info)+str(e))
+                logging.error(str(get_list_info)+str(e))
         html_text = getUrl(input_text,pool = self.pool)
         html = PyQuery(html_text)
         title = html('h1.main_title').children('a').text()
@@ -279,7 +279,7 @@ class ListParser(Parser):
             except Exception as e:
                 #import traceback  
                 #traceback.print_exc()  
-                print(str(get_list_info_html)+e)
+                logging.error(str(get_list_info_html)+e)
             
         data["total"] = len(data["data"])
         
@@ -347,7 +347,7 @@ class ListParser(Parser):
         return data
 
     def Parse_v(self,input_text):
-        print(input_text)
+        logging.debug(input_text)
         html = PyQuery(getUrl(input_text,pool = self.pool))
         datainfo_navlist = PyQuery(html("#datainfo-navlist"))
         for a in datainfo_navlist.children('a'):

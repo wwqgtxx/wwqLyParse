@@ -3,7 +3,7 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 
 
-import urllib.request,io,os,sys,json,re
+import urllib.request,io,os,sys,json,re,logging
 
 from pyquery.pyquery import PyQuery
 
@@ -22,7 +22,7 @@ class BaiduLinkUrlHandle(UrlHandle):
         a = html.children('a')
         a = PyQuery(a)
         url = a.attr("href")
-        print('urlHandle:"'+input_text+'"-->"'+url+'"')
+        logging.debug('urlHandle:"'+input_text+'"-->"'+url+'"')
         return url
     
 class MgtvUrlHandle(UrlHandle):
@@ -31,7 +31,7 @@ class MgtvUrlHandle(UrlHandle):
 
     def urlHandle(self,input_text):
         url = input_text.replace("hunantv.com","mgtv.com")
-        print('urlHandle:"'+input_text+'"-->"'+url+'"')
+        logging.debug('urlHandle:"'+input_text+'"-->"'+url+'"')
         return url
     
 class LetvUrlHandle(UrlHandle):
@@ -40,5 +40,5 @@ class LetvUrlHandle(UrlHandle):
 
     def urlHandle(self,input_text):
         url = input_text.replace("letv.com","le.com")
-        print('urlHandle:"'+input_text+'"-->"'+url+'"')
+        logging.debug('urlHandle:"'+input_text+'"-->"'+url+'"')
         return url

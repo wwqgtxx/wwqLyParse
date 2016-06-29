@@ -3,7 +3,7 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 
 
-import urllib.request,io,os,sys,json,re,math,subprocess,traceback
+import urllib.request,io,os,sys,json,re,math,subprocess,traceback,logging
 
 
 try:
@@ -35,7 +35,7 @@ class LypPvParser(Parser):
             from lyp_pv import run
         if re.search('www.iqiyi.com/(lib/m|a_)',url):
             return []
-        print("call lyp_pv.run.Parse("+url+")")
+        logging.info("call lyp_pv.run.Parse("+url+")")
         out = run.Parse(url)
         if "data" in out:
             for data in out['data']:
@@ -81,7 +81,7 @@ class LypPvParser(Parser):
             parts[0] = "7"
         label=('_').join(parts)
         label = "() "+label
-        print("call lyp_pv.run.ParseURL("+url+","+label+","+str(min)+","+str(max)+")")
+        logging.info("call lyp_pv.run.ParseURL("+url+","+label+","+str(min)+","+str(max)+")")
         result = run.ParseURL(url,label,min,max)
         if "iqiyi" in url:
             for item in result:
@@ -94,13 +94,14 @@ class LypPvParser(Parser):
                 from ..lyp_pv import run
             except Exception as e:
                 from lyp_pv import run
-            print("call lyp_pv.run._lyyc_about()")
+                logging.debug("call lyp_pv.run._lyyc_about()")
             info = run._lyyc_about()
             return "负锐解析["+str(info['pack_version'])+"]"+str(info['version'])
         except Exception as e:
+            logging.exception()
             #print(e)
-            import traceback  
-            traceback.print_exc()  
+            #import traceback
+            #traceback.print_exc()
         return ""
 
 

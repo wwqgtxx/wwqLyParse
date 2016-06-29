@@ -3,7 +3,7 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 
 
-import urllib.request,io,os,sys,json,re,threading,queue
+import urllib.request,io,os,sys,json,re,threading,queue,logging
 
 try:
     from ..common import *
@@ -32,7 +32,7 @@ class PostfixUrlHandle(UrlHandle):
         while not q_results.empty():
             htmls.append(q_results.get())
         if htmls[0] == htmls[1]:
-            print('urlHandle:"'+url+'"-->"'+result+'"')
+            logging.debug('urlHandle:"'+url+'"-->"'+result+'"')
             return result
         return url
     

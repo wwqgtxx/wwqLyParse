@@ -101,7 +101,7 @@ class AnyPageParser(Parser):
                         queue.put({"result":result,"url":url})
                 except Exception as e:
                     #continue
-                    print(e)
+                    logging.error(e)
                     #import traceback  
                     #traceback.print_exc() 
             list_parser = listparser.ListParser(pool = Pool(20))

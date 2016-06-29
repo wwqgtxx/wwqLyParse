@@ -3,7 +3,7 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 
 
-import urllib.request,io,os,sys,json,re,math,subprocess,traceback
+import urllib.request,io,os,sys,json,re,math,subprocess,traceback,logging
 
 try:
     from ..lib import conf,bridge
@@ -65,7 +65,7 @@ class YouGetParser(Parser):
         py_bin = sys.executable
         args = [py_bin, y_bin] + arg
         PIPE = subprocess.PIPE
-        print(args)
+        logging.debug(args)
         p = subprocess.Popen(args, stdout=PIPE, stderr=PIPE, shell=False)
         stdout, stderr = p.communicate()
         # try to decode
@@ -209,9 +209,10 @@ class YouGetParser(Parser):
                 return ""
             return stderr.split(',')[0]
         except Exception as e:
+            logging.exception()
             #print(e)
-            import traceback  
-            traceback.print_exc()  
+            #import traceback
+            #traceback.print_exc()
         return ""
 
 

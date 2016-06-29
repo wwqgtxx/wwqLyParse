@@ -17,7 +17,7 @@ except Exception as e:
 import sys
 sys.path.insert(0, bridge.pn(bridge.pjoin(bridge.get_root_path(), './lib/flask_lib')))
 
-import re,threading,queue,sys,json,os,time
+import re,threading,queue,sys,json,os,time,logging
 try:
     from flask import Flask,request
 except Exception:
@@ -68,14 +68,15 @@ def urlHandle(input_text):
         for filter in urlhandle.getfilters():
             if re.match(filter,input_text):
                 try:
-                    print(urlhandle)
+                    logging.debug(urlhandle)
                     result = urlhandle.urlHandle(input_text)
                     if (result is not None) and (result is not ""):
                         input_text = result
                 except Exception as e:
+                    logging.exception()
                     #print(e)
-                    import traceback  
-                    traceback.print_exc()  
+                    #import traceback
+                    #traceback.print_exc()
     return input_text
 
 
@@ -94,11 +95,11 @@ def GetVersion():
 def Parse(input_text,types=None,parsers = parsers,urlhandles = urlhandles):
     def run(queue,parser,input_text,types):
         try:
-            print(parser)
+            logging.debug(parser)
             result = parser.Parse(input_text,types)
             if (result is not None) and (result != []):
                 if "error" in result:
-                    print(result["error"])
+                    logging.error(result["error"])
                     return
                 if ("data" in result) and (result["data"] is not None) and (result["data"] != []):
                     for data in result['data']:
@@ -108,9 +109,10 @@ def Parse(input_text,types=None,parsers = parsers,urlhandles = urlhandles):
                             data['code'] = str(data['code']) + "@" + parser.__class__.__name__
                     queue.put({"result":result,"parser":parser})
         except Exception as e:
+            logging.exception()
             #print(e)
-            import traceback  
-            traceback.print_exc() 
+            #import traceback
+            #traceback.print_exc()
             
     input_text = urlHandle(input_text)
     results = []
@@ -135,17 +137,18 @@ def Parse(input_text,types=None,parsers = parsers,urlhandles = urlhandles):
 def ParseURL(input_text,label,min=None,max=None,parsers = parsers,urlhandles = urlhandles):
     def run(queue,parser,input_text,label,min,max):
         try:
-            print(parser)
+            logging.debug(parser)
             result = parser.ParseURL(input_text,label,min,max)
             if (result is not None) and (result != []):
                 if "error" in result:
-                    print(result["error"])
+                    logging.error(result["error"])
                     return
                 queue.put({"result":result,"parser":parser})
         except Exception as e:
+            logging.exception()
             #print(e)
-            import traceback  
-            traceback.print_exc() 
+            #import traceback
+            #traceback.print_exc()
     
     t_label = label.split("@")
     label = t_label[0]
@@ -175,8 +178,10 @@ def ParseURL(input_text,label,min=None,max=None,parsers = parsers,urlhandles = u
     return results[0]
     
 def debug(input):
-    print("\n------------------------------------------------------------\n")
-    print (((str(input))).encode('gbk', 'ignore').decode('gbk') )
+    info = "\n------------------------------------------------------------\n"
+    info += ((str(input))).encode('gbk', 'ignore').decode('gbk')
+    info += "\n------------------------------------------------------------"
+    logging.debug(info)
     
 @app.route('/close',methods=['POST','GET'])
 def Close():
@@ -228,7 +233,7 @@ def parseUrl():
 
 if __name__ == '__main__':
     initVersion()
-    print("\n------------------------------------------------------------\n")
+    logging.debug("\n------------------------------------------------------------\n")
     app.run(debug=False, use_reloader=False,threaded=True)
     
     #main()

@@ -3,7 +3,7 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 
 
-import urllib,io,os,sys,json,re,math,subprocess,time,binascii,math
+import urllib,io,os,sys,json,re,math,subprocess,time,binascii,math,logging
 
 from uuid import uuid4
 from random import random,randint
@@ -177,8 +177,9 @@ class IQiYiMParser(Parser):
                     try:
                         size_str = byte2size(size, False)
                     except Exception as e:
-                        import traceback  
-                        traceback.print_exc()
+                        logging.exception()
+                        #import traceback
+                        #traceback.print_exc()
                         size_str = "0"
                     data["name"] = info['data']['playInfo']['vn']
                     data["data"].append({

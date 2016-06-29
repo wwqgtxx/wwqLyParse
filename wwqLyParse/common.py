@@ -1,18 +1,24 @@
 #!/usr/bin/env python3.5
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
+import logging
+import sys
+logging.basicConfig(level=logging.DEBUG,
+                format='%(asctime)s %(filename)s[line:%(lineno)d]<%(funcName)s> %(threadName)s %(levelname)s : %(message)s',
+                datefmt='%H:%M:%S',stream=sys.stdout)
+
 try:
     from gevent import monkey
     monkey.patch_all()
-    print("gevent.monkey.patch_all()")
+    logging.info("gevent.monkey.patch_all()")
     from gevent.pool import Pool
     from gevent.queue import Queue
-    print("use gevent.pool")
+    logging.info("use gevent.pool")
 except Exception:
     gevent = None
     from simplepool import Pool
     from queue import Queue
-    print("use simple pool")
+    logging.info("use simple pool")
     
 import urllib.request,io,os,sys,json,re,gzip,time,socket,math,urllib.error,http.client,gc,threading,urllib
 
@@ -37,7 +43,7 @@ def getUrl(oUrl, encoding = 'utf-8' , headers = {}, data = None, method = None,a
         del urlcache
         urlcache = newDict
         gc.collect()
-        print("urlcache has been cleaned")
+        logging.debug("urlcache has been cleaned")
     def _getUrl(result_queue,oUrl, encoding, headers, data, method,allowCache):
         url_json = {"oUrl":oUrl,"encoding":encoding,"headers":headers,"data":data,"method":method}
         url_json = json.dumps(url_json,sort_keys=True, ensure_ascii=False)
@@ -49,15 +55,15 @@ def getUrl(oUrl, encoding = 'utf-8' , headers = {}, data = None, method = None,a
                 item = urlcache_temp[url_json]
                 html_text = item["html_text"]
                 item["lasttimestap"] = int(time.time())
-                print("cache get:"+url_json)
+                logging.debug("cache get:"+url_json)
                 if (len(urlcache_temp)>URLCACHE_MAX):
                     pool_cleanUrlcache.spawn(cleanUrlcache)
                 del urlcache_temp
                 result_queue.put(html_text)
                 return
-            print("normal get:"+url_json)
+            logging.debug("normal get:"+url_json)
         else:
-            print("nocache get:"+url_json)
+            logging.debug("nocache get:"+url_json)
         # url 包含中文时 parse.quote_from_bytes(oUrl.encode('utf-8'), ':/&%?=+')
         req = urllib.request.Request( oUrl, headers= headers, data = data, method = method )
         for i in range(10):
@@ -79,17 +85,18 @@ def getUrl(oUrl, encoding = 'utf-8' , headers = {}, data = None, method = None,a
                     result_queue.put(html_text)
                     return
             except socket.timeout:
-                print('request attempt %s timeout' % str(i + 1))
+                logging.warning('request attempt %s timeout' % str(i + 1))
             except urllib.error.URLError:
-                print('request attempt %s URLError' % str(i + 1))
+                logging.warning('request attempt %s URLError' % str(i + 1))
             except http.client.RemoteDisconnected:
-                print('request attempt %s RemoteDisconnected' % str(i + 1))
+                logging.warning('request attempt %s RemoteDisconnected' % str(i + 1))
             except http.client.IncompleteRead:
-                print('request attempt %s IncompleteRead' % str(i + 1))
+                logging.warning('request attempt %s IncompleteRead' % str(i + 1))
             except:
+                logging.exception()
                 #print(e)
-                import traceback  
-                traceback.print_exc()
+                #import traceback
+                #traceback.print_exc()
     
     queue = Queue(1)
     pool.spawn(_getUrl,queue,oUrl, encoding, headers, data, method,allowCache)
@@ -110,10 +117,10 @@ def IsOpen(ip,port):
     try:
         s.connect((ip,int(port)))
         s.shutdown(2)
-        print('%d is open' % port)
+        logging.info('%d is open' % port)
         return True
     except:
-        print('%d is down' % port)
+        logging.info('%d is down' % port)
         return False
         
 def gen_bitrate(size_byte, time_s, unit_k=1024):

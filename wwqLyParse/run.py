@@ -2,7 +2,11 @@
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
 
-import urllib.request,json,sys,subprocess,time
+import urllib.request,json,sys,subprocess,time,logging
+
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s %(filename)s[line:%(lineno)d]<%(funcName)s> %(threadName)s %(levelname)s : %(message)s',
+                    datefmt='%H:%M:%S',stream=sys.stdout)
 
 import os
 import socket
@@ -28,25 +32,25 @@ get_systeminfo()
         
 def isX64():
     if ("x64-based PC" in systeminfo):
-        print("x64")
+        logging.info("x64")
         return True
     elif ("x86-based PC" in systeminfo):
-        print("x86")
+        logging.info("x86")
         return False
     else:
-        print("UnKnow")
+        logging.info("UnKnow")
         return False
         
 def isXP():
     if ("Windows XP" in systeminfo):
-        print("XP")
+        logging.info("XP")
         return True
     else:
         return False
 
 def is2003():
     if ("Server 2003" in systeminfo):
-        print("2003")
+        logging.info("2003")
         return True
     else:
         return False
@@ -57,7 +61,7 @@ def makePython():
         EMBED_PYTHON = "./lib/python-3.5.2-embed-amd64/wwqLyParse64.exe"
     else:
         EMBED_PYTHON = "./lib/python-3.5.2-embed-win32/wwqLyParse32.exe"
-    print("set EMBED_PYTHON = " + EMBED_PYTHON)
+    logging.info("set EMBED_PYTHON = " + EMBED_PYTHON)
 makePython()
 
 def checkEmbedPython():
@@ -73,13 +77,13 @@ def checkEmbedPython():
         useEmbedPython = False
         return
     args = [py_bin, y_bin]
-    print(args)
+    logging.info(args)
     PIPE = subprocess.PIPE
     p = subprocess.Popen(args, stdout=PIPE, stderr=PIPE, shell=False)
     stdout, stderr = p.communicate()
     stdout = bridge.try_decode(stdout)
     stderr = bridge.try_decode(stderr)
-    print(stdout)
+    logging.info(stdout)
     if "ok" not in stdout:
         useEmbedPython = False
 checkEmbedPython()
@@ -89,26 +93,26 @@ def IsOpen(ip,port):
     try:
         s.connect((ip,int(port)))
         s.shutdown(2)
-        print('%d is open' % port)
+        logging.info('%d is open' % port)
         return True
     except:
-        print('%d is down' % port)
+        logging.info('%d is down' % port)
         return False
 
         
 def _run_main():
     y_bin = bridge.pn(bridge.pjoin(bridge.get_root_path(), './main.py'))
     if useEmbedPython:
-        print("use Embed Python")
+        logging.info("use Embed Python")
         py_bin = bridge.pn(bridge.pjoin(bridge.get_root_path(), EMBED_PYTHON))
     else:
-        print("don't use Embed Python")
+        logging.info("don't use Embed Python")
         py_bin = sys.executable
     if "PyRun.exe" in py_bin:
         args = [py_bin,'--normal', y_bin]
     else:
         args = [py_bin, y_bin]
-    print(args)
+    logging.info(args)
     p = subprocess.Popen(args, shell=False,cwd=bridge.get_root_path(),close_fds=True)
 
 def init():
@@ -134,7 +138,7 @@ def init():
             
 def process(url,values,willRefused=False,needresult = True,needjson = True):
     data = urllib.parse.urlencode(values).encode(encoding='UTF8')
-    print(data)
+    logging.info(data)
     req = urllib.request.Request(url, data)
     #req.add_header('Referer', 'http://www.python.org/')
     for n in range(3):
@@ -150,7 +154,7 @@ def process(url,values,willRefused=False,needresult = True,needjson = True):
                     response = urllib.request.urlopen(req)
                     break
                 except socket.timeout:
-                    print('request attempt %s timeout' % str(i + 1))
+                    logging.info('request attempt %s timeout' % str(i + 1))
             if needresult:
                 the_page = response.read()
                 if needjson:
@@ -161,7 +165,7 @@ def process(url,values,willRefused=False,needresult = True,needjson = True):
             else:
                 return
         except Exception as e:
-            #print(e)
+            #logging.info(e)
             import traceback  
             traceback.print_exc() 
     raise Exception("can't process "+str(url)+str(values))
@@ -212,7 +216,7 @@ def Parse(input_text,types=None):
             results = process(url,values)
             return results
         except Exception as e:
-            #print(e)
+            #logging.info(e)
             import traceback  
             traceback.print_exc()
             error = e
@@ -234,15 +238,17 @@ def ParseURL(input_text,label,min=None,max=None):
             results = process(url,values)
             return results
         except Exception as e:
-            #print(e)
+            #logging.info(e)
             import traceback  
             traceback.print_exc() 
             error = e
     raise e
     
 def debug(input):
-    print("\n------------------------------------------------------------\n")
-    print (((str(input))).encode('gbk', 'ignore').decode('gbk') )
+    info = "\n------------------------------------------------------------\n"
+    info += ((str(input))).encode('gbk', 'ignore').decode('gbk')
+    info += "\n------------------------------------------------------------"
+    logging.debug(info)
     
 def main(): 
     #debug(GetVersion(debug=False))
@@ -263,11 +269,11 @@ def main():
     #debug(Parse('http://www.pptv.com/'))
     #debug(Parse('http://yyfm.xyz/video/album/1300046802.html'))
     #debug(Parse('http://www.iqiyi.com/playlist392712002.html',"collection"))
-    #debug(Parse('http://list.iqiyi.com/www/2/----------------iqiyi--.html'))
+    debug(Parse('http://list.iqiyi.com/www/2/----------------iqiyi--.html'))
     #debug(Parse('http://www.iqiyi.com/a_19rrhb8fjp.html',"list"))
     #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html#vfrm=2-3-0-1'))
     #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html',"formats"))
-    debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html'))
+    #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html'))
     #debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","fullhd@IQiYiParser"))
     #debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","4_1080p_1920x1080_2746.0kbps_44:30.660_7_flv_@lyppv"))
     #debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","(1)  4_1080p_1920x1080_2746.0kbps_44:30.660_7_flv_@lyppv"))

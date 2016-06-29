@@ -3,7 +3,7 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 
 
-import urllib,io,os,sys,json,re,math,subprocess,time
+import urllib,io,os,sys,json,re,math,subprocess,time,logging
 
 from uuid import uuid4
 from random import random,randint
@@ -47,7 +47,7 @@ class IQiYiParser(Parser):
         py_bin = bridge.pn(bridge.pjoin(bridge.get_root_path(), './lib/AIRSDK_Compiler/bin/adl.exe'))
         y_bin = bridge.pn(bridge.pjoin(bridge.get_root_path(), './lib/kill_271_cmd5/handwich_bridge.xml'))
         args = [py_bin, y_bin]
-        print(args)
+        logging.debug(args)
         p = subprocess.Popen(args, shell=False,cwd=bridge.get_root_path(),close_fds=True)
 
     def init(self):
@@ -192,8 +192,9 @@ class IQiYiParser(Parser):
                             size_str = byte2size(size, False)
                             size = byte2size(size, True)
                         except Exception as e:
-                            import traceback  
-                            traceback.print_exc()
+                            logging.exception()
+                            #import traceback
+                            #traceback.print_exc()
                             size_str = "0"
                             size = 0
                         data["data"].append({

@@ -20,7 +20,7 @@ import os
 import socket
 
 try:
-    from .lib import bridge
+    from ..lib import bridge
 except Exception as e:
     from lib import bridge
     

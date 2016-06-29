@@ -97,7 +97,7 @@ def getUrl(oUrl, encoding = 'utf-8' , headers = {}, data = None, method = None,a
         
 def url_size(url, headers = {}):
     if headers:
-        response = urllib.request.urlopen(request.Request(url, headers = headers), None)
+        response = urllib.request.urlopen(urllib.request.Request(url, headers = headers), None)
     else:
         response = urllib.request.urlopen(url)
 

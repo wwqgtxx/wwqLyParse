@@ -3,7 +3,7 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 
 try:
-    from ..common import *
+    from .common import *
 except Exception as e:
     from common import *
    

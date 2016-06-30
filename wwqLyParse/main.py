@@ -25,7 +25,7 @@ except Exception:
 app = Flask(__name__)
 
 try:
-    from .parsers import listparser,indexparser,anypageparser,yougetparser,lyppvparser,mvtvparser,iqiyiparser,iqiyimparser,ykdlparser
+    from .parsers import listparser,indexparser,anypageparser,yougetparser,lyppvparser,mvtvparser,iqiyiparser,iqiyimparser,iqiyimflvparser,ykdlparser
 except Exception:
     import parsers.listparser as listparser
     import parsers.indexparser as indexparser
@@ -35,6 +35,7 @@ except Exception:
     import parsers.mvtvparser as mvtvparser
     import parsers.iqiyiparser as iqiyiparser
     import parsers.iqiyimparser as iqiyimparser
+    import parsers.iqiyimflvparser as iqiyimflvparser
     import parsers.ykdlparser as ykdlparser
     
 
@@ -60,7 +61,7 @@ version = {
 }
 
 
-parsers = [listparser.ListParser(),indexparser.IndexParser(),iqiyiparser.IQiYiParser(),iqiyimparser.IQiYiMParser(),mvtvparser.MgTVParser(),lyppvparser.LypPvParser(),yougetparser.YouGetParser(),ykdlparser.YKDLParser(),anypageparser.AnyPageParser()]
+parsers = [listparser.ListParser(),indexparser.IndexParser(),iqiyiparser.IQiYiParser(),iqiyimparser.IQiYiMParser(),iqiyimflvparser.IQiYiMFlvParser(),mvtvparser.MgTVParser(),lyppvparser.LypPvParser(),yougetparser.YouGetParser(),ykdlparser.YKDLParser(),anypageparser.AnyPageParser()]
 urlhandles = [jumpurlhandle.BaiduLinkUrlHandle(),jumpurlhandle.MgtvUrlHandle(),jumpurlhandle.LetvUrlHandle(),postfixurlhandle.PostfixUrlHandle()]
 
 def urlHandle(input_text):
@@ -109,7 +110,7 @@ def Parse(input_text,types=None,parsers = parsers,urlhandles = urlhandles):
                             data['code'] = str(data['code']) + "@" + parser.__class__.__name__
                     queue.put({"result":result,"parser":parser})
         except Exception as e:
-            logging.exception()
+            logging.exception(str(parser))
             #print(e)
             #import traceback
             #traceback.print_exc()

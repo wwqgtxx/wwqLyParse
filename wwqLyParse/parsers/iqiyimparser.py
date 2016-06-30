@@ -152,7 +152,7 @@ class IQiYiMParser(Parser):
                 "name" : "",   
                 "icon" : "",
                 "provider" : "爱奇艺",
-                "caption" : "WWQ爱奇艺视频解析(移动端接口)",
+                "caption" : "WWQ爱奇艺视频解析(移动端MP4接口)",
                 #"warning" : "提示信息",
                 "sorted" : 1,
                 "data" : []

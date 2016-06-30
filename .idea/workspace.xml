@@ -2,18 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0fe763de-fcce-4d4c-8392-b54136f37e2d" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/wwqLyParse/parsers/iqiyimflvparser.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wwqLyParse/common.py" afterPath="$PROJECT_DIR$/wwqLyParse/common.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wwqLyParse/main.py" afterPath="$PROJECT_DIR$/wwqLyParse/main.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wwqLyParse/parsers/anypageparser.py" afterPath="$PROJECT_DIR$/wwqLyParse/parsers/anypageparser.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wwqLyParse/parsers/iqiyimparser.py" afterPath="$PROJECT_DIR$/wwqLyParse/parsers/iqiyimparser.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wwqLyParse/parsers/iqiyiparser.py" afterPath="$PROJECT_DIR$/wwqLyParse/parsers/iqiyiparser.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wwqLyParse/parsers/listparser.py" afterPath="$PROJECT_DIR$/wwqLyParse/parsers/listparser.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wwqLyParse/parsers/lyppvparser.py" afterPath="$PROJECT_DIR$/wwqLyParse/parsers/lyppvparser.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wwqLyParse/parsers/yougetparser.py" afterPath="$PROJECT_DIR$/wwqLyParse/parsers/yougetparser.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wwqLyParse/run.py" afterPath="$PROJECT_DIR$/wwqLyParse/run.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wwqLyParse/urlhandles/jumpurlhandle.py" afterPath="$PROJECT_DIR$/wwqLyParse/urlhandles/jumpurlhandle.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wwqLyParse/urlhandles/postfixurlhandle.py" afterPath="$PROJECT_DIR$/wwqLyParse/urlhandles/postfixurlhandle.py" />
     </list>
     <ignored path="wwqLyParse.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -28,6 +21,7 @@
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/wwqLyParse$run_py.coverage" NAME="run.py Coverage Results" MODIFIED="1467213643155" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/wwqLyParse" />
+    <SUITE FILE_PATH="coverage/wwqLyParse$main_py.coverage" NAME="main.py Coverage Results" MODIFIED="1467259217652" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/wwqLyParse" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -38,13 +32,67 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="common.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="common.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/wwqLyParse/common.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="209">
-              <caret line="38" column="20" selection-start-line="38" selection-start-column="20" selection-end-line="38" selection-end-column="20" />
+            <state relative-caret-position="676">
+              <caret line="212" column="18" selection-start-line="212" selection-start-column="18" selection-end-line="212" selection-end-column="18" />
               <folding>
                 <element signature="e#86#100#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="lyppvparser.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/wwqLyParse/parsers/lyppvparser.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="260">
+              <caret line="103" column="13" selection-start-line="103" selection-start-column="13" selection-end-line="103" selection-end-column="13" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="iqiyimparser.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/wwqLyParse/parsers/iqiyimparser.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2565">
+              <caret line="154" column="46" selection-start-line="154" selection-start-column="46" selection-end-line="154" selection-end-column="46" />
+              <folding>
+                <element signature="e#88#162#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="iqiyimflvparser.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/wwqLyParse/parsers/iqiyimflvparser.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="57">
+              <caret line="29" column="6" selection-start-line="29" selection-start-column="6" selection-end-line="29" selection-end-column="21" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="11:46:09 common.py[line:…d-150 DEBUG : nocache get" pinned="false" current-in-tab="false">
+        <entry file="mock:///11:46:09 common.py[line:…d-150 DEBUG : nocache get">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="133">
+              <caret line="7" column="11" selection-start-line="7" selection-start-column="11" selection-end-line="7" selection-end-column="296" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="listparser.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/wwqLyParse/parsers/listparser.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="431">
+              <caret line="280" column="32" selection-start-line="280" selection-start-column="27" selection-end-line="280" selection-end-column="32" />
+              <folding>
+                <element signature="e#88#151#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -60,83 +108,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="run.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/wwqLyParse/run.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="152">
-              <caret line="8" column="38" selection-start-line="8" selection-start-column="38" selection-end-line="8" selection-end-column="56" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="main.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/wwqLyParse/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3401">
-              <caret line="179" column="0" selection-start-line="179" selection-start-column="0" selection-end-line="183" selection-end-column="23" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="postfixurlhandle.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/wwqLyParse/urlhandles/postfixurlhandle.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="15" column="69" selection-start-line="14" selection-start-column="0" selection-end-line="15" selection-end-column="69" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ykdlparser.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/wwqLyParse/parsers/ykdlparser.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-81">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="mvtvparser.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/wwqLyParse/parsers/mvtvparser.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="146">
-              <caret line="36" column="18" selection-start-line="36" selection-start-column="13" selection-end-line="36" selection-end-column="18" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="listparser.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/wwqLyParse/parsers/listparser.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5320">
-              <caret line="280" column="32" selection-start-line="280" selection-start-column="27" selection-end-line="280" selection-end-column="32" />
-              <folding>
-                <element signature="e#88#151#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="indexparser.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/wwqLyParse/parsers/indexparser.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="16" selection-start-line="0" selection-start-column="15" selection-end-line="0" selection-end-column="16" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="anypageparser.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/wwqLyParse/parsers/anypageparser.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="146">
-              <caret line="130" column="26" selection-start-line="130" selection-start-column="21" selection-end-line="130" selection-end-column="26" />
+            <state relative-caret-position="969">
+              <caret line="51" column="22" selection-start-line="51" selection-start-column="22" selection-end-line="51" selection-end-column="22" />
               <folding />
             </state>
           </provider>
@@ -151,8 +127,6 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/wwqLyParse/parsers/iqiyiparser.py" />
-        <option value="$PROJECT_DIR$/wwqLyParse/parsers/iqiyimparser.py" />
-        <option value="$PROJECT_DIR$/wwqLyParse/main.py" />
         <option value="$PROJECT_DIR$/wwqLyParse/parsers/lyppvparser.py" />
         <option value="$PROJECT_DIR$/wwqLyParse/parsers/yougetparser.py" />
         <option value="$PROJECT_DIR$/wwqLyParse/parsers/listparser.py" />
@@ -161,6 +135,9 @@
         <option value="$PROJECT_DIR$/wwqLyParse/urlhandles/jumpurlhandle.py" />
         <option value="$PROJECT_DIR$/wwqLyParse/run.py" />
         <option value="$PROJECT_DIR$/wwqLyParse/common.py" />
+        <option value="$PROJECT_DIR$/wwqLyParse/parsers/iqiyimparser.py" />
+        <option value="$PROJECT_DIR$/wwqLyParse/main.py" />
+        <option value="$PROJECT_DIR$/wwqLyParse/parsers/iqiyimflvparser.py" />
       </list>
     </option>
   </component>
@@ -176,6 +153,22 @@
     <option name="width" value="1456" />
     <option name="height" value="876" />
   </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>AngularJS</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
+  </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
     <OptionsSetting value="true" id="Remove" />
@@ -183,7 +176,7 @@
     <OptionsSetting value="true" id="Update" />
     <OptionsSetting value="true" id="Status" />
     <OptionsSetting value="true" id="Edit" />
-    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="2" id="Add" />
     <ConfirmationsSetting value="0" id="Remove" />
   </component>
   <component name="ProjectView">
@@ -201,8 +194,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -251,15 +242,22 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/wwqLyParse/run.py" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/wwqLyParse/main.py" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+    <property name="settings.editor.selected.configurable" value="preferences.editor" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
   </component>
-  <component name="RunManager" selected="Python.run.py">
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\PYTHON\wwqLyParse\wwqLyParse\parsers" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.main.py">
     <configuration default="true" type="DjangoTestsConfigurationType" factoryName="Django tests">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -487,8 +485,28 @@
       <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
     </configuration>
-    <list size="1">
+    <configuration default="false" name="main.py" type="PythonConfigurationType" factoryName="Python">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="PYTHONDONTWRITEBYTECODE" value="x" />
+      </envs>
+      <option name="SDK_HOME" value="D:\PYTHON\wwqLyParse\wwqLyParse\lib\python-3.5.2-embed-amd64\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/wwqLyParse" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="wwqLyParse" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/wwqLyParse/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <method />
+    </configuration>
+    <list size="2">
       <item index="0" class="java.lang.String" itemvalue="Python.run.py" />
+      <item index="1" class="java.lang.String" itemvalue="Python.main.py" />
     </list>
   </component>
   <component name="ShelveChangesManager" show_recycled="false">
@@ -519,7 +537,14 @@
       <option name="project" value="LOCAL" />
       <updated>1467207409618</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="rewrite print with logging module">
+      <created>1467213698154</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1467213698154</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TodoView" selected-index="2">
@@ -535,13 +560,13 @@
     <frame x="-8" y="-8" width="1456" height="876" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.258596" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26217765" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32974428" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32974428" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3293011" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.66890985" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3293011" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32974428" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32974428" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -569,7 +594,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="update idea project config" />
     <MESSAGE value="small bug fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="small bug fix" />
+    <MESSAGE value="rewrite print with logging module" />
+    <option name="LAST_COMMIT_MESSAGE" value="rewrite print with logging module" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -580,11 +606,85 @@
           <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="4" />
+      <option name="time" value="5" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/wwqLyParse/parsers/lyppvparser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wwqLyParse/urlhandles/jumpurlhandle.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="114">
+          <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wwqLyParse/run.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="8" column="38" selection-start-line="8" selection-start-column="38" selection-end-line="8" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wwqLyParse/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3401">
+          <caret line="179" column="0" selection-start-line="179" selection-start-column="0" selection-end-line="183" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wwqLyParse/urlhandles/postfixurlhandle.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="15" column="69" selection-start-line="14" selection-start-column="0" selection-end-line="15" selection-end-column="69" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wwqLyParse/parsers/mvtvparser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="646">
+          <caret line="36" column="18" selection-start-line="36" selection-start-column="13" selection-end-line="36" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wwqLyParse/parsers/listparser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5320">
+          <caret line="280" column="32" selection-start-line="280" selection-start-column="27" selection-end-line="280" selection-end-column="32" />
+          <folding>
+            <element signature="e#88#151#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wwqLyParse/parsers/indexparser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="16" selection-start-line="0" selection-start-column="15" selection-end-line="0" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wwqLyParse/parsers/anypageparser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2432">
+          <caret line="130" column="26" selection-start-line="130" selection-start-column="21" selection-end-line="130" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/wwqLyParse/common.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -599,9 +699,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2052">
           <caret line="111" column="21" selection-start-line="111" selection-start-column="21" selection-end-line="111" selection-end-column="21" />
-          <folding>
-            <element signature="e#87#141#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -625,7 +723,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -641,7 +738,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -677,9 +773,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="684">
           <caret line="39" column="11" selection-start-line="39" selection-start-column="11" selection-end-line="39" selection-end-column="11" />
-          <folding>
-            <element signature="e#87#141#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -702,9 +796,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#87#141#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -747,7 +839,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
           <caret line="836" column="8" selection-start-line="836" selection-start-column="8" selection-end-line="836" selection-end-column="8" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -755,7 +846,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -773,47 +863,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/wwqLyParse/you-get/src/you_get/common.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="146">
-          <caret line="1048" column="11" selection-start-line="1048" selection-start-column="4" selection-end-line="1048" selection-end-column="11" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wwqLyParse/parsers/iqiyiparser.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="146">
-          <caret line="240" column="34" selection-start-line="240" selection-start-column="34" selection-end-line="240" selection-end-column="34" />
-          <folding>
-            <element signature="e#88#148#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wwqLyParse/parsers/iqiyimparser.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="146">
-          <caret line="181" column="40" selection-start-line="181" selection-start-column="35" selection-end-line="181" selection-end-column="40" />
-          <folding>
-            <element signature="e#88#162#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wwqLyParse/parsers/lyppvparser.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="103" column="13" selection-start-line="103" selection-start-column="13" selection-end-line="103" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/wwqLyParse/parsers/yougetparser.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="95">
           <caret line="5" column="66" selection-start-line="5" selection-start-column="66" selection-end-line="5" selection-end-column="66" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -827,19 +880,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/wwqLyParse/parsers/mvtvparser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="146">
+        <state relative-caret-position="646">
           <caret line="36" column="18" selection-start-line="36" selection-start-column="13" selection-end-line="36" selection-end-column="18" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wwqLyParse/parsers/listparser.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5320">
-          <caret line="280" column="32" selection-start-line="280" selection-start-column="27" selection-end-line="280" selection-end-column="32" />
-          <folding>
-            <element signature="e#88#151#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -853,8 +896,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/wwqLyParse/parsers/anypageparser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="146">
+        <state relative-caret-position="0">
           <caret line="130" column="26" selection-start-line="130" selection-start-column="21" selection-end-line="130" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wwqLyParse/urlhandles/postfixurlhandle.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="15" column="69" selection-start-line="14" selection-start-column="0" selection-end-line="15" selection-end-column="69" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wwqLyParse/run.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="8" column="38" selection-start-line="8" selection-start-column="38" selection-end-line="8" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wwqLyParse/Python64.bat">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -867,37 +934,91 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/wwqLyParse/urlhandles/postfixurlhandle.py">
+    <entry file="file://$PROJECT_DIR$/wwqLyParse/you-get/src/you_get/common.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="15" column="69" selection-start-line="14" selection-start-column="0" selection-end-line="15" selection-end-column="69" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wwqLyParse/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3401">
-          <caret line="179" column="0" selection-start-line="179" selection-start-column="0" selection-end-line="183" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wwqLyParse/run.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
-          <caret line="8" column="38" selection-start-line="8" selection-start-column="38" selection-end-line="8" selection-end-column="56" />
+        <state relative-caret-position="133">
+          <caret line="158" column="0" selection-start-line="158" selection-start-column="0" selection-end-line="183" selection-end-column="18" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/wwqLyParse/common.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="38" column="20" selection-start-line="38" selection-start-column="20" selection-end-line="38" selection-end-column="20" />
+        <state relative-caret-position="676">
+          <caret line="212" column="18" selection-start-line="212" selection-start-column="18" selection-end-line="212" selection-end-column="18" />
           <folding>
             <element signature="e#86#100#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wwqLyParse/parsers/listparser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="431">
+          <caret line="280" column="32" selection-start-line="280" selection-start-column="27" selection-end-line="280" selection-end-column="32" />
+          <folding>
+            <element signature="e#88#151#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wwqLyParse/parsers/iqiyimparser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2565">
+          <caret line="154" column="46" selection-start-line="154" selection-start-column="46" selection-end-line="154" selection-end-column="46" />
+          <folding>
+            <element signature="e#88#162#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wwqLyParse/parsers/lyppvparser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="260">
+          <caret line="103" column="13" selection-start-line="103" selection-start-column="13" selection-end-line="103" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/1.JSOM">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/1.JSON">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="194">
+          <caret line="0" column="29335" selection-start-line="0" selection-start-column="29335" selection-end-line="0" selection-end-column="29335" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wwqLyParse/parsers/iqiyiparser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2901">
+          <caret line="172" column="47" selection-start-line="172" selection-start-column="47" selection-end-line="172" selection-end-column="49" />
+          <folding>
+            <element signature="e#88#148#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wwqLyParse/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="969">
+          <caret line="51" column="22" selection-start-line="51" selection-start-column="22" selection-end-line="51" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wwqLyParse/parsers/iqiyimflvparser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="57">
+          <caret line="29" column="6" selection-start-line="29" selection-start-column="6" selection-end-line="29" selection-end-column="21" />
+          <folding />
         </state>
       </provider>
     </entry>

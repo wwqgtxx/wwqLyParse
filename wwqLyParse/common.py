@@ -98,6 +98,7 @@ def getUrl(oUrl, encoding = 'utf-8' , headers = {}, data = None, method = None,a
                 #print(e)
                 #import traceback
                 #traceback.print_exc()
+        result_queue.put("")
     
     queue = Queue(1)
     pool.spawn(_getUrl,queue,oUrl, encoding, headers, data, method,allowCache)

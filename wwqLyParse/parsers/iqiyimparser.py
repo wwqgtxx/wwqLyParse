@@ -171,9 +171,13 @@ class IQiYiMParser(Parser):
                 info = self.getVMS(tvid, videoid,self.stream_to_bid[stream['id']])
                 if info["code"] == "A00000":
                     size = url_size(info['data']['m3u'])
-                    time_s = info['data']["duration"]
-                    time_s = round(time_s, 3)
-                    bitrate = gen_bitrate(size,time_s)
+                    if "duration" in info['data']:
+                        time_s = info['data']["duration"]
+                        time_s = round(time_s, 3)
+                        bitrate = gen_bitrate(size,time_s)
+                    else:
+                        time_s = 0
+                        bitrate = ""
                     try:
                         size_str = byte2size(size, False)
                     except Exception as e:

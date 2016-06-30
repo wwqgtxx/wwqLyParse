@@ -32,6 +32,8 @@ class IQiYiMTsParser(Parser):
     filters = ['http://www.iqiyi.com/']
     
     stream_types = [
+        {'id': '4K-H264', 'container': 'ts', 'video_profile': '(6)4K-H264'},
+        {'id': '4K-H265', 'container': 'ts', 'video_profile': '(6)4K-H265'},
         {'id': '1080P-H264', 'container': 'ts', 'video_profile': '(5)1080P-H264'},
         {'id': '1080P-H265', 'container': 'ts', 'video_profile': '(5)1080P-H265'},
         {'id': '720P-H264', 'container': 'ts', 'video_profile': '(4)720P-H264'},
@@ -51,6 +53,8 @@ class IQiYiMTsParser(Parser):
         17: '720P-H265',
         5:  '1080P-H264',
         18: '1080P-H265',
+        19: '4K-H265',
+        10: '4K-H264',
     }
 
            
@@ -61,6 +65,20 @@ class IQiYiMTsParser(Parser):
         sc = hashlib.new('md5', bytes(str(t) + key + vid, 'utf-8')).hexdigest()
         vmsreq =  'http://cache.m.iqiyi.com/tmts/{0}/{1}/?t={2}&sc={3}&src={4}'.format(tvid, vid, t, sc,src)
         return json.loads(getUrl(vmsreq,allowCache = False))
+
+    def getStream_type(self,stream_id):
+        try:
+            stream_id = self.vd_2_id[stream_id]
+            stream_type = None
+            for item in self.stream_types:
+                if item["id"] == stream_id:
+                    stream_type = item
+                    break
+        except:
+            stream_id = str(stream_id)
+            logging.warning("can't match stream_id " + stream_id)
+            stream_type = {'id': stream_id, 'container': 'ts', 'video_profile': stream_id}
+        return stream_type
     
    
     def Parse(self,input_text,types=None):
@@ -90,20 +108,33 @@ class IQiYiMTsParser(Parser):
             info = self.getVMS(tvid, videoid)
             assert info['code'] == 'A00000', 'can\'t play this video'
             data["name"] = title
-            logging.debug(info)
+            used_id = []
+            if 'ctl' in info['data']:
+                for stream_id in info['data']['ctl']["vip"]["bids"]:
+                    v = info['data']['ctl']['configs'][str(stream_id)]['vid']
+                    vip_info = self.getVMS(tvid, v)
+                    if vip_info['code'] == 'A00000':
+                        vip_url = vip_info['data']['m3u']
+                        stream_type = self.getStream_type(stream_id)
+                        used_id.append(stream_type['id'])
+                        data["data"].append({
+                            "label": ('-').join([stream_type['video_profile'], stream_type['container']]),
+                            "code": stream_type['id'],
+                            "ext": stream_type['container'],
+                            # "size": 0,
+                            # "type" : "",
+                            "download": [{
+                                "protocol": "m3u8",
+                                "urls": vip_url,
+                                # "maxDown" : 1,
+                                "unfixIp": True
+                            }]
+                        })
             for stream in info['data']['vidl']:
                 stream_id = stream['vd']
-                try:
-                    stream_id = self.vd_2_id[stream_id]
-                    stream_type = None
-                    for item in self.stream_types:
-                        if item["id"] == stream_id:
-                            stream_type = item
-                            break
-                except:
-                    stream_id = str(stream_id)
-                    logging.warning("can't match stream_id "+stream_id)
-                    stream_type = {'id': stream_id, 'container': 'ts', 'video_profile': stream_id}
+                stream_type = self.getStream_type(stream_id)
+                if stream_type['id'] in used_id:
+                    break
                 data["data"].append({
                     "label": ('-').join([stream_type['video_profile'], stream_type['container']]),
                     "code": stream_type['id'],

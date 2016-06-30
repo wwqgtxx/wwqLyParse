@@ -20,7 +20,7 @@ class AnyPageParser(Parser):
     
     
     TWICE_PARSE = True    
-    TWICE_PARSE_TIMEOUT = 5    
+    TWICE_PARSE_TIMEOUT = 30
         
     def Parse(self,input_text,types=None):
         global TWICE_PARSE_TIMEOUT
@@ -114,8 +114,11 @@ class AnyPageParser(Parser):
                 for filter in list_parser.getfilters():
                     if re.search(filter,url):
                         parser_threads.append(main.pool.spawn(runlist_parser,q_results,list_parser,url))
-            for parser_thread in parser_threads:
-                parser_thread.join(self.TWICE_PARSE_TIMEOUT)
+            if (gevent is not None):
+                gevent.joinall(parser_threads,timeout=self.TWICE_PARSE_TIMEOUT)
+            else:
+                for parser_thread in parser_threads:
+                    parser_thread.join(self.TWICE_PARSE_TIMEOUT)
             while not q_results.empty():
                 t_results.append(q_results.get())
                 

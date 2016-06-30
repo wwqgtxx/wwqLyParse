@@ -8,6 +8,7 @@ logging.basicConfig(level=logging.DEBUG,
                 datefmt='%H:%M:%S',stream=sys.stdout)
 
 try:
+    import gevent
     from gevent import monkey
     monkey.patch_all()
     logging.info("gevent.monkey.patch_all()")

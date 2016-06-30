@@ -27,7 +27,7 @@ except Exception as e:
 
 
 
-class IQiYiMFlvParser(Parser):
+class IQiYiMTsParser(Parser):
 
     filters = ['http://www.iqiyi.com/']
     
@@ -72,7 +72,7 @@ class IQiYiMFlvParser(Parser):
                 "name" : "",   
                 "icon" : "",
                 "provider" : "爱奇艺",
-                "caption" : "WWQ爱奇艺视频解析(移动端FLV接口)",
+                "caption" : "WWQ爱奇艺视频解析(移动端TS接口)",
                 #"warning" : "提示信息",
                 #"sorted" : 1,
                 "data" : []

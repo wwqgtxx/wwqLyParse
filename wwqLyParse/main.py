@@ -25,7 +25,7 @@ except Exception:
 app = Flask(__name__)
 
 try:
-    from .parsers import listparser,indexparser,anypageparser,yougetparser,lyppvparser,mvtvparser,iqiyiparser,iqiyimparser,iqiyimflvparser,ykdlparser
+    from .parsers import listparser,indexparser,anypageparser,yougetparser,lyppvparser,mvtvparser,iqiyiparser,iqiyimparser,iqiyimtsparser,ykdlparser
 except Exception:
     import parsers.listparser as listparser
     import parsers.indexparser as indexparser
@@ -35,7 +35,7 @@ except Exception:
     import parsers.mvtvparser as mvtvparser
     import parsers.iqiyiparser as iqiyiparser
     import parsers.iqiyimparser as iqiyimparser
-    import parsers.iqiyimflvparser as iqiyimflvparser
+    import parsers.iqiyimtsparser as iqiyimtsparser
     import parsers.ykdlparser as ykdlparser
     
 
@@ -49,7 +49,7 @@ except Exception:
 version = {
     'port_version' : "0.5.0", 
     'type' : 'parse', 
-    'version' : '0.4.1', 
+    'version' : '0.4.2',
     'uuid' : '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter' : [],
     'name' : 'WWQ猎影解析插件', 
@@ -60,8 +60,10 @@ version = {
     'note' : ''
 }
 
+PARSE_TIMEOUT = 60
 
-parsers = [listparser.ListParser(),indexparser.IndexParser(),iqiyiparser.IQiYiParser(),iqiyimparser.IQiYiMParser(),iqiyimflvparser.IQiYiMFlvParser(),mvtvparser.MgTVParser(),lyppvparser.LypPvParser(),yougetparser.YouGetParser(),ykdlparser.YKDLParser(),anypageparser.AnyPageParser()]
+
+parsers = [listparser.ListParser(), indexparser.IndexParser(), iqiyiparser.IQiYiParser(), iqiyimparser.IQiYiMParser(), iqiyimtsparser.IQiYiMTsParser(), mvtvparser.MgTVParser(), lyppvparser.LypPvParser(), yougetparser.YouGetParser(), ykdlparser.YKDLParser(), anypageparser.AnyPageParser()]
 urlhandles = [jumpurlhandle.BaiduLinkUrlHandle(),jumpurlhandle.MgtvUrlHandle(),jumpurlhandle.LetvUrlHandle(),postfixurlhandle.PostfixUrlHandle()]
 
 def urlHandle(input_text):
@@ -166,8 +168,11 @@ def ParseURL(input_text,label,min=None,max=None,parsers = parsers,urlhandles = u
             for filter in parser.getfilters():
                 if re.search(filter,input_text):
                     parser_threads.append(pool.spawn(run,q_results,parser,input_text,label,min,max))
-    for parser_thread in parser_threads:
-        parser_thread.join()
+    if (gevent is not None):
+        gevent.joinall(parser_threads,timeout=PARSE_TIMEOUT)
+    else:
+        for parser_thread in parser_threads:
+            parser_thread.join(PARSE_TIMEOUT)
     while not q_results.empty():
         t_results.append(q_results.get())
     for parser in parsers:

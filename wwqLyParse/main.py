@@ -134,7 +134,15 @@ def Parse(input_text,types=None,parsers = parsers,urlhandles = urlhandles):
     for parser in parsers:
         for t_result in t_results:
             if t_result["parser"] is parser:
-                results.append(t_result["result"])
+                data = t_result["result"]
+                try:
+                    if "sorted" not in data or data["sorted"] != 1:
+                        data["data"] = sorted(data["data"], key=lambda d: d["label"], reverse=True)
+                        logging.info("sorted the "+str(t_result["parser"])+"'s data['data'']")
+                except:
+                    pass
+                results.append(data)
+
     return results
 
 def ParseURL(input_text,label,min=None,max=None,parsers = parsers,urlhandles = urlhandles):

@@ -131,10 +131,10 @@ def IsOpen(ip,port):
     try:
         s.connect((ip,int(port)))
         s.shutdown(2)
-        logging.info('%d is open' % port)
+        logging.info(get_caller_info()+'%d is open' % port)
         return True
     except:
-        logging.info('%d is down' % port)
+        logging.info(get_caller_info()+'%d is down' % port)
         return False
         
 def gen_bitrate(size_byte, time_s, unit_k=1024):
@@ -192,6 +192,25 @@ def byte2size(size_byte, flag_add_byte=False):
         size_str += ' (' + str(size_byte) + ' Byte)'
     # done
     return size_str
+
+def _second_to_time(time_s):
+    def _number(raw):
+        f = float(raw)
+        if int(f) == f:
+            return int(f)
+        return f
+    raw = _number(time_s)
+    sec = math.floor(raw)
+    ms = raw - sec
+    minute = math.floor(sec / 60)
+    sec -= minute * 60
+    hour = math.floor(minute / 60)
+    minute -= hour * 60
+    # make text, and add ms
+    t = str(minute).zfill(2) + ':' + str(sec).zfill(2) + '.' + str(round(ms * 1e3))
+    if hour > 0:	# check add hour
+        t = str(hour).zfill(2) + ':' + t
+    return t
     
 # DEPRECATED in favor of match1()
 def r1(pattern, text):

@@ -78,7 +78,7 @@ def urlHandle(input_text):
                     if (result is not None) and (result is not ""):
                         input_text = result
                 except Exception as e:
-                    logging.exception()
+                    logging.exception(str(urlhandle))
                     #print(e)
                     #import traceback
                     #traceback.print_exc()
@@ -92,7 +92,7 @@ def initVersion():
     for urlhandle in urlhandles:
         for filter in urlhandle.getfilters():
             version['filter'].append(filter)
-    version['name'] = version['name']+version['version']+"[Include "+yougetparser.YouGetParser().getYouGetVersion()+"&"+lyppvparser.LypPvParser().getLypPvVersion()+"]"
+    version['name'] = version['name']+version['version']+"[Include "+yougetparser.YouGetParser().getYouGetVersion()+"&"+ ', p_video ' + pvideoparser.PVideoParser.get_p_video_version()+"&"+lyppvparser.LypPvParser().getLypPvVersion()+"]"
     
 def GetVersion(): 
     return version
@@ -158,7 +158,7 @@ def ParseURL(input_text,label,min=None,max=None,parsers = parsers,urlhandles = u
                     return
                 queue.put({"result":result,"parser":parser})
         except Exception as e:
-            logging.exception()
+            logging.exception(str(parser))
             #print(e)
             #import traceback
             #traceback.print_exc()

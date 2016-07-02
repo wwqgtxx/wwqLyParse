@@ -15,23 +15,21 @@ try:
     from ..common import (
         Parser, 
         IsOpen, 
-        getUrl, 
-        
+        getUrl,
+        _second_to_time,
         byte2size, 
         gen_bitrate, 
     )
-    from ..lyp_pv.run import _second_to_time
     from ..p_video.bin.autoconfig import AUTO_CONFIG,RE_SUPPORT_URL,SUPPORT_URL_BLACKLIST
 except Exception:
     from common import (
         Parser, 
         IsOpen, 
-        getUrl, 
-        
+        getUrl,
+        _second_to_time,
         byte2size, 
         gen_bitrate, 
     )
-    from lyp_pv.run import _second_to_time
     from p_video.bin.autoconfig import AUTO_CONFIG, RE_SUPPORT_URL, SUPPORT_URL_BLACKLIST
 
 

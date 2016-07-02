@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
 
-import urllib.request,json,sys,subprocess,time,logging
+import urllib.request,json,sys,subprocess,time,logging,traceback
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(filename)s[line:%(lineno)d]<%(funcName)s> %(threadName)s %(levelname)s : %(message)s',
@@ -15,6 +15,18 @@ try:
     from .lib import bridge
 except Exception as e:
     from lib import bridge
+
+def get_caller_info():
+    try:
+        fn, lno, func, sinfo = traceback.extract_stack()[-3]
+    except ValueError:  # pragma: no cover
+        fn, lno, func = "(unknown file)", 0, "(unknown function)"
+    try:
+        fn = os.path.basename(fn)
+    except:
+        pass
+    callmethod = "<%s:%d %s> " % (fn, lno, func)
+    return callmethod
 
 def get_systeminfo():
     try:
@@ -93,10 +105,10 @@ def IsOpen(ip,port):
     try:
         s.connect((ip,int(port)))
         s.shutdown(2)
-        logging.info('%d is open' % port)
+        logging.info(get_caller_info()+'%d is open' % port)
         return True
     except:
-        logging.info('%d is down' % port)
+        logging.info(get_caller_info()+'%d is down' % port)
         return False
 
         

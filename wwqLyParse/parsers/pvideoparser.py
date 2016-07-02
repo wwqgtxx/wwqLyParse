@@ -18,6 +18,7 @@ try:
         gen_bitrate, 
     )
     from ..lyp_pv.run import _second_to_time
+    from ..p_video.bin.autoconfig import AUTO_CONFIG,RE_SUPPORT_URL,SUPPORT_URL_BLACKLIST
 except Exception:
     from common import (
         Parser, 
@@ -28,14 +29,8 @@ except Exception:
         gen_bitrate, 
     )
     from lyp_pv.run import _second_to_time
+    from p_video.bin.autoconfig import AUTO_CONFIG, RE_SUPPORT_URL, SUPPORT_URL_BLACKLIST
 
-
-RE_SUPPORT_URL = [
-    '^http://[a-z]+\.iqiyi\.com/.+\.html', 
-]
-SUPPORT_URL_BLACKLIST = [
-    '\.iqiyi\.com/(lib/m|a_)', 
-]
 
 BIN_P_VIDEO = '../p_video/bin/p_video.py'
 
@@ -67,13 +62,6 @@ P_VIDEO_BASE_ARGS = [
         'req_with' : 'native', 
     }), 
 ]
-
-AUTO_CONFIG = {
-    '^http://[a-z]+\.iqiyi\.com/.+\.html' : [
-        '-m', 'e_271', 
-        '-e', 'm_pc_flash', 
-    ], 
-}
 
 
 def _check_support_url(raw):

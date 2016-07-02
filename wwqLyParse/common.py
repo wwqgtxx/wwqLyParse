@@ -110,12 +110,12 @@ def import_by_name(lib_names, prefix = "", showinfo = True):
     lib_class_map = {}
     for lib_name in lib_names:
         try:
-            lib_class_map[lib_name] = imported_class_map[prefix+lib_name]
+            lib_class_map[lib_name] = imported_class_map[prefix+ lib_name.lower()+lib_name]
         except:
             try:
                 lib_module = importlib.import_module(prefix + lib_name.lower())
                 lib_class = getattr(lib_module, lib_name)
-                imported_class_map[prefix+lib_name] = lib_class
+                imported_class_map[prefix+ lib_name.lower()+lib_name] = lib_class
                 lib_class_map[lib_name] = lib_class
                 if showinfo:
                     logging.debug("successful load " + str(lib_class))

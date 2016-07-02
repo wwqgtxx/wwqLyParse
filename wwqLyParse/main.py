@@ -29,7 +29,7 @@ app = Flask(__name__)
 version = {
     'port_version' : "0.5.0", 
     'type' : 'parse', 
-    'version' : '0.4.4',
+    'version' : '0.4.5',
     'uuid' : '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter' : [],
     'name' : 'WWQ猎影解析插件', 
@@ -48,10 +48,6 @@ urlhandles_name = ["BaiduLinkUrlHandle", "MgtvUrlHandle", "LetvUrlHandle", "Post
 
 parser_class_map = import_by_name(parsers_name,prefix="parsers.")
 urlhandle_class_map =  import_by_name(urlhandles_name,prefix="urlhandles.")
-
-#parsers = [listparser.ListParser(), indexparser.IndexParser(), iqiyiparser.IQiYiParser(), iqiyimparser.IQiYiMParser(), iqiyimtsparser.IQiYiMTsParser(), mgtvparser.MgTVParser(), lyppvparser.LypPvParser(), yougetparser.YouGetParser(), ykdlparser.YKDLParser(), anypageparser.AnyPageParser(), pvideoparser.PVideoParser()]
-#parsers = [pvideoparser.PVideoParser()]
-#urlhandles = [jumpurlhandle.BaiduLinkUrlHandle(),jumpurlhandle.MgtvUrlHandle(),jumpurlhandle.LetvUrlHandle(),postfixurlhandle.PostfixUrlHandle()]
 
 def urlHandle(input_text,urlhandles):
     for urlhandle in urlhandles:

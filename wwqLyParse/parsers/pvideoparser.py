@@ -1,3 +1,6 @@
+#!/usr/bin/env python3.5
+# -*- coding: utf-8 -*-
+# author sceext,wwqgtxx <wwqgtxx@gmail.com>
 # parser for p_video
 
 import os, sys

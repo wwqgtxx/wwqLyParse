@@ -7,3 +7,7 @@
 [submodule "wwqLyParse/you-get"]
 	path = wwqLyParse/you-get
 	url = git@github.com:wwqgtxx/you-get.git
+[submodule "wwqLyParse/p_video"]
+	path = wwqLyParse/p_video
+	url = https://github.com/sceext2/p_video.git
+	branch = pv-8

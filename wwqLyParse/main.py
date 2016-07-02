@@ -25,7 +25,7 @@ except Exception:
 app = Flask(__name__)
 
 try:
-    from .parsers import listparser,indexparser,anypageparser,yougetparser,lyppvparser,mvtvparser,iqiyiparser,iqiyimparser,iqiyimtsparser,ykdlparser
+    from .parsers import listparser,indexparser,anypageparser,yougetparser,lyppvparser,mvtvparser,iqiyiparser,iqiyimparser,iqiyimtsparser,ykdlparser,pvideoparser
 except Exception:
     import parsers.listparser as listparser
     import parsers.indexparser as indexparser
@@ -37,6 +37,7 @@ except Exception:
     import parsers.iqiyimparser as iqiyimparser
     import parsers.iqiyimtsparser as iqiyimtsparser
     import parsers.ykdlparser as ykdlparser
+    import parsers.pvideoparser as pvideoparser
     
 
 try:
@@ -63,7 +64,8 @@ version = {
 PARSE_TIMEOUT = 60
 
 
-parsers = [listparser.ListParser(), indexparser.IndexParser(), iqiyiparser.IQiYiParser(), iqiyimparser.IQiYiMParser(), iqiyimtsparser.IQiYiMTsParser(), mvtvparser.MgTVParser(), lyppvparser.LypPvParser(), yougetparser.YouGetParser(), ykdlparser.YKDLParser(), anypageparser.AnyPageParser()]
+parsers = [listparser.ListParser(), indexparser.IndexParser(), iqiyiparser.IQiYiParser(), iqiyimparser.IQiYiMParser(), iqiyimtsparser.IQiYiMTsParser(), mvtvparser.MgTVParser(), lyppvparser.LypPvParser(), yougetparser.YouGetParser(), ykdlparser.YKDLParser(), anypageparser.AnyPageParser(), pvideoparser.PVideoParser()]
+#parsers = [pvideoparser.PVideoParser()]
 urlhandles = [jumpurlhandle.BaiduLinkUrlHandle(),jumpurlhandle.MgtvUrlHandle(),jumpurlhandle.LetvUrlHandle(),postfixurlhandle.PostfixUrlHandle()]
 
 def urlHandle(input_text):

@@ -21,7 +21,7 @@ except Exception:
     from queue import Queue
     logging.info("use simple pool")
     
-import urllib.request,io,os,sys,json,re,gzip,time,socket,math,urllib.error,http.client,gc,threading,urllib
+import urllib.request,io,os,sys,json,re,gzip,time,socket,math,urllib.error,http.client,gc,threading,urllib,traceback
 
 urlcache = {}
 URLCACHE_MAX = 1000
@@ -45,7 +45,7 @@ def getUrl(oUrl, encoding = 'utf-8' , headers = {}, data = None, method = None,a
         urlcache = newDict
         gc.collect()
         logging.debug("urlcache has been cleaned")
-    def _getUrl(result_queue,oUrl, encoding, headers, data, method,allowCache):
+    def _getUrl(result_queue,oUrl, encoding, headers, data, method,allowCache,callmethod):
         url_json = {"oUrl":oUrl,"encoding":encoding,"headers":headers,"data":data,"method":method}
         url_json = json.dumps(url_json,sort_keys=True, ensure_ascii=False)
         if allowCache:
@@ -56,15 +56,15 @@ def getUrl(oUrl, encoding = 'utf-8' , headers = {}, data = None, method = None,a
                 item = urlcache_temp[url_json]
                 html_text = item["html_text"]
                 item["lasttimestap"] = int(time.time())
-                logging.debug("cache get:"+url_json)
+                logging.debug(callmethod+"cache get:"+url_json)
                 if (len(urlcache_temp)>URLCACHE_MAX):
                     pool_cleanUrlcache.spawn(cleanUrlcache)
                 del urlcache_temp
                 result_queue.put(html_text)
                 return
-            logging.debug("normal get:"+url_json)
+            logging.debug(callmethod+"normal get:"+url_json)
         else:
-            logging.debug("nocache get:"+url_json)
+            logging.debug(callmethod+"nocache get:"+url_json)
         # url 包含中文时 parse.quote_from_bytes(oUrl.encode('utf-8'), ':/&%?=+')
         req = urllib.request.Request( oUrl, headers= headers, data = data, method = method )
         for i in range(10):
@@ -94,15 +94,27 @@ def getUrl(oUrl, encoding = 'utf-8' , headers = {}, data = None, method = None,a
             except http.client.IncompleteRead:
                 logging.warning('request attempt %s IncompleteRead' % str(i + 1))
             except:
-                logging.exception()
+                logging.exception(callmethod+"get url "+url_json+"fail")
                 #print(e)
                 #import traceback
                 #traceback.print_exc()
         result_queue.put("")
     
     queue = Queue(1)
-    pool.spawn(_getUrl,queue,oUrl, encoding, headers, data, method,allowCache)
+    pool.spawn(_getUrl,queue,oUrl, encoding, headers, data, method, allowCache,callmethod = get_caller_info())
     return queue.get()
+
+def get_caller_info():
+    try:
+        fn, lno, func, sinfo = traceback.extract_stack()[-3]
+    except ValueError:  # pragma: no cover
+        fn, lno, func = "(unknown file)", 0, "(unknown function)"
+    try:
+        fn = os.path.basename(fn)
+    except:
+        pass
+    callmethod = "<%s:%d %s> " % (fn, lno, func)
+    return callmethod
         
 def url_size(url, headers = {}):
     if headers:

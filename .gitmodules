@@ -9,5 +9,4 @@
 	url = git@github.com:wwqgtxx/you-get.git
 [submodule "wwqLyParse/p_video"]
 	path = wwqLyParse/p_video
-	url = https://github.com/sceext2/p_video.git
-	branch = pv-8
+	url = git@github.com:wwqgtxx/p_video.git

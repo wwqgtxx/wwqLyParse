@@ -41,7 +41,7 @@ BIN_P_VIDEO = '../p_video/bin/p_video.py'
 
 HANDWICH_BRIDGE_CONFIG = {
     'ip' : '127.0.0.1', # --ip IP
-    'port' : 48271, 	# --port PORT
+    'port' : 48272, 	# --port PORT
     # TODO use random key
     'key' : None, 	# --key KEY
     
@@ -51,12 +51,12 @@ HANDWICH_BRIDGE_CONFIG = {
 }
 
 BIN_ADL = '../lib/AIRSDK_Compiler/bin/adl.exe'
-HANDWICH_BRIDGE_BIN = '../lib/kill_271_cmd5/handwich_bridge.xml'
+HANDWICH_BRIDGE_BIN = '../p_video/lib/bridge/handwich_bridge/handwich_bridge.xml'
 
 # TODO load multi-cores support
 LOAD_CORE = {
     'id' : 'cmd5', 
-    'path' : '../lib/kill_271_cmd5/kill_271_cmd5.swf', 
+    'path' : '../p_video/lib/bridge/handwich_bridge/kill_271_cmd5.swf',
 }
 
 P_VIDEO_BASE_ARGS = [
@@ -123,7 +123,7 @@ def _init_handwich_bridge():
         if key != None:
             url += '?key=' + str(key)
         try:
-            info = getUrl(url, allowCache=False)
+            info = getUrl(url, allowCache=False, usePool=False)
             logging.debug('handwich_bridge version: ' + info)
             init_ok = True
             break
@@ -141,9 +141,10 @@ def _init_handwich_bridge():
         core_about_url = _make_call_core_url(c_id, 'about')
         #info = json.loads(getUrl(core_about_url, allowCache=False))
         # FIXME
-        text = getUrl(core_about_url, allowCache=False)
-        print('DEBUG: core_about raw return')
-        print(text)
+        text = getUrl(core_about_url, allowCache=False, usePool=False)
+        logging.debug("core_about raw return:"+text)
+        #print('DEBUG: core_about raw return')
+        #print(text)
         info = json.loads(text)
         
         if info[0] != 'ret':
@@ -158,7 +159,7 @@ def _init_handwich_bridge():
             load_core_url += '&key=' + str(c['key'])
         load_core_url += '&path=' + urllib.parse.quote(c_path)
         
-        info = json.loads(getUrl(load_core_url, allowCache=False))
+        info = json.loads(getUrl(load_core_url, allowCache=False, usePool=False))
         if info[0] == 'done':
             logging.debug('core loaded, ' + str(info))
         else:
@@ -174,7 +175,7 @@ def _close_handwich_bridge():
             url += '?key=' + c['key']
         # just send the exit command
         try:
-            getUrl(url, allowCache=False)
+            getUrl(url, allowCache=False, usePool=False)
         except Exception as e:
             logging.error(e)	# ignore error
 
@@ -240,8 +241,8 @@ def _pvinfo_to_parse_output(pvinfo):
     out = {
         'type' : 'formats', 
         'sorted' : 1, 
-        'data' : [], 
-        
+        'data' : [],
+
         'provider' : i['site'] + '_' + i['site_name'], 
         'name' : title, 
     }
@@ -291,7 +292,7 @@ class PVideoParser(Parser):
         pvinfo = _call_p_video(url, hd=None)
         out = _pvinfo_to_parse_output(pvinfo)
         
-        out['caption'] = 'p_video'
+        out['caption'] = 'p_video(新负锐)解析'
         return out
     
     # TODO use the cache feature of p_video

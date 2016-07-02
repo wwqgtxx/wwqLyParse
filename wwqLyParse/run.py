@@ -215,7 +215,7 @@ def GetVersion(debug=False):
         closeServer()
     return results
     
-def Parse(input_text,types=None):
+def Parse(input_text,types=None, parsers_name = None, urlhandles_name = None):
     for n in range(3):
         try:
             init()
@@ -225,6 +225,10 @@ def Parse(input_text,types=None):
             values["input_text"] = input_text
             if types is not None:
                 values["types"] = types
+            if parsers_name is not None:
+                values["parsers_name"] = json.dumps(parsers_name)
+            if urlhandles_name is not None:
+                values["urlhandles_name"] = json.dumps(urlhandles_name)
             results = process(url,values)
             return results
         except Exception as e:
@@ -234,7 +238,7 @@ def Parse(input_text,types=None):
             error = e
     raise e
 
-def ParseURL(input_text,label,min=None,max=None):
+def ParseURL(input_text,label,min=None,max=None, parsers_name = None, urlhandles_name = None):
     for n in range(3):
         try:
             init()
@@ -247,6 +251,10 @@ def ParseURL(input_text,label,min=None,max=None):
                 values["min"] = min
             if max is not None:
                 values["max"] = max
+            if parsers_name is not None:
+                values["parsers_name"] = json.dumps(parsers_name)
+            if urlhandles_name is not None:
+                values["urlhandles_name"] = json.dumps(urlhandles_name)
             results = process(url,values)
             return results
         except Exception as e:
@@ -284,11 +292,10 @@ def main():
     #debug(Parse('http://list.iqiyi.com/www/2/----------------iqiyi--.html'))
     #debug(Parse('http://www.iqiyi.com/a_19rrhb8fjp.html',"list"))
     #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html#vfrm=2-3-0-1'))
-    debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html',"formats"))
+    debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html',"formats",parsers_name=["IQiYiParser"]))
+    debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html',"formats",parsers_name=["PVideoParser"]))
     #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html'))
     #debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","fullhd@IQiYiParser"))
-    #debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","4_1080p_1920x1080_2746.0kbps_44:30.660_7_flv_@lyppv"))
-    #debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","(1)  4_1080p_1920x1080_2746.0kbps_44:30.660_7_flv_@lyppv"))
     #debug(Parse('http://v.pptv.com/show/NWR29Yzj2hh7ibWE.html?rcc_src=S1'))
     #debug(Parse('http://www.bilibili.com/video/av2557971/')) #don't support
     #debug(Parse('http://v.baidu.com/link?url=dm_10tBNoD-LLAMb79CB_p0kxozuoJcW0SiN3eycdo6CdO3GZgQm26uOzZh9fqcNSWZmz9aU9YYCCfT0NmZoGfEMoznyHhz3st-QvlOeyArYdIbhzBbdIrmntA4h1HsSampAs4Z3c17r_exztVgUuHZqChPeZZQ4tlmM5&page=tvplaydetail&vfm=bdvtx&frp=v.baidu.com%2Ftv_intro%2F&bl=jp_video',"formats"))

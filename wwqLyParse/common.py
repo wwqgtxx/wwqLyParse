@@ -21,7 +21,7 @@ except Exception:
     from queue import Queue
     logging.info("use simple pool")
     
-import urllib.request,io,os,sys,json,re,gzip,time,socket,math,urllib.error,http.client,gc,threading,urllib,traceback
+import urllib.request,io,os,sys,json,re,gzip,time,socket,math,urllib.error,http.client,gc,threading,urllib,traceback,importlib
 
 urlcache = {}
 URLCACHE_MAX = 1000
@@ -103,6 +103,37 @@ def getUrl(oUrl, encoding = 'utf-8' , headers = {}, data = None, method = None,a
     queue = Queue(1)
     pool.spawn(_getUrl,queue,oUrl, encoding, headers, data, method, allowCache,callmethod = get_caller_info())
     return queue.get()
+
+imported_class_map = {}
+
+def import_by_name(lib_names, prefix = "", showinfo = True):
+    lib_class_map = {}
+    for lib_name in lib_names:
+        try:
+            lib_class_map[lib_name] = imported_class_map[prefix+lib_name]
+        except:
+            try:
+                lib_module = importlib.import_module(prefix + lib_name.lower())
+                lib_class = getattr(lib_module, lib_name)
+                imported_class_map[prefix+lib_name] = lib_class
+                lib_class_map[lib_name] = lib_class
+                if showinfo:
+                    logging.debug("successful load " + str(lib_class))
+            except:
+                logging.exception("load "+str(lib_name)+" fail")
+    return lib_class_map
+
+def new_objects(class_map,showinfo = False,*k,**kk):
+    _objects = []
+    for _class in class_map.values():
+        try:
+            _object = _class(*k,**kk)
+            _objects.append(_object)
+            if showinfo:
+                logging.debug("successful new " + str(_object))
+        except:
+            logging.exception("new "+str(_class)+" fail")
+    return _objects
 
 def get_caller_info():
     try:

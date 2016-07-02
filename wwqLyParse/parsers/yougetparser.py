@@ -201,7 +201,7 @@ class YouGetParser(Parser):
             for item in out:
                 item["unfixIp"] = True
         return out
-        
+
     def getYouGetVersion(self):
         try:
             stdout, stderr = self._run(['--version'])

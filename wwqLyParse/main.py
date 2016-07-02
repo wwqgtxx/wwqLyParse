@@ -17,34 +17,13 @@ except Exception as e:
 import sys
 sys.path.insert(0, bridge.pn(bridge.pjoin(bridge.get_root_path(), './lib/flask_lib')))
 
-import re,threading,queue,sys,json,os,time,logging
+import re,threading,queue,sys,json,os,time,logging,importlib
 try:
     from flask import Flask,request
 except Exception:
     from .flask import Flask,request
 app = Flask(__name__)
 
-try:
-    from .parsers import listparser,indexparser,anypageparser,yougetparser,lyppvparser,mvtvparser,iqiyiparser,iqiyimparser,iqiyimtsparser,ykdlparser,pvideoparser
-except Exception:
-    import parsers.listparser as listparser
-    import parsers.indexparser as indexparser
-    import parsers.anypageparser as anypageparser
-    import parsers.yougetparser as yougetparser
-    import parsers.lyppvparser as lyppvparser
-    import parsers.mvtvparser as mvtvparser
-    import parsers.iqiyiparser as iqiyiparser
-    import parsers.iqiyimparser as iqiyimparser
-    import parsers.iqiyimtsparser as iqiyimtsparser
-    import parsers.ykdlparser as ykdlparser
-    import parsers.pvideoparser as pvideoparser
-    
-
-try:
-    from .urlhandles import postfixurlhandle,jumpurlhandle
-except Exception:
-    import urlhandles.postfixurlhandle as postfixurlhandle
-    import urlhandles.jumpurlhandle as jumpurlhandle
 
 
 version = {
@@ -64,12 +43,17 @@ version = {
 PARSE_TIMEOUT = 60
 CLOSE_TIMEOUT = 10
 
+parsers_name = ["ListParser", "IndexParser", "IQiYiParser", "IQiYiMParser", "IQiYiMTsParser", "MgTVParser", "LypPvParser", "YouGetParser", "YKDLParser", "AnyPageParser", "PVideoParser"]
+urlhandles_name = ["BaiduLinkUrlHandle", "MgtvUrlHandle", "LetvUrlHandle", "PostfixUrlHandle"]
 
-parsers = [listparser.ListParser(), indexparser.IndexParser(), iqiyiparser.IQiYiParser(), iqiyimparser.IQiYiMParser(), iqiyimtsparser.IQiYiMTsParser(), mvtvparser.MgTVParser(), lyppvparser.LypPvParser(), yougetparser.YouGetParser(), ykdlparser.YKDLParser(), anypageparser.AnyPageParser(), pvideoparser.PVideoParser()]
+parser_class_map = import_by_name(parsers_name,prefix="parsers.")
+urlhandle_class_map =  import_by_name(urlhandles_name,prefix="urlhandles.")
+
+#parsers = [listparser.ListParser(), indexparser.IndexParser(), iqiyiparser.IQiYiParser(), iqiyimparser.IQiYiMParser(), iqiyimtsparser.IQiYiMTsParser(), mgtvparser.MgTVParser(), lyppvparser.LypPvParser(), yougetparser.YouGetParser(), ykdlparser.YKDLParser(), anypageparser.AnyPageParser(), pvideoparser.PVideoParser()]
 #parsers = [pvideoparser.PVideoParser()]
-urlhandles = [jumpurlhandle.BaiduLinkUrlHandle(),jumpurlhandle.MgtvUrlHandle(),jumpurlhandle.LetvUrlHandle(),postfixurlhandle.PostfixUrlHandle()]
+#urlhandles = [jumpurlhandle.BaiduLinkUrlHandle(),jumpurlhandle.MgtvUrlHandle(),jumpurlhandle.LetvUrlHandle(),postfixurlhandle.PostfixUrlHandle()]
 
-def urlHandle(input_text):
+def urlHandle(input_text,urlhandles):
     for urlhandle in urlhandles:
         for filter in urlhandle.getfilters():
             if re.match(filter,input_text):
@@ -86,19 +70,41 @@ def urlHandle(input_text):
     return input_text
 
 
-def initVersion(): 
+def initVersion():
+    parser_class_map = import_by_name(parsers_name, prefix="parsers.")
+    parsers = new_objects(parser_class_map)
+    urlhandle_class_map = import_by_name(urlhandles_name, prefix="urlhandles.")
+    urlhandles = new_objects(urlhandle_class_map)
     for parser in parsers:
         for filter in parser.getfilters():
             version['filter'].append(filter)
     for urlhandle in urlhandles:
         for filter in urlhandle.getfilters():
             version['filter'].append(filter)
-    version['name'] = version['name']+version['version']+"[Include "+yougetparser.YouGetParser().getYouGetVersion()+"&"+ ', p_video ' + pvideoparser.PVideoParser.get_p_video_version()+"&"+lyppvparser.LypPvParser().getLypPvVersion()+"]"
+
+    version['name'] = version['name']+version['version']+"[Include "
+    try:
+        version['name'] = version['name']+parser_class_map["YouGetParser"]().getYouGetVersion()+"&"
+    except:
+        logging.exception("YouGetParser version get error")
+    try:
+        version['name'] = version['name']+ ', p_video ' + parser_class_map["PVideoParser"].get_p_video_version()+"&"
+    except:
+        logging.exception("PVideoParser version get error")
+    try:
+        version['name'] = version['name'] + parser_class_map["LypPvParser"]().getLypPvVersion()
+    except:
+        logging.exception("LypPvParser version get error")
+    version['name'] = version['name']+"]"
     
 def GetVersion(): 
     return version
     
-def Parse(input_text,types=None,parsers = parsers,urlhandles = urlhandles):
+def Parse(input_text,types=None,parsers_name = parsers_name,urlhandles_name = urlhandles_name):
+    parser_class_map = import_by_name(parsers_name, prefix="parsers.")
+    parsers = new_objects(parser_class_map)
+    urlhandle_class_map = import_by_name(urlhandles_name, prefix="urlhandles.")
+    urlhandles = new_objects(urlhandle_class_map)
     def run(queue,parser,input_text,types):
         try:
             logging.debug(parser)
@@ -120,7 +126,7 @@ def Parse(input_text,types=None,parsers = parsers,urlhandles = urlhandles):
             #import traceback
             #traceback.print_exc()
             
-    input_text = urlHandle(input_text)
+    input_text = urlHandle(input_text,urlhandles)
     results = []
     parser_threads = []
     t_results = []
@@ -148,7 +154,11 @@ def Parse(input_text,types=None,parsers = parsers,urlhandles = urlhandles):
 
     return results
 
-def ParseURL(input_text,label,min=None,max=None,parsers = parsers,urlhandles = urlhandles):
+def ParseURL(input_text,label,min=None,max=None,parsers_name = parsers_name,urlhandles_name = urlhandles_name):
+    parser_class_map = import_by_name(parsers_name, prefix="parsers.")
+    parsers = new_objects(parser_class_map)
+    urlhandle_class_map = import_by_name(urlhandles_name, prefix="urlhandles.")
+    urlhandles = new_objects(urlhandle_class_map)
     def run(queue,parser,input_text,label,min,max):
         try:
             logging.debug(parser)
@@ -168,7 +178,7 @@ def ParseURL(input_text,label,min=None,max=None,parsers = parsers,urlhandles = u
     label = t_label[0]
     parser_name = t_label[1]
     
-    input_text = urlHandle(input_text)
+    input_text = urlHandle(input_text,urlhandles)
     results = []
     parser_threads = []
     t_results = []
@@ -202,6 +212,10 @@ def debug(input):
     
 @app.route('/close',methods=['POST','GET'])
 def Close():
+    parser_class_map = import_by_name(parsers_name, prefix="parsers.")
+    parsers = new_objects(parser_class_map)
+    urlhandle_class_map = import_by_name(urlhandles_name, prefix="urlhandles.")
+    urlhandles = new_objects(urlhandle_class_map)
     def exit():
         time.sleep(0.001)
         os._exit(0)
@@ -228,11 +242,21 @@ def parse():
     try:
         input_text = request.values.get('input_text', '')
         types = request.values.get('types', None)
-        result = Parse(input_text,types)
+        _parsers_name = request.values.get('parsers_name', None)
+        if _parsers_name is not None:
+            _parsers_name = json.loads(_parsers_name)
+        else:
+            _parsers_name = parsers_name
+        _urlhandles_name = request.values.get('urlhandles_name', None)
+        if _urlhandles_name is not None:
+            _urlhandles_name = json.loads(_urlhandles_name)
+        else:
+            _urlhandles_name = urlhandles_name
+        result = Parse(input_text,types,_parsers_name,_urlhandles_name)
     except Exception as e:
         info=sys.exc_info()
         result = {"type" : "error","error" : info}
-    jjson = json.dumps(result);
+    jjson = json.dumps(result)
     debug(jjson)
     return jjson
         
@@ -244,11 +268,21 @@ def parseUrl():
         label = request.values.get('label', '')
         min = request.values.get('min', None)
         max = request.values.get('max', None)
-        result = ParseURL(input_text,label,min,max)
+        _parsers_name = request.values.get('parsers_name', None)
+        if _parsers_name is not None:
+            _parsers_name = json.loads(_parsers_name)
+        else:
+            _parsers_name = parsers_name
+        _urlhandles_name = request.values.get('urlhandles_name', None)
+        if _urlhandles_name is not None:
+            _urlhandles_name = json.loads(_urlhandles_name)
+        else:
+            _urlhandles_name = urlhandles_name
+        result = ParseURL(input_text,label,min,max,_parsers_name,_urlhandles_name)
     except Exception as e:
         info=sys.exc_info()
         result = {"type" : "error","error" : info}
-    jjson = json.dumps(result);
+    jjson = json.dumps(result)
     debug(jjson)
     return jjson
     

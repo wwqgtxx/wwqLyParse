@@ -62,6 +62,7 @@ version = {
 }
 
 PARSE_TIMEOUT = 60
+CLOSE_TIMEOUT = 10
 
 
 parsers = [listparser.ListParser(), indexparser.IndexParser(), iqiyiparser.IQiYiParser(), iqiyimparser.IQiYiMParser(), iqiyimtsparser.IQiYiMTsParser(), mvtvparser.MgTVParser(), lyppvparser.LypPvParser(), yougetparser.YouGetParser(), ykdlparser.YKDLParser(), anypageparser.AnyPageParser(), pvideoparser.PVideoParser()]
@@ -204,11 +205,17 @@ def Close():
     def exit():
         time.sleep(0.001)
         os._exit(0)
+    close_threads = []
     for parser in parsers:
-        parser.closeParser()
+        close_threads.append(pool.spawn(parser.closeParser))
     for urlhandle in urlhandles:
-        urlhandle.closeUrlHandle()
-    threading.Thread(target=exit).start()
+        close_threads.append(pool.spawn(urlhandle.closeUrlHandle))
+    if (gevent is not None):
+        gevent.joinall(close_threads,timeout=CLOSE_TIMEOUT)
+    else:
+        for parser_thread in close_threads:
+            parser_thread.join(CLOSE_TIMEOUT)
+    pool.spawn(exit)
     return ""
     
 @app.route('/GetVersion',methods=['POST','GET'])

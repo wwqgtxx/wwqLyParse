@@ -108,7 +108,6 @@ def getUrl(oUrl, encoding = 'utf-8' , headers = {}, data = None, method = None,a
     return None
 
 def get_all_filename_by_dir(dir,suffix=".py"):
-    pn(pjoin(get_root_path(), dir))
     list_dirs = os.walk(dir)
     filenames = []
     for dirName, subdirList, fileList in list_dirs:
@@ -116,6 +115,7 @@ def get_all_filename_by_dir(dir,suffix=".py"):
             if file_name[-len(suffix):] == suffix:
                 if file_name != "__init__.py":
                     filenames.append(file_name[0:-len(suffix)])
+    logging.debug("<%s> has %s"%(dir,str(filenames)))
     return filenames
 
 imported_class_map = {}
@@ -209,27 +209,6 @@ def IsOpen(ip,port):
     except:
         logging.info(get_caller_info()+'%d is down' % port)
         return False
-
-etc = {}
-etc['to_root_path'] = '../'
-etc['root_path'] = ''	# used to cache get root_path result
-
-def pn(raw):
-    return os.path.normpath(raw)
-
-def pjoin(*k):
-    return os.path.join(*k)
-
-def pdir(raw):
-    return os.path.dirname(raw)
-
-# get plugin root_path
-def get_root_path():
-    if not etc['root_path']:
-        now_dir = pdir(__file__)
-        root_path = pn(pjoin(now_dir, etc['to_root_path']))
-        etc['root_path'] = root_path
-    return etc['root_path']
         
 def gen_bitrate(size_byte, time_s, unit_k=1024):
     if (size_byte <= 0) or (time_s <= 0):

@@ -316,7 +316,8 @@ def main():
     #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html',"formats",parsers_name=["IQiYiParser"]))
     #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html',"formats",parsers_name=["PVideoParser"]))
     #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html'))
-    debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","fullhd@IQiYiParser"))
+    debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","2.0@PVideoParser"))
+    # #debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","fullhd@IQiYiParser"))
     #debug(Parse('http://v.pptv.com/show/NWR29Yzj2hh7ibWE.html?rcc_src=S1'))
     #debug(Parse('http://www.bilibili.com/video/av2557971/')) #don't support
     #debug(Parse('http://v.baidu.com/link?url=dm_10tBNoD-LLAMb79CB_p0kxozuoJcW0SiN3eycdo6CdO3GZgQm26uOzZh9fqcNSWZmz9aU9YYCCfT0NmZoGfEMoznyHhz3st-QvlOeyArYdIbhzBbdIrmntA4h1HsSampAs4Z3c17r_exztVgUuHZqChPeZZQ4tlmM5&page=tvplaydetail&vfm=bdvtx&frp=v.baidu.com%2Ftv_intro%2F&bl=jp_video',"formats"))

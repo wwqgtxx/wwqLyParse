@@ -234,8 +234,7 @@ def _pvinfo_to_parse_output(pvinfo):
         'type' : 'formats', 
         'sorted' : 1, 
         'data' : [],
-
-        'provider' : i['site'] + '_' + i['site_name'], 
+        'provider' : i['site'] + '_' + i['site_name'],
         'name' : title, 
     }
     for v in pvinfo['video']:
@@ -245,7 +244,8 @@ def _pvinfo_to_parse_output(pvinfo):
         one = {
             'label' : _make_label(v), 
             'ext' : format_to_ext.get(v['format'], v['format']), 
-            'size' : byte2size(v['size_byte']), 
+            'size' : byte2size(v['size_byte']),
+            'code' : str(_label_to_hd(_make_label(v))),
         }
         out['data'].append(one)
     return out
@@ -291,7 +291,8 @@ class PVideoParser(Parser):
     def ParseURL(self, url, label, *k, **kk):
         _init_handwich_bridge()
         
-        hd = _label_to_hd(label)
+        #hd = _label_to_hd(label)
+        hd = float(label)
         pvinfo = _call_p_video(url, hd=hd)
         out = _pvinfo_to_parseurl_output(pvinfo, hd)
         

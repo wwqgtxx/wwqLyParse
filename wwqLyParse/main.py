@@ -49,7 +49,9 @@ urlhandles_name = ["BaiduLinkUrlHandle", "MgtvUrlHandle", "LetvUrlHandle", "Post
 parser_class_map = import_by_name(parsers_name,prefix="parsers.")
 urlhandle_class_map =  import_by_name(urlhandles_name,prefix="urlhandles.")
 
-def urlHandle(input_text,urlhandles):
+def urlHandle(input_text,urlhandles_name=urlhandles_name):
+    urlhandle_class_map = import_by_name(urlhandles_name, prefix="urlhandles.")
+    urlhandles = new_objects(urlhandle_class_map)
     for urlhandle in urlhandles:
         for filter in urlhandle.getfilters():
             if re.match(filter,input_text):
@@ -99,8 +101,6 @@ def GetVersion():
 def Parse(input_text,types=None,parsers_name = parsers_name,urlhandles_name = urlhandles_name):
     parser_class_map = import_by_name(parsers_name, prefix="parsers.")
     parsers = new_objects(parser_class_map)
-    urlhandle_class_map = import_by_name(urlhandles_name, prefix="urlhandles.")
-    urlhandles = new_objects(urlhandle_class_map)
     def run(queue,parser,input_text,types):
         try:
             logging.debug(parser)
@@ -122,7 +122,7 @@ def Parse(input_text,types=None,parsers_name = parsers_name,urlhandles_name = ur
             #import traceback
             #traceback.print_exc()
             
-    input_text = urlHandle(input_text,urlhandles)
+    input_text = urlHandle(input_text,urlhandles_name)
     results = []
     parser_threads = []
     t_results = []
@@ -153,8 +153,6 @@ def Parse(input_text,types=None,parsers_name = parsers_name,urlhandles_name = ur
 def ParseURL(input_text,label,min=None,max=None,parsers_name = parsers_name,urlhandles_name = urlhandles_name):
     parser_class_map = import_by_name(parsers_name, prefix="parsers.")
     parsers = new_objects(parser_class_map)
-    urlhandle_class_map = import_by_name(urlhandles_name, prefix="urlhandles.")
-    urlhandles = new_objects(urlhandle_class_map)
     def run(queue,parser,input_text,label,min,max):
         try:
             logging.debug(parser)
@@ -174,7 +172,7 @@ def ParseURL(input_text,label,min=None,max=None,parsers_name = parsers_name,urlh
     label = t_label[0]
     parser_name = t_label[1]
     
-    input_text = urlHandle(input_text,urlhandles)
+    input_text = urlHandle(input_text,urlhandles_name)
     results = []
     parser_threads = []
     t_results = []

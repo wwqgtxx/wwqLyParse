@@ -92,7 +92,6 @@ class AnyPageParser(Parser):
                 from .. import main
             except Exception as e:
                 import main
-            #run.Parse(input_text,types=None,parsers = parsers,urlhandles = urlhandles)
             def runlist_parser(queue,parser,url):
                 url2 = urlHandle(url)
                 try:

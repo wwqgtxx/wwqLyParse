@@ -29,7 +29,7 @@ app = Flask(__name__)
 version = {
     'port_version' : "0.5.0", 
     'type' : 'parse', 
-    'version' : '0.4.5',
+    'version' : '0.4.6',
     'uuid' : '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter' : [],
     'name' : 'WWQ猎影解析插件', 
@@ -150,9 +150,7 @@ def Parse(input_text,types=None,parsers_name = parsers_name,urlhandles_name = ur
 
     return results
 
-def ParseURL(input_text,label,min=None,max=None,parsers_name = parsers_name,urlhandles_name = urlhandles_name):
-    parser_class_map = import_by_name(parsers_name, prefix="parsers.")
-    parsers = new_objects(parser_class_map)
+def ParseURL(input_text,label,min=None,max=None,urlhandles_name = urlhandles_name):
     def run(queue,parser,input_text,label,min,max):
         try:
             logging.debug(parser)
@@ -161,38 +159,27 @@ def ParseURL(input_text,label,min=None,max=None,parsers_name = parsers_name,urlh
                 if "error" in result:
                     logging.error(result["error"])
                     return
-                queue.put({"result":result,"parser":parser})
+                queue.put(result)
         except Exception as e:
             logging.exception(str(parser))
-            #print(e)
-            #import traceback
-            #traceback.print_exc()
     
     t_label = label.split("@")
     label = t_label[0]
     parser_name = t_label[1]
+    parser_class_map = import_by_name([parser_name], prefix="parsers.")
+    parsers = new_objects(parser_class_map)
     
     input_text = urlHandle(input_text,urlhandles_name)
-    results = []
-    parser_threads = []
-    t_results = []
-    q_results = queue.Queue()
+    parser = parsers[0]
+    q_results = queue.Queue(1)
+    parser_thread = pool.spawn(run, q_results, parser, input_text, label, min, max)
+    joinall([parser_thread], timeout=PARSE_TIMEOUT)
+    if not q_results.empty():
+        result = q_results.get()
+    else:
+        result = []
+    return result
 
-    for parser in parsers:
-        if (parser_name == parser.__class__.__name__):
-            for filter in parser.getfilters():
-                if re.search(filter,input_text):
-                    parser_threads.append(pool.spawn(run,q_results,parser,input_text,label,min,max))
-    joinall(parser_threads,timeout=PARSE_TIMEOUT)
-    while not q_results.empty():
-        t_results.append(q_results.get())
-    for parser in parsers:
-        for t_result in t_results:
-            if t_result["parser"] is parser:
-                results.append(t_result["result"])
-    if results == []:
-        return []
-    return results[0]
     
 def debug(input):
     info = "\n------------------------------------------------------------\n"

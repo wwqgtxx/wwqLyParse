@@ -238,7 +238,7 @@ def Parse(input_text,types=None, parsers_name = None, urlhandles_name = None):
             error = e
     raise e
 
-def ParseURL(input_text,label,min=None,max=None, parsers_name = None, urlhandles_name = None):
+def ParseURL(input_text,label,min=None,max=None, urlhandles_name = None):
     for n in range(3):
         try:
             init()
@@ -251,8 +251,6 @@ def ParseURL(input_text,label,min=None,max=None, parsers_name = None, urlhandles
                 values["min"] = min
             if max is not None:
                 values["max"] = max
-            if parsers_name is not None:
-                values["parsers_name"] = json.dumps(parsers_name)
             if urlhandles_name is not None:
                 values["urlhandles_name"] = json.dumps(urlhandles_name)
             results = process(url,values)

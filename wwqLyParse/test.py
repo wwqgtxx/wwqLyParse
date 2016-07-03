@@ -11,3 +11,4 @@ if __name__ == "__main__":
     #debug(ParseURL("http://www.le.com/ptv/vplay/25047584.html","0_TD_超清_0@YKDLParser"))
     #debug(Parse("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474", parsers_name=["YKDLParser"]))
     #debug(ParseURL("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474","3_BD_1080p_2.00 GB@YKDLParser"))
+    Close()

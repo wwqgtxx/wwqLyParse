@@ -11,6 +11,8 @@ try:
     from ..common import *
 except Exception as e:
     from common import *
+
+__MODULE_CLASS_NAMES__ = ["LetvUrlHandle"]
     
 class LetvUrlHandle(UrlHandle):
     filters = ['^(http|https)://www.letv.com']

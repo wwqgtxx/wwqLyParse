@@ -23,7 +23,7 @@ except Exception:
     from queue import Queue
     logging.info("use simple pool")
     
-import urllib.request,io,os,sys,json,re,gzip,time,socket,math,urllib.error,http.client,gc,threading,urllib,traceback,importlib
+import urllib.request,io,os,sys,json,re,gzip,time,socket,math,urllib.error,http.client,gc,threading,urllib,traceback,importlib,glob
 
 urlcache = {}
 URLCACHE_MAX = 1000
@@ -107,23 +107,62 @@ def getUrl(oUrl, encoding = 'utf-8' , headers = {}, data = None, method = None,a
             return result
     return None
 
-imported_class_map = {}
+def get_all_filename_by_dir(dir,suffix=".py"):
+    pn(pjoin(get_root_path(), dir))
+    list_dirs = os.walk(dir)
+    filenames = []
+    for dirName, subdirList, fileList in list_dirs:
+        for file_name in fileList:
+            if file_name[-len(suffix):] == suffix:
+                if file_name != "__init__.py":
+                    filenames.append(file_name[0:-len(suffix)])
+    return filenames
 
-def import_by_name(lib_names, prefix = "", showinfo = True):
+imported_class_map = {}
+imported_module_map = {}
+
+def import_by_name(class_names = None,module_names = None, prefix = "", showinfo = True):
     lib_class_map = {}
-    for lib_name in lib_names:
-        try:
-            lib_class_map[lib_name] = imported_class_map[prefix+ lib_name.lower()+lib_name]
-        except:
+    if class_names is not None:
+        lib_names = class_names
+        for lib_name in lib_names:
             try:
-                lib_module = importlib.import_module(prefix + lib_name.lower())
-                lib_class = getattr(lib_module, lib_name)
-                imported_class_map[prefix+ lib_name.lower()+lib_name] = lib_class
-                lib_class_map[lib_name] = lib_class
-                if showinfo:
-                    logging.debug("successful load " + str(lib_class))
+                lib_class_map[lib_name] = imported_class_map[prefix+ lib_name.lower()+"."+lib_name]
             except:
-                logging.exception("load "+str(lib_name)+" fail")
+                try:
+                    lib_module = importlib.import_module(prefix + lib_name.lower())
+                    lib_class = getattr(lib_module, lib_name)
+                    imported_class_map[prefix+ lib_name.lower()+"."+lib_name] = lib_class
+                    lib_class_map[lib_name] = lib_class
+                    if showinfo:
+                        logging.debug("successful load " + str(lib_class))
+                except:
+                    logging.exception("load " + str(lib_name) + " fail")
+    elif module_names is not None:
+        lib_names = module_names
+        for lib_name in lib_names:
+            try:
+                for item in imported_module_map[prefix + lib_name] :
+                    lib_class_map[item["lib_name"]] = item["lib_class"]
+            except:
+                try:
+                    lib_module = importlib.import_module(prefix + lib_name)
+                    lib_module_class_names = getattr(lib_module, "__MODULE_CLASS_NAMES__")
+                    imported_module_map[prefix + lib_name] = []
+                    for lib_module_class_name in lib_module_class_names:
+                        try:
+                            lib_class = getattr(lib_module, lib_module_class_name)
+                            imported_module_map[prefix + lib_name].append({
+                                "lib_name": lib_class.__name__ ,
+                                "lib_class": lib_class
+                            })
+                            lib_class_map[lib_class.__name__] = lib_class
+                            if showinfo:
+                                logging.debug("successful load " + str(lib_class))
+                        except:
+                            logging.exception("load " + str(lib_module_class_name) + " fail")
+                except:
+                    logging.exception("load " + str(prefix + lib_name) + " fail")
     return lib_class_map
 
 def new_objects(class_map,showinfo = False,*k,**kk):
@@ -170,6 +209,27 @@ def IsOpen(ip,port):
     except:
         logging.info(get_caller_info()+'%d is down' % port)
         return False
+
+etc = {}
+etc['to_root_path'] = '../'
+etc['root_path'] = ''	# used to cache get root_path result
+
+def pn(raw):
+    return os.path.normpath(raw)
+
+def pjoin(*k):
+    return os.path.join(*k)
+
+def pdir(raw):
+    return os.path.dirname(raw)
+
+# get plugin root_path
+def get_root_path():
+    if not etc['root_path']:
+        now_dir = pdir(__file__)
+        root_path = pn(pjoin(now_dir, etc['to_root_path']))
+        etc['root_path'] = root_path
+    return etc['root_path']
         
 def gen_bitrate(size_byte, time_s, unit_k=1024):
     if (size_byte <= 0) or (time_s <= 0):

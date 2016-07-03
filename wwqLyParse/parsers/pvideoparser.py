@@ -33,6 +33,9 @@ except Exception:
     from p_video.bin.autoconfig import AUTO_CONFIG, RE_SUPPORT_URL, SUPPORT_URL_BLACKLIST
 
 
+__MODULE_CLASS_NAMES__ = ["PVideoParser"]
+
+
 BIN_P_VIDEO = '../p_video/bin/p_video.py'
 
 HANDWICH_BRIDGE_CONFIG = {

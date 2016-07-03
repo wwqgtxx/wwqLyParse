@@ -29,7 +29,7 @@ app = Flask(__name__)
 version = {
     'port_version' : "0.5.0", 
     'type' : 'parse', 
-    'version' : '0.4.6',
+    'version' : '0.4.7',
     'uuid' : '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter' : [],
     'name' : 'WWQ猎影解析插件', 
@@ -43,15 +43,15 @@ version = {
 PARSE_TIMEOUT = 60
 CLOSE_TIMEOUT = 10
 
-parsers_name = ["ListParser", "IndexParser", "IQiYiParser", "IQiYiMParser", "IQiYiMTsParser", "MgTVParser", "LypPvParser", "YouGetParser", "YKDLParser", "AnyPageParser", "PVideoParser"]
-urlhandles_name = ["BaiduLinkUrlHandle", "MgtvUrlHandle", "LetvUrlHandle", "PostfixUrlHandle"]
+parser_class_map = import_by_name(module_names = get_all_filename_by_dir( './parsers'),prefix="parsers.")
+urlhandle_class_map =  import_by_name(module_names = get_all_filename_by_dir( './urlhandles'),prefix="urlhandles.")
 
-parser_class_map = import_by_name(parsers_name,prefix="parsers.")
-urlhandle_class_map =  import_by_name(urlhandles_name,prefix="urlhandles.")
-
-def urlHandle(input_text,urlhandles_name=urlhandles_name):
-    urlhandle_class_map = import_by_name(urlhandles_name, prefix="urlhandles.")
-    urlhandles = new_objects(urlhandle_class_map)
+def urlHandle(input_text,urlhandles_name=None):
+    if urlhandles_name is not None:
+        _urlhandle_class_map = import_by_name(class_names = urlhandles_name, prefix="urlhandles.")
+    else:
+        _urlhandle_class_map = urlhandle_class_map
+    urlhandles = new_objects(_urlhandle_class_map)
     for urlhandle in urlhandles:
         for filter in urlhandle.getfilters():
             if re.match(filter,input_text):
@@ -69,9 +69,7 @@ def urlHandle(input_text,urlhandles_name=urlhandles_name):
 
 
 def initVersion():
-    parser_class_map = import_by_name(parsers_name, prefix="parsers.")
     parsers = new_objects(parser_class_map)
-    urlhandle_class_map = import_by_name(urlhandles_name, prefix="urlhandles.")
     urlhandles = new_objects(urlhandle_class_map)
     for parser in parsers:
         for filter in parser.getfilters():
@@ -98,9 +96,12 @@ def initVersion():
 def GetVersion(): 
     return version
     
-def Parse(input_text,types=None,parsers_name = parsers_name,urlhandles_name = urlhandles_name):
-    parser_class_map = import_by_name(parsers_name, prefix="parsers.")
-    parsers = new_objects(parser_class_map)
+def Parse(input_text,types=None,parsers_name = None,urlhandles_name = None):
+    if parsers_name is not None:
+        _parser_class_map = import_by_name(class_names = parsers_name, prefix="parsers.")
+    else:
+        _parser_class_map = parser_class_map
+    parsers = new_objects(_parser_class_map)
     def run(queue,parser,input_text,types):
         try:
             logging.debug(parser)
@@ -150,7 +151,7 @@ def Parse(input_text,types=None,parsers_name = parsers_name,urlhandles_name = ur
 
     return results
 
-def ParseURL(input_text,label,min=None,max=None,urlhandles_name = urlhandles_name):
+def ParseURL(input_text,label,min=None,max=None,urlhandles_name = None):
     def run(queue,parser,input_text,label,min,max):
         try:
             logging.debug(parser)
@@ -166,7 +167,7 @@ def ParseURL(input_text,label,min=None,max=None,urlhandles_name = urlhandles_nam
     t_label = label.split("@")
     label = t_label[0]
     parser_name = t_label[1]
-    parser_class_map = import_by_name([parser_name], prefix="parsers.")
+    parser_class_map = import_by_name(class_names = [parser_name], prefix="parsers.")
     parsers = new_objects(parser_class_map)
     
     input_text = urlHandle(input_text,urlhandles_name)
@@ -189,9 +190,7 @@ def debug(input):
     
 @app.route('/close',methods=['POST','GET'])
 def Close():
-    parser_class_map = import_by_name(parsers_name, prefix="parsers.")
     parsers = new_objects(parser_class_map)
-    urlhandle_class_map = import_by_name(urlhandles_name, prefix="urlhandles.")
     urlhandles = new_objects(urlhandle_class_map)
     def exit():
         time.sleep(0.001)
@@ -219,15 +218,16 @@ def parse():
         if _parsers_name is not None:
             _parsers_name = json.loads(_parsers_name)
         else:
-            _parsers_name = parsers_name
+            _parsers_name = None
         _urlhandles_name = request.values.get('urlhandles_name', None)
         if _urlhandles_name is not None:
             _urlhandles_name = json.loads(_urlhandles_name)
         else:
-            _urlhandles_name = urlhandles_name
+            _urlhandles_name = None
         result = Parse(input_text,types,_parsers_name,_urlhandles_name)
     except Exception as e:
-        info=sys.exc_info()
+        info=traceback.format_exc()
+        logging.error(info)
         result = {"type" : "error","error" : info}
     jjson = json.dumps(result)
     debug(jjson)
@@ -241,19 +241,14 @@ def parseUrl():
         label = request.values.get('label', '')
         min = request.values.get('min', None)
         max = request.values.get('max', None)
-        _parsers_name = request.values.get('parsers_name', None)
-        if _parsers_name is not None:
-            _parsers_name = json.loads(_parsers_name)
-        else:
-            _parsers_name = parsers_name
         _urlhandles_name = request.values.get('urlhandles_name', None)
         if _urlhandles_name is not None:
             _urlhandles_name = json.loads(_urlhandles_name)
         else:
-            _urlhandles_name = urlhandles_name
+            _urlhandles_name = None
         result = ParseURL(input_text,label,min,max,_urlhandles_name)
     except Exception as e:
-        info=sys.exc_info()
+        info=traceback.format_exc()
         result = {"type" : "error","error" : info}
     jjson = json.dumps(result)
     debug(jjson)

@@ -14,6 +14,8 @@ except Exception as e:
 
 JUDGE_VIP = True
 
+__MODULE_CLASS_NAMES__ = ["MgTVParser"]
+
 class MgTVParser(Parser):
 
     filters = ['http://www.mgtv.com/v/']

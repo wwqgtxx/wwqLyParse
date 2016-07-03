@@ -20,7 +20,7 @@ try:
 except Exception as e:
     import yougetparser
     
-
+__MODULE_CLASS_NAMES__ = ["YKDLParser"]
 
 class YKDLParser(yougetparser.YouGetParser):
         

@@ -12,6 +12,8 @@ try:
 except Exception as e:
     from common import *
 
+__MODULE_CLASS_NAMES__ = ["IndexParser"]
+
 class IndexParser(Parser):
 
     filters = ['^http://www.le.com$']

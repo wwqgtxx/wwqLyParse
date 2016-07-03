@@ -4,8 +4,11 @@
 
 CONFIG={
     "host" : "127.0.0.1",
-    "port" : 5000
+    "port" : 5000,
+    "uuid" : '{C35B9DFC-559F-49E2-B80B-79B66EC77471}'
 }
+if __name__ == '__main__':
+    CONFIG["port"] = 8000
 
 
 import urllib.request,json,sys,subprocess,time,logging,traceback
@@ -219,6 +222,7 @@ def getVersion(debug=False):
             results = process(url,values)
             if (not debug):
                 closeServer()
+            assert results["uuid"] == CONFIG["uuid"]
             global version
             version = results
             logging.info(version)
@@ -287,7 +291,7 @@ def debug(input):
     info += "\n------------------------------------------------------------"
     logging.debug(info)
     
-def main(): 
+def main():
     #debug(GetVersion())
     Cleanup()
     #debug(Parse('http://www.iqiyi.com/lib/m_209445514.html?src=search'))

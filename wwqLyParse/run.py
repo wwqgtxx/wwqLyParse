@@ -2,8 +2,11 @@
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
 
-HOST = "127.0.0.1"
-PORT = 5000
+CONFIG={
+    "host" : "127.0.0.1",
+    "port" : 5000
+}
+
 
 import urllib.request,json,sys,subprocess,time,logging,traceback
 
@@ -127,24 +130,24 @@ def _run_main():
         args = [py_bin,'--normal', y_bin]
     else:
         args = [py_bin, y_bin]
-    args += ['--host', HOST]
-    args += ['--port', str(PORT)]
+    args += ['--host', CONFIG["host"]]
+    args += ['--port', str(CONFIG["port"])]
     logging.info(args)
     p = subprocess.Popen(args, shell=False,cwd=bridge.get_root_path(),close_fds=True)
 
 def init():
     for n in range(2):
-        if not IsOpen(HOST,PORT):
+        if not IsOpen(CONFIG["host"],CONFIG["port"]):
             _run_main()
         else:
             return
         for i in range(100):
-            if not IsOpen(HOST,PORT):
+            if not IsOpen(CONFIG["host"],CONFIG["port"]):
                 time.sleep(0.05)
             else:
                 return
         for i in range(10):
-            if not IsOpen(HOST,PORT):
+            if not IsOpen(CONFIG["host"],CONFIG["port"]):
                 time.sleep(1)
             else:
                 return
@@ -189,42 +192,53 @@ def process(url,values,willRefused=False,needresult = True,needjson = True):
         
 def closeServer():
     for n in range(2):
-        if IsOpen(HOST,PORT):
-            url = 'http://%s:%d/close'%(HOST,PORT)
+        if IsOpen(CONFIG["host"],CONFIG["port"]):
+            url = 'http://%s:%d/close'%(CONFIG["host"],CONFIG["port"])
             values = {}
             process(url,values,willRefused = True)
             for n in range(100):
-                if not IsOpen(HOST,PORT):
+                if not IsOpen(CONFIG["host"],CONFIG["port"]):
                     return
                 time.sleep(0.05)
-            for n in range(10):
-                if not IsOpen(HOST,PORT):
+            for n in range(5):
+                if not IsOpen(CONFIG["host"],CONFIG["port"]):
                     return
                 time.sleep(1)
         return
     raise Exception("can't closeServer")
 
-            
+def getVersion(debug=False):
+    for n in range(3):
+        try:
+            if (not debug):
+                closeServer()
+            init()
+            url = 'http://%s:%d/GetVersion' % (CONFIG["host"], CONFIG["port"])
+            #user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
+            values = {}
+            results = process(url,values)
+            if (not debug):
+                closeServer()
+            global version
+            version = results
+            logging.info(version)
+            return
+        except:
+            logging.exception("getVersion fail on %s:%d"%(CONFIG["host"],CONFIG["port"]))
+        CONFIG["port"] += 1
+getVersion()
+
 def Cleanup():
     closeServer()
 
-def GetVersion(debug=False): 
-    if (not debug):
-        closeServer()
-    init()
-    url = 'http://%s:%d/GetVersion' % (HOST, PORT)
-    #user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
-    values = {}
-    results = process(url,values)
-    if (not debug):
-        closeServer()
-    return results
-    
+def GetVersion():
+    return version
+
 def Parse(input_text,types=None, parsers_name = None, urlhandles_name = None):
     for n in range(3):
         try:
             init()
-            url = 'http://%s:%d/Parse' % (HOST, PORT)
+            url = 'http://%s:%d/Parse' % (CONFIG["host"], CONFIG["port"])
             #user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
             values = {}
             values["input_text"] = input_text
@@ -247,7 +261,7 @@ def ParseURL(input_text,label,min=None,max=None, urlhandles_name = None):
     for n in range(3):
         try:
             init()
-            url = 'http://%s:%d/ParseURL' % (HOST, PORT)
+            url = 'http://%s:%d/ParseURL' % (CONFIG["host"], CONFIG["port"])
             #user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
             values = {}
             values["input_text"] = input_text
@@ -274,7 +288,7 @@ def debug(input):
     logging.debug(info)
     
 def main(): 
-    #debug(GetVersion(debug=False))
+    #debug(GetVersion())
     Cleanup()
     #debug(Parse('http://www.iqiyi.com/lib/m_209445514.html?src=search'))
     #debug(Parse('http://www.iqiyi.com/a_19rrhacdwt.html#vfrm=2-4-0-1'))

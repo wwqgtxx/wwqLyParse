@@ -259,7 +259,7 @@ def Parse(input_text,types=None, parsers_name = None, urlhandles_name = None):
             import traceback  
             traceback.print_exc()
             error = e
-    raise e
+    raise error
 
 def ParseURL(input_text,label,min=None,max=None, urlhandles_name = None):
     for n in range(3):
@@ -283,7 +283,7 @@ def ParseURL(input_text,label,min=None,max=None, urlhandles_name = None):
             import traceback  
             traceback.print_exc() 
             error = e
-    raise e
+    raise error
     
 def debug(input):
     info = "\n------------------------------------------------------------\n"
@@ -330,7 +330,10 @@ def main():
 
 if __name__ == '__main__':  
     #app.run()
-    main()
+    try:
+        main()
+    finally:
+        Cleanup()
 
 
 

@@ -251,7 +251,7 @@ def parseUrl():
             _urlhandles_name = json.loads(_urlhandles_name)
         else:
             _urlhandles_name = urlhandles_name
-        result = ParseURL(input_text,label,min,max,_parsers_name,_urlhandles_name)
+        result = ParseURL(input_text,label,min,max,_urlhandles_name)
     except Exception as e:
         info=sys.exc_info()
         result = {"type" : "error","error" : info}

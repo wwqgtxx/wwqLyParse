@@ -40,7 +40,7 @@ BIN_P_VIDEO = '../p_video/bin/p_video.py'
 
 HANDWICH_BRIDGE_CONFIG = {
     'ip' : '127.0.0.1', # --ip IP
-    'port' : 48272, 	# --port PORT
+    'port' : 48281, 	# --port PORT
     # TODO use random key
     'key' : None, 	# --key KEY
     

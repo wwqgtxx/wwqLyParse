@@ -99,11 +99,12 @@ def getUrl(oUrl, encoding = 'utf-8' , headers = {}, data = None, method = None,a
         logging.debug(callmethod + "normal get:" + url_json)
     else:
         logging.debug(callmethod + "nocache get:" + url_json)
-    queue = Queue(1)
-    pool.spawn(_getUrl,queue,url_json,oUrl, encoding, headers, data, method, allowCache,callmethod)
+
     for i in range(10):
+        queue = Queue(1)
+        pool.spawn(_getUrl, queue, url_json, oUrl, encoding, headers, data, method, allowCache, callmethod)
         result = queue.get()
-        if result is not None:
+        if result != None:
             return result
     return None
 

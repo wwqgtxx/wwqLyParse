@@ -26,9 +26,12 @@ except Exception as e:
     
 __MODULE_CLASS_NAMES__ = ["IQiYiParser"]
 
-HOST = "127.0.0.1"
-PORT = 48271
-KEY = None
+CONFIG={
+    "host" : "127.0.0.1",
+    "port" : 48271,
+    "key" : None,
+}
+
 
 class IQiYiParser(Parser):
 
@@ -50,34 +53,52 @@ class IQiYiParser(Parser):
         py_bin = bridge.pn(bridge.pjoin(bridge.get_root_path(), './lib/AIRSDK_Compiler/bin/adl.exe'))
         y_bin = bridge.pn(bridge.pjoin(bridge.get_root_path(), './lib/kill_271_cmd5/handwich_bridge.xml'))
         args = [py_bin, y_bin, '--']
-        args += ['--ip', HOST, '--port', str(PORT)]
-        if KEY != None:
-            args += ['--key', str(KEY)]
+        args += ['--ip', CONFIG["host"], '--port', str(CONFIG["port"])]
+        if CONFIG["key"] != None:
+            args += ['--key', str(CONFIG["key"])]
         logging.debug(args)
         p = subprocess.Popen(args, shell=False,cwd=bridge.get_root_path(),close_fds=True)
 
+    def checkinit(self):
+        url = 'http://%s:%d/' % (
+        CONFIG["host"], CONFIG["port"]) + 'handwich_bridge/call?core=cmd5&f=about'
+        if CONFIG["key"] != None:
+            url += '?key=' + str(CONFIG["key"])
+        result = getUrl(url, allowCache=False, usePool=False)
+        if result is None:
+            logging.debug('core not loaded')
+            return False
+        info = json.loads(result)
+        if info[0] != 'ret':
+            logging.debug('core not loaded, ' + str(info))
+            return False
+        logging.debug('core ' + "cmd5" + ', ' + str(info[1]))
+        return True
+
     def init(self):
         for n in range(3):
-            if not IsOpen(HOST,PORT):
-                self._run_kill_271_cmd5()
-            else:
+            if IsOpen(CONFIG["host"],CONFIG["port"]) and self.checkinit():
                 return
+            else:
+                self._run_kill_271_cmd5()
             for i in range(5):
-                if not IsOpen(HOST,PORT):
+                if not IsOpen(CONFIG["host"],CONFIG["port"]):
                     time.sleep(1+i)
                 else:
-                    url = 'http://%s:%d/'%(HOST,PORT) + 'handwich_bridge/load_core?id=cmd5&path='+urllib.parse.quote(bridge.pn(bridge.pjoin(bridge.get_root_path(), './lib/kill_271_cmd5/kill_271_cmd5.swf')))
-                    if KEY != None:
-                        url += '?key=' + str(KEY)
+                    url = 'http://%s:%d/'%(CONFIG["host"],CONFIG["port"]) + 'handwich_bridge/load_core?id=cmd5&path='+urllib.parse.quote(bridge.pn(bridge.pjoin(bridge.get_root_path(), './lib/kill_271_cmd5/kill_271_cmd5.swf')))
+                    if CONFIG["key"] != None:
+                        url += '?key=' + str(CONFIG["key"])
                     getUrl(url,allowCache = False,usePool = False)
-                    return
+                    if self.checkinit():
+                        return
+            CONFIG["port"] += 1
         raise Exception("can't init server")
         
     def closeServer(self):
-        if IsOpen(HOST,PORT):
-            url = 'http://%s:%d/'%(HOST,PORT) + 'handwich_bridge/exit'
-            if KEY != None:
-                url += '?key=' + str(KEY)
+        if IsOpen(CONFIG["host"],CONFIG["port"]):
+            url = 'http://%s:%d/'%(CONFIG["host"],CONFIG["port"]) + 'handwich_bridge/exit'
+            if CONFIG["key"] != None:
+                url += '?key=' + str(CONFIG["key"])
             getUrl(url,allowCache = False,usePool = False)
         
     def getVRSXORCode(self,arg1,arg2):
@@ -107,9 +128,9 @@ class IQiYiParser(Parser):
         return hashlib.new("md5",bytes(t+tp+rid,"utf-8")).hexdigest()
             
     def getvf(self,vmsreq):
-        url = 'http://%s:%d/'%(HOST,PORT) + 'handwich_bridge/call?core=cmd5&f=calc&a='+urllib.parse.quote(json.dumps([vmsreq,vmsreq]))
-        if KEY != None:
-            url += '?key=' + str(KEY)
+        url = 'http://%s:%d/'%(CONFIG["host"],CONFIG["port"]) + 'handwich_bridge/call?core=cmd5&f=calc&a='+urllib.parse.quote(json.dumps([vmsreq,vmsreq]))
+        if CONFIG["key"] != None:
+            url += '?key=' + str(CONFIG["key"])
         results = json.loads(getUrl(url,allowCache = False,usePool = False))
         return results[1]
     

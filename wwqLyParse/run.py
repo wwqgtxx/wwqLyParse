@@ -210,18 +210,16 @@ def closeServer():
         return
     raise Exception("can't closeServer")
 
-def getVersion(debug=False):
+def getVersion(needclose=True):
     for n in range(3):
         try:
-            if (not debug):
+            if needclose:
                 closeServer()
             init()
             url = 'http://%s:%d/GetVersion' % (CONFIG["host"], CONFIG["port"])
             #user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
             values = {}
             results = process(url,values)
-            if (not debug):
-                closeServer()
             assert results["uuid"] == CONFIG["uuid"]
             global version
             version = results
@@ -235,7 +233,9 @@ getVersion()
 def Cleanup():
     closeServer()
 
-def GetVersion():
+def GetVersion(debug=False):
+    if (not debug):
+        closeServer()
     return version
 
 def Parse(input_text,types=None, parsers_name = None, urlhandles_name = None):
@@ -293,7 +293,7 @@ def debug(input):
     
 def main():
     #debug(GetVersion())
-    Cleanup()
+    #Cleanup()
     #debug(Parse('http://www.iqiyi.com/lib/m_209445514.html?src=search'))
     #debug(Parse('http://www.iqiyi.com/a_19rrhacdwt.html#vfrm=2-4-0-1'))
     #debug(Parse('http://www.iqiyi.com/a_19rrhaare5.html'))

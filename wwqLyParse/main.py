@@ -185,11 +185,7 @@ def ParseURL(input_text,label,min=None,max=None,parsers_name = parsers_name,urlh
             for filter in parser.getfilters():
                 if re.search(filter,input_text):
                     parser_threads.append(pool.spawn(run,q_results,parser,input_text,label,min,max))
-    if (gevent is not None):
-        gevent.joinall(parser_threads,timeout=PARSE_TIMEOUT)
-    else:
-        for parser_thread in parser_threads:
-            parser_thread.join(PARSE_TIMEOUT)
+    joinall(parser_threads,timeout=PARSE_TIMEOUT)
     while not q_results.empty():
         t_results.append(q_results.get())
     for parser in parsers:
@@ -220,11 +216,7 @@ def Close():
         close_threads.append(pool.spawn(parser.closeParser))
     for urlhandle in urlhandles:
         close_threads.append(pool.spawn(urlhandle.closeUrlHandle))
-    if (gevent is not None):
-        gevent.joinall(close_threads,timeout=CLOSE_TIMEOUT)
-    else:
-        for parser_thread in close_threads:
-            parser_thread.join(CLOSE_TIMEOUT)
+    joinall(close_threads,timeout=CLOSE_TIMEOUT)
     pool.spawn(exit)
     return ""
     

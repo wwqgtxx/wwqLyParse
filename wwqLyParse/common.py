@@ -14,10 +14,12 @@ try:
     logging.info("gevent.monkey.patch_all()")
     from gevent.pool import Pool
     from gevent.queue import Queue
+    from gevent import joinall
     logging.info("use gevent.pool")
 except Exception:
     gevent = None
     from simplepool import Pool
+    from simplepool import joinall
     from queue import Queue
     logging.info("use simple pool")
     

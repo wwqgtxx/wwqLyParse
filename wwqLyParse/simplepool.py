@@ -7,6 +7,10 @@ import re,threading,queue,sys,json,os,time
 import functools
 from queue import Queue
 
+def joinall(close_threads,timeout=None):
+    for close_thread in close_threads:
+        close_thread.join(timeout)
+
 class Pool(object):
     def __init__(self,size=None):
         self.pool_size = size

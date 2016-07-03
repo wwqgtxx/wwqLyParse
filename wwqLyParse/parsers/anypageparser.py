@@ -114,11 +114,7 @@ class AnyPageParser(Parser):
                 for filter in list_parser.getfilters():
                     if re.search(filter,url):
                         parser_threads.append(main.pool.spawn(runlist_parser,q_results,list_parser,url))
-            if (gevent is not None):
-                gevent.joinall(parser_threads,timeout=self.TWICE_PARSE_TIMEOUT)
-            else:
-                for parser_thread in parser_threads:
-                    parser_thread.join(self.TWICE_PARSE_TIMEOUT)
+            joinall(parser_threads,timeout=self.TWICE_PARSE_TIMEOUT)
             while not q_results.empty():
                 t_results.append(q_results.get())
                 

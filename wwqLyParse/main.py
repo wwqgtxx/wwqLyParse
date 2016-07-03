@@ -18,6 +18,7 @@ import sys
 sys.path.insert(0, bridge.pn(bridge.pjoin(bridge.get_root_path(), './lib/flask_lib')))
 
 import re,threading,sys,json,os,time,logging,importlib
+from argparse import ArgumentParser
 try:
     from flask import Flask,request
 except Exception:
@@ -29,7 +30,7 @@ app = Flask(__name__)
 version = {
     'port_version' : "0.5.0", 
     'type' : 'parse', 
-    'version' : '0.4.7',
+    'version' : '0.4.8',
     'uuid' : '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter' : [],
     'name' : 'WWQ猎影解析插件', 
@@ -254,12 +255,43 @@ def parseUrl():
     debug(jjson)
     return jjson
     
+def arg_parser():
+    parser = ArgumentParser(description=version["name"])
+    parser.add_argument('--host', type=str, default='127.0.0.1', help="set listening ip")
+    parser.add_argument('-p', '--port', type=int, default=5000, help="set listening port")
+    parser.add_argument('-t', '--timeout', type=int, default=PARSE_TIMEOUT, help="set parse timeout seconds, default 60s")
+    parser.add_argument('--close_timeout', type=int, default=CLOSE_TIMEOUT, help="set close timeout seconds, default 10s")
 
+    parser.add_argument('-d', '--debug', type=str, default=None, help="debug a url")
+    parser.add_argument('-f', '--format', type=str, default=None,
+                        help="set format for Parse method")
+    parser.add_argument('--parser', type=str, nargs='*', default=None,
+                        help="set parser for Parse method, you should input a parser name, else will use all parsers")
+    parser.add_argument('-l', '--label', type=str, default=None,
+                        help="debug a url with ParseURL method, you should input the label name")
+
+    args = parser.parse_args()
+    return args
+
+def main(debugstr = None, parser = None, label = None, host = "127.0.0.1", port = "5000", timeout = PARSE_TIMEOUT, close_timeout = CLOSE_TIMEOUT):
+    logging.debug("\n------------------------------------------------------------\n")
+    global PARSE_TIMEOUT
+    PARSE_TIMEOUT = timeout
+    global CLOSE_TIMEOUT
+    CLOSE_TIMEOUT = close_timeout
+    if debugstr is not None:
+        if label is None:
+            debug(Parse(debugstr,parsers_name=parser))
+        else:
+            debug(ParseURL(debugstr,label))
+    else:
+        app.run(host=host,port=port,debug=False, use_reloader=False, threaded=True)
 
 if __name__ == '__main__':
     initVersion()
-    logging.debug("\n------------------------------------------------------------\n")
-    app.run(debug=False, use_reloader=False,threaded=True)
+    args = arg_parser()
+    main(args.debug,args.parser,args.label,args.host,args.port,args.timeout,args.close_timeout)
+
     
     #main()
 

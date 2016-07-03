@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
 
+HOST = "127.0.0.1"
+PORT = 5000
+
 import urllib.request,json,sys,subprocess,time,logging,traceback
 
 logging.basicConfig(level=logging.DEBUG,
@@ -124,22 +127,24 @@ def _run_main():
         args = [py_bin,'--normal', y_bin]
     else:
         args = [py_bin, y_bin]
+    args += ['--host', HOST]
+    args += ['--port', str(PORT)]
     logging.info(args)
     p = subprocess.Popen(args, shell=False,cwd=bridge.get_root_path(),close_fds=True)
 
 def init():
     for n in range(2):
-        if not IsOpen("127.0.0.1",5000):
+        if not IsOpen(HOST,PORT):
             _run_main()
         else:
             return
         for i in range(100):
-            if not IsOpen("127.0.0.1",5000):
+            if not IsOpen(HOST,PORT):
                 time.sleep(0.05)
             else:
                 return
         for i in range(10):
-            if not IsOpen("127.0.0.1",5000):
+            if not IsOpen(HOST,PORT):
                 time.sleep(1)
             else:
                 return
@@ -184,16 +189,16 @@ def process(url,values,willRefused=False,needresult = True,needjson = True):
         
 def closeServer():
     for n in range(2):
-        if IsOpen("127.0.0.1",5000):
-            url = 'http://localhost:5000/close'
+        if IsOpen(HOST,PORT):
+            url = 'http://%s:%d/close'%(HOST,PORT)
             values = {}
             process(url,values,willRefused = True)
             for n in range(100):
-                if not IsOpen("127.0.0.1",5000):
+                if not IsOpen(HOST,PORT):
                     return
                 time.sleep(0.05)
             for n in range(10):
-                if not IsOpen("127.0.0.1",5000):
+                if not IsOpen(HOST,PORT):
                     return
                 time.sleep(1)
         return
@@ -207,7 +212,7 @@ def GetVersion(debug=False):
     if (not debug):
         closeServer()
     init()
-    url = 'http://localhost:5000/GetVersion'
+    url = 'http://%s:%d/GetVersion' % (HOST, PORT)
     #user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
     values = {}
     results = process(url,values)
@@ -219,7 +224,7 @@ def Parse(input_text,types=None, parsers_name = None, urlhandles_name = None):
     for n in range(3):
         try:
             init()
-            url = 'http://localhost:5000/Parse'
+            url = 'http://%s:%d/Parse' % (HOST, PORT)
             #user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
             values = {}
             values["input_text"] = input_text
@@ -242,7 +247,7 @@ def ParseURL(input_text,label,min=None,max=None, urlhandles_name = None):
     for n in range(3):
         try:
             init()
-            url = 'http://localhost:5000/ParseURL'
+            url = 'http://%s:%d/ParseURL' % (HOST, PORT)
             #user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
             values = {}
             values["input_text"] = input_text

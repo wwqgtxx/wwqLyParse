@@ -17,7 +17,7 @@ except Exception as e:
 import sys
 sys.path.insert(0, bridge.pn(bridge.pjoin(bridge.get_root_path(), './lib/flask_lib')))
 
-import re,threading,queue,sys,json,os,time,logging,importlib
+import re,threading,sys,json,os,time,logging,importlib
 try:
     from flask import Flask,request
 except Exception:
@@ -126,7 +126,7 @@ def Parse(input_text,types=None,parsers_name = parsers_name,urlhandles_name = ur
     results = []
     parser_threads = []
     t_results = []
-    q_results = queue.Queue()
+    q_results = Queue()
 
     for parser in parsers:
         for filter in parser.getfilters():
@@ -171,7 +171,7 @@ def ParseURL(input_text,label,min=None,max=None,urlhandles_name = urlhandles_nam
     
     input_text = urlHandle(input_text,urlhandles_name)
     parser = parsers[0]
-    q_results = queue.Queue(1)
+    q_results = Queue(1)
     parser_thread = pool.spawn(run, q_results, parser, input_text, label, min, max)
     joinall([parser_thread], timeout=PARSE_TIMEOUT)
     if not q_results.empty():

@@ -14,52 +14,60 @@ try:
     from ..common import *
 except Exception as e:
     from common import *
-    
-try:
-    from . import yougetparser
-except Exception as e:
-    import yougetparser
-    
+
 __MODULE_CLASS_NAMES__ = ["YKDLParser"]
+try:
+    try:
+        from . import yougetparser
+    except Exception as e:
+        import yougetparser
 
-class YKDLParser(yougetparser.YouGetParser):
-        
-    bin = './ykdl/ykdl.py'
-        
-    # make arg
-    def _make_arg(self,url, _format=None):
-        arg = self._make_proxy_arg()
-        # NOTE ignore __default__ format
-        if _format and (_format != '__default__'):
-            arg += ['--format', _format]
-        arg += ['-i']
-        arg += ['--json', url]
-        return arg
-        
 
-    def Parse(self,url,types=None):
-        if (types is not None) and ("formats" not in types):
-            return
-        if ('www.iqiyi.com' in url):
-            return []
-        if re.search('www.iqiyi.com/(lib/m|a_)',url):
-            return []
-        out =  self._Parse(url,types)
-        if "data" in out:
-            out["caption"]= "YouKuDownLoader解析"
-            out['sorted']= True
-        return out
+    class YKDLParser(yougetparser.YouGetParser):
 
-    def ParseURL(self,url,label,min=None,max=None):
-        out = self._ParseURL(url,label,min,max)
-        for item in out:
-            if "iqiyi" in url:
-                item["unfixIp"] = True
-            if not isinstance(item['urls'],list):
-                if "m3u8" in item['urls'] and ":\\Users\\" in item['urls']:
-                    item['protocol'] = "m3u8"
-                    item['urls'] = "file:///" + item['urls']
-        return out
-        
+        bin = './ykdl/ykdl.py'
+
+
+        # make arg
+        def _make_arg(self, url, _format=None):
+            arg = self._make_proxy_arg()
+            # NOTE ignore __default__ format
+            if _format and (_format != '__default__'):
+                arg += ['--format', _format]
+            arg += ['-i']
+            arg += ['--json', url]
+            return arg
+
+
+        def Parse(self, url, types=None):
+            if (types is not None) and ("formats" not in types):
+                return
+            if ('www.iqiyi.com' in url):
+                return []
+            if re.search('www.iqiyi.com/(lib/m|a_)', url):
+                return []
+            out = self._Parse(url, types)
+            if "data" in out:
+                out["caption"] = "YouKuDownLoader解析"
+                out['sorted'] = True
+            return out
+
+
+        def ParseURL(self, url, label, min=None, max=None):
+            out = self._ParseURL(url, label, min, max)
+            for item in out:
+                if "iqiyi" in url:
+                    item["unfixIp"] = True
+                if not isinstance(item['urls'], list):
+                    if "m3u8" in item['urls'] and ":\\Users\\" in item['urls']:
+                        item['protocol'] = "m3u8"
+                        item['urls'] = "file:///" + item['urls']
+            return out
+
+except:
+    logging.exception("can't load yougetparser.py,it need to be super class")
+    __MODULE_CLASS_NAMES__ = []
+
+
 
 

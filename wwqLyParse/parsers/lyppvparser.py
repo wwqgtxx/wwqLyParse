@@ -67,8 +67,8 @@ class LypPvParser(Parser):
             from ..lyp_pv import run
         except Exception as e:
             from lyp_pv import run
-        logging.info("call lyp_pv.run.ParseURL(" + url + "," + label + "," + str(min) + "," + str(max) + ")")
         hd = float(label)
+        logging.info("call lyp_pv.run._do_parse(" + url + "," + str(hd) + "," + str(hd) + ")")
         pvinfo = run._do_parse(url, hd_min=hd, hd_max=hd)
         if 'error' in pvinfo:
             return pvinfo
@@ -77,30 +77,6 @@ class LypPvParser(Parser):
             for item in result:
                 item["unfixIp"] = True
         return result
-        '''
-        parts = label.split('_')
-        num = int(parts[0])
-        if num == 0:
-            parts[0] = "-3"
-        elif num == 1:
-            parts[0] = "-1"
-        elif num == 0:
-            parts[0] = "0"
-        elif num == 3:
-            parts[0] = "2"
-        elif num == 4:
-            parts[0] = "4"
-        elif num == 5:
-            parts[0] = "7"
-        label=('_').join(parts)
-        label = "() "+label
-        logging.info("call lyp_pv.run.ParseURL("+url+","+label+","+str(min)+","+str(max)+")")
-        result = run.ParseURL(url,label,min,max)
-        if "iqiyi" in url:
-            for item in result:
-                item["unfixIp"] = True
-        return result
-        '''
         
     def getLypPvVersion(self):
         try:

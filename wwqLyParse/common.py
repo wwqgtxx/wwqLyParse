@@ -122,7 +122,7 @@ def get_all_filename_by_dir(dir,suffix=".py"):
 imported_class_map = {}
 imported_module_map = {}
 
-def import_by_name(class_names = None,module_names = None, prefix = "", showinfo = True):
+def import_by_name(class_names = None,module_names = None, prefix = "",super_class = object, showinfo = True):
     lib_class_map = {}
     if class_names is not None:
         lib_names = class_names
@@ -133,10 +133,13 @@ def import_by_name(class_names = None,module_names = None, prefix = "", showinfo
                 try:
                     lib_module = importlib.import_module(prefix + lib_name.lower())
                     lib_class = getattr(lib_module, lib_name)
-                    imported_class_map[prefix+ lib_name.lower()+"."+lib_name] = lib_class
-                    lib_class_map[lib_name] = lib_class
-                    if showinfo:
-                        logging.debug("successful load " + str(lib_class))
+                    if isinstance(lib_class(),super_class):
+                        imported_class_map[prefix+ lib_name.lower()+"."+lib_name] = lib_class
+                        lib_class_map[lib_name] = lib_class
+                        if showinfo:
+                            logging.debug("successful load " + str(lib_class) + " is a instance of " + str(super_class))
+                    else:
+                        logging.warning(str(lib_class)+" is not a instance of "+str(super_class))
                 except:
                     logging.exception("load " + str(lib_name) + " fail")
     elif module_names is not None:
@@ -153,13 +156,16 @@ def import_by_name(class_names = None,module_names = None, prefix = "", showinfo
                     for lib_module_class_name in lib_module_class_names:
                         try:
                             lib_class = getattr(lib_module, lib_module_class_name)
-                            imported_module_map[prefix + lib_name].append({
-                                "lib_name": lib_class.__name__ ,
-                                "lib_class": lib_class
-                            })
-                            lib_class_map[lib_class.__name__] = lib_class
-                            if showinfo:
-                                logging.debug("successful load " + str(lib_class))
+                            if isinstance(lib_class(), super_class):
+                                imported_module_map[prefix + lib_name].append({
+                                    "lib_name": lib_class.__name__ ,
+                                    "lib_class": lib_class
+                                })
+                                lib_class_map[lib_class.__name__] = lib_class
+                                if showinfo:
+                                    logging.debug("successful load " + str(lib_class) + " is a instance of " + str(super_class))
+                            else:
+                                logging.warning(str(lib_class) + " is not a instance of " + str(super_class))
                         except:
                             logging.exception("load " + str(lib_module_class_name) + " fail")
                 except:

@@ -44,12 +44,12 @@ version = {
 PARSE_TIMEOUT = 60
 CLOSE_TIMEOUT = 10
 
-parser_class_map = import_by_name(module_names = get_all_filename_by_dir( './parsers'),prefix="parsers.")
-urlhandle_class_map =  import_by_name(module_names = get_all_filename_by_dir( './urlhandles'),prefix="urlhandles.")
+parser_class_map = import_by_name(module_names = get_all_filename_by_dir( './parsers'),prefix="parsers.",super_class=Parser)
+urlhandle_class_map =  import_by_name(module_names = get_all_filename_by_dir( './urlhandles'),prefix="urlhandles.",super_class=UrlHandle)
 
 def urlHandle(input_text,urlhandles_name=None):
     if urlhandles_name is not None:
-        _urlhandle_class_map = import_by_name(class_names = urlhandles_name, prefix="urlhandles.")
+        _urlhandle_class_map = import_by_name(class_names = urlhandles_name, prefix="urlhandles.",super_class=UrlHandle)
     else:
         _urlhandle_class_map = urlhandle_class_map
     urlhandles = new_objects(_urlhandle_class_map)
@@ -99,7 +99,7 @@ def GetVersion():
     
 def Parse(input_text,types=None,parsers_name = None,urlhandles_name = None):
     if parsers_name is not None:
-        _parser_class_map = import_by_name(class_names = parsers_name, prefix="parsers.")
+        _parser_class_map = import_by_name(class_names = parsers_name, prefix="parsers.",super_class=Parser)
     else:
         _parser_class_map = parser_class_map
     parsers = new_objects(_parser_class_map)
@@ -168,7 +168,7 @@ def ParseURL(input_text,label,min=None,max=None,urlhandles_name = None):
     t_label = label.split("@")
     label = t_label[0]
     parser_name = t_label[1]
-    parser_class_map = import_by_name(class_names = [parser_name], prefix="parsers.")
+    parser_class_map = import_by_name(class_names = [parser_name], prefix="parsers.",super_class=Parser)
     parsers = new_objects(parser_class_map)
     
     input_text = urlHandle(input_text,urlhandles_name)

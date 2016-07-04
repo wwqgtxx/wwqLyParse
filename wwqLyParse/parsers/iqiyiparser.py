@@ -36,6 +36,8 @@ CONFIG={
 class IQiYiParser(Parser):
 
     filters = ['http://www.iqiyi.com/']
+    unsupports = ['www.iqiyi.com/(lib/m|a_)']
+    types = ["formats"]
     
     stream_types = [
         {'id': '4k', 'container': 'f4v', 'video_profile': '(6)4K'},
@@ -176,70 +178,67 @@ class IQiYiParser(Parser):
     
    
     def Parse(self,input_text,types=None):
-        if (re.search('www.iqiyi.com/(lib/m|a_)',input_text)):
-            return
-        if (types is None) or ("formats" in types):
-            self.init()
-            data = {
-                "type" : "formats",
-                "name" : "",   
-                "icon" : "",
-                "provider" : "爱奇艺",
-                "caption" : "WWQ爱奇艺视频解析",
-                #"warning" : "提示信息",
-                "sorted" : 1,
-                "data" : []
-            }
-            info = self.getInfo(input_text)
-            
-            data["name"] = info["data"]["vi"]["vn"]
-                
+        self.init()
+        data = {
+            "type" : "formats",
+            "name" : "",
+            "icon" : "",
+            "provider" : "爱奇艺",
+            "caption" : "WWQ爱奇艺视频解析",
+            #"warning" : "提示信息",
+            "sorted" : 1,
+            "data" : []
+        }
+        info = self.getInfo(input_text)
 
-            # data.vp = json.data.vp
-            #  data.vi = json.data.vi
-            #  data.f4v = json.data.f4v
-            # if movieIsMember data.vp = json.data.np
+        data["name"] = info["data"]["vi"]["vn"]
 
-            #for highest qualities
-            #for http://www.iqiyi.com/v_19rrmmz5yw.html  not vp -> np
-            assert info["data"]['vp']["tkl"]!=''
-            vs = info["data"]["vp"]["tkl"][0]["vs"]
 
-            for stream in self.stream_types:
-                for i in vs:
-                    if self.stream_to_bid[stream['id']] == i['bid']:
-                        video_links=i["fs"] #now in i["flvs"] not in i["fs"]
-                        if not i["fs"][0]["l"].startswith("/"):
-                            tmp = self.getVrsEncodeCode(i["fs"][0]["l"])
-                            if tmp.endswith('mp4'):
-                                 video_links = i["flvs"]
-                        #self.stream_urls[stream['id']] = video_links
+        # data.vp = json.data.vp
+        #  data.vi = json.data.vi
+        #  data.f4v = json.data.f4v
+        # if movieIsMember data.vp = json.data.np
+
+        #for highest qualities
+        #for http://www.iqiyi.com/v_19rrmmz5yw.html  not vp -> np
+        assert info["data"]['vp']["tkl"]!=''
+        vs = info["data"]["vp"]["tkl"][0]["vs"]
+
+        for stream in self.stream_types:
+            for i in vs:
+                if self.stream_to_bid[stream['id']] == i['bid']:
+                    video_links=i["fs"] #now in i["flvs"] not in i["fs"]
+                    if not i["fs"][0]["l"].startswith("/"):
+                        tmp = self.getVrsEncodeCode(i["fs"][0]["l"])
+                        if tmp.endswith('mp4'):
+                             video_links = i["flvs"]
+                    #self.stream_urls[stream['id']] = video_links
+                    size = 0
+                    time_s = 0
+                    for l in video_links:
+                        size += l['b']
+                        time_s += l['d'] / 1e3
+                    time_s = round(time_s, 3)
+                    bitrate = gen_bitrate(size,time_s)
+                    try:
+                        size_str = byte2size(size, False)
+                        size = byte2size(size, True)
+                    except Exception as e:
+                        logging.exception()
+                        #import traceback
+                        #traceback.print_exc()
+                        size_str = "0"
                         size = 0
-                        time_s = 0
-                        for l in video_links:
-                            size += l['b']
-                            time_s += l['d'] / 1e3
-                        time_s = round(time_s, 3)
-                        bitrate = gen_bitrate(size,time_s)
-                        try:
-                            size_str = byte2size(size, False)
-                            size = byte2size(size, True)
-                        except Exception as e:
-                            logging.exception()
-                            #import traceback
-                            #traceback.print_exc()
-                            size_str = "0"
-                            size = 0
-                        data["data"].append({
-                            "label" : ('-').join([stream['video_profile'],stream['container'],i['scrsz'],size_str,bitrate]),   
-                            "code" : stream['id'],
-                            "ext" : stream['container'],   
-                            "size" : size_str,
-                            #"type" : "",
-                        })
-                        #streams[stream['id']] = {'container': stream['container'], 'video_profile': stream['video_profile'], 'size' : size}
-                        break
-            return data
+                    data["data"].append({
+                        "label" : ('-').join([stream['video_profile'],stream['container'],i['scrsz'],size_str,bitrate]),
+                        "code" : stream['id'],
+                        "ext" : stream['container'],
+                        "size" : size_str,
+                        #"type" : "",
+                    })
+                    #streams[stream['id']] = {'container': stream['container'], 'video_profile': stream['video_profile'], 'size' : size}
+                    break
+        return data
 
     def ParseURL(self,input_text,label,min=None,max=None):
         self.init()

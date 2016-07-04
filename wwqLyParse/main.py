@@ -30,7 +30,7 @@ app = Flask(__name__)
 version = {
     'port_version' : "0.5.0", 
     'type' : 'parse', 
-    'version' : '0.5.1',
+    'version' : '0.6.0',
     'uuid' : '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter' : [],
     'name' : 'WWQ猎影解析插件', 
@@ -97,16 +97,16 @@ def initVersion():
 def GetVersion(): 
     return version
     
-def Parse(input_text,types=None,parsers_name = None,urlhandles_name = None):
+def Parse(input_text,types=None,parsers_name = None,urlhandles_name = None,*k,**kk):
     if parsers_name is not None:
         _parser_class_map = import_by_name(class_names = parsers_name, prefix="parsers.",super_class=Parser)
     else:
         _parser_class_map = parser_class_map
     parsers = new_objects(_parser_class_map)
-    def run(queue,parser,input_text,types):
+    def run(queue,parser,input_text,*k,**kk):
         try:
             logging.debug(parser)
-            result = parser.Parse(input_text,types)
+            result = parser.Parse(input_text,*k,**kk)
             if (result is not None) and (result != []):
                 if "error" in result:
                     logging.error(result["error"])
@@ -117,7 +117,8 @@ def Parse(input_text,types=None,parsers_name = None,urlhandles_name = None):
                             data['label'] = str(data['label']) + "@" + parser.__class__.__name__
                         if ('code' in data) and (data['code'] is not None) and (data['code'] != ""):
                             data['code'] = str(data['code']) + "@" + parser.__class__.__name__
-                    queue.put({"result":result,"parser":parser})
+                    q_result = {"result":result,"parser":parser}
+                    queue.put(q_result)
         except Exception as e:
             logging.exception(str(parser))
             #print(e)
@@ -129,11 +130,17 @@ def Parse(input_text,types=None,parsers_name = None,urlhandles_name = None):
     parser_threads = []
     t_results = []
     q_results = Queue()
-
     for parser in parsers:
         for filter in parser.getfilters():
-            if re.search(filter,input_text):
-                parser_threads.append(pool.spawn(run,q_results,parser,input_text,types))
+            if (types is None) or (not parser.gettypes()) or (isin(types,parser.gettypes(),strict=False)):
+                if re.search(filter,input_text):
+                    support = True
+                    for unsupport in parser.getunsupports():
+                        if re.search(unsupport,input_text):
+                            support = False
+                            break
+                    if support:
+                        parser_threads.append(pool.spawn(run,q_results,parser,input_text,*k,**kk))
     for parser_thread in parser_threads:
         parser_thread.join()
     while not q_results.empty():
@@ -149,14 +156,13 @@ def Parse(input_text,types=None,parsers_name = None,urlhandles_name = None):
                 except:
                     pass
                 results.append(data)
-
     return results
 
-def ParseURL(input_text,label,min=None,max=None,urlhandles_name = None):
-    def run(queue,parser,input_text,label,min,max):
+def ParseURL(input_text,label,min=None,max=None,urlhandles_name = None,*k,**kk):
+    def run(queue,parser,input_text,label,min,max,*k,**kk):
         try:
             logging.debug(parser)
-            result = parser.ParseURL(input_text,label,min,max)
+            result = parser.ParseURL(input_text,label,min,max,*k,**kk)
             if (result is not None) and (result != []):
                 if "error" in result:
                     logging.error(result["error"])
@@ -174,7 +180,7 @@ def ParseURL(input_text,label,min=None,max=None,urlhandles_name = None):
     input_text = urlHandle(input_text,urlhandles_name)
     parser = parsers[0]
     q_results = Queue(1)
-    parser_thread = pool.spawn(run, q_results, parser, input_text, label, min, max)
+    parser_thread = pool.spawn(run, q_results, parser, input_text, label, min, max,*k,**kk)
     joinall([parser_thread], timeout=PARSE_TIMEOUT)
     if not q_results.empty():
         result = q_results.get()
@@ -213,19 +219,14 @@ def getVersion():
 @app.route('/Parse',methods=['POST','GET'])
 def parse():
     try:
-        input_text = request.values.get('input_text', '')
-        types = request.values.get('types', None)
-        _parsers_name = request.values.get('parsers_name', None)
-        if _parsers_name is not None:
-            _parsers_name = json.loads(_parsers_name)
+        s_json = request.values.get('json', None)
+        if s_json is not None:
+            logging.debug("input json:" + s_json)
+            jjson = json.loads(s_json)
+            logging.debug("load json:" + str(jjson))
+            result = Parse(jjson["input_text"], jjson["types"], jjson["parsers_name"], jjson["urlhandles_name"])
         else:
-            _parsers_name = None
-        _urlhandles_name = request.values.get('urlhandles_name', None)
-        if _urlhandles_name is not None:
-            _urlhandles_name = json.loads(_urlhandles_name)
-        else:
-            _urlhandles_name = None
-        result = Parse(input_text,types,_parsers_name,_urlhandles_name)
+            raise Exception("can;t get input json")
     except Exception as e:
         info=traceback.format_exc()
         logging.error(info)
@@ -238,16 +239,14 @@ def parse():
 @app.route('/ParseURL',methods=['POST','GET'])
 def parseUrl():
     try:
-        input_text = request.values.get('input_text', '')
-        label = request.values.get('label', '')
-        min = request.values.get('min', None)
-        max = request.values.get('max', None)
-        _urlhandles_name = request.values.get('urlhandles_name', None)
-        if _urlhandles_name is not None:
-            _urlhandles_name = json.loads(_urlhandles_name)
+        s_json = request.values.get('json', None)
+        if s_json is not None:
+            logging.debug("input json:"+s_json)
+            jjson = json.loads(s_json)
+            logging.debug("load json:" + str(jjson))
+            result = ParseURL(jjson["input_text"],jjson["label"],jjson["min"],jjson["max"],jjson["urlhandles_name"])
         else:
-            _urlhandles_name = None
-        result = ParseURL(input_text,label,min,max,_urlhandles_name)
+            raise Exception("can;t get input json")
     except Exception as e:
         info=traceback.format_exc()
         result = {"type" : "error","error" : info}
@@ -267,13 +266,15 @@ def arg_parser():
                         help="set format for Parse method")
     parser.add_argument('--parser', type=str, nargs='*', default=None,
                         help="set parser for Parse method, you should input a parser name, else will use all parsers")
+    parser.add_argument('--types', type=str, nargs='*', default=None,
+                        help="set types for Parse method, you should input a type name, else will use all type")
     parser.add_argument('-l', '--label', type=str, default=None,
                         help="debug a url with ParseURL method, you should input the label name")
 
     args = parser.parse_args()
     return args
 
-def main(debugstr = None, parsers_name = None, label = None, host = "127.0.0.1", port = "5000", timeout = PARSE_TIMEOUT, close_timeout = CLOSE_TIMEOUT):
+def main(debugstr = None, parsers_name = None, types = None, label = None, host = "127.0.0.1", port = "5000", timeout = PARSE_TIMEOUT, close_timeout = CLOSE_TIMEOUT):
     logging.debug("\n------------------------------------------------------------\n")
     global PARSE_TIMEOUT
     PARSE_TIMEOUT = timeout
@@ -281,7 +282,7 @@ def main(debugstr = None, parsers_name = None, label = None, host = "127.0.0.1",
     CLOSE_TIMEOUT = close_timeout
     if debugstr is not None:
         if label is None:
-            debug(Parse(debugstr,parsers_name=parsers_name))
+            debug(Parse(debugstr,types=types,parsers_name=parsers_name))
         else:
             debug(ParseURL(debugstr,label))
     else:
@@ -290,7 +291,7 @@ def main(debugstr = None, parsers_name = None, label = None, host = "127.0.0.1",
 if __name__ == '__main__':
     initVersion()
     args = arg_parser()
-    main(args.debug,args.parser,args.label,args.host,args.port,args.timeout,args.close_timeout)
+    main(args.debug,args.parser,args.types,args.label,args.host,args.port,args.timeout,args.close_timeout)
 
     
     #main()

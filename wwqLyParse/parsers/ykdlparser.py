@@ -39,14 +39,8 @@ try:
             return arg
 
 
-        def Parse(self, url, types=None):
-            if (types is not None) and ("formats" not in types):
-                return
-            if ('www.iqiyi.com' in url):
-                return []
-            if re.search('www.iqiyi.com/(lib/m|a_)', url):
-                return []
-            out = self._Parse(url, types)
+        def Parse(self, url):
+            out = self._Parse(url)
             if "data" in out:
                 out["caption"] = "YouKuDownLoader解析"
                 out['sorted'] = True

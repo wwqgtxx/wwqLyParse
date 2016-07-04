@@ -30,6 +30,8 @@ __MODULE_CLASS_NAMES__ = ["IQiYiMTsParser"]
 class IQiYiMTsParser(Parser):
 
     filters = ['http://www.iqiyi.com/']
+    unsupports = ['www.iqiyi.com/(lib/m|a_)']
+    types = ["formats"]
     
     stream_types = [
         {'id': '4K-H264', 'container': 'ts', 'video_profile': '(6)4K-H264'},
@@ -81,73 +83,70 @@ class IQiYiMTsParser(Parser):
         return stream_type
     
    
-    def Parse(self,input_text,types=None):
-        if (re.search('www.iqiyi.com/(lib/m|a_)',input_text)):
-            return
-        if (types is None) or ("formats" in types):
-            data = {
-                "type" : "formats",
-                "name" : "",   
-                "icon" : "",
-                "provider" : "爱奇艺",
-                "caption" : "WWQ爱奇艺视频解析(移动端TS接口)",
-                #"warning" : "提示信息",
-                #"sorted" : 1,
-                "data" : []
-            }
-            url = input_text
-            html = getUrl(url)
-            tvid = r1(r'#curid=(.+)_', url) or \
-                   r1(r'tvid=([^&]+)', url) or \
-                   r1(r'data-player-tvid="([^"]+)"', html)
-            videoid = r1(r'#curid=.+_(.*)$', url) or \
-                      r1(r'vid=([^&]+)', url) or \
-                      r1(r'data-player-videoid="([^"]+)"', html)
-            title = match1(html, '<title>([^<]+)').split('-')[0]
-            #self.vid = (tvid, videoid)
-            info = self.getVMS(tvid, videoid)
-            assert info['code'] == 'A00000', 'can\'t play this video'
-            data["name"] = title
-            used_id = []
-            if 'ctl' in info['data']:
-                for stream_id in info['data']['ctl']["vip"]["bids"]:
-                    v = info['data']['ctl']['configs'][str(stream_id)]['vid']
-                    vip_info = self.getVMS(tvid, v)
-                    if vip_info['code'] == 'A00000':
-                        vip_url = vip_info['data']['m3u']
-                        stream_type = self.getStream_type(stream_id)
-                        used_id.append(stream_type['id'])
-                        data["data"].append({
-                            "label": ('-').join([stream_type['video_profile'], stream_type['container']]),
-                            "code": stream_type['id'],
-                            "ext": stream_type['container'],
-                            # "size": 0,
-                            # "type" : "",
-                            "download": [{
-                                "protocol": "m3u8",
-                                "urls": vip_url,
-                                # "maxDown" : 1,
-                                "unfixIp": True
-                            }]
-                        })
-            for stream in info['data']['vidl']:
-                stream_id = stream['vd']
-                stream_type = self.getStream_type(stream_id)
-                if stream_type['id'] in used_id:
-                    break
-                data["data"].append({
-                    "label": ('-').join([stream_type['video_profile'], stream_type['container']]),
-                    "code": stream_type['id'],
-                    "ext": stream_type['container'],
-                    #"size": 0,
-                    # "type" : "",
-                    "download": [{
-                        "protocol": "m3u8",
-                        "urls": stream['m3u'],
-                        # "maxDown" : 1,
-                        "unfixIp": True
-                    }]
-                })
+    def Parse(self,input_text):
+        data = {
+            "type" : "formats",
+            "name" : "",
+            "icon" : "",
+            "provider" : "爱奇艺",
+            "caption" : "WWQ爱奇艺视频解析(移动端TS接口)",
+            #"warning" : "提示信息",
+            #"sorted" : 1,
+            "data" : []
+        }
+        url = input_text
+        html = getUrl(url)
+        tvid = r1(r'#curid=(.+)_', url) or \
+               r1(r'tvid=([^&]+)', url) or \
+               r1(r'data-player-tvid="([^"]+)"', html)
+        videoid = r1(r'#curid=.+_(.*)$', url) or \
+                  r1(r'vid=([^&]+)', url) or \
+                  r1(r'data-player-videoid="([^"]+)"', html)
+        title = match1(html, '<title>([^<]+)').split('-')[0]
+        #self.vid = (tvid, videoid)
+        info = self.getVMS(tvid, videoid)
+        assert info['code'] == 'A00000', 'can\'t play this video'
+        data["name"] = title
+        used_id = []
+        if 'ctl' in info['data']:
+            for stream_id in info['data']['ctl']["vip"]["bids"]:
+                v = info['data']['ctl']['configs'][str(stream_id)]['vid']
+                vip_info = self.getVMS(tvid, v)
+                if vip_info['code'] == 'A00000':
+                    vip_url = vip_info['data']['m3u']
+                    stream_type = self.getStream_type(stream_id)
+                    used_id.append(stream_type['id'])
+                    data["data"].append({
+                        "label": ('-').join([stream_type['video_profile'], stream_type['container']]),
+                        "code": stream_type['id'],
+                        "ext": stream_type['container'],
+                        # "size": 0,
+                        # "type" : "",
+                        "download": [{
+                            "protocol": "m3u8",
+                            "urls": vip_url,
+                            # "maxDown" : 1,
+                            "unfixIp": True
+                        }]
+                    })
+        for stream in info['data']['vidl']:
+            stream_id = stream['vd']
+            stream_type = self.getStream_type(stream_id)
+            if stream_type['id'] in used_id:
+                break
+            data["data"].append({
+                "label": ('-').join([stream_type['video_profile'], stream_type['container']]),
+                "code": stream_type['id'],
+                "ext": stream_type['container'],
+                #"size": 0,
+                # "type" : "",
+                "download": [{
+                    "protocol": "m3u8",
+                    "urls": stream['m3u'],
+                    # "maxDown" : 1,
+                    "unfixIp": True
+                }]
+            })
 
-            return data
+        return data
                     

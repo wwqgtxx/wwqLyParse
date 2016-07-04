@@ -127,14 +127,23 @@ def import_by_name(class_names = None,module_names = None, prefix = "",super_cla
     if class_names is not None:
         lib_names = class_names
         for lib_name in lib_names:
+            if "." in lib_name:
+                full_name = prefix+ lib_name
+                list_lib_name = lib_name.split(".")
+                lib_name = list_lib_name[-1]
+                module_name = prefix
+                module_name += "".join(list_lib_name[0:-1])
+            else:
+                full_name = prefix + lib_name.lower() + "." + lib_name
+                module_name = prefix + lib_name.lower()
             try:
-                lib_class_map[lib_name] = imported_class_map[prefix+ lib_name.lower()+"."+lib_name]
+                lib_class_map[lib_name] = imported_class_map[full_name]
             except:
                 try:
-                    lib_module = importlib.import_module(prefix + lib_name.lower())
+                    lib_module = importlib.import_module(module_name)
                     lib_class = getattr(lib_module, lib_name)
                     if isinstance(lib_class(),super_class):
-                        imported_class_map[prefix+ lib_name.lower()+"."+lib_name] = lib_class
+                        imported_class_map[full_name] = lib_class
                         lib_class_map[lib_name] = lib_class
                         if showinfo:
                             logging.debug("successful load " + str(lib_class) + " is a instance of " + str(super_class))
@@ -161,6 +170,7 @@ def import_by_name(class_names = None,module_names = None, prefix = "",super_cla
                                     "lib_name": lib_class.__name__ ,
                                     "lib_class": lib_class
                                 })
+                                imported_class_map[prefix + lib_name + "." + lib_class.__name__] = lib_class
                                 lib_class_map[lib_class.__name__] = lib_class
                                 if showinfo:
                                     logging.debug("successful load " + str(lib_class) + " is a instance of " + str(super_class))
@@ -195,7 +205,20 @@ def get_caller_info():
         pass
     callmethod = "<%s:%d %s> " % (fn, lno, func)
     return callmethod
-        
+
+def isin(a,b,strict = True):
+    result = False
+    if isinstance(a,list):
+        for item in a:
+            if item in b:
+                result = True
+            elif strict:
+                result = False
+    else:
+        result = (a in b)
+    return result
+
+
 def url_size(url, headers = {}):
     for n in range(3):
         try:
@@ -336,12 +359,18 @@ def debug(input):
         
 class Parser(object):
     filters = []
-    def Parse(self,url,types=None):
+    unsupports = []
+    types = []
+    def Parse(self,url):
         pass
     def ParseURL(self,url,label,min=None,max=None):
         pass
     def getfilters(self):
         return self.filters
+    def getunsupports(self):
+        return self.unsupports
+    def gettypes(self):
+        return self.types
     def closeParser(self):
         return
         

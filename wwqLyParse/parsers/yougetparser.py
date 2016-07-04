@@ -20,6 +20,8 @@ __MODULE_CLASS_NAMES__ = ["YouGetParser"]
 class YouGetParser(Parser):
 
     filters = ['^(http|https)://.+']
+    types = ["formats"]
+    unsupports = ['www.iqiyi.com','list.iqiyi.com']
     bin = './you-get/you-get'
         
     # print exception function
@@ -158,7 +160,7 @@ class YouGetParser(Parser):
                 raw_text = rest
 
     # parse functions
-    def _Parse(self,url,types=None):
+    def _Parse(self,url):
         yarg = self._make_arg(url)
         stdout, stderr = self._run(yarg)
         #print(stdout)
@@ -177,14 +179,8 @@ class YouGetParser(Parser):
         out = self._parse_parse(info)
         return out
     
-    def Parse(self,url,types=None):
-        if (types is not None) and ("formats" not in types):
-            return
-        if ('www.iqiyi.com' in url):
-            return []
-        if re.search('www.iqiyi.com/(lib/m|a_)',url):
-            return []
-        out =  self._Parse(url,types)
+    def Parse(self,url):
+        out =  self._Parse(url)
         if "data" in out:
             out["caption"]= "you-get解析"
             out['sorted']= True

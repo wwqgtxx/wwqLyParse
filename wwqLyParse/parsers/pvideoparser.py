@@ -277,6 +277,8 @@ def _pvinfo_to_parseurl_output(pvinfo, hd):
 
 class PVideoParser(Parser):
     filters = RE_SUPPORT_URL
+    unsupports = SUPPORT_URL_BLACKLIST+['list.iqiyi.com']
+    types = ["formats"]
     
     def Parse(self, url, *k, **kk):
         if not _check_support_url(url):

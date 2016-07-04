@@ -30,6 +30,8 @@ __MODULE_CLASS_NAMES__ = ["IQiYiMParser"]
 class IQiYiMParser(Parser):
 
     filters = ['http://www.iqiyi.com/']
+    unsupports = ['www.iqiyi.com/(lib/m|a_)']
+    types = ["formats"]
     
     stream_types = [
         {'id': 'high', 'container': 'mp4', 'video_profile': '(2)高清'},
@@ -143,64 +145,61 @@ class IQiYiMParser(Parser):
         return json.loads(getUrl(vmsreq,allowCache = False)[13:])
     
    
-    def Parse(self,input_text,types=None):
-        if (re.search('www.iqiyi.com/(lib/m|a_)',input_text)):
-            return
-        if (types is None) or ("formats" in types):
-            data = {
-                "type" : "formats",
-                "name" : "",   
-                "icon" : "",
-                "provider" : "爱奇艺",
-                "caption" : "WWQ爱奇艺视频解析(移动端MP4接口)",
-                #"warning" : "提示信息",
-                "sorted" : 1,
-                "data" : []
-            }
-            url = input_text
-            html = getUrl(url)
-            tvid = r1(r'#curid=(.+)_', url) or \
-                   r1(r'tvid=([^&]+)', url) or \
-                   r1(r'data-player-tvid="([^"]+)"', html)
-            videoid = r1(r'#curid=.+_(.*)$', url) or \
-                      r1(r'vid=([^&]+)', url) or \
-                      r1(r'data-player-videoid="([^"]+)"', html)
-            #self.vid = (tvid, videoid)
-            
-            for stream in self.stream_types:
-                info = self.getVMS(tvid, videoid,self.stream_to_bid[stream['id']])
-                if info["code"] == "A00000":
-                    size = url_size(info['data']['m3u'])
-                    if "duration" in info['data']:
-                        time_s = info['data']["duration"]
-                        time_s = round(time_s, 3)
-                        bitrate = gen_bitrate(size,time_s)
-                    else:
-                        time_s = 0
-                        bitrate = ""
-                    try:
-                        size_str = byte2size(size, False)
-                    except Exception as e:
-                        logging.exception()
-                        #import traceback
-                        #traceback.print_exc()
-                        size_str = "0"
-                    data["name"] = info['data']['playInfo']['vn']
-                    data["data"].append({
-                            "label" : ('-').join([stream['video_profile'],stream['container'],size_str,bitrate]),   
-                            "code" : stream['id'],
-                            "ext" : stream['container'],   
-                            "size" : size_str,
-                            #"type" : "",
-                            "download" : [{
-                                "protocol" : "http", 
-                                "urls" :  info['data']['m3u'],
-                                "duration" : time_s*1e3,
-                                "length" : size,
-                                #"maxDown" : 1,
-                                "unfixIp" : True
-                            }]
-                        })
-                    #streams[stream] = {'container': 'mp4', 'video_profile': stream, 'src' : [info['data']['m3u']], 'size' : url_size(info['data']['m3u'])}
-            return data
+    def Parse(self,input_text):
+        data = {
+            "type" : "formats",
+            "name" : "",
+            "icon" : "",
+            "provider" : "爱奇艺",
+            "caption" : "WWQ爱奇艺视频解析(移动端MP4接口)",
+            #"warning" : "提示信息",
+            "sorted" : 1,
+            "data" : []
+        }
+        url = input_text
+        html = getUrl(url)
+        tvid = r1(r'#curid=(.+)_', url) or \
+               r1(r'tvid=([^&]+)', url) or \
+               r1(r'data-player-tvid="([^"]+)"', html)
+        videoid = r1(r'#curid=.+_(.*)$', url) or \
+                  r1(r'vid=([^&]+)', url) or \
+                  r1(r'data-player-videoid="([^"]+)"', html)
+        #self.vid = (tvid, videoid)
+
+        for stream in self.stream_types:
+            info = self.getVMS(tvid, videoid,self.stream_to_bid[stream['id']])
+            if info["code"] == "A00000":
+                size = url_size(info['data']['m3u'])
+                if "duration" in info['data']:
+                    time_s = info['data']["duration"]
+                    time_s = round(time_s, 3)
+                    bitrate = gen_bitrate(size,time_s)
+                else:
+                    time_s = 0
+                    bitrate = ""
+                try:
+                    size_str = byte2size(size, False)
+                except Exception as e:
+                    logging.exception()
+                    #import traceback
+                    #traceback.print_exc()
+                    size_str = "0"
+                data["name"] = info['data']['playInfo']['vn']
+                data["data"].append({
+                        "label" : ('-').join([stream['video_profile'],stream['container'],size_str,bitrate]),
+                        "code" : stream['id'],
+                        "ext" : stream['container'],
+                        "size" : size_str,
+                        #"type" : "",
+                        "download" : [{
+                            "protocol" : "http",
+                            "urls" :  info['data']['m3u'],
+                            "duration" : time_s*1e3,
+                            "length" : size,
+                            #"maxDown" : 1,
+                            "unfixIp" : True
+                        }]
+                    })
+                #streams[stream] = {'container': 'mp4', 'video_profile': stream, 'src' : [info['data']['m3u']], 'size' : url_size(info['data']['m3u'])}
+        return data
                     

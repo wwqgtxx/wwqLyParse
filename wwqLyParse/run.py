@@ -246,13 +246,11 @@ def Parse(input_text,types=None, parsers_name = None, urlhandles_name = None):
             #user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
             values = {}
             values["input_text"] = input_text
-            if types is not None:
-                values["types"] = types
-            if parsers_name is not None:
-                values["parsers_name"] = json.dumps(parsers_name)
-            if urlhandles_name is not None:
-                values["urlhandles_name"] = json.dumps(urlhandles_name)
-            results = process(url,values)
+            values["types"] = types
+            values["parsers_name"] = parsers_name
+            values["urlhandles_name"] = urlhandles_name
+            jjson = json.dumps(values)
+            results = process(url, {"json": jjson})
             return results
         except Exception as e:
             #logging.info(e)
@@ -270,13 +268,11 @@ def ParseURL(input_text,label,min=None,max=None, urlhandles_name = None):
             values = {}
             values["input_text"] = input_text
             values["label"] = label
-            if min is not None:
-                values["min"] = min
-            if max is not None:
-                values["max"] = max
-            if urlhandles_name is not None:
-                values["urlhandles_name"] = json.dumps(urlhandles_name)
-            results = process(url,values)
+            values["min"] = min
+            values["max"] = max
+            values["urlhandles_name"] = urlhandles_name
+            jjson = json.dumps(values)
+            results = process(url, {"json": jjson})
             return results
         except Exception as e:
             #logging.info(e)

@@ -12,27 +12,15 @@ try:
 except Exception as e:
     from common import *
 
-__MODULE_CLASS_NAMES__ = ["ListParser"]
+__MODULE_CLASS_NAMES__ = ["IQiYiAListParser","IQiYiLibMListParser","IQiYiVListParser"]
 
-class ListParser(Parser):
-
-    filters = ['www.iqiyi.com/(lib/m|a_|v_)']
     
-    def __init__(self,pool=pool_getUrl):
-        self.pool = pool
-        
-    def Parse(self,input_text,types=None):
-        if (types is None) or ("list" in types):
-            if re.search('www.iqiyi.com/lib/m',input_text):
-                return self.Parse_lib_m(input_text)
-            if re.search('www.iqiyi.com/a_',input_text):
-                return self.Parse_a(input_text)
-            if re.search('www.iqiyi.com/v_',input_text):
-                return self.Parse_v(input_text)
-    
+class IQiYiAListParser(Parser):
 
-        
-    def Parse_a(self,input_text):
+    filters = ["www.iqiyi.com/a_"]
+    types = ["list"]
+
+    def Parse(self,input_text, pool=pool_getUrl):
         # modity from sceext2's list271.py
         def get_list_info_api1(html_text):
             RE_GET_AID = ' albumId: ([0-9]+),'    # albumId: 202340701,
@@ -69,7 +57,7 @@ class ListParser(Parser):
                     page_n += 1
                     url = make_port_url(aid, page_n)
                     # get text
-                    raw_text = getUrl(url,pool = self.pool)
+                    raw_text = getUrl(url,pool = pool)
                     
                     # get list
                     sub_list = parse_one_page(raw_text)
@@ -159,7 +147,7 @@ class ListParser(Parser):
                 # make request url
                 url = make_port_url(aid)
                 # get text
-                raw_text = getUrl(url,pool = self.pool)
+                raw_text = getUrl(url,pool = pool)
                 # get list
                 vlist = parse_one_page(raw_text)
                 # get full vinfo list done
@@ -246,14 +234,14 @@ class ListParser(Parser):
                 #import traceback  
                 #traceback.print_exc()  
                 logging.error(str(get_list_info)+str(e))
-        html_text = getUrl(input_text,pool = self.pool)
+        html_text = getUrl(input_text,pool = pool)
         html = PyQuery(html_text)
         title = html('h1.main_title').children('a').text()
         for a in html('div.crumb-item').children('a'):
             a = PyQuery(a)
             if a.attr('href') in input_text:
                 title = a.text()    
-        i =0
+        i = 0
         data = {
             "data": [],
             "more": False,
@@ -283,11 +271,16 @@ class ListParser(Parser):
                 logging.error(str(get_list_info_html)+e)
             
         data["total"] = len(data["data"])
-        
         return data
 
-    def Parse_lib_m(self,input_text):
-        html = PyQuery(getUrl(input_text,pool = self.pool))
+class IQiYiLibMListParser(Parser):
+
+    filters = ["www.iqiyi.com/lib/m"]
+    types = ["list"]
+
+
+    def Parse(self,input_text, pool=pool_getUrl):
+        html = PyQuery(getUrl(input_text,pool = pool))
         
         """
         album_items = html('div.clearfix').children('li.album_item')
@@ -327,7 +320,7 @@ class ListParser(Parser):
         
         data_doc_id = html('span.play_source').attr('data-doc-id')
         ejson_url = 'http://rq.video.iqiyi.com/aries/e.json?site=iqiyi&docId='+data_doc_id+'&count=100000'
-        ejson = json.loads(getUrl(ejson_url,pool = self.pool))
+        ejson = json.loads(getUrl(ejson_url,pool = pool))
         ejson_datas = ejson["data"]["objs"]
         data["total"] = ejson_datas["info"]["total_video_number"]
         data["title"] = ejson_datas["info"]["album_title"]
@@ -347,13 +340,24 @@ class ListParser(Parser):
         #print(ejson)
         return data
 
-    def Parse_v(self,input_text):
+class IQiYiVListParser(Parser):
+
+    filters = ["www.iqiyi.com/v_"]
+    types = ["list"]
+
+    def Parse(self,input_text, pool=pool_getUrl):
         logging.debug(input_text)
-        html = PyQuery(getUrl(input_text,pool = self.pool))
+        html = PyQuery(getUrl(input_text,pool = pool))
         datainfo_navlist = PyQuery(html("#datainfo-navlist"))
         for a in datainfo_navlist.children('a'):
             a = PyQuery(a)
             url = a.attr("href")
-            if re.search('www.iqiyi.com/(a_|lib/m)',url):
-                return self.Parse(url)
+            logging.info("change %s to %s"%(input_text,url))
+            try:
+                from ..main import Parse as main_parse
+            except Exception as e:
+                from main import Parse as main_parse
+            result = main_parse(input_text=url, types="list")
+            if result:
+                return result[0]
     

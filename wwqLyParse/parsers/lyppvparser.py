@@ -22,19 +22,15 @@ class LypPvParser(Parser):
         filters = run.GetVersion()['filter'] 
     except Exception as e:
         filters = []
+    types = ["formats"]
+    unsupports = ['www.iqiyi.com','list.iqiyi.com']
 
     # parse functions
-    def Parse(self,url,types=None):
-        if (types is not None) and ("formats" not in types):
-            return
-        if ('www.iqiyi.com' in url):
-            return []
+    def Parse(self,url):
         try:
             from ..lyp_pv import run
         except Exception as e:
             from lyp_pv import run
-        if re.search('www.iqiyi.com/(lib/m|a_)',url):
-            return []
         logging.info("call lyp_pv.run.Parse("+url+")")
         out = run.Parse(url)
         if "data" in out:

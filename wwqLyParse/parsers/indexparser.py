@@ -17,11 +17,10 @@ __MODULE_CLASS_NAMES__ = ["IndexParser"]
 class IndexParser(Parser):
 
     filters = ['^http://www.le.com$']
+    types = ["collection"]
         
-    def Parse(self,input_text,types=None):
-        if (types is None) or ("collection" in types):
-            if re.match('^http://www.le.com$',input_text):
-                return self.Parse_le(input_text)
+    def Parse(self,input_text):
+        return self.Parse_le(input_text)
         
     def Parse_le(self,input_text):
         html = PyQuery(getUrl(input_text))

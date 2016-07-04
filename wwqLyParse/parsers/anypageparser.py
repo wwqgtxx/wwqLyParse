@@ -17,17 +17,15 @@ __MODULE_CLASS_NAMES__ = ["AnyPageParser"]
 class AnyPageParser(Parser):
 
     filters = ['^(http|https)://.+']
+    types = ["collection"]
+    unsupports = ['www.iqiyi.com/(lib/m|a_|v_)']
     
     
     TWICE_PARSE = True    
     TWICE_PARSE_TIMEOUT = 30
         
-    def Parse(self,input_text,types=None):
+    def Parse(self,input_text):
         global TWICE_PARSE_TIMEOUT
-        if (types is not None) and ("collection" not in types):
-            return
-        if (re.search('www.iqiyi.com/(lib/m|a_|v_)',input_text)):
-            return
         html = PyQuery(getUrl(input_text))
         items = html('a')
         title = html('title').text()
@@ -85,34 +83,31 @@ class AnyPageParser(Parser):
             data["data"].append(info)
         if self.TWICE_PARSE:
             try:
-                from . import listparser
+                from . import iqiyilistparser
             except Exception as e:
                 import listparser
             try:
                 from .. import main
             except Exception as e:
                 import main
-            def runlist_parser(queue,parser,url):
-                url2 = urlHandle(url)
+            def runlist_parser(queue,url,pool):
                 try:
-                    result = parser.Parse(url2)
+                    result = main.Parse(url,types="list",pool = pool)[0]
                     if (result is not None) and (result != []) and (result["data"] is not None) and (result["data"] != []):
                         queue.put({"result":result,"url":url})
                 except Exception as e:
                     #continue
-                    logging.error(e)
+                    logging.exception("twice parse %s failed"%url)
                     #import traceback  
-                    #traceback.print_exc() 
-            list_parser = listparser.ListParser(pool = Pool(20))
-            urlHandle = main.urlHandle
+                    #traceback.print_exc()
+
+            pool = Pool(20)
             parser_threads = []
             parse_urls = []
             t_results = []
             q_results = Queue()
             for url in urls:
-                for filter in list_parser.getfilters():
-                    if re.search(filter,url):
-                        parser_threads.append(main.pool.spawn(runlist_parser,q_results,list_parser,url))
+                parser_threads.append(main.pool.spawn(runlist_parser,q_results,url,pool))
             joinall(parser_threads,timeout=self.TWICE_PARSE_TIMEOUT)
             while not q_results.empty():
                 t_results.append(q_results.get())

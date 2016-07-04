@@ -208,7 +208,7 @@ def url_size(url, headers = {}):
                 return int(size)
         except Exception as e:
             error = e
-    logging.error(e)
+    logging.error(error)
     return -1
 
     

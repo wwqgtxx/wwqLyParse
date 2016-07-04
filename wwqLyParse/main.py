@@ -273,7 +273,7 @@ def arg_parser():
     args = parser.parse_args()
     return args
 
-def main(debugstr = None, parser = None, label = None, host = "127.0.0.1", port = "5000", timeout = PARSE_TIMEOUT, close_timeout = CLOSE_TIMEOUT):
+def main(debugstr = None, parsers_name = None, label = None, host = "127.0.0.1", port = "5000", timeout = PARSE_TIMEOUT, close_timeout = CLOSE_TIMEOUT):
     logging.debug("\n------------------------------------------------------------\n")
     global PARSE_TIMEOUT
     PARSE_TIMEOUT = timeout
@@ -281,7 +281,7 @@ def main(debugstr = None, parser = None, label = None, host = "127.0.0.1", port 
     CLOSE_TIMEOUT = close_timeout
     if debugstr is not None:
         if label is None:
-            debug(Parse(debugstr,parsers_name=parser))
+            debug(Parse(debugstr,parsers_name=parsers_name))
         else:
             debug(ParseURL(debugstr,label))
     else:

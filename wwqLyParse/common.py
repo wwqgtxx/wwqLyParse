@@ -197,13 +197,19 @@ def get_caller_info():
     return callmethod
         
 def url_size(url, headers = {}):
-    if headers:
-        response = urllib.request.urlopen(urllib.request.Request(url, headers = headers), None)
-    else:
-        response = urllib.request.urlopen(url)
-
-    size = response.headers['content-length']
-    return int(size) if size!=None else float('inf')
+    for n in range(3):
+        try:
+            if headers:
+                response = urllib.request.urlopen(urllib.request.Request(url, headers = headers), None)
+            else:
+                response = urllib.request.urlopen(url)
+            size = response.headers['content-length']
+            if size!=None:
+                return int(size)
+        except Exception as e:
+            error = e
+    logging.error(e)
+    return -1
 
     
 def IsOpen(ip,port):

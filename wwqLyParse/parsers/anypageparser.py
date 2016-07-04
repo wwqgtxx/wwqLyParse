@@ -83,10 +83,6 @@ class AnyPageParser(Parser):
             data["data"].append(info)
         if self.TWICE_PARSE:
             try:
-                from . import iqiyilistparser
-            except Exception as e:
-                import listparser
-            try:
                 from .. import main
             except Exception as e:
                 import main

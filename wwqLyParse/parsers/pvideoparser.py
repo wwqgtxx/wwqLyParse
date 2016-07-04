@@ -178,7 +178,10 @@ def _get_rel_path(raw):
     return out
 
 def _run_p_video(argv):
-    args = [sys.executable, _get_rel_path(BIN_P_VIDEO)] + argv
+    if "PyRun.exe" in sys.executable:
+        args = [sys.executable, '--normal', _get_rel_path(BIN_P_VIDEO)] + argv
+    else:
+        args = [sys.executable, _get_rel_path(BIN_P_VIDEO)] + argv
     logging.info(' run p_video --> ' + str(args))
     
     PIPE = subprocess.PIPE

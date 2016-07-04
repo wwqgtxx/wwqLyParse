@@ -63,7 +63,11 @@ class YouGetParser(Parser):
     def _run(self,arg):
         y_bin = bridge.pn(bridge.pjoin(bridge.get_root_path(),self.bin))
         py_bin = sys.executable
-        args = [py_bin, y_bin] + arg
+        if "PyRun.exe" in py_bin:
+            args = [py_bin, '--normal', y_bin]
+        else:
+            args = [py_bin, y_bin]
+        args = args + arg
         PIPE = subprocess.PIPE
         logging.debug(args)
         p = subprocess.Popen(args, stdout=PIPE, stderr=PIPE, shell=False)

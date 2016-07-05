@@ -197,7 +197,7 @@ def closeServer():
     for n in range(2):
         if IsOpen(CONFIG["host"],CONFIG["port"]):
             url = 'http://%s:%d/close'%(CONFIG["host"],CONFIG["port"])
-            values = {}
+            values = {"uuid": CONFIG["uuid"]}
             process(url,values,willRefused = True)
             for n in range(100):
                 if not IsOpen(CONFIG["host"],CONFIG["port"]):
@@ -218,7 +218,7 @@ def getVersion(needclose=True):
             init()
             url = 'http://%s:%d/GetVersion' % (CONFIG["host"], CONFIG["port"])
             #user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
-            values = {}
+            values = {"uuid" : CONFIG["uuid"]}
             results = process(url,values)
             assert results["uuid"] == CONFIG["uuid"]
             global version
@@ -250,7 +250,8 @@ def Parse(input_text,types=None, parsers_name = None, urlhandles_name = None):
             values["parsers_name"] = parsers_name
             values["urlhandles_name"] = urlhandles_name
             jjson = json.dumps(values)
-            results = process(url, {"json": jjson})
+            values = {"json": jjson,"uuid" : CONFIG["uuid"]}
+            results = process(url, values)
             return results
         except Exception as e:
             #logging.info(e)
@@ -272,7 +273,8 @@ def ParseURL(input_text,label,min=None,max=None, urlhandles_name = None):
             values["max"] = max
             values["urlhandles_name"] = urlhandles_name
             jjson = json.dumps(values)
-            results = process(url, {"json": jjson})
+            values = {"json": jjson, "uuid": CONFIG["uuid"]}
+            results = process(url, values)
             return results
         except Exception as e:
             #logging.info(e)
@@ -308,11 +310,11 @@ def main():
     #debug(Parse('http://www.iqiyi.com/playlist392712002.html',"collection"))
     #debug(Parse('http://list.iqiyi.com/www/2/----------------iqiyi--.html'))
     #debug(Parse('http://www.iqiyi.com/a_19rrhb8fjp.html',"list"))
-    #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html#vfrm=2-3-0-1'))
+    debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html#vfrm=2-3-0-1'))
     #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html',"formats",parsers_name=["IQiYiParser"]))
     #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html',"formats",parsers_name=["PVideoParser"]))
     #debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html'))
-    debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","2.0@PVideoParser"))
+    #debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","2.0@PVideoParser"))
     # #debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","fullhd@IQiYiParser"))
     #debug(Parse('http://v.pptv.com/show/NWR29Yzj2hh7ibWE.html?rcc_src=S1'))
     #debug(Parse('http://www.bilibili.com/video/av2557971/')) #don't support

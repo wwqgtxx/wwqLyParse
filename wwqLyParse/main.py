@@ -141,8 +141,7 @@ def Parse(input_text,types=None,parsers_name = None,urlhandles_name = None,*k,**
                             break
                     if support:
                         parser_threads.append(pool.spawn(run,q_results,parser,input_text,*k,**kk))
-    for parser_thread in parser_threads:
-        parser_thread.join()
+    joinall(parser_threads, timeout=PARSE_TIMEOUT)
     while not q_results.empty():
         t_results.append(q_results.get())
     for parser in parsers:
@@ -194,31 +193,64 @@ def debug(input):
     info += ((str(input))).encode('gbk', 'ignore').decode('gbk')
     info += "\n------------------------------------------------------------"
     logging.debug(info)
-    
-@app.route('/close',methods=['POST','GET'])
-def Close():
+
+def close():
     parsers = new_objects(parser_class_map)
     urlhandles = new_objects(urlhandle_class_map)
+
     def exit():
         time.sleep(0.001)
         os._exit(0)
+
     close_threads = []
     for parser in parsers:
         close_threads.append(pool.spawn(parser.closeParser))
     for urlhandle in urlhandles:
         close_threads.append(pool.spawn(urlhandle.closeUrlHandle))
-    joinall(close_threads,timeout=CLOSE_TIMEOUT)
+    joinall(close_threads, timeout=CLOSE_TIMEOUT)
     pool.spawn(exit)
-    return ""
+    
+@app.route('/close',methods=['POST','GET'])
+def Close():
+    try:
+        '''
+        uuid = request.values.get('uuid', None)
+        if uuid is None or uuid != version["uuid"]:
+            raise Exception("get the error uuid:" + str(uuid))
+        '''
+        close()
+        return ""
+    except Exception as e:
+        info = traceback.format_exc()
+        logging.error(info)
+        result = {"type": "error", "error": info}
+        jjson = json.dumps(result)
+        logging.debug(jjson)
+        return jjson
     
 @app.route('/GetVersion',methods=['POST','GET'])
-def getVersion(): 
-    result = GetVersion()
-    return json.dumps(result)
+def getVersion():
+    try:
+        '''
+        uuid = request.values.get('uuid', None)
+        if uuid is None or uuid != version["uuid"]:
+            raise Exception("get the error uuid:" + str(uuid))
+        '''
+        result = GetVersion()
+    except Exception as e:
+        info = traceback.format_exc()
+        logging.error(info)
+        result = {"type": "error", "error": info}
+    jjson = json.dumps(result)
+    logging.debug(jjson)
+    return jjson
     
 @app.route('/Parse',methods=['POST','GET'])
 def parse():
     try:
+        uuid = request.values.get('uuid', None)
+        if uuid is None or uuid != version["uuid"]:
+            raise Exception("get the error uuid:"+str(uuid))
         s_json = request.values.get('json', None)
         if s_json is not None:
             logging.debug("input json:" + s_json)
@@ -226,19 +258,22 @@ def parse():
             logging.debug("load json:" + str(jjson))
             result = Parse(jjson["input_text"], jjson["types"], jjson["parsers_name"], jjson["urlhandles_name"])
         else:
-            raise Exception("can;t get input json")
+            raise Exception("can't get input json")
     except Exception as e:
         info=traceback.format_exc()
         logging.error(info)
         result = {"type" : "error","error" : info}
     jjson = json.dumps(result)
-    debug(jjson)
+    logging.debug(jjson)
     return jjson
         
     
 @app.route('/ParseURL',methods=['POST','GET'])
 def parseUrl():
     try:
+        uuid = request.values.get('uuid', None)
+        if uuid is None or uuid != version["uuid"]:
+            raise Exception("get the error uuid:" + str(uuid))
         s_json = request.values.get('json', None)
         if s_json is not None:
             logging.debug("input json:"+s_json)
@@ -246,12 +281,12 @@ def parseUrl():
             logging.debug("load json:" + str(jjson))
             result = ParseURL(jjson["input_text"],jjson["label"],jjson["min"],jjson["max"],jjson["urlhandles_name"])
         else:
-            raise Exception("can;t get input json")
+            raise Exception("can't get input json")
     except Exception as e:
         info=traceback.format_exc()
         result = {"type" : "error","error" : info}
     jjson = json.dumps(result)
-    debug(jjson)
+    logging.debug(jjson)
     return jjson
     
 def arg_parser():

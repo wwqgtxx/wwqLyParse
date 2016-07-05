@@ -14,4 +14,4 @@ if __name__ == "__main__":
     #main("http://www.le.com/ptv/vplay/25047584.html",label="0_TD_超清_0@YKDLParser")
     #main("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474", parsers_name=["YKDLParser"])
     #main("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474",label="3_BD_1080p_2.00 GB@YKDLParser")
-    Close()
+    close()

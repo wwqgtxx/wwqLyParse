@@ -88,7 +88,7 @@ class AnyPageParser(Parser):
                 import main
             def runlist_parser(queue,url,pool):
                 try:
-                    result = main.Parse(url,types="list",pool = pool)[0]
+                    result = main.Parse(url,types="list",parsers_name=["iqiyilistparser.IQiYiAListParser","iqiyilistparser.IQiYiLibMListParser","iqiyilistparser.IQiYiVListParser"],pool = pool)[0]
                     if (result is not None) and (result != []) and (result["data"] is not None) and (result["data"] != []):
                         queue.put({"result":result,"url":url})
                 except Exception as e:
@@ -104,7 +104,7 @@ class AnyPageParser(Parser):
             q_results = Queue()
             for url in urls:
                 parser_threads.append(main.pool.spawn(runlist_parser,q_results,url,pool))
-            joinall(parser_threads,timeout=self.TWICE_PARSE_TIMEOUT)
+            joinall(parser_threads, timeout=self.TWICE_PARSE_TIMEOUT)
             while not q_results.empty():
                 t_results.append(q_results.get())
                 

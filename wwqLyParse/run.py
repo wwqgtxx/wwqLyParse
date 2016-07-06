@@ -100,7 +100,11 @@ def checkEmbedPython():
     args = [py_bin, y_bin]
     logging.info(args)
     PIPE = subprocess.PIPE
-    p = subprocess.Popen(args, stdout=PIPE, stderr=PIPE, shell=False)
+    try:
+        p = subprocess.Popen(args, stdout=PIPE, stderr=PIPE, shell=False)
+    except:
+        useEmbedPython = False
+        return
     stdout, stderr = p.communicate()
     stdout = bridge.try_decode(stdout)
     stderr = bridge.try_decode(stderr)

@@ -3,10 +3,10 @@
 	url = https://github.com/wwqgtxx/lyp_pv.git
 [submodule "wwqLyParse/ykdl"]
 	path = wwqLyParse/ykdl
-	url = git@github.com:wwqgtxx/ykdl.git
+	url = https://github.com/wwqgtxx/ykdl.git
 [submodule "wwqLyParse/you-get"]
 	path = wwqLyParse/you-get
-	url = git@github.com:wwqgtxx/you-get.git
+	url = https://github.com/wwqgtxx/you-get.git
 [submodule "wwqLyParse/p_video"]
 	path = wwqLyParse/p_video
-	url = git@github.com:wwqgtxx/p_video.git
+	url = https://github.com/wwqgtxx/p_video.git

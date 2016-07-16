@@ -138,10 +138,13 @@ class YouGetParser(Parser):
         for u in urls:
             one = {}
             one['protocol'] = 'http'
-            if container == "m3u8":
-                one['protocol'] = 'm3u8'
             one['args'] = {}
             one['urls'] = u
+            if container == "m3u8":
+                one['protocol'] = 'm3u8'
+                if not isinstance(one['urls'], list):
+                    if "m3u8" in one['urls'] and ":\\Users\\" in one['urls']:
+                        one['urls'] = "file:///" + one['urls']
             # check referer
             if referer:
                 one['args'] = {

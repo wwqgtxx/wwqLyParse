@@ -129,6 +129,7 @@ class YouGetParser(Parser):
     # parse for parse_url
     def _parse_parse_url(self,raw, _format):
         stream = raw['streams'][_format]
+        container = stream['container']
         urls = stream['src']
         referer = None
         if 'refer' in stream:
@@ -137,6 +138,8 @@ class YouGetParser(Parser):
         for u in urls:
             one = {}
             one['protocol'] = 'http'
+            if container == "m3u8":
+                one['protocol'] = 'm3u8'
             one['args'] = {}
             one['urls'] = u
             # check referer

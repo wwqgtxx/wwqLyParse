@@ -2,12 +2,17 @@
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
 
+
 from main import *
 
 if __name__ == "__main__":
     #main("http://www.iqiyi.com/v_19rrl8pmn8.html",types="list")
     #main("http://www.iqiyi.com/v_19rrl8pmn8.html", parsers_name=["IQiYiMParser","IQiYiParser"])
-    #main("http://www.iqiyi.com/v_19rrl8pmn8.html","fullhd@IQiYiParser")
+    #main("http://www.iqiyi.com/v_19rrl8pmn8.html",label="fullhd@IQiYiParser")
+    #main("http://www.iqiyi.com/v_19rrl8pmn8.html",parsers_name=["ykdlparser.YKDLParser"])
+    #main("http://www.iqiyi.com/v_19rrl8pmn8.html",label="1_BD_1080p_0@YKDLParser")
+    #main("http://www.iqiyi.com/v_19rrl8pmn8.html", parsers_name=["yougetparser.YouGetParser"])
+    main("http://www.iqiyi.com/v_19rrl8pmn8.html", label="4_BD_1080p_0@YouGetParser")
     #main("http://www.le.com/ptv/vplay/25047584.html",parsers_name=["LypPvParser"])
     #main("http://www.le.com/ptv/vplay/25047584.html",label="4.0@LypPvParser")
     #main("http://www.le.com/ptv/vplay/25047584.html",parsers_name=["ykdlparser.YKDLParser"],types="formats")

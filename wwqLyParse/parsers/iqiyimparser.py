@@ -24,7 +24,7 @@ try:
 except Exception as e:
     from lib import bridge
     
-__MODULE_CLASS_NAMES__ = ["IQiYiMParser"]
+__MODULE_CLASS_NAMES__ = []
 
 
 class IQiYiMParser(Parser):

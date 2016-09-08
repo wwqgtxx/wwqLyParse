@@ -14,7 +14,7 @@ except Exception as e:
 
 JUDGE_VIP = True
 
-__MODULE_CLASS_NAMES__ = ["MgTVParser"]
+__MODULE_CLASS_NAMES__ = []
 
 class MgTVParser(Parser):
 

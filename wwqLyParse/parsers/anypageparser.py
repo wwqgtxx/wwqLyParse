@@ -91,6 +91,8 @@ class AnyPageParser(Parser):
                     result = main.Parse(url,types="list",parsers_name=["iqiyilistparser.IQiYiAListParser","iqiyilistparser.IQiYiLibMListParser","iqiyilistparser.IQiYiVListParser"],pool = pool)[0]
                     if (result is not None) and (result != []) and (result["data"] is not None) and (result["data"] != []):
                         queue.put({"result":result,"url":url})
+                except IndexError:
+                    pass
                 except Exception as e:
                     #continue
                     logging.exception("twice parse %s failed"%url)

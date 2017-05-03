@@ -4,7 +4,7 @@
     <content url="file://$MODULE_DIR$/wwqLyParse">
       <sourceFolder url="file://$MODULE_DIR$/wwqLyParse/lib/flask_lib" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.5.2 (C:\Users\Administrator\AppData\Local\Programs\Python\Python35\python.exe)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.6.0 (C:\Program Files\Python36\python.exe)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="TestRunnerService">

@@ -23,7 +23,7 @@ class LypPvParser(Parser):
     except Exception as e:
         filters = []
     types = ["formats"]
-    unsupports = ['www.iqiyi.com','list.iqiyi.com']
+    unsupports = ['www.iqiyi.com','list.iqiyi.com','www.le.com']
 
     # parse functions
     def Parse(self,url):

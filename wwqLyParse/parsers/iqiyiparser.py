@@ -24,7 +24,7 @@ try:
 except Exception as e:
     from lib import bridge
     
-__MODULE_CLASS_NAMES__ = ["IQiYiParser"]
+__MODULE_CLASS_NAMES__ = []
 
 CONFIG={
     "host" : "127.0.0.1",

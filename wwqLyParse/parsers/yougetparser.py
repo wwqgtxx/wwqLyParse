@@ -21,7 +21,7 @@ class YouGetParser(Parser):
 
     filters = ['^(http|https)://.+']
     types = ["formats"]
-    unsupports = ['www.iqiyi.com','list.iqiyi.com']
+    unsupports = ['list.iqiyi.com']
     bin = './you-get/you-get'
         
     # print exception function

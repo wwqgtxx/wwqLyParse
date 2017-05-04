@@ -112,10 +112,12 @@ class YouGetParser(Parser):
             s['_format'] = _format
             stream.append(s)
         # sort stream by size
-        stream.sort(key=lambda x:x['size'], reverse=False)
+        if 'size' in stream:
+            stream.sort(key=lambda x:x['size'], reverse=False)
         for i in range(len(stream)):
             stream[i]['_id'] = i
-        stream.sort(key=lambda x:x['size'], reverse=True)
+        if 'size' in stream:
+            stream.sort(key=lambda x:x['size'], reverse=True)
         # process each stream
         for s in stream:
             one = {}

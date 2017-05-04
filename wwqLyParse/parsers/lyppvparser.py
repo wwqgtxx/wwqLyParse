@@ -11,7 +11,7 @@ try:
 except Exception as e:
     from common import *
     
-__MODULE_CLASS_NAMES__ = ["LypPvParser"]
+__MODULE_CLASS_NAMES__ = []
 
 class LypPvParser(Parser):
     try:

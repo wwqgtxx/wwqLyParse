@@ -83,15 +83,15 @@ def initVersion():
     try:
         version['name'] = version['name']+parser_class_map["YouGetParser"]().getYouGetVersion()+"&"
     except:
-        logging.exception("YouGetParser version get error")
+        logging.warning("YouGetParser version get error")
     try:
         version['name'] = version['name']+ ', p_video ' + parser_class_map["PVideoParser"].get_p_video_version()+"&"
     except:
-        logging.exception("PVideoParser version get error")
+        logging.warning("PVideoParser version get error")
     try:
         version['name'] = version['name'] + parser_class_map["LypPvParser"]().getLypPvVersion()
     except:
-        logging.exception("LypPvParser version get error")
+        logging.warning("LypPvParser version get error")
     version['name'] = version['name']+"]"
     
 def GetVersion(): 

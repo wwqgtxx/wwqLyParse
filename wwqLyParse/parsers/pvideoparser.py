@@ -33,7 +33,7 @@ except Exception:
     from p_video.bin.autoconfig import AUTO_CONFIG, RE_SUPPORT_URL, SUPPORT_URL_BLACKLIST
 
 
-__MODULE_CLASS_NAMES__ = ["PVideoParser"]
+__MODULE_CLASS_NAMES__ = []
 
 
 BIN_P_VIDEO = '../p_video/bin/p_video.py'
@@ -277,7 +277,7 @@ def _pvinfo_to_parseurl_output(pvinfo, hd):
 
 class PVideoParser(Parser):
     filters = RE_SUPPORT_URL
-    unsupports = SUPPORT_URL_BLACKLIST+['list.iqiyi.com','www.iqiyi.com']
+    unsupports = SUPPORT_URL_BLACKLIST+['list.iqiyi.com']
     types = ["formats"]
     
     def Parse(self, url, *k, **kk):

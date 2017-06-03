@@ -3,7 +3,7 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 
 
-import urllib.request,io,os,sys,json,re
+import urllib.request, io, os, sys, json, re
 
 from pyquery.pyquery import PyQuery
 
@@ -14,19 +14,19 @@ except Exception as e:
 
 __MODULE_CLASS_NAMES__ = ["IndexParser"]
 
-class IndexParser(Parser):
 
+class IndexParser(Parser):
     filters = ['^http://www.le.com$']
     types = ["collection"]
-        
-    def Parse(self,input_text):
+
+    def Parse(self, input_text):
         return self.Parse_le(input_text)
-        
-    def Parse_le(self,input_text):
+
+    def Parse_le(self, input_text):
         html = PyQuery(getUrl(input_text))
         items = html('dt.d_tit')
         title = "LETV"
-        i =0
+        i = 0
         data = {
             "data": [],
             "more": False,
@@ -42,19 +42,17 @@ class IndexParser(Parser):
             url = a.attr('href')
             if url is None:
                 continue
-            if not re.match('^http://www\.le\.com/.+\.html',url):
+            if not re.match('^http://www\.le\.com/.+\.html', url):
                 continue
             info = {
                 "name": name,
                 "no": no,
                 "subtitle": subtitle,
                 "url": url,
-                "caption": "首页地址列表"  
+                "caption": "首页地址列表"
             }
             data["data"].append(info)
-            i = i+1
+            i = i + 1
         total = i
         data["total"] = total
         return data
-
-

@@ -3,80 +3,86 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 import logging
 import sys
+
 logging.basicConfig(level=logging.DEBUG,
-                format='%(asctime)s %(filename)s[line:%(lineno)d]<%(funcName)s> %(threadName)s %(levelname)s : %(message)s',
-                datefmt='%H:%M:%S',stream=sys.stdout)
+                    format='%(asctime)s %(filename)s[line:%(lineno)d]<%(funcName)s> %(threadName)s %(levelname)s : %(message)s',
+                    datefmt='%H:%M:%S', stream=sys.stdout)
 
 try:
     import gevent
     from gevent import monkey
+
     monkey.patch_all()
     logging.info("gevent.monkey.patch_all()")
     from gevent.pool import Pool
     from gevent.queue import Queue
     from gevent import joinall
+
     logging.info("use gevent.pool")
 except Exception:
     gevent = None
     from simplepool import Pool
     from simplepool import joinall
     from queue import Queue
+
     logging.info("use simple pool")
-    
-import urllib.request,io,os,sys,json,re,gzip,time,socket,math,urllib.error,http.client,gc,threading,urllib,traceback,importlib,glob
+
+import urllib.request, io, os, sys, json, re, gzip, time, socket, math, urllib.error, http.client, gc, threading, \
+    urllib, traceback, importlib, glob
 
 urlcache = {}
 URLCACHE_MAX = 1000
 URLCACHE_POOL = 20
-    
+
 pool_getUrl = Pool(URLCACHE_POOL)
 pool_cleanUrlcache = Pool(1)
-    
 
-def getUrl(oUrl, encoding = 'utf-8' , headers = {}, data = None, method = None,allowCache = True,usePool = True,pool = pool_getUrl) :
+
+def getUrl(oUrl, encoding='utf-8', headers={}, data=None, method=None, allowCache=True, usePool=True, pool=pool_getUrl):
     def cleanUrlcache():
         global urlcache
-        if (len(urlcache)<=URLCACHE_MAX):
+        if (len(urlcache) <= URLCACHE_MAX):
             return
         sortedDict = sorted(urlcache.items(), key=lambda d: d[1]["lasttimestap"], reverse=True)
         newDict = {}
-        for (k, v) in sortedDict[:int(URLCACHE_MAX - URLCACHE_MAX/10)]:# 从数组中取索引start开始到end-1的记录
+        for (k, v) in sortedDict[:int(URLCACHE_MAX - URLCACHE_MAX / 10)]:  # 从数组中取索引start开始到end-1的记录
             newDict[k] = v
         del sortedDict
         del urlcache
         urlcache = newDict
         gc.collect()
         logging.debug("urlcache has been cleaned")
-    def _getUrl(result_queue,url_json,oUrl, encoding, headers, data, method,allowCache,callmethod):
+
+    def _getUrl(result_queue, url_json, oUrl, encoding, headers, data, method, allowCache, callmethod):
         # url 包含中文时 parse.quote_from_bytes(oUrl.encode('utf-8'), ':/&%?=+')
-        req = urllib.request.Request( oUrl, headers= headers, data = data, method = method )
+        req = urllib.request.Request(oUrl, headers=headers, data=data, method=method)
         try:
-            with urllib.request.urlopen(req ) as  response:
+            with urllib.request.urlopen(req) as  response:
                 headers = response.info()
-                cType = headers.get('Content-Type','')
+                cType = headers.get('Content-Type', '')
                 match = re.search('charset\s*=\s*(\w+)', cType)
                 if match:
                     encoding = match.group(1)
                 blob = response.read()
-                if headers.get('Content-Encoding','') == 'gzip':
-                    data=gzip.decompress(blob)
-                    html_text = data.decode(encoding,'ignore')
+                if headers.get('Content-Encoding', '') == 'gzip':
+                    data = gzip.decompress(blob)
+                    html_text = data.decode(encoding, 'ignore')
                 else:
-                    html_text = blob.decode(encoding,'ignore')
+                    html_text = blob.decode(encoding, 'ignore')
                 if allowCache:
-                    urlcache[url_json] = {"html_text":html_text,"lasttimestap":int(time.time())}
+                    urlcache[url_json] = {"html_text": html_text, "lasttimestap": int(time.time())}
                 result_queue.put(html_text)
                 return
         except socket.timeout:
-            logging.warning(callmethod+'request attempt %s timeout' % str(i + 1))
+            logging.warning(callmethod + 'request attempt %s timeout' % str(i + 1))
         except urllib.error.URLError:
-            logging.warning(callmethod+'request attempt %s URLError' % str(i + 1))
+            logging.warning(callmethod + 'request attempt %s URLError' % str(i + 1))
         except http.client.RemoteDisconnected:
-            logging.warning(callmethod+'request attempt %s RemoteDisconnected' % str(i + 1))
+            logging.warning(callmethod + 'request attempt %s RemoteDisconnected' % str(i + 1))
         except http.client.IncompleteRead:
-            logging.warning(callmethod+'request attempt %s IncompleteRead' % str(i + 1))
+            logging.warning(callmethod + 'request attempt %s IncompleteRead' % str(i + 1))
         except:
-            logging.exception(callmethod+"get url "+url_json+"fail")
+            logging.exception(callmethod + "get url " + url_json + "fail")
         result_queue.put(None)
         return
 
@@ -108,7 +114,8 @@ def getUrl(oUrl, encoding = 'utf-8' , headers = {}, data = None, method = None,a
             return result
     return None
 
-def get_all_filename_by_dir(dir,suffix=".py"):
+
+def get_all_filename_by_dir(dir, suffix=".py"):
     list_dirs = os.walk(dir)
     filenames = []
     for dirName, subdirList, fileList in list_dirs:
@@ -116,19 +123,21 @@ def get_all_filename_by_dir(dir,suffix=".py"):
             if file_name[-len(suffix):] == suffix:
                 if file_name != "__init__.py":
                     filenames.append(file_name[0:-len(suffix)])
-    logging.debug("<%s> has %s"%(dir,str(filenames)))
+    logging.debug("<%s> has %s" % (dir, str(filenames)))
     return filenames
+
 
 imported_class_map = {}
 imported_module_map = {}
 
-def import_by_name(class_names = None,module_names = None, prefix = "",super_class = object, showinfo = True):
+
+def import_by_name(class_names=None, module_names=None, prefix="", super_class=object, showinfo=True):
     lib_class_map = {}
     if class_names is not None:
         lib_names = class_names
         for lib_name in lib_names:
             if "." in lib_name:
-                full_name = prefix+ lib_name
+                full_name = prefix + lib_name
                 list_lib_name = lib_name.split(".")
                 lib_name = list_lib_name[-1]
                 module_name = prefix
@@ -142,20 +151,20 @@ def import_by_name(class_names = None,module_names = None, prefix = "",super_cla
                 try:
                     lib_module = importlib.import_module(module_name)
                     lib_class = getattr(lib_module, lib_name)
-                    if isinstance(lib_class(),super_class):
+                    if isinstance(lib_class(), super_class):
                         imported_class_map[full_name] = lib_class
                         lib_class_map[lib_name] = lib_class
                         if showinfo:
                             logging.debug("successful load " + str(lib_class) + " is a instance of " + str(super_class))
                     else:
-                        logging.warning(str(lib_class)+" is not a instance of "+str(super_class))
+                        logging.warning(str(lib_class) + " is not a instance of " + str(super_class))
                 except:
                     logging.exception("load " + str(lib_name) + " fail")
     elif module_names is not None:
         lib_names = module_names
         for lib_name in lib_names:
             try:
-                for item in imported_module_map[prefix + lib_name] :
+                for item in imported_module_map[prefix + lib_name]:
                     lib_class_map[item["lib_name"]] = item["lib_class"]
             except:
                 try:
@@ -167,13 +176,14 @@ def import_by_name(class_names = None,module_names = None, prefix = "",super_cla
                             lib_class = getattr(lib_module, lib_module_class_name)
                             if isinstance(lib_class(), super_class):
                                 imported_module_map[prefix + lib_name].append({
-                                    "lib_name": lib_class.__name__ ,
+                                    "lib_name": lib_class.__name__,
                                     "lib_class": lib_class
                                 })
                                 imported_class_map[prefix + lib_name + "." + lib_class.__name__] = lib_class
                                 lib_class_map[lib_class.__name__] = lib_class
                                 if showinfo:
-                                    logging.debug("successful load " + str(lib_class) + " is a instance of " + str(super_class))
+                                    logging.debug(
+                                        "successful load " + str(lib_class) + " is a instance of " + str(super_class))
                             else:
                                 logging.warning(str(lib_class) + " is not a instance of " + str(super_class))
                         except:
@@ -182,17 +192,19 @@ def import_by_name(class_names = None,module_names = None, prefix = "",super_cla
                     logging.exception("load " + str(prefix + lib_name) + " fail")
     return lib_class_map
 
-def new_objects(class_map,showinfo = False,*k,**kk):
+
+def new_objects(class_map, showinfo=False, *k, **kk):
     _objects = []
     for _class in class_map.values():
         try:
-            _object = _class(*k,**kk)
+            _object = _class(*k, **kk)
             _objects.append(_object)
             if showinfo:
                 logging.debug("successful new " + str(_object))
         except:
-            logging.exception("new "+str(_class)+" fail")
+            logging.exception("new " + str(_class) + " fail")
     return _objects
+
 
 def get_caller_info():
     try:
@@ -206,9 +218,10 @@ def get_caller_info():
     callmethod = "<%s:%d %s> " % (fn, lno, func)
     return callmethod
 
-def isin(a,b,strict = True):
+
+def isin(a, b, strict=True):
     result = False
-    if isinstance(a,list):
+    if isinstance(a, list):
         for item in a:
             if item in b:
                 result = True
@@ -219,41 +232,43 @@ def isin(a,b,strict = True):
     return result
 
 
-def url_size(url, headers = {}):
+def url_size(url, headers={}):
     for n in range(3):
         try:
             if headers:
-                response = urllib.request.urlopen(urllib.request.Request(url, headers = headers), None)
+                response = urllib.request.urlopen(urllib.request.Request(url, headers=headers), None)
             else:
                 response = urllib.request.urlopen(url)
             size = response.headers['content-length']
-            if size!=None:
+            if size != None:
                 return int(size)
         except Exception as e:
             error = e
     logging.error(error)
     return -1
 
-    
-def IsOpen(ip,port):
-    s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+
+def IsOpen(ip, port):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
-        s.connect((ip,int(port)))
+        s.connect((ip, int(port)))
         s.shutdown(2)
-        logging.info(get_caller_info()+'%d is open' % port)
+        logging.info(get_caller_info() + '%d is open' % port)
         return True
     except:
-        logging.info(get_caller_info()+'%d is down' % port)
+        logging.info(get_caller_info() + '%d is down' % port)
         return False
-        
+
+
 def gen_bitrate(size_byte, time_s, unit_k=1024):
     if (size_byte <= 0) or (time_s <= 0):
-        return '-1'	# can not gen bitrate
-    raw_rate = size_byte * 8 / time_s	# bps
+        return '-1'  # can not gen bitrate
+    raw_rate = size_byte * 8 / time_s  # bps
     kbps = raw_rate / unit_k
     bitrate = str(round(kbps, 1)) + 'kbps'
     return bitrate
-   
+
+
 # make a 2.3 number, with given length after .
 def num_len(n, l=3):
     t = str(float(n))
@@ -268,39 +283,40 @@ def num_len(n, l=3):
     # done
     return t
 
+
 # byte to size
 def byte2size(size_byte, flag_add_byte=False):
-    
     unit_list = [
-        'Byte', 
-        'KB', 
-        'MB', 
-        'GB', 
-        'TB', 
-        'PB', 
-        'EB', 
+        'Byte',
+        'KB',
+        'MB',
+        'GB',
+        'TB',
+        'PB',
+        'EB',
     ]
-    
+
     # check size_byte
     size_byte = int(size_byte)
     if size_byte < 1024:
         return size_byte + unit_list[0]
-    
+
     # get unit
     unit_i = math.floor(math.log(size_byte, 1024))
     unit = unit_list[unit_i]
     size_n = size_byte / pow(1024, unit_i)
-    
+
     size_t = num_len(size_n, 2)
-    
+
     # make final size_str
     size_str = size_t + ' ' + unit
-    
+
     # check flag
     if flag_add_byte:
         size_str += ' (' + str(size_byte) + ' Byte)'
     # done
     return size_str
+
 
 def _second_to_time(time_s):
     def _number(raw):
@@ -308,6 +324,7 @@ def _second_to_time(time_s):
         if int(f) == f:
             return int(f)
         return f
+
     raw = _number(time_s)
     sec = math.floor(raw)
     ms = raw - sec
@@ -317,15 +334,17 @@ def _second_to_time(time_s):
     minute -= hour * 60
     # make text, and add ms
     t = str(minute).zfill(2) + ':' + str(sec).zfill(2) + '.' + str(round(ms * 1e3))
-    if hour > 0:	# check add hour
+    if hour > 0:  # check add hour
         t = str(hour).zfill(2) + ':' + t
     return t
-    
+
+
 # DEPRECATED in favor of match1()
 def r1(pattern, text):
     m = re.search(pattern, text)
     if m:
         return m.group(1)
+
 
 def match1(text, *patterns):
     """Scans through a string for substrings matched some patterns (first-subgroups only).
@@ -353,32 +372,44 @@ def match1(text, *patterns):
             if match:
                 ret.append(match.group(1))
         return ret
-        
+
+
 def debug(input):
-    print (((str(input))).encode('gbk', 'ignore').decode('gbk') )
-        
+    print(((str(input))).encode('gbk', 'ignore').decode('gbk'))
+
+
 class Parser(object):
     filters = []
     unsupports = []
     types = []
-    def Parse(self,url):
+
+    def Parse(self, url):
         pass
-    def ParseURL(self,url,label,min=None,max=None):
+
+    def ParseURL(self, url, label, min=None, max=None):
         pass
+
     def getfilters(self):
         return self.filters
+
     def getunsupports(self):
         return self.unsupports
+
     def gettypes(self):
         return self.types
+
     def closeParser(self):
         return
-        
+
+
 class UrlHandle():
     filters = []
+
     def urlHandle(url):
         pass
+
     def getfilters(self):
         return self.filters
+
     def closeUrlHandle(self):
         return

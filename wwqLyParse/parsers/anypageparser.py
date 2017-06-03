@@ -94,7 +94,7 @@ class AnyPageParser(Parser):
                                                                          "iqiyilistparser.IQiYiVListParser"],
                                         pool=pool)[0]
                     if (result is not None) and (result != []) and (result["data"] is not None) and (
-                        result["data"] != []):
+                                result["data"] != []):
                         queue.put({"result": result, "url": url})
                 except IndexError:
                     pass

@@ -3,15 +3,15 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 
 
-import urllib.request,io,os,sys,json,re,math,subprocess,traceback,logging
-
+import urllib.request, io, os, sys, json, re, math, subprocess, traceback, logging
 
 try:
     from ..common import *
 except Exception as e:
     from common import *
-    
+
 __MODULE_CLASS_NAMES__ = []
+
 
 class LypPvParser(Parser):
     try:
@@ -19,25 +19,25 @@ class LypPvParser(Parser):
             from ..lyp_pv import run
         except Exception as e:
             from lyp_pv import run
-        filters = run.GetVersion()['filter'] 
+        filters = run.GetVersion()['filter']
     except Exception as e:
         filters = []
     types = ["formats"]
-    unsupports = ['www.iqiyi.com','list.iqiyi.com','www.le.com']
+    unsupports = ['www.iqiyi.com', 'list.iqiyi.com', 'www.le.com']
 
     # parse functions
-    def Parse(self,url):
+    def Parse(self, url):
         try:
             from ..lyp_pv import run
         except Exception as e:
             from lyp_pv import run
-        logging.info("call lyp_pv.run.Parse("+url+")")
+        logging.info("call lyp_pv.run.Parse(" + url + ")")
         out = run.Parse(url)
         if "data" in out:
             for data in out['data']:
                 old_label = data['label']
                 data["code"] = run._parse_label(old_label)
-                data['label'] = re.compile('\(\d\)\s*').sub('',str(old_label))
+                data['label'] = re.compile('\(\d\)\s*').sub('', str(old_label))
                 parts = data['label'].split('_')
                 num = int(parts[0])
                 if num == -3:
@@ -52,13 +52,13 @@ class LypPvParser(Parser):
                     parts[0] = "4"
                 elif num == 7:
                     parts[0] = "5"
-                data['label']=('_').join(parts)
-            out["caption"]= "负锐解析"
+                data['label'] = ('_').join(parts)
+            out["caption"] = "负锐解析"
             out.pop("icon")
             out.pop("warning")
         return out
 
-    def ParseURL(self,url,label,min=None,max=None):
+    def ParseURL(self, url, label, min=None, max=None):
         try:
             from ..lyp_pv import run
         except Exception as e:
@@ -73,7 +73,7 @@ class LypPvParser(Parser):
             for item in result:
                 item["unfixIp"] = True
         return result
-        
+
     def getLypPvVersion(self):
         try:
             try:
@@ -82,13 +82,10 @@ class LypPvParser(Parser):
                 from lyp_pv import run
                 logging.debug("call lyp_pv.run._lyyc_about()")
             info = run._lyyc_about()
-            return "负锐解析["+str(info['pack_version'])+"]"+str(info['version'])
+            return "负锐解析[" + str(info['pack_version']) + "]" + str(info['version'])
         except Exception as e:
             logging.exception()
-            #print(e)
-            #import traceback
-            #traceback.print_exc()
+            # print(e)
+            # import traceback
+            # traceback.print_exc()
         return ""
-
-
-

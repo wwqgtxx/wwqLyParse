@@ -7,6 +7,7 @@ from pyquery.pyquery import PyQuery
 
 if __name__ == "__main__":
     from main import *
+
     # main("http://www.iqiyi.com/v_19rrl8pmn8.html", types="list")
     # main("http://www.iqiyi.com/v_19rrl8pmn8.html", parsers_name=["IQiYiMParser", "IQiYiParser"])
     # main("http://www.iqiyi.com/v_19rrl8pmn8.html", label="fullhd@IQiYiParser")
@@ -26,11 +27,8 @@ if __name__ == "__main__":
     # main("http://www.bilibili.com/video/av3153352/", label="0_default__2.80 MB@YouGetParser")
     # main("http://www.le.com/ptv/vplay/27416375.html", parsers_name=["YouGetParser"])
     # main("http://www.le.com/ptv/vplay/1981824.html", types="list")
-    main("http://v.youku.com/v_show/id_XMjcxMzkwMjU3Mg==.html?from=y1.3-tv-grid-1007-9910.86827-86824-86821.1-2&spm=a2htv.20009910.m_86821.5~5~5~5!4~5!2~A", types="list")
+    main("http://v.youku.com/v_show/id_XMjcxMzkwMjU3Mg==.html", types="list")
     # main("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474", parsers_name=["YouGetParser"])
     # main("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474", parsers_name=["YKDLParser"])
     # main("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474", label="3_BD_1080p_2.00 GB@YKDLParser")
     # close()
-
-
-

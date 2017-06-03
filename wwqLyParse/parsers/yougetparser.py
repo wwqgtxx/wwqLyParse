@@ -21,7 +21,7 @@ __MODULE_CLASS_NAMES__ = ["YouGetParser"]
 class YouGetParser(Parser):
     filters = ['^(http|https)://.+']
     types = ["formats"]
-    unsupports = ['list.iqiyi.com','www.le.com']
+    unsupports = ['list.iqiyi.com', 'www.le.com']
     bin = './you-get/you-get'
 
     # print exception function
@@ -218,6 +218,7 @@ streams:             # Available quality and codecs
         :param raw_text: 
         :return: 
         """
+
         def get_item_from_str(string, key):
             string = str(string)
             if string.startswith(key):

@@ -1,31 +1,50 @@
 #!/usr/bin/env python3.5
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
-import logging
-import sys
-
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s %(filename)s[line:%(lineno)d]<%(funcName)s> %(threadName)s %(levelname)s : %(message)s',
-                    datefmt='%H:%M:%S', stream=sys.stdout)
-
 try:
     import gevent
     from gevent import monkey
-
-    monkey.patch_all()
-    logging.info("gevent.monkey.patch_all()")
     from gevent.pool import Pool
     from gevent.queue import Queue
     from gevent import joinall
 
-    logging.info("use gevent.pool")
+    monkey.patch_all()
 except Exception:
     gevent = None
     from simplepool import Pool
     from simplepool import joinall
     from queue import Queue
 
+import logging
+import sys
+
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s{%(name)s}%(filename)s[line:%(lineno)d]<%(funcName)s> pid:%(process)d %(threadName)s %(levelname)s : %(message)s',
+                    datefmt='%H:%M:%S', stream=sys.stdout)
+
+if gevent:
+    logging.info("gevent.monkey.patch_all()")
+    logging.info("use gevent.pool")
+else:
     logging.info("use simple pool")
+
+try:
+    from .lib import bridge
+except Exception as e:
+    from lib import bridge
+
+import sys
+
+sys.path.insert(0, bridge.pn(bridge.pjoin(bridge.get_root_path(), './lib/flask_lib')))
+sys.path.insert(0, bridge.pn(bridge.pjoin(bridge.get_root_path(), './lib/requests_lib')))
+
+try:
+    import requests
+
+    session = requests.Session()
+except:
+    requests = None
+    session = None
 
 import urllib.request, io, os, sys, json, re, gzip, time, socket, math, urllib.error, http.client, gc, threading, \
     urllib, traceback, importlib, glob
@@ -37,8 +56,18 @@ URLCACHE_POOL = 20
 pool_getUrl = Pool(URLCACHE_POOL)
 pool_cleanUrlcache = Pool(1)
 
+fake_headers = {
+    'Connection': 'keep-alive',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+    'Accept-Encoding': 'gzip, deflate',
+    'Accept-Language': 'zh-CN,zh;q=0.8',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) ' +
+                  'Chrome/53.0.2785.104 Safari/537.36 Core/1.53.2669.400 QQBrowser/9.6.10990.400'
+}
 
-def getUrl(oUrl, encoding='utf-8', headers={}, data=None, method=None, allowCache=True, usePool=True, pool=pool_getUrl):
+
+def getUrl(oUrl, encoding='utf-8', headers=None, data=None, method=None, allowCache=True, usePool=True,
+           pool=pool_getUrl):
     def cleanUrlcache():
         global urlcache
         if (len(urlcache) <= URLCACHE_MAX):
@@ -54,25 +83,32 @@ def getUrl(oUrl, encoding='utf-8', headers={}, data=None, method=None, allowCach
         logging.debug("urlcache has been cleaned")
 
     def _getUrl(result_queue, url_json, oUrl, encoding, headers, data, method, allowCache, callmethod):
-        # url 包含中文时 parse.quote_from_bytes(oUrl.encode('utf-8'), ':/&%?=+')
-        req = urllib.request.Request(oUrl, headers=headers, data=data, method=method)
         try:
-            with urllib.request.urlopen(req) as  response:
-                headers = response.info()
-                cType = headers.get('Content-Type', '')
-                match = re.search('charset\s*=\s*(\w+)', cType)
-                if match:
-                    encoding = match.group(1)
-                blob = response.read()
-                if headers.get('Content-Encoding', '') == 'gzip':
-                    data = gzip.decompress(blob)
-                    html_text = data.decode(encoding, 'ignore')
-                else:
-                    html_text = blob.decode(encoding, 'ignore')
-                if allowCache:
-                    urlcache[url_json] = {"html_text": html_text, "lasttimestap": int(time.time())}
-                result_queue.put(html_text)
-                return
+            if requests and session:
+                req = requests.Request(method=method if method else "GET", url=oUrl,
+                                       headers=headers if headers else fake_headers, data=data)
+                prepped = req.prepare()
+                resp = session.send(prepped)
+                html_text = resp.text
+            else:
+                # url 包含中文时 parse.quote_from_bytes(oUrl.encode('utf-8'), ':/&%?=+')
+                req = urllib.request.Request(oUrl, headers=headers if headers else {}, data=data, method=method)
+                with urllib.request.urlopen(req) as response:
+                    headers = response.info()
+                    cType = headers.get('Content-Type', '')
+                    match = re.search('charset\s*=\s*(\w+)', cType)
+                    if match:
+                        encoding = match.group(1)
+                    blob = response.read()
+                    if headers.get('Content-Encoding', '') == 'gzip':
+                        data = gzip.decompress(blob)
+                        html_text = data.decode(encoding, 'ignore')
+                    else:
+                        html_text = blob.decode(encoding, 'ignore')
+            if allowCache:
+                urlcache[url_json] = {"html_text": html_text, "lasttimestap": int(time.time())}
+            result_queue.put(html_text)
+            return
         except socket.timeout:
             logging.warning(callmethod + 'request attempt %s timeout' % str(i + 1))
         except urllib.error.URLError:
@@ -98,7 +134,7 @@ def getUrl(oUrl, encoding='utf-8', headers={}, data=None, method=None, allowCach
             html_text = item["html_text"]
             item["lasttimestap"] = int(time.time())
             logging.debug(callmethod + "cache get:" + url_json)
-            if (len(urlcache_temp) > URLCACHE_MAX):
+            if len(urlcache_temp) > URLCACHE_MAX:
                 pool_cleanUrlcache.spawn(cleanUrlcache)
             del urlcache_temp
             return html_text
@@ -110,7 +146,7 @@ def getUrl(oUrl, encoding='utf-8', headers={}, data=None, method=None, allowCach
         queue = Queue(1)
         pool.spawn(_getUrl, queue, url_json, oUrl, encoding, headers, data, method, allowCache, callmethod)
         result = queue.get()
-        if result != None:
+        if result is not None:
             return result
     return None
 

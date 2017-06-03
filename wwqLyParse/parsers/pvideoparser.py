@@ -20,7 +20,7 @@ try:
         byte2size,
         gen_bitrate,
     )
-    from ..p_video.bin.autoconfig import AUTO_CONFIG, RE_SUPPORT_URL, SUPPORT_URL_BLACKLIST
+    # from ..p_video.bin.autoconfig import AUTO_CONFIG, RE_SUPPORT_URL, SUPPORT_URL_BLACKLIST
 except Exception:
     from common import (
         Parser,
@@ -30,7 +30,9 @@ except Exception:
         byte2size,
         gen_bitrate,
     )
-    from p_video.bin.autoconfig import AUTO_CONFIG, RE_SUPPORT_URL, SUPPORT_URL_BLACKLIST
+    # from p_video.bin.autoconfig import AUTO_CONFIG, RE_SUPPORT_URL, SUPPORT_URL_BLACKLIST
+
+AUTO_CONFIG, RE_SUPPORT_URL, SUPPORT_URL_BLACKLIST = None, None, []
 
 __MODULE_CLASS_NAMES__ = []
 

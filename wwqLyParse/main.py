@@ -9,15 +9,6 @@ except Exception as e:
 
 pool = Pool()
 
-try:
-    from .lib import bridge
-except Exception as e:
-    from lib import bridge
-
-import sys
-
-sys.path.insert(0, bridge.pn(bridge.pjoin(bridge.get_root_path(), './lib/flask_lib')))
-
 import re, threading, sys, json, os, time, logging, importlib
 from argparse import ArgumentParser
 
@@ -30,7 +21,7 @@ app = Flask(__name__)
 version = {
     'port_version': "0.5.0",
     'type': 'parse',
-    'version': '0.7.4',
+    'version': '0.7.5',
     'uuid': '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter': [],
     'name': 'WWQ猎影解析插件',
@@ -87,15 +78,6 @@ def initVersion():
         version['name'] = version['name'] + parser_class_map["YouGetParser"]().getYouGetVersion() + "&"
     except:
         logging.warning("YouGetParser version get error")
-    try:
-        version['name'] = version['name'] + ', p_video ' + parser_class_map["PVideoParser"].get_p_video_version() + "&"
-    except:
-        logging.warning("PVideoParser version get error")
-    try:
-        version['name'] = version['name'] + parser_class_map["LypPvParser"]().getLypPvVersion()
-    except:
-        logging.warning("LypPvParser version get error")
-    version['name'] = version['name'] + "]"
 
 
 def GetVersion():

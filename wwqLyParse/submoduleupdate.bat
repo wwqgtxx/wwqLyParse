@@ -7,7 +7,4 @@ cd you-get
 git pull https://github.com/soimort/you-get.git develop
 git push --force
 cd..
-cd p_video
-git pull https://github.com/sceext2/p_video.git pv-8
-git push --force
 @pause

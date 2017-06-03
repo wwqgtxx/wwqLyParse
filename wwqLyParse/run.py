@@ -56,10 +56,10 @@ get_systeminfo()
 
 
 def isX64():
-    if ("x64-based PC" in systeminfo):
+    if "x64-based PC" in systeminfo:
         logging.info("x64")
         return True
-    elif ("x86-based PC" in systeminfo):
+    elif "x86-based PC" in systeminfo:
         logging.info("x86")
         return False
     else:
@@ -68,7 +68,7 @@ def isX64():
 
 
 def isXP():
-    if ("Windows XP" in systeminfo):
+    if "Windows XP" in systeminfo:
         logging.info("XP")
         return True
     else:
@@ -76,7 +76,7 @@ def isXP():
 
 
 def is2003():
-    if ("Server 2003" in systeminfo):
+    if "Server 2003" in systeminfo:
         logging.info("2003")
         return True
     else:
@@ -86,9 +86,9 @@ def is2003():
 def makePython():
     global EMBED_PYTHON
     if isX64():
-        EMBED_PYTHON = "./lib/python-3.5.2-embed-amd64/wwqLyParse64.exe"
+        EMBED_PYTHON = "./lib/python-3.6.1-embed-amd64/wwqLyParse64.exe"
     else:
-        EMBED_PYTHON = "./lib/python-3.5.2-embed-win32/wwqLyParse32.exe"
+        EMBED_PYTHON = "./lib/python-3.6.1-embed-win32/wwqLyParse32.exe"
     logging.info("set EMBED_PYTHON = " + EMBED_PYTHON)
 
 
@@ -98,7 +98,7 @@ makePython()
 def checkEmbedPython():
     global useEmbedPython
     useEmbedPython = True
-    if (isXP() or is2003() or (systeminfo == "")):
+    if isXP() or is2003() or (systeminfo == ""):
         useEmbedPython = False
         return
     y_bin = bridge.pn(bridge.pjoin(bridge.get_root_path(), './printok.py'))
@@ -111,13 +111,14 @@ def checkEmbedPython():
     logging.info(args)
     PIPE = subprocess.PIPE
     try:
-        p = subprocess.Popen(args, stdout=PIPE, stderr=PIPE, shell=False)
+        p = subprocess.Popen(args, stdout=PIPE, stderr=None, shell=False)
     except:
+        logging.exception("error")
         useEmbedPython = False
         return
     stdout, stderr = p.communicate()
     stdout = bridge.try_decode(stdout)
-    stderr = bridge.try_decode(stderr)
+    # stderr = bridge.try_decode(stderr)
     logging.info(stdout)
     if "ok" not in stdout:
         useEmbedPython = False

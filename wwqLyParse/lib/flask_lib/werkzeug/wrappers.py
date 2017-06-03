@@ -36,7 +36,7 @@ from werkzeug.formparser import FormDataParser, default_stream_factory
 from werkzeug.utils import cached_property, environ_property, \
     header_property, get_content_type
 from werkzeug.wsgi import get_current_url, get_host, \
-    ClosingIterator, get_input_stream, get_content_length
+    ClosingIterator, get_input_stream, get_content_length, _RangeWrapper
 from werkzeug.datastructures import MultiDict, CombinedMultiDict, Headers, \
     EnvironHeaders, ImmutableMultiDict, ImmutableTypeConversionDict, \
     ImmutableList, MIMEAccept, CharsetAccept, LanguageAccept, \
@@ -83,6 +83,16 @@ def _iter_encoded(iterable, charset):
             yield item.encode(charset)
         else:
             yield item
+
+
+def _clean_accept_ranges(accept_ranges):
+    if accept_ranges is True:
+        return "bytes"
+    elif accept_ranges is False:
+        return "none"
+    elif isinstance(accept_ranges, text_type):
+        return to_native(accept_ranges)
+    raise ValueError("Invalid accept_ranges value")
 
 
 class BaseRequest(object):
@@ -399,11 +409,16 @@ class BaseRequest(object):
 
     @cached_property
     def stream(self):
-        """The stream to read incoming data from.  Unlike :attr:`input_stream`
-        this stream is properly guarded that you can't accidentally read past
-        the length of the input.  Werkzeug will internally always refer to
-        this stream to read data which makes it possible to wrap this
-        object with a stream that does filtering.
+        """
+        If the incoming form data was not encoded with a known mimetype
+        the data is stored unmodified in this stream for consumption.  Most
+        of the time it is a better idea to use :attr:`data` which will give
+        you that data as a string.  The stream only returns the data once.
+
+        Unlike :attr:`input_stream` this stream is properly guarded that you
+        can't accidentally read past the length of the input.  Werkzeug will
+        internally always refer to this stream to read data which makes it
+        possible to wrap this object with a stream that does filtering.
 
         .. versionchanged:: 0.9
            This stream is now always available but might be consumed by the
@@ -422,7 +437,10 @@ class BaseRequest(object):
 
     @cached_property
     def args(self):
-        """The parsed URL parameters.  By default an
+        """The parsed URL parameters (the part in the URL after the question
+        mark).
+
+        By default an
         :class:`~werkzeug.datastructures.ImmutableMultiDict`
         is returned from this function.  This can be changed by setting
         :attr:`parameter_storage_class` to a different type.  This might
@@ -434,6 +452,11 @@ class BaseRequest(object):
 
     @cached_property
     def data(self):
+        """
+        Contains the incoming request data as string in case it came with
+        a mimetype Werkzeug does not handle.
+        """
+
         if self.disable_data_descriptor:
             raise AttributeError('data descriptor is disabled')
         # XXX: this should eventually be deprecated.
@@ -488,13 +511,22 @@ class BaseRequest(object):
         is returned from this function.  This can be changed by setting
         :attr:`parameter_storage_class` to a different type.  This might
         be necessary if the order of the form data is important.
+
+        Please keep in mind that file uploads will not end up here, but instead
+        in the :attr:`files` attribute.
+
+        .. versionchanged:: 0.9
+
+            Previous to Werkzeug 0.9 this would only contain form data for POST
+            and PUT requests.
         """
         self._load_form_data()
         return self.form
 
     @cached_property
     def values(self):
-        """Combined multi dict for :attr:`args` and :attr:`form`."""
+        """A :class:`werkzeug.datastructures.CombinedMultiDict` that combines
+        :attr:`args` and :attr:`form`."""
         args = []
         for d in self.args, self.form:
             if not isinstance(d, MultiDict):
@@ -509,6 +541,11 @@ class BaseRequest(object):
         ``<input type="file" name="">``.  Each value in :attr:`files` is a
         Werkzeug :class:`~werkzeug.datastructures.FileStorage` object.
 
+        It basically behaves like a standard file object you know from Python,
+        with the difference that it also has a
+        :meth:`~werkzeug.datastructures.FileStorage.save` function that can
+        store the file on the filesystem.
+
         Note that :attr:`files` will only contain data if the request method was
         POST, PUT or PATCH and the ``<form>`` that posted to the request had
         ``enctype="multipart/form-data"``.  It will be empty otherwise.
@@ -522,7 +559,8 @@ class BaseRequest(object):
 
     @cached_property
     def cookies(self):
-        """Read only access to the retrieved cookie values as dictionary."""
+        """A :class:`dict` with the contents of all cookies transmitted with
+        the request."""
         return parse_cookie(self.environ, self.charset,
                             self.encoding_errors,
                             cls=self.dict_storage_class)
@@ -602,7 +640,7 @@ class BaseRequest(object):
     method = environ_property(
         'REQUEST_METHOD', 'GET', read_only=True,
         load_func=lambda x: x.upper(),
-        doc="The transmission method. (For example ``'GET'`` or ``'POST'``).")
+        doc="The request method. (For example ``'GET'`` or ``'POST'``).")
 
     @cached_property
     def access_route(self):
@@ -690,7 +728,7 @@ class BaseResponse(object):
     subclasses of response objects and you want to post process them with a
     known interface.
 
-    Per default the request object will assume all the text data is `utf-8`
+    Per default the response object will assume all the text data is `utf-8`
     encoded.  Please refer to `the unicode chapter <unicode.txt>`_ for more
     details about customizing the behavior.
 
@@ -713,8 +751,8 @@ class BaseResponse(object):
     :param status: a string with a status or an integer with the status code.
     :param headers: a list of headers or a
                     :class:`~werkzeug.datastructures.Headers` object.
-    :param mimetype: the mimetype for the request.  See notice above.
-    :param content_type: the content type for the request.  See notice above.
+    :param mimetype: the mimetype for the response.  See notice above.
+    :param content_type: the content type for the response.  See notice above.
     :param direct_passthrough: if set to `True` :meth:`iter_encoded` is not
                                called before iteration which makes it
                                possible to pass special iterators through
@@ -993,7 +1031,7 @@ class BaseResponse(object):
         return _iter_encoded(self.response, self.charset)
 
     def set_cookie(self, key, value='', max_age=None, expires=None,
-                   path='/', domain=None, secure=None, httponly=False):
+                   path='/', domain=None, secure=False, httponly=False):
         """Sets a cookie. The parameters are the same as in the cookie `Morsel`
         object in the Python standard library but it accepts unicode data, too.
 
@@ -1003,17 +1041,27 @@ class BaseResponse(object):
                         the cookie should last only as long as the client's
                         browser session.
         :param expires: should be a `datetime` object or UNIX timestamp.
+        :param path: limits the cookie to a given path, per default it will
+                     span the whole domain.
         :param domain: if you want to set a cross-domain cookie.  For example,
                        ``domain=".example.com"`` will set a cookie that is
                        readable by the domain ``www.example.com``,
                        ``foo.example.com`` etc.  Otherwise, a cookie will only
                        be readable by the domain that set it.
-        :param path: limits the cookie to a given path, per default it will
-                     span the whole domain.
+        :param secure: If `True`, the cookie will only be available via HTTPS
+        :param httponly: disallow JavaScript to access the cookie.  This is an
+                         extension to the cookie standard and probably not
+                         supported by all browsers.
         """
-        self.headers.add('Set-Cookie', dump_cookie(key, value, max_age,
-                                                   expires, path, domain, secure, httponly,
-                                                   self.charset))
+        self.headers.add('Set-Cookie', dump_cookie(key,
+                                                   value=value,
+                                                   max_age=max_age,
+                                                   expires=expires,
+                                                   path=path,
+                                                   domain=domain,
+                                                   secure=secure,
+                                                   httponly=httponly,
+                                                   charset=self.charset))
 
     def delete_cookie(self, key, path='/', domain=None):
         """Delete a cookie.  Fails silently if key doesn't exist.
@@ -1406,7 +1454,60 @@ class ETagResponseMixin(object):
                                           on_update,
                                           ResponseCacheControl)
 
-    def make_conditional(self, request_or_environ):
+    def _wrap_response(self, start, length):
+        """Wrap existing Response in case of Range Request context."""
+        if self.status_code == 206:
+            self.response = _RangeWrapper(self.response, start, length)
+
+    def _is_range_request_processable(self, environ):
+        """Return ``True`` if `Range` header is present and if underlying
+        resource is considered unchanged when compared with `If-Range` header.
+        """
+        return (
+            'HTTP_IF_RANGE' not in environ
+            or not is_resource_modified(
+                environ, self.headers.get('etag'), None,
+                self.headers.get('last-modified'), ignore_if_range=False
+            )
+        ) and 'HTTP_RANGE' in environ
+
+    def _process_range_request(self, environ, complete_length=None, accept_ranges=None):
+        """Handle Range Request related headers (RFC7233).  If `Accept-Ranges`
+        header is valid, and Range Request is processable, we set the headers
+        as described by the RFC, and wrap the underlying response in a
+        RangeWrapper.
+
+        Returns ``True`` if Range Request can be fulfilled, ``False`` otherwise.
+
+        :raises: :class:`~werkzeug.exceptions.RequestedRangeNotSatisfiable`
+                 if `Range` header could not be parsed or satisfied.
+        """
+        from werkzeug.exceptions import RequestedRangeNotSatisfiable
+        if accept_ranges is None:
+            return False
+        self.headers['Accept-Ranges'] = accept_ranges
+        if not self._is_range_request_processable(environ) or complete_length is None:
+            return False
+        parsed_range = parse_range_header(environ.get('HTTP_RANGE'))
+        if parsed_range is None:
+            raise RequestedRangeNotSatisfiable(complete_length)
+        range_tuple = parsed_range.range_for_length(complete_length)
+        content_range_header = parsed_range.to_content_range_header(complete_length)
+        if range_tuple is None or content_range_header is None:
+            raise RequestedRangeNotSatisfiable(complete_length)
+        content_length = range_tuple[1] - range_tuple[0]
+        # Be sure not to send 206 response
+        # if requested range is the full content.
+        if content_length != complete_length:
+            self.headers['Content-Length'] = content_length
+            self.content_range = content_range_header
+            self.status_code = 206
+            self._wrap_response(range_tuple[0], content_length)
+            return True
+        return False
+
+    def make_conditional(self, request_or_environ, accept_ranges=False,
+                         complete_length=None):
         """Make the response conditional to the request.  This method works
         best if an etag was defined for the response already.  The `add_etag`
         method can be used to do that.  If called without etag just the date
@@ -1414,6 +1515,11 @@ class ETagResponseMixin(object):
 
         This does nothing if the request method in the request or environ is
         anything but GET or HEAD.
+
+        For optimal performance when handling range requests, it's recommended
+        that your response data object implements `seekable`, `seek` and `tell`
+        methods as described by :py:class:`io.IOBase`.  Objects returned by
+        :meth:`~werkzeug.wsgi.wrap_file` automatically implement those methods.
 
         It does not remove the body of the response because that's something
         the :meth:`__call__` function does for us automatically.
@@ -1424,6 +1530,19 @@ class ETagResponseMixin(object):
         :param request_or_environ: a request object or WSGI environment to be
                                    used to make the response conditional
                                    against.
+        :param accept_ranges: This parameter dictates the value of
+                              `Accept-Ranges` header. If ``False`` (default),
+                              the header is not set. If ``True``, it will be set
+                              to ``"bytes"``. If ``None``, it will be set to
+                              ``"none"``. If it's a string, it will use this
+                              value.
+        :param complete_length: Will be used only in valid Range Requests.
+                                It will set `Content-Range` complete length
+                                value and compute `Content-Length` real value.
+                                This parameter is mandatory for successful
+                                Range Requests completion.
+        :raises: :class:`~werkzeug.exceptions.RequestedRangeNotSatisfiable`
+                 if `Range` header could not be parsed or satisfied.
         """
         environ = _get_environ(request_or_environ)
         if environ['REQUEST_METHOD'] in ('GET', 'HEAD'):
@@ -1433,13 +1552,16 @@ class ETagResponseMixin(object):
             # wsgiref.
             if 'date' not in self.headers:
                 self.headers['Date'] = http_date()
+            accept_ranges = _clean_accept_ranges(accept_ranges)
+            is206 = self._process_range_request(environ, complete_length, accept_ranges)
+            if not is206 and not is_resource_modified(
+                environ, self.headers.get('etag'), None, self.headers.get('last-modified')
+            ):
+                self.status_code = 304
             if self.automatically_set_content_length and 'content-length' not in self.headers:
                 length = self.calculate_content_length()
                 if length is not None:
                     self.headers['Content-Length'] = length
-            if not is_resource_modified(environ, self.headers.get('etag'), None,
-                                        self.headers.get('last-modified')):
-                self.status_code = 304
         return self
 
     def add_etag(self, overwrite=False, weak=False):

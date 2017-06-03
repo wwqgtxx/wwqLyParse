@@ -2,8 +2,6 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/wwqLyParse/lyp_pv" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/wwqLyParse/p_video" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/wwqLyParse/ykdl" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/wwqLyParse/you-get" vcs="Git" />
   </component>

@@ -4,12 +4,23 @@
 
 import pyquery
 
+if __name__ == "__main__":
+    import os
+    import sys
+
+    _srcdir = os.path.dirname(os.path.realpath(__file__))
+    _filepath = os.path.dirname(sys.argv[0])
+    sys.path.insert(0, os.path.join(_filepath, _srcdir))
+
+    os.environ["NOT_LOGGING"] = "1"
+    del sys
+    del os
+
 try:
-    from .lib import bridge
+    from .common import *
 except Exception as e:
-    from lib import bridge
-import sys
-sys.path.insert(0, bridge.pn(bridge.pjoin(bridge.get_root_path(), './lib/flask_lib')))
+    from common import *
+
 try:
     from flask import Flask,request
 except Exception:

@@ -89,7 +89,7 @@
     If matching succeeded but the URL rule was incompatible to the given
     method (for example there were only rules for `GET` and `HEAD` and
     routing system tried to match a `POST` request) a `MethodNotAllowed`
-    method is raised.
+    exception is raised.
 
 
     :copyright: (c) 2014 by the Werkzeug Team, see AUTHORS for more details.
@@ -112,6 +112,7 @@ from werkzeug._compat import itervalues, iteritems, to_unicode, to_bytes, \
     text_type, string_types, native_string_result, \
     implements_to_string, wsgi_decoding_dance
 from werkzeug.datastructures import ImmutableDict, MultiDict
+from werkzeug.utils import cached_property
 
 
 _rule_re = re.compile(r'''
@@ -249,6 +250,7 @@ class RequestAliasRedirect(RoutingException):
         self.matched_values = matched_values
 
 
+@implements_to_string
 class BuildError(RoutingException, LookupError):
 
     """Raised if the build system cannot find a URL for an endpoint with the
@@ -260,10 +262,14 @@ class BuildError(RoutingException, LookupError):
         self.endpoint = endpoint
         self.values = values
         self.method = method
-        self.suggested = self.closest_rule(adapter)
+        self.adapter = adapter
+
+    @cached_property
+    def suggested(self):
+        return self.closest_rule(self.adapter)
 
     def closest_rule(self, adapter):
-        def score_rule(rule):
+        def _score_rule(rule):
             return sum([
                 0.98 * difflib.SequenceMatcher(
                     None, rule.endpoint, self.endpoint
@@ -273,22 +279,20 @@ class BuildError(RoutingException, LookupError):
             ])
 
         if adapter and adapter.map._rules:
-            return max(adapter.map._rules, key=score_rule)
-        else:
-            return None
+            return max(adapter.map._rules, key=_score_rule)
 
     def __str__(self):
         message = []
-        message.append("Could not build url for endpoint %r" % self.endpoint)
+        message.append('Could not build url for endpoint %r' % self.endpoint)
         if self.method:
-            message.append(" (%r)" % self.method)
+            message.append(' (%r)' % self.method)
         if self.values:
-            message.append(" with values %r" % sorted(self.values.keys()))
-        message.append(".")
+            message.append(' with values %r' % sorted(self.values.keys()))
+        message.append('.')
         if self.suggested:
             if self.endpoint == self.suggested.endpoint:
                 if self.method and self.method not in self.suggested.methods:
-                    message.append(" Did you mean to use methods %r?" % sorted(
+                    message.append(' Did you mean to use methods %r?' % sorted(
                         self.suggested.methods
                     ))
                 missing_values = self.suggested.arguments.union(
@@ -296,14 +300,14 @@ class BuildError(RoutingException, LookupError):
                 ) - set(self.values.keys())
                 if missing_values:
                     message.append(
-                        " Did you forget to specify values %r?" %
+                        ' Did you forget to specify values %r?' %
                         sorted(missing_values)
                     )
             else:
                 message.append(
-                    " Did you mean %r instead?" % self.suggested.endpoint
+                    ' Did you mean %r instead?' % self.suggested.endpoint
                 )
-        return "".join(message)
+        return u''.join(message)
 
 
 class ValidationError(ValueError):
@@ -610,6 +614,8 @@ class Rule(RuleFactory):
         if methods is None:
             self.methods = None
         else:
+            if isinstance(methods, str):
+                raise TypeError('param `methods` should be `Iterable[str]`, not `str`')
             self.methods = set([x.upper() for x in methods])
             if 'HEAD' not in self.methods and 'GET' in self.methods:
                 self.methods.add('HEAD')
@@ -741,9 +747,9 @@ class Rule(RuleFactory):
         )
         self._regex = re.compile(regex, re.UNICODE)
 
-    def match(self, path):
+    def match(self, path, method=None):
         """Check if the rule matches a given path. Path is a string in the
-        form ``"subdomain|/path(method)"`` and is assembled by the map.  If
+        form ``"subdomain|/path"`` and is assembled by the map.  If
         the map is doing host matching the subdomain part will be the host
         instead.
 
@@ -761,7 +767,9 @@ class Rule(RuleFactory):
                 # tells the map to redirect to the same url but with a
                 # trailing slash
                 if self.strict_slashes and not self.is_leaf and \
-                   not groups.pop('__suffix__'):
+                        not groups.pop('__suffix__') and \
+                        (method is None or self.methods is None or
+                         method in self.methods):
                     raise RequestSlash()
                 # if we are not in strict slashes mode we have to remove
                 # a __suffix__
@@ -880,6 +888,8 @@ class Rule(RuleFactory):
     def __eq__(self, other):
         return self.__class__ is other.__class__ and \
             self._trace == other._trace
+
+    __hash__ = None
 
     def __ne__(self, other):
         return not self.__eq__(other)
@@ -1517,7 +1527,7 @@ class MapAdapter(object):
         have_match_for = set()
         for rule in self.map._rules:
             try:
-                rv = rule.match(path)
+                rv = rule.match(path, method)
             except RequestSlash:
                 raise RequestRedirect(self.make_redirect_url(
                     url_quote(path_info, self.map.charset,

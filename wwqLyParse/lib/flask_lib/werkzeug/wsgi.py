@@ -20,7 +20,7 @@ from functools import partial, update_wrapper
 
 from werkzeug._compat import iteritems, text_type, string_types, \
     implements_iterator, make_literal_wrapper, to_unicode, to_bytes, \
-    wsgi_get_bytes, try_coerce_native, PY2
+    wsgi_get_bytes, try_coerce_native, PY2, BytesIO
 from werkzeug._internal import _empty_stream, _encode_idna
 from werkzeug.http import is_resource_modified, http_date
 from werkzeug.urls import uri_to_iri, url_quote, url_parse, url_join
@@ -43,7 +43,7 @@ def responder(f):
 def get_current_url(environ, root_only=False, strip_querystring=False,
                     host_only=False, trusted_hosts=None):
     """A handy helper function that recreates the full URL as IRI for the
-    current request or parts of it.  Here an example:
+    current request or parts of it.  Here's an example:
 
     >>> from werkzeug.test import create_environ
     >>> env = create_environ("/?param=foo", "http://localhost/script")
@@ -545,10 +545,11 @@ class SharedDataMiddleware(object):
             if filesystem_bound:
                 return basename, self._opener(
                     provider.get_resource_filename(manager, path))
+            s = provider.get_resource_string(manager, path)
             return basename, lambda: (
-                provider.get_resource_stream(manager, path),
+                BytesIO(s),
                 loadtime,
-                0
+                len(s)
             )
         return loader
 
@@ -754,6 +755,22 @@ class FileWrapper(object):
         if hasattr(self.file, 'close'):
             self.file.close()
 
+    def seekable(self):
+        if hasattr(self.file, 'seekable'):
+            return self.file.seekable()
+        if hasattr(self.file, 'seek'):
+            return True
+        return False
+
+    def seek(self, *args):
+        if hasattr(self.file, 'seek'):
+            self.file.seek(*args)
+
+    def tell(self):
+        if hasattr(self.file, 'tell'):
+            return self.file.tell()
+        return None
+
     def __iter__(self):
         return self
 
@@ -762,6 +779,87 @@ class FileWrapper(object):
         if data:
             return data
         raise StopIteration()
+
+
+@implements_iterator
+class _RangeWrapper(object):
+    # private for now, but should we make it public in the future ?
+
+    """This class can be used to convert an iterable object into
+    an iterable that will only yield a piece of the underlying content.
+    It yields blocks until the underlying stream range is fully read.
+    The yielded blocks will have a size that can't exceed the original
+    iterator defined block size, but that can be smaller.
+
+    If you're using this object together with a :class:`BaseResponse` you have
+    to use the `direct_passthrough` mode.
+
+    :param iterable: an iterable object with a :meth:`__next__` method.
+    :param start_byte: byte from which read will start.
+    :param byte_range: how many bytes to read.
+    """
+
+    def __init__(self, iterable, start_byte=0, byte_range=None):
+        self.iterable = iter(iterable)
+        self.byte_range = byte_range
+        self.start_byte = start_byte
+        self.end_byte = None
+        if byte_range is not None:
+            self.end_byte = self.start_byte + self.byte_range
+        self.read_length = 0
+        self.seekable = hasattr(iterable, 'seekable') and iterable.seekable()
+        self.end_reached = False
+
+    def __iter__(self):
+        return self
+
+    def _next_chunk(self):
+        try:
+            chunk = next(self.iterable)
+            self.read_length += len(chunk)
+            return chunk
+        except StopIteration:
+            self.end_reached = True
+            raise
+
+    def _first_iteration(self):
+        chunk = None
+        if self.seekable:
+            self.iterable.seek(self.start_byte)
+            self.read_length = self.iterable.tell()
+            contextual_read_length = self.read_length
+        else:
+            while self.read_length <= self.start_byte:
+                chunk = self._next_chunk()
+            if chunk is not None:
+                chunk = chunk[self.start_byte - self.read_length:]
+            contextual_read_length = self.start_byte
+        return chunk, contextual_read_length
+
+    def _next(self):
+        if self.end_reached:
+            raise StopIteration()
+        chunk = None
+        contextual_read_length = self.read_length
+        if self.read_length == 0:
+            chunk, contextual_read_length = self._first_iteration()
+        if chunk is None:
+            chunk = self._next_chunk()
+        if self.end_byte is not None and self.read_length >= self.end_byte:
+            self.end_reached = True
+            return chunk[:self.end_byte - contextual_read_length]
+        return chunk
+
+    def __next__(self):
+        chunk = self._next()
+        if chunk:
+            return chunk
+        self.end_reached = True
+        raise StopIteration()
+
+    def close(self):
+        if hasattr(self.iterable, 'close'):
+            self.iterable.close()
 
 
 def _make_chunk_iter(stream, limit, buffer_size):
@@ -804,6 +902,9 @@ def make_line_iter(stream, limit=None, buffer_size=10 * 1024,
     .. versionadded:: 0.9
        added support for iterators as input stream.
 
+    .. versionadded:: 0.11.10
+       added support for the `cap_at_buffer` parameter.
+
     :param stream: the stream or iterate to iterate over.
     :param limit: the limit in bytes for the stream.  (Usually
                   content length.  Not necessary if the `stream`
@@ -813,8 +914,6 @@ def make_line_iter(stream, limit=None, buffer_size=10 * 1024,
                           than the buffer size.  Internally this is implemented
                           that the buffer size might be exhausted by a factor
                           of two however.
-    .. versionadded:: 0.11.10
-       added support for the `cap_at_buffer` parameter.
     """
     _iter = _make_chunk_iter(stream, limit, buffer_size)
 

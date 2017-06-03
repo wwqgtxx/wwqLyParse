@@ -17,20 +17,9 @@ except Exception:
 
 import logging
 import sys
-
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s{%(name)s}%(filename)s[line:%(lineno)d]<%(funcName)s> pid:%(process)d %(threadName)s %(levelname)s : %(message)s',
-                    datefmt='%H:%M:%S', stream=sys.stdout)
-
-if gevent:
-    logging.info("gevent.monkey.patch_all()")
-    logging.info("use gevent.pool")
-else:
-    logging.info("use simple pool")
-
 import os
 
-COMMON_PATH = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "./common.py"))
+COMMON_PATH = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "./__init__.py"))
 
 
 def get_real_path(abstract_path):
@@ -39,6 +28,17 @@ def get_real_path(abstract_path):
 
 sys.path.insert(0, get_real_path('./lib/flask_lib'))
 sys.path.insert(0, get_real_path('./lib/requests_lib'))
+
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s{%(name)s}%(filename)s[line:%(lineno)d]<%(funcName)s> pid:%(process)d %(threadName)s %(levelname)s : %(message)s',
+                    datefmt='%H:%M:%S', stream=sys.stdout)
+
+if not os.environ.get("NOT_LOGGING", None):
+    if gevent:
+        logging.info("gevent.monkey.patch_all()")
+        logging.info("use gevent.pool")
+    else:
+        logging.info("use simple pool")
 
 try:
     import requests
@@ -146,7 +146,10 @@ def getUrl(oUrl, encoding='utf-8', headers=None, data=None, method=None, allowCa
 
     for i in range(10):
         queue = Queue(1)
-        pool.spawn(_getUrl, queue, url_json, oUrl, encoding, headers, data, method, allowCache, callmethod)
+        if usePool:
+            pool.spawn(_getUrl, queue, url_json, oUrl, encoding, headers, data, method, allowCache, callmethod)
+        else:
+            _getUrl(queue, url_json, oUrl, encoding, headers, data, method, allowCache, callmethod)
         result = queue.get()
         if result is not None:
             return result

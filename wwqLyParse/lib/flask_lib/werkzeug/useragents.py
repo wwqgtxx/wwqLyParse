@@ -25,8 +25,12 @@ class UserAgentParser(object):
         (r'darwin|mac|os\s*x', 'macos'),
         ('win', 'windows'),
         (r'android', 'android'),
-        (r'x11|lin(\b|ux)?', 'linux'),
+        ('netbsd', 'netbsd'),
+        ('openbsd', 'openbsd'),
+        ('freebsd', 'freebsd'),
+        ('dragonfly', 'dragonflybsd'),
         ('(sun|i86)os', 'solaris'),
+        (r'x11|lin(\b|ux)?', 'linux'),
         (r'nintendo\s+wii', 'wii'),
         ('irix', 'irix'),
         ('hp-?ux', 'hpux'),
@@ -45,6 +49,7 @@ class UserAgentParser(object):
         (r'aol|america\s+online\s+browser', 'aol'),
         ('opera', 'opera'),
         ('chrome', 'chrome'),
+        ('seamonkey', 'seamonkey'),
         ('firefox|firebird|phoenix|iceweasel', 'firefox'),
         ('galeon', 'galeon'),
         ('safari|version', 'safari'),
@@ -56,10 +61,12 @@ class UserAgentParser(object):
         (r'msie|microsoft\s+internet\s+explorer|trident/.+? rv:', 'msie'),
         ('lynx', 'lynx'),
         ('links', 'links'),
-        ('seamonkey|mozilla', 'seamonkey')
+        ('Baiduspider', 'baidu'),
+        ('bingbot', 'bing'),
+        ('mozilla', 'mozilla')
     )
 
-    _browser_version_re = r'(?:%s)[/\sa-z(]*(\d+[.\da-z]+)?(?i)'
+    _browser_version_re = r'(?:%s)[/\sa-z(]*(\d+[.\da-z]+)?'
     _language_re = re.compile(
         r'(?:;\s*|\s+)(\b\w{2}\b(?:-\b\w{2}\b)?)\s*;|'
         r'(?:\(|\[|;)\s*(\b\w{2}\b(?:-\b\w{2}\b)?)\s*(?:\]|\)|;)'
@@ -67,7 +74,7 @@ class UserAgentParser(object):
 
     def __init__(self):
         self.platforms = [(b, re.compile(a, re.I)) for a, b in self.platforms]
-        self.browsers = [(b, re.compile(self._browser_version_re % a))
+        self.browsers = [(b, re.compile(self._browser_version_re % a, re.I))
                          for a, b in self.browsers]
 
     def __call__(self, user_agent):

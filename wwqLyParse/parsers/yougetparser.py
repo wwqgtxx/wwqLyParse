@@ -21,7 +21,7 @@ __MODULE_CLASS_NAMES__ = ["YouGetParser"]
 class YouGetParser(Parser):
     filters = ['^(http|https)://.+']
     types = ["formats"]
-    unsupports = ['list.iqiyi.com']
+    unsupports = ['list.iqiyi.com','www.le.com']
     bin = './you-get/you-get'
 
     # print exception function

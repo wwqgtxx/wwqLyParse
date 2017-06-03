@@ -3,12 +3,12 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 
 
-import urllib.request,io,os,sys,json,re,math,subprocess,traceback
+import urllib.request, io, os, sys, json, re, math, subprocess, traceback
 
 try:
-    from ..lib import conf,bridge
+    from ..lib import conf, bridge
 except Exception as e:
-    from lib import conf,bridge
+    from lib import conf, bridge
 
 try:
     from ..common import *
@@ -27,17 +27,19 @@ try:
 
         bin = './ykdl/ykdl.py'
 
-
         # make arg
-        def _make_arg(self, url, _format=None):
+        def _make_arg(self, url, _format=None, use_info=False):
             arg = self._make_proxy_arg()
             # NOTE ignore __default__ format
             if _format and (_format != '__default__'):
                 arg += ['--format', _format]
             arg += ['-i']
+            arg += ['--debug']
             arg += ['--json', url]
             return arg
 
+        def _run(self, arg, need_stderr=False):
+            return super(YKDLParser, self)._run(arg, need_stderr)
 
         def Parse(self, url):
             out = self._Parse(url)
@@ -46,22 +48,6 @@ try:
                 out['sorted'] = True
             return out
 
-
-        def ParseURL(self, url, label, min=None, max=None):
-            out = self._ParseURL(url, label, min, max)
-            for item in out:
-                if "iqiyi" in url:
-                    item["unfixIp"] = True
-                # if not isinstance(item['urls'], list):
-                #     if "m3u8" in item['urls'] and ":\\Users\\" in item['urls']:
-                #         item['protocol'] = "m3u8"
-                #         item['urls'] = "file:///" + item['urls']
-            return out
-
 except:
     logging.exception("can't load yougetparser.py,it need to be super class")
     __MODULE_CLASS_NAMES__ = []
-
-
-
-

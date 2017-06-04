@@ -153,7 +153,12 @@ def getUrl(oUrl, encoding='utf-8', headers=None, data=None, method=None, allowCa
     else:
         logging.debug(callmethod + "nocache get:" + url_json)
 
-    for i in range(10):
+    if requests and session:
+        retry_num = 1
+    else:
+        retry_num = 10
+
+    for i in range(retry_num):
         queue = Queue(1)
         if usePool:
             pool.spawn(_getUrl, queue, url_json, oUrl, encoding, headers, data, method, allowCache, callmethod)

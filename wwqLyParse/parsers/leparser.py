@@ -181,6 +181,8 @@ class LeParser(Parser):
                         pool.spawn(call_method_and_save_to_queue, result_queue, self.get_m3u8_from_location,
                                    args=(location,), kwargs={})
             m3u8 = result_queue.get()
+            while not m3u8:
+                m3u8 = result_queue.get()
             m3u8_list = self.decode_m3u8(m3u8)
             file_name = put_new_http_cache_data(m3u8_list, ".m3u8")
             file_url = get_http_cache_data_url(file_name)

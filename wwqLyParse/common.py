@@ -152,6 +152,7 @@ def getUrl(oUrl, encoding='utf-8', headers=None, data=None, method=None, allowCa
         logging.debug(callmethod + "normal get:" + url_json)
     else:
         logging.debug(callmethod + "nocache get:" + url_json)
+        usePool = False
 
     if requests and session:
         retry_num = 1

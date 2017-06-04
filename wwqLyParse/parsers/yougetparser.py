@@ -134,6 +134,11 @@ class YouGetParser(Parser):
             one['label'] = label
             one['ext'] = ext
             one['size'] = size
+            try:
+                download = self._parse_parse_url(raw, s['_format'])
+                one['download'] = download
+            except KeyError:
+                pass
             out['data'].append(one)
         return out
 

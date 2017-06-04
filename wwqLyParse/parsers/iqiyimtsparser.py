@@ -15,14 +15,6 @@ try:
 except Exception as e:
     from common import *
 
-import os
-import socket
-
-try:
-    from ..lib import bridge
-except Exception as e:
-    from lib import bridge
-
 __MODULE_CLASS_NAMES__ = ["IQiYiMTsParser"]
 
 

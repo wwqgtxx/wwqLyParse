@@ -24,15 +24,15 @@ import re, threading, sys, json, os, time, logging, importlib
 from argparse import ArgumentParser
 
 try:
-    from flask import Flask, request
+    from flask import Flask, request, abort
 except Exception:
-    from .flask import Flask, request
+    from .flask import Flask, request, abort
 app = Flask(__name__)
 
 version = {
     'port_version': "0.5.0",
     'type': 'parse',
-    'version': '0.7.7',
+    'version': '0.7.8',
     'uuid': '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter': [],
     'name': 'WWQ猎影解析插件',
@@ -295,6 +295,15 @@ def parseUrl():
     return jjson
 
 
+@app.route('/cache/<url>', methods=['POST', 'GET'])
+def cache(url):
+    data = get_http_cache_data(url)
+    if data is not None:
+        return data
+    else:
+        abort(404)
+
+
 def arg_parser():
     parser = ArgumentParser(description=version["name"])
     parser.add_argument('--host', type=str, default='127.0.0.1', help="set listening ip")
@@ -337,6 +346,7 @@ def main(debugstr=None, parsers_name=None, types=None, label=None, host="127.0.0
 if __name__ == '__main__':
     initVersion()
     args = arg_parser()
+    globals()["args"] = args
     main(args.debug, args.parser, args.types, args.label, args.host, args.port, args.timeout, args.close_timeout)
 
 

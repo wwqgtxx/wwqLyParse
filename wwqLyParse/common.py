@@ -18,6 +18,7 @@ except Exception:
 import logging
 import sys
 import os
+import uuid
 
 COMMON_PATH = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "./__init__.py"))
 
@@ -91,7 +92,12 @@ def getUrl(oUrl, encoding='utf-8', headers=None, data=None, method=None, allowCa
                                        headers=headers if headers else fake_headers, data=data)
                 prepped = req.prepare()
                 resp = session.send(prepped)
-                html_text = resp.text
+                if encoding == "raw":
+                    html_text = resp.content
+                else:
+                    if encoding != 'utf-8':
+                        resp.encoding = encoding
+                    html_text = resp.text
             else:
                 # url 包含中文时 parse.quote_from_bytes(oUrl.encode('utf-8'), ':/&%?=+')
                 req = urllib.request.Request(oUrl, headers=headers if headers else {}, data=data, method=method)
@@ -104,9 +110,12 @@ def getUrl(oUrl, encoding='utf-8', headers=None, data=None, method=None, allowCa
                     blob = response.read()
                     if headers.get('Content-Encoding', '') == 'gzip':
                         data = gzip.decompress(blob)
-                        html_text = data.decode(encoding, 'ignore')
                     else:
-                        html_text = blob.decode(encoding, 'ignore')
+                        data = blob
+                    if encoding == "raw":
+                        html_text = data
+                    else:
+                        html_text = data.decode(encoding, 'ignore')
             if allowCache:
                 urlcache[url_json] = {"html_text": html_text, "lasttimestap": int(time.time())}
             result_queue.put(html_text)
@@ -154,6 +163,37 @@ def getUrl(oUrl, encoding='utf-8', headers=None, data=None, method=None, allowCa
         if result is not None:
             return result
     return None
+
+
+def call_method_and_save_to_queue(queue, method, args, kwargs):
+    queue.put(method(*args, **kwargs))
+
+
+http_cache_data = dict()
+
+
+def put_new_http_cache_data(data, suffix="None"):
+    name = str(uuid.uuid4()) + suffix
+    http_cache_data[name] = data
+    return name
+
+
+def get_http_cache_data(name, need_delete=True):
+    if need_delete:
+        return http_cache_data.pop(name, None)
+    else:
+        return http_cache_data.get(name, None)
+
+
+def get_http_cache_data_url(name):
+    if "args" in globals():
+        args = globals()["args"]
+        host = args.host
+        port = args.port
+    else:
+        host = "127.0.0.1"
+        port = "5000"
+    return "http://%s:%s/cache/%s" % (host, port, name)
 
 
 def get_all_filename_by_dir(dir, suffix=".py"):

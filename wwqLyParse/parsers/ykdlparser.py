@@ -25,7 +25,7 @@ try:
 
     class YKDLParser(yougetparser.YouGetParser):
 
-        unsupports = ['list.iqiyi.com']
+        # unsupports = ['list.iqiyi.com']
         bin = './ykdl/ykdl.py'
 
         # make arg

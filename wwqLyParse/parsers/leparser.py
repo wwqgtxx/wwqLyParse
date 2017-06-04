@@ -87,7 +87,7 @@ class LeParser(Parser):
         return data
 
     def get_available_stream_id(self, data):
-        return sorted(list(data["playurl"]["dispatch"].keys()), key=self.supported_stream_types.index)
+        return list(data["playurl"]["dispatch"].keys())
 
     def Parse(self, input_text):
         info = {

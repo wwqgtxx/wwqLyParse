@@ -241,11 +241,17 @@ class IQiYiAListParser(Parser):
 
         html_text = getUrl(input_text, pool=pool)
         html = PyQuery(html_text)
-        title = html('h1.main_title').children('a').text()
-        for a in html('div.crumb-item').children('a'):
-            a = PyQuery(a)
-            if a.attr('href') in input_text:
-                title = a.text()
+        title = html('h1.main_title > a').text()
+        if not title:
+            for a in html('div.crumb-item > a'):
+                a = PyQuery(a)
+                if a.attr('href') in input_text:
+                    title = a.text()
+        if not title:
+            try:
+                title = match1(html_text, '<title>([^<]+)').split('-')[0]
+            except AttributeError:
+                pass
         i = 0
         data = {
             "data": [],
@@ -267,13 +273,13 @@ class IQiYiAListParser(Parser):
         while not q_results.empty():
             data["data"] = q_results.get()
             break
-        if data["data"] == []:
+        if not data["data"]:
             try:
                 data["data"] = get_list_info_html(html)
-            except Exception as e:
+            except Exception:
                 # import traceback
                 # traceback.print_exc()
-                logging.error(str(get_list_info_html) + e)
+                logging.exception(str(get_list_info_html))
 
         data["total"] = len(data["data"])
         return data

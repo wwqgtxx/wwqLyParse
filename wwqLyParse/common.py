@@ -95,8 +95,7 @@ def getUrl(oUrl, encoding='utf-8', headers=None, data=None, method=None, allowCa
                 if encoding == "raw":
                     html_text = resp.content
                 else:
-                    if encoding != 'utf-8':
-                        resp.encoding = encoding
+                    resp.encoding = encoding
                     html_text = resp.text
             else:
                 # url 包含中文时 parse.quote_from_bytes(oUrl.encode('utf-8'), ':/&%?=+')

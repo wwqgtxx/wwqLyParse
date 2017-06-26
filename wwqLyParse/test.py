@@ -21,7 +21,7 @@ if __name__ == "__main__":
     from main import *
 
     # main("http://www.iqiyi.com/v_19rrl8pmn8.html", types="list")
-    # main("http://www.iqiyi.com/v_19rrl8pmn8.html", parsers_name=["IQiYiMParser", "IQiYiParser"])
+    main("http://www.iqiyi.com/v_19rrl8pmn8.html", parsers_name=["IQiYiMTsParser"])
     # main("http://www.iqiyi.com/v_19rrl8pmn8.html", label="fullhd@IQiYiParser")
     # main("http://www.iqiyi.com/v_19rrl8pmn8.html", parsers_name=["ykdlparser.YKDLParser"])
     # main("http://www.iqiyi.com/v_19rrl8pmn8.html", label="1_BD_1080p_0@YKDLParser")
@@ -40,7 +40,7 @@ if __name__ == "__main__":
     # main("http://www.le.com/ptv/vplay/27416375.html", parsers_name=["YouGetParser"])
     # main("http://www.le.com/ptv/vplay/1981824.html", types="list")
     # main("http://www.le.com/ptv/vplay/27416375.html", parsers_name=["LeParser"])
-    main("http://www.le.com/ptv/vplay/27416375.html", label="1080p@LeParser")
+    # main("http://www.le.com/ptv/vplay/27416375.html", label="1080p@LeParser")
     # main("http://v.youku.com/v_show/id_XMjcxMzkwMjU3Mg==.html", types="list")
     # main("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474", parsers_name=["YouGetParser"])
     # main("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474", parsers_name=["YKDLParser"])

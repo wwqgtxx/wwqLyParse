@@ -20,8 +20,9 @@ from pyquery.pyquery import PyQuery
 if __name__ == "__main__":
     from main import *
 
-    # main("http://www.iqiyi.com/v_19rrl8pmn8.html", types="list")
-    main("http://www.iqiyi.com/v_19rrl8pmn8.html", parsers_name=["IQiYiMTsParser"])
+    main("http://www.iqiyi.com/v_19rrl8pmn8.html", types="list")
+    main("http://www.iqiyi.com/v_19rrl8pmn8.html", types="list")
+    # main("http://www.iqiyi.com/v_19rrl8pmn8.html", parsers_name=["IQiYiMTsParser"])
     # main("http://www.iqiyi.com/v_19rrl8pmn8.html", label="fullhd@IQiYiParser")
     # main("http://www.iqiyi.com/v_19rrl8pmn8.html", parsers_name=["ykdlparser.YKDLParser"])
     # main("http://www.iqiyi.com/v_19rrl8pmn8.html", label="1_BD_1080p_0@YKDLParser")

@@ -52,9 +52,15 @@ except:
 import urllib.request, io, os, sys, json, re, gzip, time, socket, math, urllib.error, http.client, gc, threading, \
     urllib, traceback, importlib, glob
 
-urlcache = {}
+try:
+    from .lru_cache import LRUCache
+except Exception as e:
+    from lru_cache import LRUCache
+
 URLCACHE_MAX = 1000
+URLCACHE_TIMEOUT = 12 * 60 * 60
 URLCACHE_POOL = 20
+urlcache = LRUCache(URLCACHE_TIMEOUT)
 
 pool_getUrl = Pool(URLCACHE_POOL)
 pool_cleanUrlcache = Pool(1)
@@ -71,20 +77,6 @@ fake_headers = {
 
 def getUrl(oUrl, encoding='utf-8', headers=None, data=None, method=None, allowCache=True, usePool=True,
            pool=pool_getUrl):
-    def cleanUrlcache():
-        global urlcache
-        if (len(urlcache) <= URLCACHE_MAX):
-            return
-        sortedDict = sorted(urlcache.items(), key=lambda d: d[1]["lasttimestap"], reverse=True)
-        newDict = {}
-        for (k, v) in sortedDict[:int(URLCACHE_MAX - URLCACHE_MAX / 10)]:  # 从数组中取索引start开始到end-1的记录
-            newDict[k] = v
-        del sortedDict
-        del urlcache
-        urlcache = newDict
-        gc.collect()
-        logging.debug("urlcache has been cleaned")
-
     def _getUrl(result_queue, url_json, oUrl, encoding, headers, data, method, allowCache, callmethod):
         try:
             if requests and session:
@@ -136,17 +128,11 @@ def getUrl(oUrl, encoding='utf-8', headers=None, data=None, method=None, allowCa
     url_json = {"oUrl": oUrl, "encoding": encoding, "headers": headers, "data": data, "method": method}
     url_json = json.dumps(url_json, sort_keys=True, ensure_ascii=False)
     if allowCache:
-        global urlcache
-        global URLCACHE_MAX
-        urlcache_temp = urlcache
-        if url_json in urlcache_temp:
-            item = urlcache_temp[url_json]
+        if url_json in urlcache:
+            item = urlcache[url_json]
             html_text = item["html_text"]
             item["lasttimestap"] = int(time.time())
             logging.debug(callmethod + "cache get:" + url_json)
-            if len(urlcache_temp) > URLCACHE_MAX:
-                pool_cleanUrlcache.spawn(cleanUrlcache)
-            del urlcache_temp
             return html_text
         logging.debug(callmethod + "normal get:" + url_json)
     else:

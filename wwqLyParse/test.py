@@ -20,7 +20,10 @@ from pyquery.pyquery import PyQuery
 if __name__ == "__main__":
     from main import *
 
+    urlcache.timeout = 10
     main("http://www.iqiyi.com/v_19rrl8pmn8.html", types="list")
+    main("http://www.iqiyi.com/v_19rrl8pmn8.html", types="list")
+    time.sleep(10)
     main("http://www.iqiyi.com/v_19rrl8pmn8.html", types="list")
     # main("http://www.iqiyi.com/v_19rrl8pmn8.html", parsers_name=["IQiYiMTsParser"])
     # main("http://www.iqiyi.com/v_19rrl8pmn8.html", label="fullhd@IQiYiParser")

@@ -58,7 +58,7 @@ except Exception as e:
     from lru_cache import LRUCache
 
 URLCACHE_MAX = 1000
-URLCACHE_TIMEOUT = 12 * 60 * 60
+URLCACHE_TIMEOUT = 6 * 60 * 60
 URLCACHE_POOL = 20
 urlcache = LRUCache(URLCACHE_TIMEOUT)
 
@@ -108,7 +108,7 @@ def getUrl(oUrl, encoding='utf-8', headers=None, data=None, method=None, allowCa
                     else:
                         html_text = data.decode(encoding, 'ignore')
             if allowCache:
-                urlcache[url_json] = {"html_text": html_text, "lasttimestap": int(time.time())}
+                urlcache[url_json] = html_text
             result_queue.put(html_text)
             return
         except socket.timeout:
@@ -129,9 +129,7 @@ def getUrl(oUrl, encoding='utf-8', headers=None, data=None, method=None, allowCa
     url_json = json.dumps(url_json, sort_keys=True, ensure_ascii=False)
     if allowCache:
         if url_json in urlcache:
-            item = urlcache[url_json]
-            html_text = item["html_text"]
-            item["lasttimestap"] = int(time.time())
+            html_text = urlcache[url_json]
             logging.debug(callmethod + "cache get:" + url_json)
             return html_text
         logging.debug(callmethod + "normal get:" + url_json)

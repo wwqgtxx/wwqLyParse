@@ -5,6 +5,7 @@ from __future__ import absolute_import, division, print_function, \
     with_statement
 
 import collections
+import threading
 import time
 
 
@@ -13,50 +14,61 @@ class LRUCache(collections.MutableMapping):
         self.size = size
         self.timeout = timeout
         self._store = {}
-        self._keys_to_last_time = {}
+        self._keys_to_last_time = collections.OrderedDict()
+        self._lock = threading.RLock()
         self.update(dict(*args, **kwargs))
 
     def __getitem__(self, key):
-        self.sweep()
-        t = time.time()
-        item = self._store[key]
-        self._keys_to_last_time[key] = t
-        return item
+        with self._lock:
+            self.sweep()
+            t = time.time()
+            item = self._store[key]
+            self._keys_to_last_time[key] = t
+            self._keys_to_last_time.move_to_end(key, False)  # move to start
+            return item
 
     def __setitem__(self, key, value):
-        self.sweep()
-        t = time.time()
-        self._keys_to_last_time[key] = t
-        self._store[key] = value
+        with self._lock:
+            self.sweep()
+            t = time.time()
+            self._store[key] = value
+            self._keys_to_last_time[key] = t
+            self._keys_to_last_time.move_to_end(key, False)  # move to start
 
     def __delitem__(self, key):
-        del self._store[key]
-        del self._keys_to_last_time[key]
+        with self._lock:
+            del self._store[key]
+            del self._keys_to_last_time[key]
 
     def __iter__(self):
-        return iter(self._store)
+        with self._lock:
+            return iter(self._store.copy())
 
     def __len__(self):
-        return len(self._store)
+        with self._lock:
+            return len(self._store)
 
     def sweep(self):
-        len_store = len(self._store)
-        if len_store == 0:
-            return
-        now = time.time()
-        sorted_dict_items = sorted(self._keys_to_last_time.items(), key=lambda i: i[1], reverse=True)
-        delete_num = 0
-        if len_store > self.size or now - sorted_dict_items[-1][1] > self.timeout:
-            for k, v in sorted_dict_items[self.size:]:
-                del self._store[k]
-                del self._keys_to_last_time[k]
-                delete_num += 1
+        with self._lock:
+            len_store = len(self._store)
+            if len_store == 0:
+                return
+            now = time.time()
+            sorted_dict_items = collections.deque(self._keys_to_last_time.items())
+            # sorted_dict_items = sorted(self._keys_to_last_time.items(), key=lambda i: i[1], reverse=True)
+            if len_store > self.size:
+                for _ in range(len_store - self.size):
+                    i = sorted_dict_items.pop()
+                    if i is None:
+                        break
+                    k, v = i
+                    del self._store[k]
+                    del self._keys_to_last_time[k]
 
-            while delete_num < len_store and now - sorted_dict_items[delete_num][1] > self.timeout:
-                k, v = sorted_dict_items[delete_num]
+            while len(sorted_dict_items) > 0 and now - sorted_dict_items[-1][1] > self.timeout:
+                k, v = sorted_dict_items.pop()
                 del self._store[k]
                 del self._keys_to_last_time[k]
-                delete_num += 1
 
 
 if __name__ == '__main__':
@@ -78,8 +90,18 @@ if __name__ == '__main__':
         print("successful")
     else:
         print("error")
-    time.sleep(15)
+    time.sleep(7)
+    if "f" in l:
+        print("successful")
+    else:
+        print("error")
+    time.sleep(7)
+    if "f" in l:
+        print("successful")
+    else:
+        print("error")
     if "g" not in l:
         print("successful")
     else:
         print("error")
+    print(list(l.items()))

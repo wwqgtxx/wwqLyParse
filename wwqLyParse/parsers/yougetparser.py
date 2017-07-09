@@ -154,10 +154,12 @@ class YouGetParser(Parser):
         container = stream['container']
         urls = stream['src']
         referer = None
+        ua = None
         if "extra" in raw:
             extra = raw["extra"]
             if isinstance(extra, dict):
                 referer = extra.get("referer", None)
+                ua = extra.get("ua", None)
         if 'refer' in stream:
             referer = stream['refer']
         out = []
@@ -172,10 +174,12 @@ class YouGetParser(Parser):
                     if "m3u8" in one['urls'] and ":\\Users\\" in one['urls']:
                         one['urls'] = "file:///" + one['urls']
             # check referer
-            if referer:
-                one['args'] = {
-                    'Referer': referer,
-                }
+            if referer or ua:
+                one['args'] = {}
+                if referer:
+                    one['args']['Referer'] = referer
+                if ua:
+                    one['args']['User-Agent'] = ua
             else:
                 one['args'] = {}
             out.append(one)
@@ -371,7 +375,14 @@ streams:             # Available quality and codecs
                 item["unfixIp"] = True
         if "bilibili" in url:
             for item in out:
-                item["args"]['Referer'] = url
+                if isinstance(item, dict):
+                    args = item.get("args", None)
+                    if args and isinstance(args, dict):
+                        referer = args.get('Referer', None)
+                        if not referer:
+                            args['Referer'] = url
+                    else:
+                        item["args"] = {'Referer': url}
         # if "le.com" in url:
         #     for item in out:
         #         if item['protocol'] == 'm3u8':

@@ -343,20 +343,20 @@ streams:             # Available quality and codecs
 
     def Parse(self, url):
         out = self._Parse(url)
-        if "bilibili" in url:
-            for item in out['data']:
-                if isinstance(item, dict):
-                    download = item.get("download", None)
-                    if download:
-                        for item2 in download:
-                            if isinstance(item2, dict):
-                                args = item2.get("args", None)
-                                if args and isinstance(args, dict):
-                                    referer = args.get('Referer', None)
-                                    if not referer:
-                                        args['Referer'] = url
-                                else:
-                                    item2["args"] = {'Referer': url}
+        # if "bilibili" in url:
+        #     for item in out['data']:
+        #         if isinstance(item, dict):
+        #             download = item.get("download", None)
+        #             if download:
+        #                 for item2 in download:
+        #                     if isinstance(item2, dict):
+        #                         args = item2.get("args", None)
+        #                         if args and isinstance(args, dict):
+        #                             referer = args.get('Referer', None)
+        #                             if not referer:
+        #                                 args['Referer'] = url
+        #                         else:
+        #                             item2["args"] = {'Referer': url}
         return out
 
     def _ParseURL(self, url, label, min=None, max=None):
@@ -373,16 +373,16 @@ streams:             # Available quality and codecs
         if "iqiyi" in url:
             for item in out:
                 item["unfixIp"] = True
-        if "bilibili" in url:
-            for item in out:
-                if isinstance(item, dict):
-                    args = item.get("args", None)
-                    if args and isinstance(args, dict):
-                        referer = args.get('Referer', None)
-                        if not referer:
-                            args['Referer'] = url
-                    else:
-                        item["args"] = {'Referer': url}
+        # if "bilibili" in url:
+        #     for item in out:
+        #         if isinstance(item, dict):
+        #             args = item.get("args", None)
+        #             if args and isinstance(args, dict):
+        #                 referer = args.get('Referer', None)
+        #                 if not referer:
+        #                     args['Referer'] = url
+        #             else:
+        #                 item["args"] = {'Referer': url}
         # if "le.com" in url:
         #     for item in out:
         #         if item['protocol'] == 'm3u8':

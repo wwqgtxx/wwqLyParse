@@ -23,6 +23,7 @@ class YouGetParser(Parser):
     types = ["formats"]
     unsupports = ['list.iqiyi.com', 'www.le.com']
     bin = './you-get/you-get'
+    name = "you-get解析"
 
     # print exception function
     def _print_exception(self, e):
@@ -140,6 +141,8 @@ class YouGetParser(Parser):
             except KeyError:
                 pass
             out['data'].append(one)
+        out["caption"] = self.name
+        out['sorted'] = True
         return out
 
     # parse for parse_url
@@ -168,6 +171,8 @@ class YouGetParser(Parser):
                 one['args'] = {
                     'Referer': referer,
                 }
+            else:
+                one['args'] = {}
             out.append(one)
         return out
 
@@ -329,9 +334,17 @@ streams:             # Available quality and codecs
 
     def Parse(self, url):
         out = self._Parse(url)
-        if "data" in out:
-            out["caption"] = "you-get解析"
-            out['sorted'] = True
+        if "bilibili" in url:
+            for item in out['data']:
+                if isinstance(item, dict):
+                    download = item.get("download", None)
+                    if download:
+                        for item2 in download:
+                            if isinstance(item2, dict):
+                                args = item2.get("args", None)
+                                if args and isinstance(args, dict):
+                                    args['Referer'] = url
+                                item2["args"] = {'Referer': url}
         return out
 
     def _ParseURL(self, url, label, min=None, max=None):
@@ -348,6 +361,9 @@ streams:             # Available quality and codecs
         if "iqiyi" in url:
             for item in out:
                 item["unfixIp"] = True
+        if "bilibili" in url:
+            for item in out:
+                item["args"]['Referer'] = url
         # if "le.com" in url:
         #     for item in out:
         #         if item['protocol'] == 'm3u8':

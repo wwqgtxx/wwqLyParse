@@ -27,6 +27,7 @@ try:
 
         # unsupports = ['list.iqiyi.com']
         bin = './ykdl/ykdl.py'
+        name = "YouKuDownLoader解析"
 
         # make arg
         def _make_arg(self, url, _format=None, use_info=False):
@@ -41,13 +42,6 @@ try:
 
         def _run(self, arg, need_stderr=False):
             return super(YKDLParser, self)._run(arg, need_stderr)
-
-        def Parse(self, url):
-            out = self._Parse(url)
-            if "data" in out:
-                out["caption"] = "YouKuDownLoader解析"
-                out['sorted'] = True
-            return out
 
 except:
     logging.exception("can't load yougetparser.py,it need to be super class")

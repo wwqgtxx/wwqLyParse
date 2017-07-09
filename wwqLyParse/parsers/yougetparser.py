@@ -128,6 +128,7 @@ class YouGetParser(Parser):
             stream.sort(key=lambda x: x['size'], reverse=True)
         except KeyError:
             pass
+
         # process each stream
         for s in stream:
             one = {}
@@ -153,6 +154,10 @@ class YouGetParser(Parser):
         container = stream['container']
         urls = stream['src']
         referer = None
+        if "extra" in raw:
+            extra = raw["extra"]
+            if isinstance(extra, dict):
+                referer = extra.get("referer", None)
         if 'refer' in stream:
             referer = stream['refer']
         out = []
@@ -343,8 +348,11 @@ streams:             # Available quality and codecs
                             if isinstance(item2, dict):
                                 args = item2.get("args", None)
                                 if args and isinstance(args, dict):
-                                    args['Referer'] = url
-                                item2["args"] = {'Referer': url}
+                                    referer = args.get('Referer', None)
+                                    if not referer:
+                                        args['Referer'] = url
+                                else:
+                                    item2["args"] = {'Referer': url}
         return out
 
     def _ParseURL(self, url, label, min=None, max=None):

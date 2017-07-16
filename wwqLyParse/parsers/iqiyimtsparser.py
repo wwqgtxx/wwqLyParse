@@ -71,7 +71,7 @@ class IQiYiMTsParser(Parser):
             stream_type = {'id': stream_id, 'container': 'ts', 'video_profile': stream_id}
         return stream_type
 
-    def Parse(self, input_text):
+    def Parse(self, input_text, *k, **kk):
         data = {
             "type": "formats",
             "name": "",

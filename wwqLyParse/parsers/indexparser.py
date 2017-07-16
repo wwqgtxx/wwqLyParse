@@ -19,7 +19,7 @@ class IndexParser(Parser):
     filters = ['^http://www.le.com$']
     types = ["collection"]
 
-    def Parse(self, input_text):
+    def Parse(self, input_text, *k, **kk):
         return self.Parse_le(input_text)
 
     def Parse_le(self, input_text):

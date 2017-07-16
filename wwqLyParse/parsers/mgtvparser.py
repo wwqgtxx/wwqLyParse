@@ -21,7 +21,7 @@ class MgTVParser(Parser):
     filters = ['http://www.mgtv.com/v/']
     types = ["formats"]
 
-    def Parse(self, input_text, types=None):
+    def Parse(self, input_text, types=None, *k, **kk):
         data = {
             "type": "formats",
             "name": "",
@@ -76,7 +76,7 @@ class MgTVParser(Parser):
             })
         return data
 
-    def ParseURL(self, input_text, label, min=None, max=None):
+    def ParseURL(self, input_text, label, min=None, max=None, *k, **kk):
         data = {
             "protocol": "http",
             "urls": [""],

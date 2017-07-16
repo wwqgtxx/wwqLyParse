@@ -23,7 +23,7 @@ class AnyPageParser(Parser):
     TWICE_PARSE = True
     TWICE_PARSE_TIMEOUT = 30
 
-    def Parse(self, input_text):
+    def Parse(self, input_text, *k, **kk):
         global TWICE_PARSE_TIMEOUT
         html = PyQuery(getUrl(input_text))
         items = html('a')

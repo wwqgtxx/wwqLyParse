@@ -32,7 +32,7 @@ app = Flask(__name__)
 version = {
     'port_version': "0.5.0",
     'type': 'parse',
-    'version': '0.8.3',
+    'version': '0.8.4',
     'uuid': '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter': [],
     'name': 'WWQ猎影解析插件',
@@ -92,6 +92,14 @@ def initVersion():
     version['name'] = version['name'] + "]" + " Running on Python %s" % sys.version
 
 
+def parsePassword(input_text, kk):
+    if "||" in input_text:
+        input_text = str(input_text).split("||")
+        kk["password"] = input_text[1]
+        input_text = input_text[0]
+    return input_text
+
+
 def GetVersion():
     return version
 
@@ -124,6 +132,8 @@ def Parse(input_text, types=None, parsers_name=None, urlhandles_name=None, *k, *
             # print(e)
             # import traceback
             # traceback.print_exc()
+
+    input_text = parsePassword(input_text, kk)
 
     input_text = urlHandle(input_text, urlhandles_name)
     results = []
@@ -176,6 +186,8 @@ def ParseURL(input_text, label, min=None, max=None, urlhandles_name=None, *k, **
     parser_name = t_label[1]
     parser_class_map = import_by_name(class_names=[parser_name], prefix="parsers.", super_class=Parser)
     parsers = new_objects(parser_class_map)
+
+    input_text = parsePassword(input_text, kk)
 
     input_text = urlHandle(input_text, urlhandles_name)
     parser = parsers[0]

@@ -30,7 +30,7 @@ try:
         name = "YouKuDownLoader解析"
 
         # make arg
-        def _make_arg(self, url, _format=None, use_info=False):
+        def _make_arg(self, url, _format=None, use_info=False, *k, **kk):
             arg = self._make_proxy_arg()
             # NOTE ignore __default__ format
             if _format and (_format != '__default__'):

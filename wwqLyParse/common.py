@@ -453,10 +453,10 @@ class Parser(object):
     unsupports = []
     types = []
 
-    def Parse(self, url):
+    def Parse(self, url, *k, **kk):
         pass
 
-    def ParseURL(self, url, label, min=None, max=None):
+    def ParseURL(self, url, label, min=None, max=None, *k, **kk):
         pass
 
     def getfilters(self):

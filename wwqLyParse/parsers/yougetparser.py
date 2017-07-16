@@ -54,8 +54,10 @@ class YouGetParser(Parser):
             return []  # use system default proxy
 
     # make you-get arg
-    def _make_arg(self, url, _format=None, use_info=True):
+    def _make_arg(self, url, _format=None, use_info=True, password=None, *k, **kk):
         arg = self._make_proxy_arg()
+        if password:
+            arg += ['--password', password]
         # NOTE ignore __default__ format
         if _format and (_format != '__default__'):
             arg += ['--format', _format]
@@ -310,8 +312,8 @@ streams:             # Available quality and codecs
         return info
 
     # parse functions
-    def _Parse(self, url):
-        yarg = self._make_arg(url)
+    def _Parse(self, url, *k, **kk):
+        yarg = self._make_arg(url, *k, **kk)
         stdout, stderr = self._run(yarg)
         # print(stdout)
         # try to decode
@@ -341,8 +343,8 @@ streams:             # Available quality and codecs
         out = self._parse_parse(info)
         return out
 
-    def Parse(self, url):
-        out = self._Parse(url)
+    def Parse(self, url, *k, **kk):
+        out = self._Parse(url, *k, **kk)
         # if "bilibili" in url:
         #     for item in out['data']:
         #         if isinstance(item, dict):
@@ -359,17 +361,17 @@ streams:             # Available quality and codecs
         #                             item2["args"] = {'Referer': url}
         return out
 
-    def _ParseURL(self, url, label, min=None, max=None):
+    def _ParseURL(self, url, label, min=None, max=None, *k, **kk):
         _format = self._parse_label(label)
-        yarg = self._make_arg(url, _format)
+        yarg = self._make_arg(url, _format, *k, **kk)
         stdout, stderr = self._run(yarg)
         # just load json, without ERROR check
         info = self._try_parse_json(stdout)
         out = self._parse_parse_url(info, _format)
         return out
 
-    def ParseURL(self, url, label, min=None, max=None):
-        out = self._ParseURL(url, label, min, max)
+    def ParseURL(self, url, label, min=None, max=None, *k, **kk):
+        out = self._ParseURL(url, label, min, max, *k, **kk)
         if "iqiyi" in url:
             for item in out:
                 item["unfixIp"] = True

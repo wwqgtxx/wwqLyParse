@@ -139,7 +139,7 @@ class IQiYiMParser(Parser):
             tvid, vid, rate, tvid, vid, sc, t - 7)
         return json.loads(getUrl(vmsreq, allowCache=False)[13:])
 
-    def Parse(self, input_text):
+    def Parse(self, input_text, *k, **kk):
         data = {
             "type": "formats",
             "name": "",

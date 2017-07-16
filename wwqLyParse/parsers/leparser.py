@@ -89,7 +89,7 @@ class LeParser(Parser):
     def get_available_stream_id(self, data):
         return list(data["playurl"]["dispatch"].keys())
 
-    def Parse(self, input_text):
+    def Parse(self, input_text, *k, **kk):
         info = {
             "type": "formats",
             "name": "",
@@ -131,7 +131,7 @@ class LeParser(Parser):
         m3u8 = getUrl(location + suffix, encoding="raw", allowCache=False)
         return m3u8
 
-    def ParseURL(self, input_text, label, min=None, max=None):
+    def ParseURL(self, input_text, label, min=None, max=None, *k, **kk):
         info = {
             "protocol": "m3u8",
             "urls": [""],

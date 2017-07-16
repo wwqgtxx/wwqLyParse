@@ -26,7 +26,7 @@ class LypPvParser(Parser):
     unsupports = ['www.iqiyi.com', 'list.iqiyi.com', 'www.le.com']
 
     # parse functions
-    def Parse(self, url):
+    def Parse(self, url, *k, **kk):
         try:
             from ..lyp_pv import run
         except Exception as e:
@@ -58,7 +58,7 @@ class LypPvParser(Parser):
             out.pop("warning")
         return out
 
-    def ParseURL(self, url, label, min=None, max=None):
+    def ParseURL(self, url, label, min=None, max=None, *k, **kk):
         try:
             from ..lyp_pv import run
         except Exception as e:

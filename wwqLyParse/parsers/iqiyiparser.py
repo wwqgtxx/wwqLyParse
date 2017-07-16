@@ -179,7 +179,7 @@ class IQiYiParser(Parser):
 
         return info
 
-    def Parse(self, input_text, types=None):
+    def Parse(self, input_text, types=None, *k, **kk):
         self.init()
         data = {
             "type": "formats",
@@ -242,7 +242,7 @@ class IQiYiParser(Parser):
                     break
         return data
 
-    def ParseURL(self, input_text, label, min=None, max=None):
+    def ParseURL(self, input_text, label, min=None, max=None, *k, **kk):
         self.init()
         datas = []
 

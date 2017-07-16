@@ -19,7 +19,7 @@ class YouKuListParser1(Parser):
     filters = ["v.youku.com/v_show"]
     types = ["list"]
 
-    def Parse(self, input_text):
+    def Parse(self, input_text, *k, **kk):
         html = getUrl(input_text)
         m = re.findall('<a class="desc-link" href="(//list\.youku\.com/show/id_[^\s]+\.html)"', html)
         new_url = "http:" + m[0]
@@ -36,7 +36,7 @@ class YouKuListParser2(Parser):
     filters = ["list.youku.com/show"]
     types = ["list"]
 
-    def Parse(self, input_text):
+    def Parse(self, input_text, *k, **kk):
         html = getUrl(input_text)
         m = re.findall('showid:"([0-9]+)",', html)  # showid:"307775"
         logging.info(m[0])

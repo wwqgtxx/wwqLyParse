@@ -19,7 +19,7 @@ class IQiYiAListParser(Parser):
     filters = ["www.iqiyi.com/a_"]
     types = ["list"]
 
-    def Parse(self, input_text, pool=pool_getUrl):
+    def Parse(self, input_text, pool=pool_getUrl, *k, **kk):
         # modity from sceext2's list271.py
         def get_list_info_api1(html_text):
             RE_GET_AID = ' albumId: ([0-9]+),'  # albumId: 202340701,
@@ -289,7 +289,7 @@ class IQiYiLibMListParser(Parser):
     filters = ["www.iqiyi.com/lib/m"]
     types = ["list"]
 
-    def Parse(self, input_text, pool=pool_getUrl):
+    def Parse(self, input_text, pool=pool_getUrl, *k, **kk):
         html = PyQuery(getUrl(input_text, pool=pool))
 
         """
@@ -355,7 +355,7 @@ class IQiYiVListParser(Parser):
     filters = ["www.iqiyi.com/v_"]
     types = ["list"]
 
-    def Parse(self, input_text, pool=pool_getUrl):
+    def Parse(self, input_text, pool=pool_getUrl, *k, **kk):
         logging.debug(input_text)
         html = PyQuery(getUrl(input_text, pool=pool))
         datainfo_navlist = PyQuery(html("#datainfo-navlist"))

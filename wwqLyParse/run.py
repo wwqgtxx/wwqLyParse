@@ -40,7 +40,7 @@ def get_caller_info():
 
 def get_systeminfo():
     try:
-        args = "systeminfo"
+        args = bridge.pn(bridge.pjoin(bridge.get_root_path(), "./SysArch.exe"))
         PIPE = subprocess.PIPE
         p = subprocess.Popen(args, stdout=PIPE, stderr=PIPE, shell=False)
         stdout, stderr = p.communicate()
@@ -56,10 +56,10 @@ get_systeminfo()
 
 
 def isX64():
-    if "x64-based PC" in systeminfo:
+    if "64bit" in systeminfo:
         logging.info("x64")
         return True
-    elif "x86-based PC" in systeminfo:
+    elif "32bit" in systeminfo:
         logging.info("x86")
         return False
     else:

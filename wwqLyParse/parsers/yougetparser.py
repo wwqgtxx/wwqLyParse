@@ -99,15 +99,17 @@ class YouGetParser(Parser):
         except:
             size_str = "0"
             size = 0
-        l = ('_').join([str(_id), _format, quality, size_str])
+        l = '_'.join([str(_id), _format, quality, size_str])
         ext = stream['container']
-        return l, size, ext
+        return l, _format, size, ext
 
     # parse label
     def _parse_label(self, raw):
-        parts = raw.split('_')
-        _format = parts[1]
-        return _format
+        if '_' in raw:
+            parts = raw.split('_')
+            _format = parts[1]
+            return _format
+        return raw
 
     # parse you-get output for parse
     def _parse_parse(self, raw):
@@ -134,8 +136,9 @@ class YouGetParser(Parser):
         # process each stream
         for s in stream:
             one = {}
-            label, size, ext = self._make_label(s)
+            label, code, size, ext = self._make_label(s)
             one['label'] = label
+            one['code'] = code
             one['ext'] = ext
             one['size'] = size
             try:

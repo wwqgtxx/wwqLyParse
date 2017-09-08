@@ -69,7 +69,7 @@ class YouKuListParser2(Parser):
                         item = PyQuery(item)
                         num = int(item.text())
                         url = "http:" + item.attr("href")
-                        title = "%s 第%02d集" % (data["title"], num)
+                        title = "第%02d集" % num
                         info = {
                             "name": title,
                             "no": title,

@@ -14,12 +14,23 @@ except Exception as e:
 
 JUDGE_VIP = True
 
-__MODULE_CLASS_NAMES__ = []
+__MODULE_CLASS_NAMES__ = ["MgTVParser", "MgTVListParser"]
 
 
 class MgTVParser(Parser):
-    filters = ['http://www.mgtv.com/v/']
+    filters = ['www.mgtv.com/']
     types = ["formats"]
+
+    def get_api_data(self, url):
+        # id = re.match('^http://[^\s]+/[^\s]+/([^\s]+)\.html', url).group(1)
+        vid = match1(url, 'http://www.mgtv.com/(?:b|l)/\d+/(\d+).html')
+        if not vid:
+            vid = match1(url, 'http://www.mgtv.com/hz/bdpz/\d+/(\d+).html')
+        api_url = 'http://pcweb.api.mgtv.com/player/video?video_id={}'.format(vid)
+        api_data = getUrl(api_url)
+        api_data = json.loads(api_data)
+        # print(api_data)
+        return api_data
 
     def Parse(self, input_text, types=None, *k, **kk):
         data = {
@@ -32,54 +43,27 @@ class MgTVParser(Parser):
             "sorted": 1,
             "data": []
         }
-        id = re.match('^http://[^\s]+/[^\s]+/([^\s]+)\.html', input_text).group(1)
-        ejson_url = 'http://v.api.mgtv.com/player/video?retry=1&video_id=' + id
-        ejson = getUrl(ejson_url)
-        # print(ejson)
-        ejson = json.loads(ejson)
-        if ejson["status"] != 200:
-            return
-        edata = ejson["data"]
-        # don't parse vip
-        if JUDGE_VIP and (edata["user"]["isvip"] != "0"):
-            return
-        einfo = edata["info"]
-        estream = edata["stream"]
-        estream_domain = edata["stream_domain"]
-        data["name"] = einfo["title"]
-        data["icon"] = einfo["thumb"]
-        length = len(estream)
-        # 1=标清，2=高清,3=超清
-        if length >= 3:
-            data["data"].append({
-                "label": "超清",
-                "code": 3,
-                # "ext" : "",
-                # "size" : "",
-                # "type" : "",
-            })
-        if length >= 2:
-            data["data"].append({
-                "label": "高清",
-                "code": 2,
-                # "ext" : "",
-                # "size" : "",
-                # "type" : "",
-            })
-        if length >= 1:
-            data["data"].append({
-                "label": "标清",
-                "code": 1,
-                # "ext" : "",
-                # "size" : "",
-                # "type" : "",
-            })
+        api_data = self.get_api_data(input_text)
+        if api_data['code'] != 200 and api_data['data']:
+            return []
+        info = api_data['data']['info']
+        data["name"] = info['title'] + ' ' + info['desc']
+        data["icon"] = info['thumb']
+        for lstream in api_data['data']['stream']:
+            if lstream['url']:
+                data["data"].append({
+                    "label": lstream['name'],
+                    "code": lstream['def'],
+                    # "ext" : "",
+                    # "size" : "",
+                    # "type" : "",
+                })
         return data
 
     def ParseURL(self, input_text, label, min=None, max=None, *k, **kk):
         data = {
-            "protocol": "http",
-            "urls": [""],
+            "protocol": "m3u8",
+            "urls": [],
             # "args" : {},
             # "duration" : 1111,
             # "length" : 222222,
@@ -92,33 +76,61 @@ class MgTVParser(Parser):
             # "convert" : "",
             # "convertData" : "",
         }
-        id = re.match('^http://[^\s]+/[^\s]+/([^\s]+)\.html', input_text).group(1)
-        ejson_url = 'http://v.api.mgtv.com/player/video?retry=1&video_id=' + id
-        ejson = getUrl(ejson_url)
-        ejson = json.loads(ejson)
-        if ejson["status"] != 200:
-            return
-        edata = ejson["data"]
-        estream = edata["stream"]
-        estream_domain = edata["stream_domain"]
-        i = int(label) - 1
-        stream = estream[i]
-        stream_domain = estream_domain[i]
-        host = str(stream_domain)
-        url = str(stream["url"])
-        aurl = url.split('?')
-        a = aurl[0].strip('/playlist.m3u8')
-        b = aurl[1].split('&')
-        u = host + '/' + a + '?pno=1031&' + b[3] + '&' + b[4]
-        op1 = getUrl(u)
-        data1 = json.loads(op1)
-        eurl = data1['info']
-        data["urls"] = eurl
-        info = {
-            "label": i,
-            "code": i,
-            # "ext" : "",
-            # "size" : "",
-            # "type" : "",
-        }
+        api_data = self.get_api_data(input_text)
+        if api_data['code'] != 200 and api_data['data']:
+            return []
+        # domain = api_data['data']['stream_domain'][0]
+        for lstream in api_data['data']['stream']:
+            if lstream['url'] and lstream['def'] == label:
+                for domain in api_data['data']['stream_domain']:
+                    api_data2 = json.loads(getUrl(domain + lstream['url'], allowCache=False))
+                    # print(api_data2)
+                    url = api_data2['info']
+                    data["urls"].append(url)
+                    break
         return [data]
+
+
+class MgTVListParser(MgTVParser):
+    filters = ["www.mgtv.com/"]
+    types = ["collection"]
+
+    def Parse(self, input_text, *k, **kk):
+        data = {
+            "data": [],
+            "more": False,
+            "title": '',
+            "total": 0,
+            "type": "collection",
+            "caption": "芒果TV全集"
+        }
+        api_data = self.get_api_data(input_text)
+        if api_data['code'] != 200 and api_data['data']:
+            return []
+        info = api_data['data']['info']
+        collection_id = info['collection_id']
+        url1 = 'http://pcweb.api.mgtv.com/variety/showlist?collection_id=' + collection_id
+        api_data1 = json.loads(getUrl(url1))
+        # print(api_data1)
+        if api_data1['code'] != 200 and not api_data1['data']:
+            return []
+        data['title'] = api_data1['data']['info']['title']
+        for tab in api_data1['data']['tab_m']:
+            url2 = url1 + '&month=' + tab['m']
+            api_data2 = json.loads(getUrl(url2))
+            # print(api_data2)
+            if api_data2['code'] == 200 and api_data2['data']:
+                for item in api_data2['data']['list']:
+                    if item['isnew'] == '2':
+                        continue
+                    info = {
+                        "no": item['t2']+' '+item['t1'],
+                        "subtitle": item['t3'],
+                        "url": 'http://www.mgtv.com' + item['url']
+                    }
+                    # print(info)
+                    data["data"].append(info)
+        return data
+
+    def ParseURL(self, url, label, min=None, max=None, *k, **kk):
+        pass

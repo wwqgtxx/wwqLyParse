@@ -44,7 +44,7 @@ class MgTVParser(Parser):
             "data": []
         }
         api_data = self.get_api_data(input_text)
-        if api_data['code'] != 200 and api_data['data']:
+        if api_data['code'] != 200 or not api_data['data']:
             return []
         info = api_data['data']['info']
         data["name"] = info['title'] + ' ' + info['desc']

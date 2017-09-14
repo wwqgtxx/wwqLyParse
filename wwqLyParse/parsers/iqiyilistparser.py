@@ -363,10 +363,6 @@ class IQiYiVListParser(Parser):
             a = PyQuery(a)
             url = a.attr("href")
             logging.info("change %s to %s" % (input_text, url))
-            try:
-                from ..main import Parse as main_parse
-            except Exception as e:
-                from main import Parse as main_parse
-            result = main_parse(input_text=url, types="list")
+            result = get_main_parse()(input_text=url, types="list")
             if result:
                 return result[0]

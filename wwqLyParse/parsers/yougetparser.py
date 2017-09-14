@@ -21,7 +21,7 @@ __MODULE_CLASS_NAMES__ = ["YouGetParser"]
 class YouGetParser(Parser):
     filters = ['^(http|https)://.+']
     types = ["formats"]
-    unsupports = ['list.iqiyi.com', 'www.le.com', 'www.mgtv.com']
+    unsupports = ['list.iqiyi.com', 'list.youku.com', 'www.le.com', 'www.mgtv.com']
     bin = './you-get/you-get'
     name = "you-get解析"
 
@@ -324,7 +324,7 @@ streams:             # Available quality and codecs
         info = None
         if stdout:
             try:
-                logging.debug(stdout)
+                logging.debug("%s get stdout: %s" % (self.__class__.__name__, stdout))
                 try:
                     info = self._try_parse_json(stdout)
                 except json.decoder.JSONDecodeError:

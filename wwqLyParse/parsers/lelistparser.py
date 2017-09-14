@@ -23,11 +23,7 @@ class LeListParser1(Parser):
         html = getUrl(input_text)
         html = PyQuery(html)
         html2_url = html("a.more").attr("href")
-        try:
-            from ..main import Parse as main_parse
-        except Exception as e:
-            from main import Parse as main_parse
-        result = main_parse(input_text=html2_url, types="list")
+        result = get_main_parse()(input_text=html2_url, types="list")
         if result:
             return result[0]
 

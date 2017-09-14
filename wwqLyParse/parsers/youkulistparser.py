@@ -12,7 +12,7 @@ try:
 except Exception as e:
     from common import *
 
-__MODULE_CLASS_NAMES__ = ["YouKuListParser1", "YouKuListParser2"]
+__MODULE_CLASS_NAMES__ = ["YouKuListParser1", "YouKuListParser2", "YouKuListParser3", "YouKuListParser4"]
 
 
 class YouKuListParser1(Parser):
@@ -22,23 +22,40 @@ class YouKuListParser1(Parser):
     def Parse(self, input_text, *k, **kk):
         html = getUrl(input_text)
         m = re.findall('<a class="desc-link" href="(//list\.youku\.com/show/id_[^\s]+\.html)"', html)
+        if not m:
+            return []
         new_url = "http:" + m[0]
-        try:
-            from ..main import Parse as main_parse
-        except Exception as e:
-            from main import Parse as main_parse
-        result = main_parse(input_text=new_url, types="list")
+        result = get_main_parse()(input_text=new_url, types="list")
         if result:
             return result[0]
 
 
 class YouKuListParser2(Parser):
+    filters = ["v.youku.com/v_show"]
+    types = ["collection"]
+
+    def Parse(self, input_text, *k, **kk):
+        html = getUrl(input_text)
+        m = re.findall('(//list\.youku\.com/albumlist/show/id_[^\s]+\.html)', html)
+        if not m:
+            return []
+        new_url = "http:" + m[0]
+        result = get_main_parse()(input_text=new_url, types="collection")
+        if result:
+            return result[0]
+
+
+class YouKuListParser3(Parser):
+    # http://list.youku.com/show/id_z2ae8ee1c837b11e18195.html
+    # official playlist
     filters = ["list.youku.com/show"]
     types = ["list"]
 
     def Parse(self, input_text, *k, **kk):
         html = getUrl(input_text)
         m = re.findall('showid:"([0-9]+)",', html)  # showid:"307775"
+        if not m:
+            return []
         logging.info(m[0])
 
         html = PyQuery(html)
@@ -84,4 +101,65 @@ class YouKuListParser2(Parser):
             else:
                 break
         data["total"] = len(data["data"])
+        return data
+
+
+class YouKuListParser4(Parser):
+    # http://list.youku.com/albumlist/show/id_2336634.html
+    # UGC playlist
+    filters = ["list.youku.com/albumlist/show"]
+    types = ["collection"]
+
+    def Parse(self, input_text, *k, **kk):
+        html = getUrl(input_text)
+        html = PyQuery(html)
+        p_title = html("div.pl-title")
+        title = p_title.attr("title")
+        list_id = re.search('https?://list.youku.com/albumlist/show/id_(\d+)\.html', input_text).group(1)
+        ep = 'http://list.youku.com/albumlist/items?id={}&page={}&size=20&ascending=1&callback=a'
+
+        first_u = ep.format(list_id, 1)
+        xhr_page = getUrl(first_u)
+        json_data = json.loads(xhr_page[14:-2])
+        # print(json_data)
+        # video_cnt = json_data['data']['total']
+        xhr_html = json_data['html']
+        # print(xhr_html)
+        data = {
+            "data": [],
+            "more": False,
+            "title": title,
+            "total": 0,
+            "type": "collection",
+            "caption": "优酷视频全集"
+        }
+        last_num = 1
+        while True:
+            new_url = ep.format(list_id, last_num)
+            json_data = getUrl(new_url)[14:-2]
+            info = json.loads(json_data)
+            if info.get("error", None) == 1 and info.get("message", None) == "success":
+                new_html = info.get("html", None)
+                if new_html:
+                    new_html = PyQuery(new_html)
+                    items = new_html("a[target='video'][data-from='2-1']")
+                    for item in items:
+                        item = PyQuery(item)
+                        url = "http:" + item.attr("href")
+                        title = item.attr("title")
+                        info = {
+                            "name": title,
+                            "no": title,
+                            "subtitle": title,
+                            "url": url
+                        }
+                        data["data"].append(info)
+                    last_num += 1
+                else:
+                    break
+            else:
+                break
+        data["total"] = len(data["data"])
+        # print(data)
+
         return data

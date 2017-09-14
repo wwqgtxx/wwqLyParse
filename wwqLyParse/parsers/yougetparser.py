@@ -21,7 +21,8 @@ __MODULE_CLASS_NAMES__ = ["YouGetParser"]
 class YouGetParser(Parser):
     filters = ['^(http|https)://.+']
     types = ["formats"]
-    unsupports = ['list.iqiyi.com', 'list.youku.com', 'www.le.com', 'www.mgtv.com','yinyuetai.com']
+    unsupports = ["www.iqiyi.com/a_", 'www.iqiyi.com/lib/m', 'list.iqiyi.com', 'list.youku.com', 'www.le.com',
+                  'www.mgtv.com', 'yinyuetai.com']
     bin = './you-get/you-get'
     name = "you-get解析"
 

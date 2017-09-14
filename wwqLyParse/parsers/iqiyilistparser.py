@@ -291,6 +291,14 @@ class IQiYiLibMListParser(Parser):
 
     def Parse(self, input_text, pool=pool_getUrl, *k, **kk):
         html = PyQuery(getUrl(input_text, pool=pool))
+        a = html("a.albumPlayBtn")
+        url = a.attr("href")
+        if str(url).startswith("//"):
+            url = "http:" + str(url)
+        logging.info("change %s to %s" % (input_text, url))
+        result = get_main_parse()(input_text=url, types="list")
+        if result:
+            return result[0]
 
         """
         album_items = html('div.clearfix').children('li.album_item')
@@ -362,6 +370,8 @@ class IQiYiVListParser(Parser):
         for a in datainfo_navlist.children('a'):
             a = PyQuery(a)
             url = a.attr("href")
+            if str(url).startswith("//"):
+                url = "http:" + str(url)
             logging.info("change %s to %s" % (input_text, url))
             result = get_main_parse()(input_text=url, types="list")
             if result:

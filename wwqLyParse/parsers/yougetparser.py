@@ -22,7 +22,7 @@ class YouGetParser(Parser):
     filters = ['^(http|https)://.+']
     types = ["formats"]
     un_supports = ["www.iqiyi.com/a_", 'www.iqiyi.com/lib/m', 'list.iqiyi.com', 'list.youku.com', 'www.le.com',
-                  'www.mgtv.com', 'yinyuetai.com']
+                   'www.mgtv.com', 'yinyuetai.com']
     bin = './you-get/you-get'
     name = "you-get解析"
 
@@ -100,6 +100,7 @@ class YouGetParser(Parser):
         except:
             size_str = "0"
             size = 0
+        _format = str(_format).replace("_", "!")
         l = '_'.join([str(_id), _format, quality, size_str])
         ext = stream['container']
         return l, _format, size, ext
@@ -109,7 +110,9 @@ class YouGetParser(Parser):
         if '_' in raw:
             parts = raw.split('_')
             _format = parts[1]
+            _format = str(_format).replace("!", "_")
             return _format
+        raw = str(raw).replace("!", "_")
         return raw
 
     # parse you-get output for parse
@@ -155,6 +158,10 @@ class YouGetParser(Parser):
     # parse for parse_url
     def _parse_parse_url(self, raw, _format):
         stream = raw['streams'].get(_format, None)
+        if stream is None:
+            for item in raw['streams'].keys():
+                if str(item).lower() == str(_format).lower():
+                    stream = raw['streams'][item]
         if stream is None:
             stream = raw['streams']["__default__"]
         container = stream['container']
@@ -371,6 +378,7 @@ streams:             # Available quality and codecs
         stdout, stderr = self._run(yarg)
         # just load json, without ERROR check
         info = self._try_parse_json(stdout)
+        logging.debug(info)
         out = self._parse_parse_url(info, _format)
         return out
 

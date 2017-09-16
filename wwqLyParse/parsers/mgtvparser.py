@@ -18,7 +18,7 @@ __MODULE_CLASS_NAMES__ = ["MgTVParser", "MgTVListParser"]
 
 
 class MgTVParser(Parser):
-    filters = ['www.mgtv.com/']
+    filters = ['http://www.mgtv.com/(?:b|l)/\d+/(\d+).html', 'http://www.mgtv.com/hz/bdpz/\d+/(\d+).html']
     types = ["formats"]
 
     def get_api_data(self, url, allow_cache=True):
@@ -92,7 +92,7 @@ class MgTVParser(Parser):
 
 
 class MgTVListParser(MgTVParser):
-    filters = ["www.mgtv.com/"]
+    filters = MgTVParser.filters + ['http://www.mgtv.com/h/(\d+).html']
     types = ["collection"]
 
     def parse(self, input_text, *k, **kk):
@@ -104,11 +104,13 @@ class MgTVListParser(MgTVParser):
             "type": "collection",
             "caption": "芒果TV全集"
         }
-        api_data = self.get_api_data(input_text)
-        if api_data['code'] != 200 and api_data['data']:
-            return []
-        info = api_data['data']['info']
-        collection_id = info['collection_id']
+        collection_id = match1(input_text, 'http://www.mgtv.com/h/(\d+).html')
+        if not collection_id:
+            api_data = self.get_api_data(input_text)
+            if api_data['code'] != 200 and api_data['data']:
+                return []
+            info = api_data['data']['info']
+            collection_id = info['collection_id']
         url1 = 'http://pcweb.api.mgtv.com/variety/showlist?collection_id=' + collection_id
         api_data1 = json.loads(get_url(url1))
         # print(api_data1)
@@ -131,6 +133,3 @@ class MgTVListParser(MgTVParser):
                     # print(info)
                     data["data"].append(info)
         return data
-
-    def parse_url(self, url, label, min=None, max=None, *k, **kk):
-        pass

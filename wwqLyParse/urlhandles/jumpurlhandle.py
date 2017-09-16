@@ -18,8 +18,8 @@ __MODULE_CLASS_NAMES__ = ["BaiduLinkUrlHandle", "LetvUrlHandle", "MgtvUrlHandle"
 class BaiduLinkUrlHandle(UrlHandle):
     filters = ['^(http|https)://v.baidu.com/link']
 
-    def urlHandle(self, input_text):
-        html = PyQuery(getUrl(input_text))
+    def url_handle(self, input_text):
+        html = PyQuery(get_url(input_text))
         a = html.children('a')
         a = PyQuery(a)
         url = a.attr("href")
@@ -30,7 +30,7 @@ class BaiduLinkUrlHandle(UrlHandle):
 class LetvUrlHandle(UrlHandle):
     filters = ['^(http|https)://www.letv.com']
 
-    def urlHandle(self, input_text):
+    def url_handle(self, input_text):
         url = input_text.replace("letv.com", "le.com")
         logging.debug('urlHandle:"' + input_text + '"-->"' + url + '"')
         return url
@@ -39,7 +39,7 @@ class LetvUrlHandle(UrlHandle):
 class MgtvUrlHandle(UrlHandle):
     filters = ['^(http|https)://www.hunantv.com']
 
-    def urlHandle(self, input_text):
+    def url_handle(self, input_text):
         url = input_text.replace("hunantv.com", "mgtv.com")
         logging.debug('urlHandle:"' + input_text + '"-->"' + url + '"')
         return url
@@ -48,7 +48,7 @@ class MgtvUrlHandle(UrlHandle):
 class IqiyiMUrlHandle(UrlHandle):
     filters = ['^(http|https)://m.iqiyi.com']
 
-    def urlHandle(self, input_text):
+    def url_handle(self, input_text):
         url = input_text.replace("m.iqiyi.com", "www.iqiyi.com")
         logging.debug('urlHandle:"' + input_text + '"-->"' + url + '"')
         return url

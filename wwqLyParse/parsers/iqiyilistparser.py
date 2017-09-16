@@ -19,7 +19,7 @@ class IQiYiAListParser(Parser):
     filters = ["www.iqiyi.com/a_"]
     types = ["list"]
 
-    def Parse(self, input_text, pool=pool_getUrl, *k, **kk):
+    def parse(self, input_text, pool=pool_get_url, *k, **kk):
         # modity from sceext2's list271.py
         def get_list_info_api1(html_text):
             RE_GET_AID = ' albumId: ([0-9]+),'  # albumId: 202340701,
@@ -57,7 +57,7 @@ class IQiYiAListParser(Parser):
                     page_n += 1
                     url = make_port_url(aid, page_n)
                     # get text
-                    raw_text = getUrl(url, pool=pool)
+                    raw_text = get_url(url, pool=pool)
 
                     # get list
                     sub_list = parse_one_page(raw_text)
@@ -149,7 +149,7 @@ class IQiYiAListParser(Parser):
                 # make request url
                 url = make_port_url(aid)
                 # get text
-                raw_text = getUrl(url, pool=pool)
+                raw_text = get_url(url, pool=pool)
                 # get list
                 vlist = parse_one_page(raw_text)
                 # get full vinfo list done
@@ -239,7 +239,7 @@ class IQiYiAListParser(Parser):
                 # traceback.print_exc()
                 logging.error(str(get_list_info) + str(e))
 
-        html_text = getUrl(input_text, pool=pool)
+        html_text = get_url(input_text, pool=pool)
         html = PyQuery(html_text)
         title = html('h1.main_title > a').text()
         if not title:
@@ -289,8 +289,8 @@ class IQiYiLibMListParser(Parser):
     filters = ["www.iqiyi.com/lib/m"]
     types = ["list"]
 
-    def Parse(self, input_text, pool=pool_getUrl, *k, **kk):
-        html = PyQuery(getUrl(input_text, pool=pool))
+    def parse(self, input_text, pool=pool_get_url, *k, **kk):
+        html = PyQuery(get_url(input_text, pool=pool))
         a = html("a.albumPlayBtn")
         url = a.attr("href")
         if str(url).startswith("//"):
@@ -338,7 +338,7 @@ class IQiYiLibMListParser(Parser):
 
         data_doc_id = html('span.play_source').attr('data-doc-id')
         ejson_url = 'http://rq.video.iqiyi.com/aries/e.json?site=iqiyi&docId=' + data_doc_id + '&count=100000'
-        ejson = json.loads(getUrl(ejson_url, pool=pool))
+        ejson = json.loads(get_url(ejson_url, pool=pool))
         ejson_datas = ejson["data"]["objs"]
         data["total"] = ejson_datas["info"]["total_video_number"]
         data["title"] = ejson_datas["info"]["album_title"]
@@ -363,9 +363,9 @@ class IQiYiVListParser(Parser):
     filters = ["www.iqiyi.com/v_"]
     types = ["list"]
 
-    def Parse(self, input_text, pool=pool_getUrl, *k, **kk):
+    def parse(self, input_text, pool=pool_get_url, *k, **kk):
         logging.debug(input_text)
-        html = PyQuery(getUrl(input_text, pool=pool))
+        html = PyQuery(get_url(input_text, pool=pool))
         datainfo_navlist = PyQuery(html("#datainfo-navlist"))
         for a in datainfo_navlist.children('a'):
             a = PyQuery(a)

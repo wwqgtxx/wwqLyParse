@@ -34,7 +34,7 @@ CONFIG = {
 
 class IQiYiParser(Parser):
     filters = ['http://www.iqiyi.com/']
-    unsupports = ['www.iqiyi.com/(lib/m|a_)']
+    un_supports = ['www.iqiyi.com/(lib/m|a_)']
     types = ["formats"]
 
     stream_types = [
@@ -64,7 +64,7 @@ class IQiYiParser(Parser):
             CONFIG["host"], CONFIG["port"]) + 'handwich_bridge/call?core=cmd5&f=about'
         if CONFIG["key"] != None:
             url += '?key=' + str(CONFIG["key"])
-        result = getUrl(url, allowCache=False, usePool=False)
+        result = get_url(url, allow_cache=False, use_pool=False)
         if result is None:
             logging.debug('core not loaded')
             return False
@@ -77,12 +77,12 @@ class IQiYiParser(Parser):
 
     def init(self):
         for n in range(3):
-            if IsOpen(CONFIG["host"], CONFIG["port"]) and self.checkinit():
+            if is_open(CONFIG["host"], CONFIG["port"]) and self.checkinit():
                 return
             else:
                 self._run_kill_271_cmd5()
             for i in range(5):
-                if not IsOpen(CONFIG["host"], CONFIG["port"]):
+                if not is_open(CONFIG["host"], CONFIG["port"]):
                     time.sleep(1 + i)
                 else:
                     url = 'http://%s:%d/' % (
@@ -91,18 +91,18 @@ class IQiYiParser(Parser):
                         bridge.pn(bridge.pjoin(bridge.get_root_path(), './lib/kill_271_cmd5/kill_271_cmd5.swf')))
                     if CONFIG["key"] != None:
                         url += '?key=' + str(CONFIG["key"])
-                    getUrl(url, allowCache=False, usePool=False)
+                    get_url(url, allow_cache=False, use_pool=False)
                     if self.checkinit():
                         return
             CONFIG["port"] += 1
         raise Exception("can't init server")
 
     def closeServer(self):
-        if IsOpen(CONFIG["host"], CONFIG["port"]):
+        if is_open(CONFIG["host"], CONFIG["port"]):
             url = 'http://%s:%d/' % (CONFIG["host"], CONFIG["port"]) + 'handwich_bridge/exit'
             if CONFIG["key"] != None:
                 url += '?key=' + str(CONFIG["key"])
-            getUrl(url, allowCache=False, usePool=False)
+            get_url(url, allow_cache=False, use_pool=False)
 
     def getVRSXORCode(self, arg1, arg2):
         loc3 = arg2 % 3
@@ -125,7 +125,7 @@ class IQiYiParser(Parser):
 
     def getDispathKey(self, rid):
         tp = ")(*&^flash@#$%a"  # magic from swf
-        time = json.loads(getUrl("http://data.video.qiyi.com/t?tn=" + str(random()), allowCache=False))["t"]
+        time = json.loads(get_url("http://data.video.qiyi.com/t?tn=" + str(random()), allow_cache=False))["t"]
         t = str(int(floor(int(time) / (10 * 60.0))))
         return hashlib.new("md5", bytes(t + tp + rid, "utf-8")).hexdigest()
 
@@ -135,7 +135,7 @@ class IQiYiParser(Parser):
             json.dumps([vmsreq, vmsreq]))
         if CONFIG["key"] != None:
             url += '?key=' + str(CONFIG["key"])
-        results = json.loads(getUrl(url, allowCache=False, usePool=False))
+        results = json.loads(get_url(url, allow_cache=False, use_pool=False))
         return results[1]
 
     def getVMS(self, tvid, videoid):
@@ -156,10 +156,10 @@ class IQiYiParser(Parser):
         # vmsreq='http://cache.video.qiyi.com/vms?key=fvip&src=1702633101b340d8917a69cf8a4b8c7c&tvId=451038600&vid=faca833cc73ec8d7d8d248199bc3e7b8&vinfo=1&tm=7807&qyid=&puid=&authKey=04494c4efd643082cb7852621f7a8e6c&um=0&pf=b6c13e26323c537d&thdk=&thdt=&rs=1&k_tag=1&qdv=1&vf=30ed40c5e2dc8bdc532c7c0c1df13994'
 
 
-        return json.loads(getUrl(vmsreq, headers={'Accept-Encoding': 'gzip, deflate, sdch'}, allowCache=False))
+        return json.loads(get_url(vmsreq, headers={'Accept-Encoding': 'gzip, deflate, sdch'}, allow_cache=False))
 
     def getInfo(self, url):
-        html = getUrl(url)
+        html = get_url(url)
         tvid = r1(r'#curid=(.+)_', url) or \
                r1(r'tvid=([^&]+)', url) or \
                r1(r'data-player-tvid="([^"]+)"', html)
@@ -179,7 +179,7 @@ class IQiYiParser(Parser):
 
         return info
 
-    def Parse(self, input_text, types=None, *k, **kk):
+    def parse(self, input_text, types=None, *k, **kk):
         self.init()
         data = {
             "type": "formats",
@@ -242,7 +242,7 @@ class IQiYiParser(Parser):
                     break
         return data
 
-    def ParseURL(self, input_text, label, min=None, max=None, *k, **kk):
+    def parse_url(self, input_text, label, min=None, max=None, *k, **kk):
         self.init()
         datas = []
 
@@ -273,7 +273,7 @@ class IQiYiParser(Parser):
                     url = "/".join(
                         baseurl) + vlink + '?su=' + gen_uid + '&qyid=' + uuid4().hex + '&client=&z=&bt=&ct=&tn=' + str(
                         randint(10000, 20000))
-                    result = json.loads(getUrl(url, allowCache=False))["l"]
+                    result = json.loads(get_url(url, allow_cache=False))["l"]
                     # print(result)
                     urls.append(result)
         # download should be complete in 10 minutes
@@ -290,6 +290,6 @@ class IQiYiParser(Parser):
         # data["urls"] = urls
         return datas
 
-    def closeParser(self):
+    def close_parser(self):
         self.closeServer()
         return

@@ -18,14 +18,14 @@ __MODULE_CLASS_NAMES__ = ["AnyPageParser"]
 class AnyPageParser(Parser):
     filters = []  # ['^(http|https)://.+']
     types = ["collection"]
-    unsupports = ['www.iqiyi.com/(lib/m|a_|v_)', 'www.le.com']
+    un_supports = ['www.iqiyi.com/(lib/m|a_|v_)', 'www.le.com']
 
     TWICE_PARSE = True
     TWICE_PARSE_TIMEOUT = 30
 
-    def Parse(self, input_text, *k, **kk):
+    def parse(self, input_text, *k, **kk):
         global TWICE_PARSE_TIMEOUT
-        html = PyQuery(getUrl(input_text))
+        html = PyQuery(get_url(input_text))
         items = html('a')
         title = html('title').text()
         data = {
@@ -89,7 +89,7 @@ class AnyPageParser(Parser):
 
             def runlist_parser(queue, url, pool):
                 try:
-                    result = main.Parse(url, types="list", parsers_name=["iqiyilistparser.IQiYiAListParser",
+                    result = main.parse(url, types="list", parsers_name=["iqiyilistparser.IQiYiAListParser",
                                                                          "iqiyilistparser.IQiYiLibMListParser",
                                                                          "iqiyilistparser.IQiYiVListParser"],
                                         pool=pool)[0]

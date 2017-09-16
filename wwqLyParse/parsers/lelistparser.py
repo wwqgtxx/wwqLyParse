@@ -19,8 +19,8 @@ class LeListParser1(Parser):
     filters = ["www.le.com/ptv/vplay/"]
     types = ["list"]
 
-    def Parse(self, input_text, *k, **kk):
-        html = getUrl(input_text)
+    def parse(self, input_text, *k, **kk):
+        html = get_url(input_text)
         html = PyQuery(html)
         html2_url = html("a.more").attr("href")
         result = get_main_parse()(input_text=html2_url, types="list")
@@ -32,8 +32,8 @@ class LeListParser2(Parser):
     filters = ["www.le.com/tv/"]
     types = ["list"]
 
-    def Parse(self, input_text, *k, **kk):
-        html2 = getUrl(input_text)
+    def parse(self, input_text, *k, **kk):
+        html2 = get_url(input_text)
         html2 = PyQuery(html2)
         w120 = html2("div.gut > div.listTab > div.listPic > div.list > dl.w120 > dt > a")
         total = len(w120)

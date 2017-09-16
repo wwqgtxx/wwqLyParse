@@ -24,7 +24,7 @@ __MODULE_CLASS_NAMES__ = ["LeParser"]
 
 class LeParser(Parser):
     filters = ['http://www.le.com/ptv/vplay/']
-    unsupports = []
+    un_supports = []
     types = ["formats"]
 
     stream_types = [
@@ -82,14 +82,14 @@ class LeParser(Parser):
         # normal process
         url = 'http://player-pc.le.com/mms/out/video/playJson?id={}&platid=1&splatid=101&format=1&tkey={}&domain=www.le.com&region=cn&source=1000&accesyx=1'.format(
             vid, self.calcTimeKey(int(time.time())))
-        r = getUrl(url, allowCache=False)
+        r = get_url(url, allow_cache=False)
         data = json.loads(r)
         return data
 
     def get_available_stream_id(self, data):
         return list(data["playurl"]["dispatch"].keys())
 
-    def Parse(self, input_text, *k, **kk):
+    def parse(self, input_text, *k, **kk):
         info = {
             "type": "formats",
             "name": "",
@@ -128,10 +128,10 @@ class LeParser(Parser):
 
     def get_m3u8_from_location(self, location):
         suffix = '&r=' + str(int(time.time() * 1000)) + '&appid=500'
-        m3u8 = getUrl(location + suffix, encoding="raw", allowCache=False)
+        m3u8 = get_url(location + suffix, encoding="raw", allow_cache=False)
         return m3u8
 
-    def ParseURL(self, input_text, label, min=None, max=None, *k, **kk):
+    def parse_url(self, input_text, label, min=None, max=None, *k, **kk):
         info = {
             "protocol": "m3u8",
             "urls": [""],
@@ -162,7 +162,7 @@ class LeParser(Parser):
                 s_url = s_url.replace('tss=0', 'tss=ios')
                 s_url += "&m3v=1&termid=1&format=1&hwtype=un&ostype=MacOS10.12.4&p1=1&p2=10&p3=-&expect=3&tn={}&vid={}&uuid={}&sign=letv".format(
                     random.random(), vid, uuid)
-                r2 = getUrl(s_url, allowCache=False)
+                r2 = get_url(s_url, allow_cache=False)
                 data2 = json.loads(r2)
 
                 # hold on ! more things to do

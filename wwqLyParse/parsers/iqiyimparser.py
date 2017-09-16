@@ -28,7 +28,7 @@ __MODULE_CLASS_NAMES__ = []
 
 class IQiYiMParser(Parser):
     filters = ['http://www.iqiyi.com/']
-    unsupports = ['www.iqiyi.com/(lib/m|a_)']
+    un_supports = ['www.iqiyi.com/(lib/m|a_)']
     types = ["formats"]
 
     stream_types = [
@@ -137,9 +137,9 @@ class IQiYiMParser(Parser):
         sc = self.gen_sc(tvid, t).decode('utf-8')
         vmsreq = 'http://cache.m.iqiyi.com/jp/tmts/{}/{}/?platForm=h5&rate={}&tvid={}&vid={}&cupid=qc_100001_100186&type=mp4&olimit=0&agenttype=13&src=d846d0c32d664d32b6b54ea48997a589&sc={}&t={}&__jsT=null'.format(
             tvid, vid, rate, tvid, vid, sc, t - 7)
-        return json.loads(getUrl(vmsreq, allowCache=False)[13:])
+        return json.loads(get_url(vmsreq, allow_cache=False)[13:])
 
-    def Parse(self, input_text, *k, **kk):
+    def parse(self, input_text, *k, **kk):
         data = {
             "type": "formats",
             "name": "",
@@ -151,7 +151,7 @@ class IQiYiMParser(Parser):
             "data": []
         }
         url = input_text
-        html = getUrl(url)
+        html = get_url(url)
         tvid = r1(r'#curid=(.+)_', url) or \
                r1(r'tvid=([^&]+)', url) or \
                r1(r'data-player-tvid="([^"]+)"', html)

@@ -25,7 +25,7 @@ class YinYueTaiParser(Parser):
     types_2_id = {'sh': 'BD', 'he': 'TD', 'hd': 'HD', 'hc': 'SD'}
     types_2_profile = {'sh': u'原画', 'he': u'超清', 'hd': u'高清', 'hc': u'标清', '': u'标清'}
 
-    def Parse(self, input_text, types=None, *k, **kk):
+    def parse(self, input_text, types=None, *k, **kk):
         data = {
             "type": "formats",
             "name": "",
@@ -40,7 +40,7 @@ class YinYueTaiParser(Parser):
         if not vid:
             vid = match1(input_text, 'http://\w+.yinyuetai.com/video/h5/(\d+)')
         api_data = json.loads(
-            getUrl('http://ext.yinyuetai.com/main/get-h-mv-info?json=true&videoId={}'.format(vid), allowCache=False))
+            get_url('http://ext.yinyuetai.com/main/get-h-mv-info?json=true&videoId={}'.format(vid), allow_cache=False))
         # if api_data['error']:
         #     return []
         video_data = api_data['videoInfo']['coreVideoInfo']
@@ -82,7 +82,7 @@ class YinYueTaiListParser(YinYueTaiParser):
     types = ["collection"]
     types_2_profile = {'sh': u'原画', 'shd': u'超清', 'hd': u'高清', '': u'标清'}
 
-    def Parse(self, input_text, *k, **kk):
+    def parse(self, input_text, *k, **kk):
         data = {
             "data": [],
             "more": False,
@@ -95,7 +95,7 @@ class YinYueTaiListParser(YinYueTaiParser):
         data["title"] = urllib.parse.unquote(keyword)
         last_num = 1
         while True:
-            api_data = getUrl(
+            api_data = get_url(
                 "http://soapi.yinyuetai.com/search/video-search?keyword={}&pageIndex={}&pageSize=24".format(keyword,
                                                                                                             last_num))
             api_data = json.loads(api_data)

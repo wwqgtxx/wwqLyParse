@@ -62,8 +62,8 @@ URLCACHE_TIMEOUT = 6 * 60 * 60
 URLCACHE_POOL = 20
 urlcache = LRUCache(URLCACHE_TIMEOUT)
 
-pool_getUrl = Pool(URLCACHE_POOL)
-pool_cleanUrlcache = Pool(1)
+pool_get_url = Pool(URLCACHE_POOL)
+pool_clean_url_cache = Pool(1)
 
 fake_headers = {
     'Connection': 'keep-alive',
@@ -75,12 +75,12 @@ fake_headers = {
 }
 
 
-def getUrl(oUrl, encoding='utf-8', headers=None, data=None, method=None, allowCache=True, usePool=True,
-           pool=pool_getUrl):
-    def _getUrl(result_queue, url_json, oUrl, encoding, headers, data, method, allowCache, callmethod):
+def get_url(o_url, encoding='utf-8', headers=None, data=None, method=None, allow_cache=True, use_pool=True,
+            pool=pool_get_url):
+    def _get_url(result_queue, url_json, o_url, encoding, headers, data, method, allowCache, callmethod):
         try:
             if requests and session:
-                req = requests.Request(method=method if method else "GET", url=oUrl,
+                req = requests.Request(method=method if method else "GET", url=o_url,
                                        headers=headers if headers else fake_headers, data=data)
                 prepped = req.prepare()
                 resp = session.send(prepped)
@@ -90,8 +90,8 @@ def getUrl(oUrl, encoding='utf-8', headers=None, data=None, method=None, allowCa
                     resp.encoding = encoding
                     html_text = resp.text
             else:
-                # url 包含中文时 parse.quote_from_bytes(oUrl.encode('utf-8'), ':/&%?=+')
-                req = urllib.request.Request(oUrl, headers=headers if headers else {}, data=data, method=method)
+                # url 包含中文时 parse.quote_from_bytes(o_url.encode('utf-8'), ':/&%?=+')
+                req = urllib.request.Request(o_url, headers=headers if headers else {}, data=data, method=method)
                 with urllib.request.urlopen(req) as response:
                     headers = response.info()
                     cType = headers.get('Content-Type', '')
@@ -125,9 +125,9 @@ def getUrl(oUrl, encoding='utf-8', headers=None, data=None, method=None, allowCa
         return
 
     callmethod = get_caller_info()
-    url_json = {"oUrl": oUrl, "encoding": encoding, "headers": headers, "data": data, "method": method}
+    url_json = {"o_url": o_url, "encoding": encoding, "headers": headers, "data": data, "method": method}
     url_json = json.dumps(url_json, sort_keys=True, ensure_ascii=False)
-    if allowCache:
+    if allow_cache:
         if url_json in urlcache:
             html_text = urlcache[url_json]
             logging.debug(callmethod + "cache get:" + url_json)
@@ -135,7 +135,7 @@ def getUrl(oUrl, encoding='utf-8', headers=None, data=None, method=None, allowCa
         logging.debug(callmethod + "normal get:" + url_json)
     else:
         logging.debug(callmethod + "nocache get:" + url_json)
-        usePool = False
+        use_pool = False
 
     if requests and session:
         retry_num = 1
@@ -144,10 +144,10 @@ def getUrl(oUrl, encoding='utf-8', headers=None, data=None, method=None, allowCa
 
     for i in range(retry_num):
         queue = Queue(1)
-        if usePool:
-            pool.spawn(_getUrl, queue, url_json, oUrl, encoding, headers, data, method, allowCache, callmethod)
+        if use_pool:
+            pool.spawn(_get_url, queue, url_json, o_url, encoding, headers, data, method, allow_cache, callmethod)
         else:
-            _getUrl(queue, url_json, oUrl, encoding, headers, data, method, allowCache, callmethod)
+            _get_url(queue, url_json, o_url, encoding, headers, data, method, allow_cache, callmethod)
         result = queue.get()
         if result is not None:
             return result
@@ -187,23 +187,23 @@ def get_http_cache_data_url(name):
 
 def get_main_parse():
     try:
-        from ..main import Parse as main_parse
+        from ..main import parse as main_parse
     except Exception as e:
-        from main import Parse as main_parse
+        from main import parse as main_parse
 
     return main_parse
 
 
-def get_all_filename_by_dir(dir, suffix=".py"):
-    list_dirs = os.walk(dir)
-    filenames = []
+def get_all_filename_by_dir(dir_name, suffix=".py"):
+    list_dirs = os.walk(dir_name)
+    file_names = []
     for dirName, subdirList, fileList in list_dirs:
         for file_name in fileList:
             if file_name[-len(suffix):] == suffix:
                 if file_name != "__init__.py":
-                    filenames.append(file_name[0:-len(suffix)])
-    logging.debug("<%s> has %s" % (dir, str(filenames)))
-    return filenames
+                    file_names.append(file_name[0:-len(suffix)])
+    logging.debug("<%s> has %s" % (dir_name, str(file_names)))
+    return file_names
 
 
 imported_class_map = {}
@@ -311,7 +311,8 @@ def isin(a, b, strict=True):
     return result
 
 
-def url_size(url, headers={}):
+def url_size(url, headers=None):
+    error = None
     for n in range(3):
         try:
             if headers:
@@ -327,7 +328,7 @@ def url_size(url, headers={}):
     return -1
 
 
-def IsOpen(ip, port):
+def is_open(ip, port):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
         s.connect((ip, int(port)))
@@ -453,42 +454,42 @@ def match1(text, *patterns):
         return ret
 
 
-def debug(input):
-    print(((str(input))).encode('gbk', 'ignore').decode('gbk'))
+def debug(text):
+    print((str(text)).encode('gbk', 'ignore').decode('gbk'))
 
 
 class Parser(object):
     filters = []
-    unsupports = []
+    un_supports = []
     types = []
 
-    def Parse(self, url, *k, **kk):
+    def parse(self, url, *k, **kk):
         pass
 
-    def ParseURL(self, url, label, min=None, max=None, *k, **kk):
+    def parse_url(self, url, label, min=None, max=None, *k, **kk):
         pass
 
-    def getfilters(self):
+    def get_filters(self):
         return self.filters
 
-    def getunsupports(self):
-        return self.unsupports
+    def get_un_supports(self):
+        return self.un_supports
 
-    def gettypes(self):
+    def get_types(self):
         return self.types
 
-    def closeParser(self):
+    def close_parser(self):
         return
 
 
-class UrlHandle():
+class UrlHandle(object):
     filters = []
 
-    def urlHandle(url):
+    def url_handle(self, url):
         pass
 
-    def getfilters(self):
+    def get_filters(self):
         return self.filters
 
-    def closeUrlHandle(self):
+    def close_url_handle(self):
         return

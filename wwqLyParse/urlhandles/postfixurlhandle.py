@@ -16,9 +16,9 @@ __MODULE_CLASS_NAMES__ = ["PostfixUrlHandle"]
 class PostfixUrlHandle(UrlHandle):
     filters = ['^(http|https)://[^\s]+/[^\s]+\.[s]{0,1}html(\?|#)[^\s]+']
 
-    def urlHandle(self, url):
+    def url_handle(self, url):
         def _getUrl(queue, url):
-            queue.put(getUrl(url))
+            queue.put(get_url(url))
 
         if (re.match('http://v.qq.com/cover/y/[^\s]+\.html\?vid=[^\s]+', url)):
             return url

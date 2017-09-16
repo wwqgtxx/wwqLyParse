@@ -14,8 +14,8 @@ import urllib.parse
 try:
     from ..common import (
         Parser,
-        IsOpen,
-        getUrl,
+        is_open,
+        get_url,
         _second_to_time,
         byte2size,
         gen_bitrate,
@@ -24,8 +24,8 @@ try:
 except Exception:
     from common import (
         Parser,
-        IsOpen,
-        getUrl,
+        is_open,
+        get_url,
         _second_to_time,
         byte2size,
         gen_bitrate,
@@ -100,7 +100,7 @@ def _init_handwich_bridge():
     port = c['port']
     key = c['key']
     # TODO start handwich_bridge
-    if not IsOpen(ip, port):
+    if not is_open(ip, port):
         argv = [_get_rel_path(BIN_ADL), _get_rel_path(HANDWICH_BRIDGE_BIN), '--']
         argv += ['--ip', str(ip), '--port', str(port)]
         if key != None:
@@ -110,14 +110,14 @@ def _init_handwich_bridge():
     # wait and check bridge started successfully
     init_ok = False
     for i in range(3):
-        if not IsOpen(ip, port):
+        if not is_open(ip, port):
             time.sleep(i + 1)
             continue
         url = _make_handwich_base_url() + 'version'
         if key != None:
             url += '?key=' + str(key)
         try:
-            info = getUrl(url, allowCache=False, usePool=False)
+            info = get_url(url, allow_cache=False, use_pool=False)
             logging.debug('handwich_bridge version: ' + info)
             init_ok = True
             break
@@ -135,7 +135,7 @@ def _init_handwich_bridge():
         core_about_url = _make_call_core_url(c_id, 'about')
         # info = json.loads(getUrl(core_about_url, allowCache=False))
         # FIXME
-        text = getUrl(core_about_url, allowCache=False, usePool=False)
+        text = get_url(core_about_url, allow_cache=False, use_pool=False)
         logging.debug("core_about raw return:" + text)
         # print('DEBUG: core_about raw return')
         # print(text)
@@ -153,7 +153,7 @@ def _init_handwich_bridge():
             load_core_url += '&key=' + str(c['key'])
         load_core_url += '&path=' + urllib.parse.quote(c_path)
 
-        info = json.loads(getUrl(load_core_url, allowCache=False, usePool=False))
+        info = json.loads(get_url(load_core_url, allow_cache=False, use_pool=False))
         if info[0] == 'done':
             logging.debug('core loaded, ' + str(info))
         else:
@@ -164,13 +164,13 @@ def _init_handwich_bridge():
 
 def _close_handwich_bridge():
     c = HANDWICH_BRIDGE_CONFIG
-    if IsOpen(c['ip'], c['port']):
+    if is_open(c['ip'], c['port']):
         url = _make_handwich_base_url() + 'exit'
         if c['key'] != None:
             url += '?key=' + c['key']
         # just send the exit command
         try:
-            getUrl(url, allowCache=False, usePool=False)
+            get_url(url, allow_cache=False, use_pool=False)
         except Exception as e:
             logging.error(e)  # ignore error
 
@@ -287,10 +287,10 @@ def _pvinfo_to_parseurl_output(pvinfo, hd):
 
 class PVideoParser(Parser):
     filters = RE_SUPPORT_URL
-    unsupports = SUPPORT_URL_BLACKLIST + ['list.iqiyi.com']
+    un_supports = SUPPORT_URL_BLACKLIST + ['list.iqiyi.com']
     types = ["formats"]
 
-    def Parse(self, url, *k, **kk):
+    def parse(self, url, *k, **kk):
         if not _check_support_url(url):
             logging.debug('ignore url ' + url)
             return []
@@ -303,7 +303,7 @@ class PVideoParser(Parser):
         return out
 
     # TODO use the cache feature of p_video
-    def ParseURL(self, url, label, *k, **kk):
+    def parse_url(self, url, label, *k, **kk):
         _init_handwich_bridge()
 
         # hd = _label_to_hd(label)
@@ -317,7 +317,7 @@ class PVideoParser(Parser):
                 i['unfixIp'] = True
         return out
 
-    def closeParser(self):
+    def close_parser(self):
         _close_handwich_bridge()
 
     @staticmethod

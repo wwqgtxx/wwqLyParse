@@ -25,7 +25,7 @@ try:
 
     class YKDLParser(yougetparser.YouGetParser):
 
-        # unsupports = ['list.iqiyi.com']
+        # un_supports = ['list.iqiyi.com']
         bin = './ykdl/ykdl.py'
         name = "YouKuDownLoader解析"
 

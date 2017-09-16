@@ -20,7 +20,7 @@ __MODULE_CLASS_NAMES__ = ["IQiYiMTsParser"]
 
 class IQiYiMTsParser(Parser):
     filters = ['http://www.iqiyi.com/']
-    unsupports = ['www.iqiyi.com/(lib/m|a_)']
+    un_supports = ['www.iqiyi.com/(lib/m|a_)']
     types = ["formats"]
 
     stream_types = [
@@ -55,7 +55,7 @@ class IQiYiMTsParser(Parser):
         key = 'd5fb4bd9d50c4be6948c97edd7254b0e'
         sc = hashlib.new('md5', bytes(str(t) + key + vid, 'utf-8')).hexdigest()
         vmsreq = 'http://cache.m.iqiyi.com/tmts/{0}/{1}/?t={2}&sc={3}&src={4}'.format(tvid, vid, t, sc, src)
-        return json.loads(getUrl(vmsreq, allowCache=False))
+        return json.loads(get_url(vmsreq, allow_cache=False))
 
     def getStream_type(self, stream_id):
         try:
@@ -71,7 +71,7 @@ class IQiYiMTsParser(Parser):
             stream_type = {'id': stream_id, 'container': 'ts', 'video_profile': stream_id}
         return stream_type
 
-    def Parse(self, input_text, *k, **kk):
+    def parse(self, input_text, *k, **kk):
         data = {
             "type": "formats",
             "name": "",
@@ -83,7 +83,7 @@ class IQiYiMTsParser(Parser):
             "data": []
         }
         url = input_text
-        html = getUrl(url)
+        html = get_url(url)
         tvid = r1(r'#curid=(.+)_', url) or \
                r1(r'tvid=([^&]+)', url) or \
                r1(r'data-player-tvid="([^"]+)"', html)

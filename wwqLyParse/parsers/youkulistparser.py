@@ -19,8 +19,8 @@ class YouKuListParser1(Parser):
     filters = ["v.youku.com/v_show"]
     types = ["list"]
 
-    def Parse(self, input_text, *k, **kk):
-        html = getUrl(input_text)
+    def parse(self, input_text, *k, **kk):
+        html = get_url(input_text)
         m = re.findall('<a class="desc-link" href="(//list\.youku\.com/show/id_[^\s]+\.html)"', html)
         if not m:
             return []
@@ -34,8 +34,8 @@ class YouKuListParser2(Parser):
     filters = ["v.youku.com/v_show"]
     types = ["collection"]
 
-    def Parse(self, input_text, *k, **kk):
-        html = getUrl(input_text)
+    def parse(self, input_text, *k, **kk):
+        html = get_url(input_text)
         m = re.findall('(//list\.youku\.com/albumlist/show/id_[^\s]+\.html)', html)
         if not m:
             return []
@@ -51,8 +51,8 @@ class YouKuListParser3(Parser):
     filters = ["list.youku.com/show"]
     types = ["list"]
 
-    def Parse(self, input_text, *k, **kk):
-        html = getUrl(input_text)
+    def parse(self, input_text, *k, **kk):
+        html = get_url(input_text)
         m = re.findall('showid:"([0-9]+)",', html)  # showid:"307775"
         if not m:
             return []
@@ -75,7 +75,7 @@ class YouKuListParser3(Parser):
         last_num = 0
         while True:
             new_url = "http://list.youku.com/show/episode?id=" + m[0] + "&stage=reload_" + str(last_num) + "&callback=a"
-            json_data = getUrl(new_url)[14:-2]
+            json_data = get_url(new_url)[14:-2]
             info = json.loads(json_data)
             if info.get("error", None) == 0 and info.get("message", None) == "success":
                 new_html = info.get("html", None)
@@ -110,8 +110,8 @@ class YouKuListParser4(Parser):
     filters = ["list.youku.com/albumlist/show"]
     types = ["collection"]
 
-    def Parse(self, input_text, *k, **kk):
-        html = getUrl(input_text)
+    def parse(self, input_text, *k, **kk):
+        html = get_url(input_text)
         html = PyQuery(html)
         p_title = html("div.pl-title")
         title = p_title.attr("title")
@@ -119,7 +119,7 @@ class YouKuListParser4(Parser):
         ep = 'http://list.youku.com/albumlist/items?id={}&page={}&size=20&ascending=1&callback=a'
 
         first_u = ep.format(list_id, 1)
-        xhr_page = getUrl(first_u)
+        xhr_page = get_url(first_u)
         json_data = json.loads(xhr_page[14:-2])
         # print(json_data)
         # video_cnt = json_data['data']['total']
@@ -136,7 +136,7 @@ class YouKuListParser4(Parser):
         last_num = 1
         while True:
             new_url = ep.format(list_id, last_num)
-            json_data = getUrl(new_url)[14:-2]
+            json_data = get_url(new_url)[14:-2]
             info = json.loads(json_data)
             if info.get("error", None) == 1 and info.get("message", None) == "success":
                 new_html = info.get("html", None)

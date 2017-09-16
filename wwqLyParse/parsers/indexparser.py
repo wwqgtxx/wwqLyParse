@@ -19,11 +19,11 @@ class IndexParser(Parser):
     filters = ['^http://www.le.com$']
     types = ["collection"]
 
-    def Parse(self, input_text, *k, **kk):
+    def parse(self, input_text, *k, **kk):
         return self.Parse_le(input_text)
 
     def Parse_le(self, input_text):
-        html = PyQuery(getUrl(input_text))
+        html = PyQuery(get_url(input_text))
         items = html('dt.d_tit')
         title = "LETV"
         i = 0

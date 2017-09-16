@@ -21,7 +21,7 @@ __MODULE_CLASS_NAMES__ = ["YouGetParser"]
 class YouGetParser(Parser):
     filters = ['^(http|https)://.+']
     types = ["formats"]
-    unsupports = ["www.iqiyi.com/a_", 'www.iqiyi.com/lib/m', 'list.iqiyi.com', 'list.youku.com', 'www.le.com',
+    un_supports = ["www.iqiyi.com/a_", 'www.iqiyi.com/lib/m', 'list.iqiyi.com', 'list.youku.com', 'www.le.com',
                   'www.mgtv.com', 'yinyuetai.com']
     bin = './you-get/you-get'
     name = "you-get解析"
@@ -347,7 +347,7 @@ streams:             # Available quality and codecs
         out = self._parse_parse(info)
         return out
 
-    def Parse(self, url, *k, **kk):
+    def parse(self, url, *k, **kk):
         out = self._Parse(url, *k, **kk)
         # if "bilibili" in url:
         #     for item in out['data']:
@@ -374,7 +374,7 @@ streams:             # Available quality and codecs
         out = self._parse_parse_url(info, _format)
         return out
 
-    def ParseURL(self, url, label, min=None, max=None, *k, **kk):
+    def parse_url(self, url, label, min=None, max=None, *k, **kk):
         out = self._ParseURL(url, label, min, max, *k, **kk)
         if "iqiyi" in url:
             for item in out:

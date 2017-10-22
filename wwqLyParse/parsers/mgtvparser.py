@@ -18,14 +18,14 @@ __MODULE_CLASS_NAMES__ = ["MgTVParser", "MgTVListParser"]
 
 
 class MgTVParser(Parser):
-    filters = ['http://www.mgtv.com/(?:b|l)/\d+/(\d+).html', 'http://www.mgtv.com/hz/bdpz/\d+/(\d+).html']
+    filters = [r'https?://www.mgtv.com/(?:b|l)/\d+/(\d+).html', r'https?://www.mgtv.com/hz/bdpz/\d+/(\d+).html']
     types = ["formats"]
 
     def get_api_data(self, url, allow_cache=True):
         # id = re.match('^http://[^\s]+/[^\s]+/([^\s]+)\.html', url).group(1)
-        vid = match1(url, 'http://www.mgtv.com/(?:b|l)/\d+/(\d+).html')
+        vid = match1(url, r'https?://www.mgtv.com/(?:b|l)/\d+/(\d+).html')
         if not vid:
-            vid = match1(url, 'http://www.mgtv.com/hz/bdpz/\d+/(\d+).html')
+            vid = match1(url, r'https?://www.mgtv.com/hz/bdpz/\d+/(\d+).html')
         api_url = 'http://pcweb.api.mgtv.com/player/video?video_id={}'.format(vid)
         api_data = get_url(api_url, allow_cache=allow_cache)
         api_data = json.loads(api_data)
@@ -92,7 +92,7 @@ class MgTVParser(Parser):
 
 
 class MgTVListParser(MgTVParser):
-    filters = MgTVParser.filters + ['http://www.mgtv.com/h/(\d+).html']
+    filters = MgTVParser.filters + [r'https?://www.mgtv.com/h/(\d+).html']
     types = ["collection"]
 
     def parse(self, input_text, *k, **kk):
@@ -104,7 +104,7 @@ class MgTVListParser(MgTVParser):
             "type": "collection",
             "caption": "芒果TV全集"
         }
-        collection_id = match1(input_text, 'http://www.mgtv.com/h/(\d+).html')
+        collection_id = match1(input_text, r'https?://www.mgtv.com/h/(\d+).html')
         if not collection_id:
             api_data = self.get_api_data(input_text)
             if api_data['code'] != 200 and api_data['data']:

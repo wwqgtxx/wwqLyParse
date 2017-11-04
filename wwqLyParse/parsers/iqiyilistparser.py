@@ -366,7 +366,7 @@ class IQiYiVListParser(Parser):
     def parse(self, input_text, pool=pool_get_url, *k, **kk):
         logging.debug(input_text)
         html = PyQuery(get_url(input_text, pool=pool))
-        datainfo_navlist = PyQuery(html(".progInfo_pic"))
+        datainfo_navlist = PyQuery(html("#drama-series-title"))
         for a in datainfo_navlist.children('a'):
             a = PyQuery(a)
             url = a.attr("href")

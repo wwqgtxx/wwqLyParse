@@ -26,14 +26,19 @@ need_close = True
 if __name__ == '__main__':
     CONFIG["port"] = 8000
 else:
-    with open(bridge.pn(bridge.pjoin(bridge.get_root_path(), '../../../ver.txt'))) as f:
-        ver = f.readline()
-        if "2016" in ver or "2015" in ver:
-            import ctypes
+    try:
+        with open(bridge.pn(bridge.pjoin(bridge.get_root_path(), '../../../ver.txt'))) as f:
+            ver = f.readline()
+            if "2016" in ver or "2015" in ver:
+                import ctypes
 
-            MessageBox = ctypes.windll.user32.MessageBoxW
-            MessageBox(None, '你的猎影版本太低，请更新你的猎影到最新版本!', '错误', 0x00000010)
-            sys.exit(5)
+                MessageBox = ctypes.windll.user32.MessageBoxW
+                MessageBox(None, '你的猎影版本太低，请更新你的猎影到最新版本!', '错误', 0x00000010)
+                sys.exit(5)
+    except SystemExit as e:
+        raise e
+    except:
+        pass
     logging.info(bridge.pn(bridge.pjoin(bridge.get_root_path(), './run.py')))
     if CONFIG["uuid"] in str(bridge.pn(bridge.pjoin(bridge.get_root_path(), './run.py'))).replace('_', '-'):
         need_close = False
@@ -230,14 +235,30 @@ def process(url, values, willRefused=False, needresult=True, needjson=True):
 
 def close_server():
     if use_embed_python:
-        if is_64bit():
-            subprocess.check_output(
-                ['powershell.exe', '-Command', 'Start-Process', '-FilePath', '"taskkill"', '-ArgumentLis',
-                 '"/F","/IM","wwqLyParse64.exe"', '-Verb', 'runas'])
-        else:
-            subprocess.check_output(
-                ['powershell.exe', '-Command', 'Start-Process', '-FilePath', '"taskkill"', '-ArgumentLis',
-                 '"/F","/IM","wwqLyParse32.exe"', '-Verb', 'runas'])
+        try:
+            try:
+                if is_64bit():
+                    subprocess.check_output(
+                        ['powershell.exe', '-Command', 'Start-Process', '-FilePath', '"taskkill"', '-ArgumentLis',
+                         '"/F","/IM","wwqLyParse64.exe"', '-Verb', 'runas'])
+                else:
+                    subprocess.check_output(
+                        ['powershell.exe', '-Command', 'Start-Process', '-FilePath', '"taskkill"', '-ArgumentLis',
+                         '"/F","/IM","wwqLyParse32.exe"', '-Verb', 'runas'])
+            except FileNotFoundError:
+                try:
+                    if is_64bit():
+                        subprocess.check_output(
+                            [r'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe', '-Command', 'Start-Process', '-FilePath', '"taskkill"', '-ArgumentLis',
+                             '"/F","/IM","wwqLyParse64.exe"', '-Verb', 'runas'])
+                    else:
+                        subprocess.check_output(
+                            [r'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe', '-Command', 'Start-Process', '-FilePath', '"taskkill"', '-ArgumentLis',
+                             '"/F","/IM","wwqLyParse32.exe"', '-Verb', 'runas'])
+                except FileNotFoundError:
+                    logging.exception("FileNotFoundError!")
+        except subprocess.CalledProcessError:
+            logging.exception("CalledProcessError!")
     for n in range(2):
         if is_open(CONFIG["host"], CONFIG["port"]):
             url = 'http://%s:%d/close' % (CONFIG["host"], CONFIG["port"])

@@ -7,10 +7,8 @@ CONFIG = {
     "port": 5000,
     "uuid": '{C35B9DFC-559F-49E2-B80B-79B66EC77471}'
 }
-if __name__ == '__main__':
-    CONFIG["port"] = 8000
 
-import urllib.request, json, sys, subprocess, time, logging, traceback
+import urllib.request, urllib.parse, json, sys, subprocess, time, logging, traceback
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(filename)s[line:%(lineno)d]<%(funcName)s> %(threadName)s %(levelname)s : %(message)s',
@@ -23,6 +21,23 @@ try:
     from .lib import bridge
 except Exception as e:
     from lib import bridge
+
+need_close = True
+if __name__ == '__main__':
+    CONFIG["port"] = 8000
+else:
+    with open(bridge.pn(bridge.pjoin(bridge.get_root_path(), '../../../ver.txt'))) as f:
+        ver = f.readline()
+        if "2016" in ver or "2015" in ver:
+            import ctypes
+
+            MessageBox = ctypes.windll.user32.MessageBoxW
+            MessageBox(None, '你的猎影版本太低，请更新你的猎影到最新版本!', '错误', 0x00000010)
+            sys.exit(5)
+    logging.info(bridge.pn(bridge.pjoin(bridge.get_root_path(), './run.py')))
+    if CONFIG["uuid"] in str(bridge.pn(bridge.pjoin(bridge.get_root_path(), './run.py'))).replace('_', '-'):
+        need_close = False
+    logging.info(need_close)
 
 
 def get_caller_info():
@@ -55,7 +70,7 @@ def get_systeminfo():
 get_systeminfo()
 
 
-def isX64():
+def is_64bit():
     if "64bit" in systeminfo:
         logging.info("x64")
         return True
@@ -67,7 +82,7 @@ def isX64():
         return False
 
 
-def isXP():
+def is_xp():
     if "Windows XP" in systeminfo:
         logging.info("XP")
         return True
@@ -75,7 +90,7 @@ def isXP():
         return False
 
 
-def is2003():
+def is_2003():
     if "Server 2003" in systeminfo:
         logging.info("2003")
         return True
@@ -83,29 +98,29 @@ def is2003():
         return False
 
 
-def makePython():
+def make_python():
     global EMBED_PYTHON
-    if isX64():
+    if is_64bit():
         EMBED_PYTHON = "./lib/python-3.6.1-embed-amd64/wwqLyParse64.exe"
     else:
         EMBED_PYTHON = "./lib/python-3.6.1-embed-win32/wwqLyParse32.exe"
     logging.info("set EMBED_PYTHON = " + EMBED_PYTHON)
 
 
-makePython()
+make_python()
 
 
-def checkEmbedPython():
-    global useEmbedPython
-    useEmbedPython = True
-    if isXP() or is2003() or (systeminfo == ""):
-        useEmbedPython = False
+def check_embed_python():
+    global use_embed_python
+    use_embed_python = True
+    if is_xp() or is_2003() or (systeminfo == ""):
+        use_embed_python = False
         return
     y_bin = bridge.pn(bridge.pjoin(bridge.get_root_path(), './printok.py'))
     try:
         py_bin = bridge.pn(bridge.pjoin(bridge.get_root_path(), EMBED_PYTHON))
     except:
-        useEmbedPython = False
+        use_embed_python = False
         return
     args = [py_bin, y_bin]
     logging.info(args)
@@ -114,20 +129,20 @@ def checkEmbedPython():
         p = subprocess.Popen(args, stdout=PIPE, stderr=None, shell=False)
     except:
         logging.exception("error")
-        useEmbedPython = False
+        use_embed_python = False
         return
     stdout, stderr = p.communicate()
     stdout = bridge.try_decode(stdout)
     # stderr = bridge.try_decode(stderr)
     logging.info(stdout)
     if "ok" not in stdout:
-        useEmbedPython = False
+        use_embed_python = False
 
 
-checkEmbedPython()
+check_embed_python()
 
 
-def IsOpen(ip, port):
+def is_open(ip, port):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
         s.connect((ip, int(port)))
@@ -141,7 +156,7 @@ def IsOpen(ip, port):
 
 def _run_main():
     y_bin = bridge.pn(bridge.pjoin(bridge.get_root_path(), './main.py'))
-    if useEmbedPython:
+    if use_embed_python:
         logging.info("use Embed Python")
         py_bin = bridge.pn(bridge.pjoin(bridge.get_root_path(), EMBED_PYTHON))
     else:
@@ -159,22 +174,22 @@ def _run_main():
 
 def init():
     for n in range(2):
-        if not IsOpen(CONFIG["host"], CONFIG["port"]):
+        if not is_open(CONFIG["host"], CONFIG["port"]):
             _run_main()
         else:
             return
         for i in range(100):
-            if not IsOpen(CONFIG["host"], CONFIG["port"]):
+            if not is_open(CONFIG["host"], CONFIG["port"]):
                 time.sleep(0.05)
             else:
                 return
         for i in range(10):
-            if not IsOpen(CONFIG["host"], CONFIG["port"]):
+            if not is_open(CONFIG["host"], CONFIG["port"]):
                 time.sleep(1)
             else:
                 return
-        global useEmbedPython
-        useEmbedPython = False
+        global use_embed_python
+        use_embed_python = False
     raise Exception("can't init server")
 
 
@@ -213,36 +228,45 @@ def process(url, values, willRefused=False, needresult=True, needjson=True):
     raise Exception("can't process " + str(url) + str(values))
 
 
-def closeServer():
+def close_server():
+    if use_embed_python:
+        if is_64bit():
+            subprocess.check_output(
+                ['powershell.exe', '-Command', 'Start-Process', '-FilePath', '"taskkill"', '-ArgumentLis',
+                 '"/F","/IM","wwqLyParse64.exe"', '-Verb', 'runas'])
+        else:
+            subprocess.check_output(
+                ['powershell.exe', '-Command', 'Start-Process', '-FilePath', '"taskkill"', '-ArgumentLis',
+                 '"/F","/IM","wwqLyParse32.exe"', '-Verb', 'runas'])
     for n in range(2):
-        if IsOpen(CONFIG["host"], CONFIG["port"]):
+        if is_open(CONFIG["host"], CONFIG["port"]):
             url = 'http://%s:%d/close' % (CONFIG["host"], CONFIG["port"])
             values = {"uuid": CONFIG["uuid"]}
             process(url, values, willRefused=True)
             for n in range(100):
-                if not IsOpen(CONFIG["host"], CONFIG["port"]):
+                if not is_open(CONFIG["host"], CONFIG["port"]):
                     return
                 time.sleep(0.05)
             for n in range(5):
-                if not IsOpen(CONFIG["host"], CONFIG["port"]):
+                if not is_open(CONFIG["host"], CONFIG["port"]):
                     return
                 time.sleep(1)
         return
     raise Exception("can't closeServer")
 
 
-def getVersion(needclose=True):
+def get_version():
+    global version
     for n in range(3):
         try:
-            if needclose:
-                closeServer()
+            if need_close:
+                close_server()
             init()
             url = 'http://%s:%d/GetVersion' % (CONFIG["host"], CONFIG["port"])
             # user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
             values = {"uuid": CONFIG["uuid"]}
             results = process(url, values)
             assert results["uuid"] == CONFIG["uuid"]
-            global version
             version = results
             logging.info(version)
             return
@@ -251,16 +275,16 @@ def getVersion(needclose=True):
         CONFIG["port"] += 1
 
 
-getVersion()
+get_version()
 
 
 def Cleanup():
-    closeServer()
+    close_server()
 
 
 def GetVersion(debug=False):
-    if (not debug):
-        closeServer()
+    if not debug:
+        close_server()
     return version
 
 

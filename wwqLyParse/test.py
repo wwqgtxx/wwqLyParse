@@ -20,7 +20,7 @@ from pyquery.pyquery import PyQuery
 if __name__ == "__main__":
     from main import *
 
-    # main(r"file:///E:\QQDownloads\11.m3u8")
+    main(r"file:///E:\QQDownloads\11.m3u8")
     # main(r"file:///E:\QQDownloads\a.list")
     # main(r"https://youku.pohaier.com/yk.php?url=d1BTTTFlVnRTell1VDhtQmlLZ3lrTkZSUGtTdlhrY3JOZlJOTnZZRmE2ZDZiSVNkNU9rdVJoMlBoL1doR1FDRGVmWkJCR25rbkE=")
     # main("http://defaultts.tc.qq.com/defaultts.tc.qq.com/mcvctgljBW77YvaEtxIhsDu81rGkBDNrvJH-aOijrz6vYDOAERMwo8YjsMhsUX30gycp3l48NFvhiK0q8RrcI_piINVQwY4sfKdsmv5qi459Q7GV-rljooWl1yRZcP-f/c00248syj3f.321004.ts.m3u8?ver=4")
@@ -56,7 +56,7 @@ if __name__ == "__main__":
     # main("http://v.youku.com/v_show/id_XMjcxMzkwMjU3Mg==.html", types="list")
     # main("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474", parsers_name=["YouGetParser"])
     # main("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474", parsers_name=["YKDLParser"])
-    main("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474", label="3_BD_1080p_2.00 GB@YKDLParser")
+    # main("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474", label="3_BD_1080p_2.00 GB@YKDLParser")
     # main("http://v.youku.com/v_show/id_XMzg1ODY1MTIw.html||123", parsers_name=["YouGetParser"])
     # main("http://list.youku.com/albumlist/show/id_2336634.html", types="collection")
     # main("http://v.youku.com/v_show/id_XMTE4NjQ3MjYw.html?spm=a2h1n.8251843.playList.5!4~1!2~3~A&f=2336634&o=0", types="collection")

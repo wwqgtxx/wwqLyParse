@@ -16,7 +16,7 @@ __MODULE_CLASS_NAMES__ = ["FilesParser1", "FilesParser2", "FilesParser3"]
 
 
 class FilesParser1(Parser):
-    filters = [r"^file:///[^\s]+\.m3u8$"]
+    filters = [r"^file:///[\s\S]+\.m3u8$"]
     types = ["formats"]
 
     def parse(self, input_text, *k, **kk):
@@ -62,7 +62,7 @@ class FilesParser2(Parser):
 
 
 class FilesParser3(Parser):
-    filters = [r"^file:///[^\s]+\.list$"]
+    filters = [r"^file:///[\s\S]+\.list$"]
     types = ["collection"]
 
     def parse(self, input_text, *k, **kk):

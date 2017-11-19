@@ -32,7 +32,7 @@ app = Flask(__name__)
 version = {
     'port_version': "0.5.0",
     'type': 'parse',
-    'version': '0.9.9',
+    'version': '1.0.0',
     'uuid': '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter': [],
     'name': 'WWQ猎影解析插件',
@@ -54,7 +54,8 @@ urlhandle_class_map = import_by_name(module_names=get_all_filename_by_dir('./url
 
 def url_handle_parse(input_text, url_handles_name=None):
     if url_handles_name is not None:
-        _url_handle_class_map = import_by_name(class_names=url_handles_name, prefix="urlhandles.", super_class=UrlHandle)
+        _url_handle_class_map = import_by_name(class_names=url_handles_name, prefix="urlhandles.",
+                                               super_class=UrlHandle)
     else:
         _url_handle_class_map = urlhandle_class_map
     url_handles = new_objects(_url_handle_class_map)
@@ -228,31 +229,27 @@ def close():
 @app.route('/close', methods=['POST', 'GET'])
 def app_close():
     try:
-        '''
-        uuid = request.values.get('uuid', None)
-        if uuid is None or uuid != version["uuid"]:
-            raise Exception("get the error uuid:" + str(uuid))
-        '''
-        close()
-        return ""
+        if request.user_agent.string != "wwqLyParse":
+            result = {"type": "error", "error": "Error UserAgent{%s}!" % request.user_agent.string}
+        else:
+            close()
+            return ""
     except Exception as e:
         info = traceback.format_exc()
         logging.error(info)
         result = {"type": "error", "error": info}
-        j_json = json.dumps(result)
-        logging.debug(j_json)
-        return j_json
+    j_json = json.dumps(result)
+    logging.debug(j_json)
+    return j_json
 
 
 @app.route('/GetVersion', methods=['POST', 'GET'])
 def app_get_version():
     try:
-        '''
-        uuid = request.values.get('uuid', None)
-        if uuid is None or uuid != version["uuid"]:
-            raise Exception("get the error uuid:" + str(uuid))
-        '''
-        result = get_version()
+        if request.user_agent.string != "wwqLyParse":
+            result = {"type": "error", "error": "Error UserAgent{%s}!" % request.user_agent.string}
+        else:
+            result = get_version()
     except Exception as e:
         info = traceback.format_exc()
         logging.error(info)
@@ -265,17 +262,20 @@ def app_get_version():
 @app.route('/Parse', methods=['POST', 'GET'])
 def app_parse():
     try:
-        uuid = request.values.get('uuid', None)
-        if uuid is None or uuid != version["uuid"]:
-            raise Exception("get the error uuid:" + str(uuid))
-        s_json = request.values.get('json', None)
-        if s_json is not None:
-            logging.debug("input json:" + s_json)
-            j_json = json.loads(s_json)
-            logging.debug("load json:" + str(j_json))
-            result = parse(j_json["input_text"], j_json["types"], j_json["parsers_name"], j_json["urlhandles_name"])
+        if request.user_agent.string != "wwqLyParse":
+            result = {"type": "error", "error": "Error UserAgent{%s}!" % request.user_agent.string}
         else:
-            raise Exception("can't get input json")
+            uuid = request.values.get('uuid', None)
+            if uuid is None or uuid != version["uuid"]:
+                raise Exception("get the error uuid:" + str(uuid))
+            s_json = request.values.get('json', None)
+            if s_json is not None:
+                logging.debug("input json:" + s_json)
+                j_json = json.loads(s_json)
+                logging.debug("load json:" + str(j_json))
+                result = parse(j_json["input_text"], j_json["types"], j_json["parsers_name"], j_json["urlhandles_name"])
+            else:
+                raise Exception("can't get input json")
     except Exception as e:
         info = traceback.format_exc()
         logging.error(info)
@@ -288,17 +288,21 @@ def app_parse():
 @app.route('/ParseURL', methods=['POST', 'GET'])
 def app_parse_url():
     try:
-        uuid = request.values.get('uuid', None)
-        if uuid is None or uuid != version["uuid"]:
-            raise Exception("get the error uuid:" + str(uuid))
-        s_json = request.values.get('json', None)
-        if s_json is not None:
-            logging.debug("input json:" + s_json)
-            j_json = json.loads(s_json)
-            logging.debug("load json:" + str(j_json))
-            result = parse_url(j_json["input_text"], j_json["label"], j_json["min"], j_json["max"], j_json["urlhandles_name"])
+        if request.user_agent.string != "wwqLyParse":
+            result = {"type": "error", "error": "Error UserAgent{%s}!" % request.user_agent.string}
         else:
-            raise Exception("can't get input json")
+            uuid = request.values.get('uuid', None)
+            if uuid is None or uuid != version["uuid"]:
+                raise Exception("get the error uuid:" + str(uuid))
+            s_json = request.values.get('json', None)
+            if s_json is not None:
+                logging.debug("input json:" + s_json)
+                j_json = json.loads(s_json)
+                logging.debug("load json:" + str(j_json))
+                result = parse_url(j_json["input_text"], j_json["label"], j_json["min"], j_json["max"],
+                                   j_json["urlhandles_name"])
+            else:
+                raise Exception("can't get input json")
     except Exception as e:
         info = traceback.format_exc()
         result = {"type": "error", "error": info}

@@ -378,7 +378,7 @@ streams:             # Available quality and codecs
         stdout, stderr = self._run(yarg)
         # just load json, without ERROR check
         info = self._try_parse_json(stdout)
-        logging.debug(info)
+        logging.debug("\n"+str(info))
         out = self._parse_parse_url(info, _format)
         return out
 

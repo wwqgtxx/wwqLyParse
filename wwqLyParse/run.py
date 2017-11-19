@@ -202,6 +202,7 @@ def process(url, values, willRefused=False, needresult=True, needjson=True):
     data = urllib.parse.urlencode(values).encode(encoding='UTF8')
     logging.info(data)
     req = urllib.request.Request(url, data)
+    req.add_header('User-Agent', 'wwqLyParse')
     # req.add_header('Referer', 'http://www.python.org/')
     for n in range(3):
         try:

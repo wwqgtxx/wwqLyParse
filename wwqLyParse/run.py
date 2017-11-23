@@ -17,17 +17,21 @@ logging.basicConfig(level=logging.DEBUG,
 import os
 import socket
 
-try:
-    from .lib import bridge
-except Exception as e:
-    from lib import bridge
+
+def get_real_root_path():
+    return os.path.dirname(os.path.abspath(__file__))
+
+
+def get_real_path(abstract_path):
+    return os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), abstract_path))
+
 
 need_close = True
 if __name__ == '__main__':
     CONFIG["port"] = 8000
 else:
     try:
-        with open(bridge.pn(bridge.pjoin(bridge.get_root_path(), '../../../ver.txt'))) as f:
+        with open(get_real_path('../../../ver.txt')) as f:
             ver = f.readline()
             if "2016" in ver or "2015" in ver:
                 MessageBox = ctypes.windll.user32.MessageBoxW
@@ -37,8 +41,8 @@ else:
         raise e
     except:
         pass
-    logging.info(bridge.pn(bridge.pjoin(bridge.get_root_path(), './run.py')))
-    if CONFIG["uuid"] in str(bridge.pn(bridge.pjoin(bridge.get_root_path(), './run.py'))).replace('_', '-'):
+    logging.info(get_real_path('./run.py'))
+    if CONFIG["uuid"] in str(get_real_path('./run.py')).replace('_', '-'):
         need_close = False
     logging.info(need_close)
 
@@ -58,12 +62,9 @@ def get_caller_info():
 
 def get_systeminfo():
     try:
-        args = bridge.pn(bridge.pjoin(bridge.get_root_path(), "./SysArch.exe"))
-        PIPE = subprocess.PIPE
-        p = subprocess.Popen(args, stdout=PIPE, stderr=PIPE, shell=False)
-        stdout, stderr = p.communicate()
-        stdout = bridge.try_decode(stdout)
-        stderr = bridge.try_decode(stderr)
+        args = get_real_path("./SysArch.exe")
+        stdout = subprocess.check_output(args, stderr=subprocess.STDOUT)
+        stdout = stdout.decode()
         global systeminfo
         systeminfo = stdout
     except:
@@ -100,15 +101,16 @@ def is_2003():
     else:
         return False
 
+
 lib_wwqLyParse = None
 
 
 def init_lib():
     global lib_wwqLyParse
     if sysconfig.get_platform() == "win-amd64":
-        lib_wwqLyParse = ctypes.cdll.LoadLibrary(bridge.pn(bridge.pjoin(bridge.get_root_path(), "./wwqLyParse64.dll")))
+        lib_wwqLyParse = ctypes.cdll.LoadLibrary(get_real_path("./wwqLyParse64.dll"))
     else:
-        lib_wwqLyParse = ctypes.cdll.LoadLibrary(bridge.pn(bridge.pjoin(bridge.get_root_path(), "./wwqLyParse32.dll")))
+        lib_wwqLyParse = ctypes.cdll.LoadLibrary(get_real_path("./wwqLyParse32.dll"))
     lib_wwqLyParse.get_uuid.restype = ctypes.c_char_p
     assert lib_wwqLyParse.get_uuid().decode() == CONFIG["uuid"]
 
@@ -140,24 +142,21 @@ def check_embed_python():
     if is_xp() or is_2003() or (systeminfo == ""):
         use_embed_python = False
         return
-    y_bin = bridge.pn(bridge.pjoin(bridge.get_root_path(), './printok.py'))
+    y_bin = get_real_path('./printok.py')
     try:
-        py_bin = bridge.pn(bridge.pjoin(bridge.get_root_path(), EMBED_PYTHON))
+        py_bin = get_real_path(EMBED_PYTHON)
     except:
         use_embed_python = False
         return
     args = [py_bin, y_bin]
     logging.info(args)
-    PIPE = subprocess.PIPE
     try:
-        p = subprocess.Popen(args, stdout=PIPE, stderr=None, shell=False)
+        stdout = subprocess.check_output(args, stderr=subprocess.STDOUT)
+        stdout = stdout.decode()
     except:
         logging.exception("error")
         use_embed_python = False
         return
-    stdout, stderr = p.communicate()
-    stdout = bridge.try_decode(stdout)
-    # stderr = bridge.try_decode(stderr)
     logging.info(stdout)
     if "ok" not in stdout:
         use_embed_python = False
@@ -179,10 +178,10 @@ def is_open(ip, port):
 
 
 def _run_main():
-    y_bin = bridge.pn(bridge.pjoin(bridge.get_root_path(), './main.py'))
+    y_bin = get_real_path('./main.py')
     if use_embed_python:
         logging.info("use Embed Python")
-        py_bin = bridge.pn(bridge.pjoin(bridge.get_root_path(), EMBED_PYTHON))
+        py_bin = get_real_path(EMBED_PYTHON)
     else:
         logging.info("don't use Embed Python")
         py_bin = sys.executable
@@ -193,7 +192,7 @@ def _run_main():
     args += ['--host', CONFIG["host"]]
     args += ['--port', str(CONFIG["port"])]
     logging.info(args)
-    p = subprocess.Popen(args, shell=False, cwd=bridge.get_root_path(), close_fds=True)
+    p = subprocess.Popen(args, shell=False, cwd=get_real_root_path(), close_fds=True)
 
 
 def init():
@@ -269,11 +268,13 @@ def close_server():
                 try:
                     if is_64bit():
                         subprocess.check_output(
-                            [r'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe', '-Command', 'Start-Process', '-FilePath', '"taskkill"', '-ArgumentLis',
+                            [r'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe', '-Command', 'Start-Process',
+                             '-FilePath', '"taskkill"', '-ArgumentLis',
                              '"/F","/IM","wwqLyParse64.exe"', '-Verb', 'runas'])
                     else:
                         subprocess.check_output(
-                            [r'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe', '-Command', 'Start-Process', '-FilePath', '"taskkill"', '-ArgumentLis',
+                            [r'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe', '-Command', 'Start-Process',
+                             '-FilePath', '"taskkill"', '-ArgumentLis',
                              '"/F","/IM","wwqLyParse32.exe"', '-Verb', 'runas'])
                 except FileNotFoundError:
                     logging.exception("FileNotFoundError!")
@@ -378,9 +379,13 @@ def ParseURL(input_text, label, min=None, max=None, urlhandles_name=None):
     raise error
 
 
-def debug(input):
+def debug(input_str):
+    try:
+        input_str = json.dumps(input_str, ensure_ascii=False)
+    except:
+        pass
     info = "\n------------------------------------------------------------\n"
-    info += ((str(input))).encode('gbk', 'ignore').decode('gbk')
+    info += (str(input_str)).encode('gbk', 'ignore').decode('gbk')
     info += "\n------------------------------------------------------------"
     logging.debug(info)
 

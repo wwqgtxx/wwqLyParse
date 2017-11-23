@@ -63,7 +63,7 @@ version = {
     'note': ''
 }
 
-PARSE_TIMEOUT = 60
+PARSE_TIMEOUT = 60  # must > 5
 CLOSE_TIMEOUT = 10
 
 parser_class_map = import_by_name(module_names=get_all_filename_by_dir('./parsers'), prefix="parsers.",

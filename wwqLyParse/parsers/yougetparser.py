@@ -82,7 +82,11 @@ class YouGetParser(Parser):
         PIPE = subprocess.PIPE
         logging.debug(args)
         p = subprocess.Popen(args, stdout=PIPE, stderr=PIPE if need_stderr else None, shell=False)
-        stdout, stderr = p.communicate()
+        try:
+            stdout, stderr = p.communicate(timeout=get_main().PARSE_TIMEOUT - 5)
+        except subprocess.TimeoutExpired:
+            p.kill()
+            stdout, stderr = p.communicate()
         # try to decode
         stdout = bridge.try_decode(stdout)
         stderr = bridge.try_decode(stderr) if need_stderr else None
@@ -378,7 +382,7 @@ streams:             # Available quality and codecs
         stdout, stderr = self._run(yarg)
         # just load json, without ERROR check
         info = self._try_parse_json(stdout)
-        logging.debug("\n"+str(info))
+        logging.debug("\n" + str(info))
         out = self._parse_parse_url(info, _format)
         return out
 

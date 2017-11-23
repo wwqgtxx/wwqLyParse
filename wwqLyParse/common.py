@@ -176,13 +176,17 @@ def get_http_cache_data_url(name):
     return "http://%s:%s/cache/%s" % (host, port, name)
 
 
-def get_main_parse():
+def get_main():
     try:
-        from ..main import parse as main_parse
+        from . import main
     except Exception as e:
-        from main import parse as main_parse
+        import main
 
-    return main_parse
+    return main
+
+
+def get_main_parse():
+    return get_main().parse
 
 
 def get_all_filename_by_dir(dir_name, suffix=".py"):

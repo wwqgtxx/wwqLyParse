@@ -8,7 +8,7 @@ CONFIG = {
     "uuid": '{C35B9DFC-559F-49E2-B80B-79B66EC77471}'
 }
 
-import urllib.request, urllib.parse, json, sys, subprocess, time, logging, traceback
+import urllib.request, urllib.parse, json, sys, subprocess, time, logging, traceback, ctypes, sysconfig
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(filename)s[line:%(lineno)d]<%(funcName)s> %(threadName)s %(levelname)s : %(message)s',
@@ -30,8 +30,6 @@ else:
         with open(bridge.pn(bridge.pjoin(bridge.get_root_path(), '../../../ver.txt'))) as f:
             ver = f.readline()
             if "2016" in ver or "2015" in ver:
-                import ctypes
-
                 MessageBox = ctypes.windll.user32.MessageBoxW
                 MessageBox(None, '你的猎影版本太低，请更新你的猎影到最新版本!', '错误', 0x00000010)
                 sys.exit(5)
@@ -101,6 +99,27 @@ def is_2003():
         return True
     else:
         return False
+
+lib_wwqLyParse = None
+
+
+def init_lib():
+    global lib_wwqLyParse
+    if sysconfig.get_platform() == "win-amd64":
+        lib_wwqLyParse = ctypes.cdll.LoadLibrary(bridge.pn(bridge.pjoin(bridge.get_root_path(), "./wwqLyParse64.dll")))
+    else:
+        lib_wwqLyParse = ctypes.cdll.LoadLibrary(bridge.pn(bridge.pjoin(bridge.get_root_path(), "./wwqLyParse32.dll")))
+    lib_wwqLyParse.get_uuid.restype = ctypes.c_char_p
+    assert lib_wwqLyParse.get_uuid().decode() == CONFIG["uuid"]
+
+
+init_lib()
+
+
+def lib_parse(byte_str: bytes):
+    p = ctypes.c_char_p(byte_str)
+    lib_wwqLyParse.parse(p, len(byte_str))
+    return byte_str
 
 
 def make_python():
@@ -198,7 +217,7 @@ def init():
     raise Exception("can't init server")
 
 
-def process(url, values, willRefused=False, needresult=True, needjson=True):
+def process(url, values, willRefused=False, needresult=True, needjson=True, needParse=True):
     data = urllib.parse.urlencode(values).encode(encoding='UTF8')
     logging.info(data)
     req = urllib.request.Request(url, data)
@@ -215,18 +234,18 @@ def process(url, values, willRefused=False, needresult=True, needjson=True):
             for i in range(10):
                 try:
                     response = urllib.request.urlopen(req)
-                    break
+                    if needresult:
+                        results = response.read()
+                        if needParse:
+                            lib_parse(results)
+                        results = results.decode('UTF8')
+                        if needjson:
+                            results = json.loads(results)
+                        return results
+                    else:
+                        return
                 except socket.timeout:
                     logging.info('request attempt %s timeout' % str(i + 1))
-            if needresult:
-                the_page = response.read()
-                if needjson:
-                    results = json.loads(the_page.decode('UTF8'))
-                else:
-                    the_page.decode('UTF8')
-                return results
-            else:
-                return
         except Exception as e:
             # logging.info(e)
             import traceback
@@ -311,6 +330,7 @@ def GetVersion(debug=False):
 
 
 def Parse(input_text, types=None, parsers_name=None, urlhandles_name=None):
+    error = None
     for n in range(3):
         try:
             init()
@@ -334,6 +354,7 @@ def Parse(input_text, types=None, parsers_name=None, urlhandles_name=None):
 
 
 def ParseURL(input_text, label, min=None, max=None, urlhandles_name=None):
+    error = None
     for n in range(3):
         try:
             init()
@@ -365,7 +386,7 @@ def debug(input):
 
 
 def main():
-    # debug(GetVersion())
+    debug(GetVersion())
     # Cleanup()
     # debug(Parse('http://www.iqiyi.com/lib/m_209445514.html?src=search'))
     # debug(Parse('http://www.iqiyi.com/a_19rrhacdwt.html#vfrm=2-4-0-1'))
@@ -385,7 +406,7 @@ def main():
     # debug(Parse('http://www.iqiyi.com/playlist392712002.html',"collection"))
     # debug(Parse('http://list.iqiyi.com/www/2/----------------iqiyi--.html'))
     # debug(Parse('http://www.iqiyi.com/a_19rrhb8fjp.html',"list"))
-    debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html#vfrm=2-3-0-1'))
+    # debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html#vfrm=2-3-0-1'))
     # debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html',"formats",parsers_name=["IQiYiParser"]))
     # debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html',"formats",parsers_name=["PVideoParser"]))
     # debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html'))
@@ -399,7 +420,7 @@ def main():
     # debug(Parse('http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474'))
     # debug(Parse('http://v.qq.com/cover/y/yxpn9yol52go2i6.html?vid=f0141icyptp'))
     # debug(ParseURL('http://v.qq.com/cover/y/yxpn9yol52go2i6.html?vid=f0141icyptp','4_1080p____-1x-1_2521.9kbps_09:35.240_1_mp4_@LypPvParser'))
-    Cleanup()
+    # Cleanup()
 
 
 if __name__ == '__main__':

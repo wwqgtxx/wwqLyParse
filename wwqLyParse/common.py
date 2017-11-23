@@ -3,12 +3,10 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 try:
     import gevent
-    from gevent import monkey
     from gevent.pool import Pool
     from gevent.queue import Queue
     from gevent import joinall
 
-    monkey.patch_all()
 except Exception:
     gevent = None
     from simplepool import Pool
@@ -33,13 +31,6 @@ sys.path.insert(0, get_real_path('./lib/requests_lib'))
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s{%(name)s}%(filename)s[line:%(lineno)d]<%(funcName)s> pid:%(process)d %(threadName)s %(levelname)s : %(message)s',
                     datefmt='%H:%M:%S', stream=sys.stdout)
-
-if not os.environ.get("NOT_LOGGING", None):
-    if gevent:
-        logging.info("gevent.monkey.patch_all()")
-        logging.info("use gevent.pool")
-    else:
-        logging.info("use simple pool")
 
 try:
     import requests

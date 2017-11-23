@@ -13,12 +13,32 @@ if __name__ == "__main__":
     del sys
     del os
 
+    try:
+        import gevent
+        from gevent import monkey
+
+        monkey.patch_all()
+    except Exception:
+        gevent = None
+
 try:
     from .common import *
 except Exception as e:
     from common import *
+if __name__ == "__main__":
+    if not os.environ.get("NOT_LOGGING", None):
+        if gevent:
+            logging.info("gevent.monkey.patch_all()")
+            logging.info("use gevent.pool")
+        else:
+            logging.info("use simple pool")
 
 pool = Pool()
+
+try:
+    from .lib.lib_wwqLyParse import *
+except Exception as e:
+    from lib.lib_wwqLyParse import *
 
 import re, threading, sys, json, os, time, logging, importlib
 from argparse import ArgumentParser
@@ -32,7 +52,7 @@ app = Flask(__name__)
 version = {
     'port_version': "0.5.0",
     'type': 'parse',
-    'version': '1.0.1',
+    'version': '1.0.2',
     'uuid': '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter': [],
     'name': 'WWQ猎影解析插件',
@@ -256,7 +276,9 @@ def app_get_version():
         result = {"type": "error", "error": info}
     j_json = json.dumps(result)
     logging.debug(j_json)
-    return j_json
+    byte_str = j_json.encode()
+    lib_parse(byte_str)
+    return byte_str
 
 
 @app.route('/Parse', methods=['POST', 'GET'])
@@ -282,7 +304,9 @@ def app_parse():
         result = {"type": "error", "error": info}
     j_json = json.dumps(result)
     logging.debug(j_json)
-    return j_json
+    byte_str = j_json.encode()
+    lib_parse(byte_str)
+    return byte_str
 
 
 @app.route('/ParseURL', methods=['POST', 'GET'])
@@ -308,7 +332,9 @@ def app_parse_url():
         result = {"type": "error", "error": info}
     j_json = json.dumps(result)
     logging.debug(j_json)
-    return j_json
+    byte_str = j_json.encode()
+    lib_parse(byte_str)
+    return byte_str
 
 
 @app.route('/cache/<url>', methods=['POST', 'GET'])

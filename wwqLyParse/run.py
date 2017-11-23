@@ -381,7 +381,7 @@ def ParseURL(input_text, label, min=None, max=None, urlhandles_name=None):
 
 def debug(input_str):
     try:
-        input_str = json.dumps(input_str, ensure_ascii=False)
+        input_str = json.dumps({"output": input_str}, ensure_ascii=False)
     except:
         pass
     info = "\n------------------------------------------------------------\n"

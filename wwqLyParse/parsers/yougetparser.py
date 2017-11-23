@@ -85,6 +85,7 @@ class YouGetParser(Parser):
         try:
             stdout, stderr = p.communicate(timeout=get_main().PARSE_TIMEOUT - 5)
         except subprocess.TimeoutExpired:
+            logging.debug("Timeout!!! %s kill %s" % (self.__class__.__name__, str(p)))
             p.kill()
             stdout, stderr = p.communicate()
         # try to decode

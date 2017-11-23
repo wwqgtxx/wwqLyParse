@@ -223,6 +223,10 @@ def parse_url(input_text, label, min=None, max=None, url_handles_name=None, *k, 
 
 
 def debug(text):
+    try:
+        text = json.dumps({"output": text}, ensure_ascii=False)
+    except:
+        pass
     info = "\n------------------------------------------------------------\n"
     info += (str(text)).encode('gbk', 'ignore').decode('gbk')
     info += "\n------------------------------------------------------------"

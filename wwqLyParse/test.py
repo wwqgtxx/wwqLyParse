@@ -22,6 +22,7 @@ if __name__ == "__main__":
 
     # main(r"file:///E:\QQDownloads\11.m3u8")
     # main(r"file:///E:\QQDownloads\a.list")
+    main(r"file:///E:\QQDownloads\url.media")
     # main(r"https://youku.pohaier.com/yk.php?url=d1BTTTFlVnRTell1VDhtQmlLZ3lrTkZSUGtTdlhrY3JOZlJOTnZZRmE2ZDZiSVNkNU9rdVJoMlBoL1doR1FDRGVmWkJCR25rbkE=")
     # main("http://defaultts.tc.qq.com/defaultts.tc.qq.com/mcvctgljBW77YvaEtxIhsDu81rGkBDNrvJH-aOijrz6vYDOAERMwo8YjsMhsUX30gycp3l48NFvhiK0q8RrcI_piINVQwY4sfKdsmv5qi459Q7GV-rljooWl1yRZcP-f/c00248syj3f.321004.ts.m3u8?ver=4")
     # main("http://v.yinyuetai.com/video/2796852", parsers_name=["YinYueTaiParser"])
@@ -54,7 +55,7 @@ if __name__ == "__main__":
     # main("http://www.le.com/ptv/vplay/27416375.html", parsers_name=["LeParser"])
     # main("http://www.le.com/ptv/vplay/27416375.html", label="1080p@LeParser")
     # main("http://v.youku.com/v_show/id_XMjcxMzkwMjU3Mg==.html", types="list")
-    main("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474")
+    # main("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474")
     # main("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474", parsers_name=["YouGetParser"])
     # main("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474", parsers_name=["YKDLParser"])
     # main("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474", label="3_BD_1080p_2.00 GB@YKDLParser")

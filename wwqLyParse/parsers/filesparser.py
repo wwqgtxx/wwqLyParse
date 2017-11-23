@@ -12,7 +12,7 @@ try:
 except Exception as e:
     from common import *
 
-__MODULE_CLASS_NAMES__ = ["FilesParser1", "FilesParser2", "FilesParser3"]
+__MODULE_CLASS_NAMES__ = ["FilesParser1", "FilesParser2", "FilesParser3", "FilesParser4"]
 
 
 class FilesParser1(Parser):
@@ -89,4 +89,32 @@ class FilesParser3(Parser):
                 data["data"].append(info)
                 last_num += 1
         data["total"] = len(data["data"])
+        return data
+
+
+class FilesParser4(Parser):
+    filters = [r"^file:///[\s\S]+\.media$"]
+    types = ["formats"]
+
+    def parse(self, input_text, *k, **kk):
+        download = []
+        data = {
+            "type": "formats",
+            "name": "media",
+            "sorted": 1,
+            "data": [
+                {
+                    "label": "media",
+                    "download": download
+                }
+            ]
+        }
+        with open(input_text[8:]) as f:
+            for line in f.readlines():
+                url = line.strip()
+                info = {
+                    "protocol": "http",
+                    "urls": [url],
+                }
+                download.append(info)
         return data

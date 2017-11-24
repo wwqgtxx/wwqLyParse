@@ -193,6 +193,7 @@ def _run_main():
     args += ['--port', str(CONFIG["port"])]
     logging.info(args)
     p = subprocess.Popen(args, shell=False, cwd=get_real_root_path(), close_fds=True)
+    globals()["p"] = p
 
 
 def init():
@@ -253,33 +254,12 @@ def process(url, values, willRefused=False, needresult=True, needjson=True, need
 
 
 def close_server():
-    if use_embed_python:
-        try:
-            try:
-                if is_64bit():
-                    subprocess.check_output(
-                        ['powershell.exe', '-Command', 'Start-Process', '-FilePath', '"taskkill"', '-ArgumentLis',
-                         '"/F","/IM","wwqLyParse64.exe"', '-Verb', 'runas'])
-                else:
-                    subprocess.check_output(
-                        ['powershell.exe', '-Command', 'Start-Process', '-FilePath', '"taskkill"', '-ArgumentLis',
-                         '"/F","/IM","wwqLyParse32.exe"', '-Verb', 'runas'])
-            except FileNotFoundError:
-                try:
-                    if is_64bit():
-                        subprocess.check_output(
-                            [r'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe', '-Command', 'Start-Process',
-                             '-FilePath', '"taskkill"', '-ArgumentLis',
-                             '"/F","/IM","wwqLyParse64.exe"', '-Verb', 'runas'])
-                    else:
-                        subprocess.check_output(
-                            [r'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe', '-Command', 'Start-Process',
-                             '-FilePath', '"taskkill"', '-ArgumentLis',
-                             '"/F","/IM","wwqLyParse32.exe"', '-Verb', 'runas'])
-                except FileNotFoundError:
-                    logging.exception("FileNotFoundError!")
-        except subprocess.CalledProcessError:
-            logging.exception("CalledProcessError!")
+    try:
+        p = globals()["p"]
+        p.kill()
+        logging.info("successfully kill %s" % (str(p)))
+    except:
+        pass
     for n in range(2):
         if is_open(CONFIG["host"], CONFIG["port"]):
             url = 'http://%s:%d/close' % (CONFIG["host"], CONFIG["port"])

@@ -19,7 +19,7 @@ def init_lib():
 init_lib()
 
 
-def lib_parse(byte_str: bytes):
+def lib_parse(byte_str):
     p = ctypes.c_char_p(byte_str)
     lib_wwqLyParse.parse(p, len(byte_str))
     return byte_str

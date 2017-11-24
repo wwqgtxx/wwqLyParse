@@ -112,9 +112,10 @@ class FilesParser4(Parser):
         with open(input_text[8:]) as f:
             for line in f.readlines():
                 url = line.strip()
-                info = {
-                    "protocol": "http",
-                    "urls": [url],
-                }
-                download.append(info)
+                if re.search(r"^(http|https)://",url):
+                    info = {
+                        "protocol": "http",
+                        "urls": [url],
+                    }
+                    download.append(info)
         return data

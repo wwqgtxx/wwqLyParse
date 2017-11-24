@@ -52,7 +52,7 @@ app = Flask(__name__)
 version = {
     'port_version': "0.5.0",
     'type': 'parse',
-    'version': '1.0.4',
+    'version': '1.0.5',
     'uuid': '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter': [],
     'name': 'WWQ猎影解析插件',
@@ -264,11 +264,19 @@ def app_close():
         result = {"type": "error", "error": info}
     j_json = json.dumps(result)
     logging.debug(j_json)
-    return j_json
+    byte_str = j_json.encode("utf-8")
+    lib_parse(byte_str)
+    return byte_str
 
 
 @app.route('/GetVersion', methods=['POST', 'GET'])
 def app_get_version():
+    values = bytes(request.data)
+    lib_parse(values)
+    values = values.decode("utf-8")
+    logging.debug(values)
+    values = json.loads(values)
+
     try:
         if request.user_agent.string != "wwqLyParse":
             result = {"type": "error", "error": "Error UserAgent{%s}!" % request.user_agent.string}
@@ -280,21 +288,27 @@ def app_get_version():
         result = {"type": "error", "error": info}
     j_json = json.dumps(result)
     logging.debug(j_json)
-    byte_str = j_json.encode()
+    byte_str = j_json.encode("utf-8")
     lib_parse(byte_str)
     return byte_str
 
 
 @app.route('/Parse', methods=['POST', 'GET'])
 def app_parse():
+    values = bytes(request.data)
+    lib_parse(values)
+    values = values.decode("utf-8")
+    logging.debug(values)
+    values = json.loads(values)
+
     try:
         if request.user_agent.string != "wwqLyParse":
             result = {"type": "error", "error": "Error UserAgent{%s}!" % request.user_agent.string}
         else:
-            uuid = request.values.get('uuid', None)
+            uuid = values.get('uuid', None)
             if uuid is None or uuid != version["uuid"]:
                 raise Exception("get the error uuid:" + str(uuid))
-            s_json = request.values.get('json', None)
+            s_json = values.get('json', None)
             if s_json is not None:
                 logging.debug("input json:" + s_json)
                 j_json = json.loads(s_json)
@@ -308,21 +322,27 @@ def app_parse():
         result = {"type": "error", "error": info}
     j_json = json.dumps(result)
     logging.debug(j_json)
-    byte_str = j_json.encode()
+    byte_str = j_json.encode("utf-8")
     lib_parse(byte_str)
     return byte_str
 
 
 @app.route('/ParseURL', methods=['POST', 'GET'])
 def app_parse_url():
+    values = bytes(request.data)
+    lib_parse(values)
+    values = values.decode("utf-8")
+    logging.debug(values)
+    values = json.loads(values)
+
     try:
         if request.user_agent.string != "wwqLyParse":
             result = {"type": "error", "error": "Error UserAgent{%s}!" % request.user_agent.string}
         else:
-            uuid = request.values.get('uuid', None)
+            uuid = values.get('uuid', None)
             if uuid is None or uuid != version["uuid"]:
                 raise Exception("get the error uuid:" + str(uuid))
-            s_json = request.values.get('json', None)
+            s_json = values.get('json', None)
             if s_json is not None:
                 logging.debug("input json:" + s_json)
                 j_json = json.loads(s_json)
@@ -336,7 +356,7 @@ def app_parse_url():
         result = {"type": "error", "error": info}
     j_json = json.dumps(result)
     logging.debug(j_json)
-    byte_str = j_json.encode()
+    byte_str = j_json.encode("utf-8")
     lib_parse(byte_str)
     return byte_str
 

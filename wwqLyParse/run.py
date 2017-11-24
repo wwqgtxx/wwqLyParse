@@ -218,10 +218,14 @@ def init():
 
 
 def process(url, values, willRefused=False, needresult=True, needjson=True, needParse=True):
-    data = urllib.parse.urlencode(values).encode(encoding='UTF8')
+    data = json.dumps(values)
     logging.info(data)
+    data = data.encode("utf-8")
+    lib_parse(data)
+    # data = urllib.parse.urlencode(values).encode(encoding='UTF8')
     req = urllib.request.Request(url, data)
     req.add_header('User-Agent', 'wwqLyParse')
+    req.add_header('Content-type','wwqLyParse')
     # req.add_header('Referer', 'http://www.python.org/')
     for n in range(3):
         try:
@@ -238,7 +242,7 @@ def process(url, values, willRefused=False, needresult=True, needjson=True, need
                         results = response.read()
                         if needParse:
                             lib_parse(results)
-                        results = results.decode('UTF8')
+                        results = results.decode('utf-8')
                         if needjson:
                             results = json.loads(results)
                         return results
@@ -374,7 +378,7 @@ def main():
     debug(GetVersion())
     # Cleanup()
     # debug(Parse('http://www.iqiyi.com/lib/m_209445514.html?src=search'))
-    # debug(Parse('http://www.iqiyi.com/a_19rrhacdwt.html#vfrm=2-4-0-1'))
+    debug(Parse('http://www.iqiyi.com/a_19rrhacdwt.html#vfrm=2-4-0-1'))
     # debug(Parse('http://www.iqiyi.com/a_19rrhaare5.html'))
     # debug(Parse('http://www.iqiyi.com/a_19rrhbhf6d.html#vfrm=2-3-0-1'))
     # debug(Parse('http://www.le.com'))

@@ -22,7 +22,7 @@ if __name__ == "__main__":
 
     # main(r"file:///E:\QQDownloads\11.m3u8")
     # main(r"file:///E:\QQDownloads\a.list")
-    main(r"file:///E:\QQDownloads\url.media")
+    # main(r"file:///E:\QQDownloads\url.media")
     # main(r"https://youku.pohaier.com/yk.php?url=d1BTTTFlVnRTell1VDhtQmlLZ3lrTkZSUGtTdlhrY3JOZlJOTnZZRmE2ZDZiSVNkNU9rdVJoMlBoL1doR1FDRGVmWkJCR25rbkE=")
     # main("http://defaultts.tc.qq.com/defaultts.tc.qq.com/mcvctgljBW77YvaEtxIhsDu81rGkBDNrvJH-aOijrz6vYDOAERMwo8YjsMhsUX30gycp3l48NFvhiK0q8RrcI_piINVQwY4sfKdsmv5qi459Q7GV-rljooWl1yRZcP-f/c00248syj3f.321004.ts.m3u8?ver=4")
     # main("http://v.yinyuetai.com/video/2796852", parsers_name=["YinYueTaiParser"])
@@ -62,4 +62,5 @@ if __name__ == "__main__":
     # main("http://v.youku.com/v_show/id_XMzg1ODY1MTIw.html||123", parsers_name=["YouGetParser"])
     # main("http://list.youku.com/albumlist/show/id_2336634.html", types="collection")
     # main("http://v.youku.com/v_show/id_XMTE4NjQ3MjYw.html?spm=a2h1n.8251843.playList.5!4~1!2~3~A&f=2336634&o=0", types="collection")
+    main("http://video.tudou.com/v/XMzAxODM2MDA1Mg==.html?spm=a2h28.8313475.c1.dtitle2")
     # close()

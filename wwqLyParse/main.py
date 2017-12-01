@@ -52,7 +52,7 @@ app = Flask(__name__)
 version = {
     'port_version': "0.5.0",
     'type': 'parse',
-    'version': '1.0.8',
+    'version': '1.0.9',
     'uuid': '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter': [],
     'name': 'WWQ猎影解析插件',
@@ -414,6 +414,5 @@ if __name__ == '__main__':
     args = arg_parser()
     globals()["args"] = args
     main(args.debug, args.parser, args.types, args.label, args.host, args.port, args.timeout, args.close_timeout)
-
 
     # main()

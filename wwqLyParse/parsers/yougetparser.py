@@ -6,16 +6,14 @@
 import urllib.request, io, os, sys, json, re, math, subprocess, traceback, logging
 
 try:
-    from ..lib import conf, bridge
-except Exception as e:
-    from lib import conf, bridge
-
-try:
     from ..common import *
 except Exception as e:
     from common import *
 
 __MODULE_CLASS_NAMES__ = ["YouGetParser"]
+
+# paths from plugin root_path
+proxy_config_file = './etc/proxy_config.json'
 
 
 class YouGetParser(Parser):
@@ -34,7 +32,7 @@ class YouGetParser(Parser):
 
     # load config file
     def _load_config_file(self):
-        fpath = bridge.pn(bridge.pjoin(bridge.get_root_path(), conf.proxy_config_file))
+        fpath = get_real_path(proxy_config_file)
         with open(fpath, 'rb') as f:
             blob = f.read()
         text = blob.decode('utf-8')
@@ -70,10 +68,18 @@ class YouGetParser(Parser):
                 arg += ['--json', url]
         return arg
 
+    def _get_py_bin(self):
+        py_bin = sys.executable
+        if "wwqLyParse64.exe" in py_bin:
+            py_bin = py_bin.replace("wwqLyParse64.exe", "wwqLyParse64-youget.exe")
+        elif "wwqLyParse32.exe" in py_bin:
+            py_bin = py_bin.replace("wwqLyParse32.exe", "wwqLyParse32-youget.exe")
+        return py_bin
+
     # run you-get
     def _run(self, arg, need_stderr=False):
-        y_bin = bridge.pn(bridge.pjoin(bridge.get_root_path(), self.bin))
-        py_bin = sys.executable
+        y_bin = get_real_path(self.bin)
+        py_bin = self._get_py_bin()
         if "PyRun.exe" in py_bin:
             args = [py_bin, '--normal', y_bin]
         else:
@@ -89,8 +95,8 @@ class YouGetParser(Parser):
             p.kill()
             stdout, stderr = p.communicate()
         # try to decode
-        stdout = bridge.try_decode(stdout)
-        stderr = bridge.try_decode(stderr) if need_stderr else None
+        stdout = try_decode(stdout)
+        stderr = try_decode(stderr) if need_stderr else None
         # print(stdout)
         return stdout, stderr
 

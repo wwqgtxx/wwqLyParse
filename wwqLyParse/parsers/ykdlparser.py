@@ -6,11 +6,6 @@
 import urllib.request, io, os, sys, json, re, math, subprocess, traceback
 
 try:
-    from ..lib import conf, bridge
-except Exception as e:
-    from lib import conf, bridge
-
-try:
     from ..common import *
 except Exception as e:
     from common import *
@@ -28,6 +23,14 @@ try:
         # un_supports = ['list.iqiyi.com']
         bin = './ykdl/ykdl.py'
         name = "YouKuDownLoader解析"
+
+        def _get_py_bin(self):
+            py_bin = sys.executable
+            if "wwqLyParse64.exe" in py_bin:
+                py_bin = py_bin.replace("wwqLyParse64.exe", "wwqLyParse64-ykdl.exe")
+            elif "wwqLyParse32.exe" in py_bin:
+                py_bin = py_bin.replace("wwqLyParse32.exe", "wwqLyParse32-ykdl.exe")
+            return py_bin
 
         # make arg
         def _make_arg(self, url, _format=None, use_info=False, *k, **kk):

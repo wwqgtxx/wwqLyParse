@@ -308,9 +308,7 @@ def Cleanup():
     close_server()
 
 
-def GetVersion(debug=False):
-    if not debug:
-        close_server()
+def GetVersion():
     return version
 
 
@@ -378,7 +376,7 @@ def main():
     debug(GetVersion())
     # Cleanup()
     # debug(Parse('http://www.iqiyi.com/lib/m_209445514.html?src=search'))
-    debug(Parse('http://www.iqiyi.com/a_19rrhacdwt.html#vfrm=2-4-0-1'))
+    # debug(Parse('http://www.iqiyi.com/a_19rrhacdwt.html#vfrm=2-4-0-1'))
     # debug(Parse('http://www.iqiyi.com/a_19rrhaare5.html'))
     # debug(Parse('http://www.iqiyi.com/a_19rrhbhf6d.html#vfrm=2-3-0-1'))
     # debug(Parse('http://www.le.com'))

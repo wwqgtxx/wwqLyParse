@@ -25,6 +25,13 @@ try:
     from .common import *
 except Exception as e:
     from common import *
+
+import logging
+
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s{%(name)s}%(filename)s[line:%(lineno)d]<%(funcName)s> pid:%(process)d %(threadName)s %(levelname)s : %(message)s',
+                    datefmt='%H:%M:%S', stream=sys.stdout)
+
 if __name__ == "__main__":
     if not os.environ.get("NOT_LOGGING", None):
         if gevent:
@@ -163,7 +170,7 @@ def parse(input_text, types=None, parsers_name=None, url_handles_name=None, *k, 
     q_results = Queue()
     for parser in parsers:
         for filter_str in parser.get_filters():
-            if (types is None) or (not parser.get_types()) or (isin(types, parser.get_types(), strict=False)):
+            if (types is None) or (not parser.get_types()) or (is_in(types, parser.get_types(), strict=False)):
                 if re.search(filter_str, input_text):
                     support = True
                     for un_support in parser.get_un_supports():

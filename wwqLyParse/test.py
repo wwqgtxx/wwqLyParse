@@ -61,6 +61,6 @@ if __name__ == "__main__":
     # main("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474", label="3_BD_1080p_2.00 GB@YKDLParser")
     # main("http://v.youku.com/v_show/id_XMzg1ODY1MTIw.html||123", parsers_name=["YouGetParser"])
     # main("http://list.youku.com/albumlist/show/id_2336634.html", types="collection")
-    # main("http://v.youku.com/v_show/id_XMTE4NjQ3MjYw.html", types="collection")
-    main("http://video.tudou.com/v/XMzAxODM2MDA1Mg==.html?spm=a2h28.8313475.c1.dtitle2")
+    main("http://v.youku.com/v_show/id_XMTE4NjQ3MjYw.html")
+    # main("http://video.tudou.com/v/XMzAxODM2MDA1Mg==.html?spm=a2h28.8313475.c1.dtitle2")
     # close()

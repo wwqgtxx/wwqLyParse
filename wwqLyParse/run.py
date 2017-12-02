@@ -167,7 +167,7 @@ check_embed_python()
 
 def is_open(ip, port):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.settimeout(0.05)
+    s.settimeout(0.1)
     try:
         s.connect((ip, int(port)))
         s.shutdown(2)
@@ -203,7 +203,7 @@ def init():
             _run_main()
         else:
             return
-        for i in range(200):
+        for i in range(100):
             if not is_open(CONFIG["host"], CONFIG["port"]):
                 time.sleep(0.05)
             else:

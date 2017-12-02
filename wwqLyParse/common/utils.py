@@ -49,18 +49,3 @@ def is_in(a, b, strict=True):
     else:
         result = (a in b)
     return result
-
-
-def is_open(ip, port):
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.settimeout(0.05)
-    try:
-        s.connect((ip, int(port)))
-        s.shutdown(2)
-        logging.info(get_caller_info() + '%d is open' % port)
-        return True
-    except:
-        logging.info(get_caller_info() + '%d is down' % port)
-        return False
-
-

@@ -53,6 +53,7 @@ def is_in(a, b, strict=True):
 
 def is_open(ip, port):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.settimeout(0.05)
     try:
         s.connect((ip, int(port)))
         s.shutdown(2)

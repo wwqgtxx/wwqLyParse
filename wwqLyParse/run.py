@@ -226,7 +226,7 @@ def process(url, values, willRefused=False, needresult=True, needjson=True, need
     # data = urllib.parse.urlencode(values).encode(encoding='UTF8')
     req = urllib.request.Request(url, data)
     req.add_header('User-Agent', 'wwqLyParse')
-    req.add_header('Content-type','wwqLyParse')
+    req.add_header('Content-type', 'wwqLyParse')
     # req.add_header('Referer', 'http://www.python.org/')
     for n in range(3):
         try:
@@ -282,6 +282,9 @@ def close_server():
     raise Exception("can't closeServer")
 
 
+version = None
+
+
 def get_version():
     global version
     for n in range(3):
@@ -296,13 +299,10 @@ def get_version():
             assert results["uuid"] == CONFIG["uuid"]
             version = results
             logging.info(version)
-            return
+            return version
         except:
             logging.exception("getVersion fail on %s:%d" % (CONFIG["host"], CONFIG["port"]))
         CONFIG["port"] += 1
-
-
-get_version()
 
 
 def Cleanup():
@@ -310,12 +310,16 @@ def Cleanup():
 
 
 def GetVersion(debug=False):
+    if not version:
+        get_version()
     if not debug:
         close_server()
     return version
 
 
 def Parse(input_text, types=None, parsers_name=None, urlhandles_name=None):
+    if not version:
+        get_version()
     error = None
     for n in range(3):
         try:
@@ -340,6 +344,8 @@ def Parse(input_text, types=None, parsers_name=None, urlhandles_name=None):
 
 
 def ParseURL(input_text, label, min=None, max=None, urlhandles_name=None):
+    if not version:
+        get_version()
     error = None
     for n in range(3):
         try:

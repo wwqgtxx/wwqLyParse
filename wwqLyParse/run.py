@@ -309,7 +309,9 @@ def Cleanup():
     close_server()
 
 
-def GetVersion():
+def GetVersion(debug=False):
+    if not debug:
+        close_server()
     return version
 
 

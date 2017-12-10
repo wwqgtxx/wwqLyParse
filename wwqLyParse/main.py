@@ -269,8 +269,8 @@ def app_close():
         info = traceback.format_exc()
         logging.error(info)
         result = {"type": "error", "error": info}
+    debug(result)
     j_json = json.dumps(result)
-    logging.debug(j_json)
     byte_str = j_json.encode("utf-8")
     lib_parse(byte_str)
     return byte_str
@@ -293,8 +293,8 @@ def app_get_version():
         info = traceback.format_exc()
         logging.error(info)
         result = {"type": "error", "error": info}
+    debug(result)
     j_json = json.dumps(result)
-    logging.debug(j_json)
     byte_str = j_json.encode("utf-8")
     lib_parse(byte_str)
     return byte_str
@@ -327,8 +327,8 @@ def app_parse():
         info = traceback.format_exc()
         logging.error(info)
         result = {"type": "error", "error": info}
+    debug(result)
     j_json = json.dumps(result)
-    logging.debug(j_json)
     byte_str = j_json.encode("utf-8")
     lib_parse(byte_str)
     return byte_str
@@ -361,8 +361,8 @@ def app_parse_url():
     except Exception as e:
         info = traceback.format_exc()
         result = {"type": "error", "error": info}
+    debug(result)
     j_json = json.dumps(result)
-    logging.debug(j_json)
     byte_str = j_json.encode("utf-8")
     lib_parse(byte_str)
     return byte_str

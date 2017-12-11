@@ -1,4 +1,4 @@
-import subprocess, ctypes, sysconfig
+import ctypes, sysconfig, logging
 
 try:
     from ..common import *
@@ -14,6 +14,7 @@ def init_lib():
         lib_wwqLyParse = ctypes.cdll.LoadLibrary(get_real_path("./wwqLyParse64.dll"))
     else:
         lib_wwqLyParse = ctypes.cdll.LoadLibrary(get_real_path("./wwqLyParse32.dll"))
+    logging.debug("successful load lib_wwqLyParse %s" % lib_wwqLyParse)
 
 
 init_lib()

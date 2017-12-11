@@ -59,7 +59,7 @@ app = Flask(__name__)
 version = {
     'port_version': "0.5.0",
     'type': 'parse',
-    'version': '1.1.0',
+    'version': '1.1.1',
     'uuid': '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter': [],
     'name': 'WWQ猎影解析插件',

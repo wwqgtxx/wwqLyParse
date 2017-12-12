@@ -10,6 +10,9 @@ if __name__ == "__main__":
     sys.path.insert(0, os.path.join(_filepath, _srcdir))
 
     print(sys.path)
+
+    os.environ["GEVENT_RESOLVER"] = "ares"
+
     del sys
     del os
 

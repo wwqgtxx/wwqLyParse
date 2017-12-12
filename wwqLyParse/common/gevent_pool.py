@@ -1,10 +1,6 @@
 #!/usr/bin/env python3.5
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
-import os
-os.environ["GEVENT_RESOLVER"] = "ares"
-
-
 import gevent
 from gevent.pool import Pool as _Pool
 from gevent.queue import Queue

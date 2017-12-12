@@ -21,10 +21,6 @@ def get_main_parse():
     return get_main().parse
 
 
-def call_method_and_save_to_queue(queue, method, args, kwargs):
-    queue.put(method(*args, **kwargs))
-
-
 def get_caller_info():
     try:
         fn, lno, func, sinfo = traceback.extract_stack()[-3]

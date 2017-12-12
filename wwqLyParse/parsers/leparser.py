@@ -151,41 +151,41 @@ class LeParser(Parser):
         data = self.get_first_json(vid)
         data = data['msgs']
         available_stream_id = self.get_available_stream_id(data)
-        pool = Pool()
-        result_queue = queue.Queue()
-        location_list = list()
-        if label in available_stream_id:
-            stream = label
-            for _ in range(3):
-                s_url = data["playurl"]["domain"][0] + data["playurl"]["dispatch"][stream][0]
-                uuid = hashlib.sha1(s_url.encode('utf8')).hexdigest() + '_0'
-                s_url = s_url.replace('tss=0', 'tss=ios')
-                s_url += "&m3v=1&termid=1&format=1&hwtype=un&ostype=MacOS10.12.4&p1=1&p2=10&p3=-&expect=3&tn={}&vid={}&uuid={}&sign=letv".format(
-                    random.random(), vid, uuid)
-                r2 = get_url(s_url, allow_cache=False)
-                data2 = json.loads(r2)
+        with Pool() as pool:
+            result_queue = queue.Queue()
+            location_list = list()
+            if label in available_stream_id:
+                stream = label
+                for _ in range(3):
+                    s_url = data["playurl"]["domain"][0] + data["playurl"]["dispatch"][stream][0]
+                    uuid = hashlib.sha1(s_url.encode('utf8')).hexdigest() + '_0'
+                    s_url = s_url.replace('tss=0', 'tss=ios')
+                    s_url += "&m3v=1&termid=1&format=1&hwtype=un&ostype=MacOS10.12.4&p1=1&p2=10&p3=-&expect=3&tn={}&vid={}&uuid={}&sign=letv".format(
+                        random.random(), vid, uuid)
+                    r2 = get_url(s_url, allow_cache=False)
+                    data2 = json.loads(r2)
 
-                # hold on ! more things to do
-                # to decode m3u8 (encoded)
-                if "nodelist" in data2:
-                    for node in data2["nodelist"]:
-                        location = node["location"]
+                    # hold on ! more things to do
+                    # to decode m3u8 (encoded)
+                    if "nodelist" in data2:
+                        for node in data2["nodelist"]:
+                            location = node["location"]
+                            if location not in location_list:
+                                location_list.append(location)
+                                pool.spawn(call_method_and_save_to_queue, result_queue, self.get_m3u8_from_location,
+                                           args=(location,), kwargs={})
+                    else:
+                        location = data2["location"]
                         if location not in location_list:
                             location_list.append(location)
                             pool.spawn(call_method_and_save_to_queue, result_queue, self.get_m3u8_from_location,
                                        args=(location,), kwargs={})
-                else:
-                    location = data2["location"]
-                    if location not in location_list:
-                        location_list.append(location)
-                        pool.spawn(call_method_and_save_to_queue, result_queue, self.get_m3u8_from_location,
-                                   args=(location,), kwargs={})
-            m3u8 = result_queue.get()
-            while not m3u8:
                 m3u8 = result_queue.get()
-            m3u8_list = self.decode_m3u8(m3u8)
-            file_name = put_new_http_cache_data(m3u8_list, ".m3u8")
-            file_url = get_http_cache_data_url(file_name)
-            info["urls"] = [file_url]
+                while not m3u8:
+                    m3u8 = result_queue.get()
+                m3u8_list = self.decode_m3u8(m3u8)
+                file_name = put_new_http_cache_data(m3u8_list, ".m3u8")
+                file_url = get_http_cache_data_url(file_name)
+                info["urls"] = [file_url]
 
         return [info]

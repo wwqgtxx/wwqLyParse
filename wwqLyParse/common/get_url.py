@@ -2,19 +2,13 @@
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
 
-try:
-    import gevent
-    from gevent.pool import Pool
-    from gevent.queue import Queue
-    from gevent import joinall
-
-except Exception:
-    gevent = None
-    from .simplepool import Pool
-    from .simplepool import joinall
-    from queue import Queue
+from .gevent_pool import *
 
 try:
+    import requests.adapters
+
+    requests.adapters.DEFAULT_POOLSIZE = 50
+
     import requests
 
     session = requests.Session()
@@ -50,16 +44,21 @@ def get_url(o_url, encoding='utf-8', headers=None, data=None, method=None, allow
             pool=pool_get_url):
     def _get_url(result_queue, url_json, o_url, encoding, headers, data, method, allowCache, callmethod):
         try:
+            html_text = None
             if requests and session:
-                req = requests.Request(method=method if method else "GET", url=o_url,
-                                       headers=headers if headers else fake_headers, data=data)
-                prepped = req.prepare()
-                resp = session.send(prepped)
-                if encoding == "raw":
-                    html_text = resp.content
-                else:
-                    resp.encoding = encoding
-                    html_text = resp.text
+                try:
+                    req = requests.Request(method=method if method else "GET", url=o_url,
+                                           headers=headers if headers else fake_headers, data=data)
+                    prepped = req.prepare()
+                    resp = session.send(prepped)
+                    if encoding == "raw":
+                        html_text = resp.content
+                    else:
+                        resp.encoding = encoding
+                        html_text = resp.text
+                except requests.exceptions.RequestException as e:
+                    logging.warning(callmethod + 'requests error %s' % e)
+
             else:
                 # url 包含中文时 parse.quote_from_bytes(o_url.encode('utf-8'), ':/&%?=+')
                 req = urllib.request.Request(o_url, headers=headers if headers else {}, data=data, method=method)
@@ -83,13 +82,16 @@ def get_url(o_url, encoding='utf-8', headers=None, data=None, method=None, allow
             result_queue.put(html_text)
             return
         except socket.timeout:
-            logging.warning(callmethod + 'request attempt %s timeout' % str(i + 1))
+            logging.warning(callmethod + 'request attempt timeout')
         except urllib.error.URLError:
-            logging.warning(callmethod + 'request attempt %s URLError' % str(i + 1))
+            logging.warning(callmethod + 'request attempt URLError')
         except http.client.RemoteDisconnected:
-            logging.warning(callmethod + 'request attempt %s RemoteDisconnected' % str(i + 1))
+            logging.warning(callmethod + 'request attempt RemoteDisconnected')
         except http.client.IncompleteRead:
-            logging.warning(callmethod + 'request attempt %s IncompleteRead' % str(i + 1))
+            logging.warning(callmethod + 'request attempt IncompleteRead')
+        except GreenletExit as e:
+            result_queue.put(None)
+            raise e
         except:
             logging.exception(callmethod + "get url " + url_json + "fail")
         result_queue.put(None)
@@ -118,10 +120,7 @@ def get_url(o_url, encoding='utf-8', headers=None, data=None, method=None, allow
         if use_pool:
             pool.spawn(_get_url, queue, url_json, o_url, encoding, headers, data, method, allow_cache, callmethod)
         else:
-            try:
-                _get_url(queue, url_json, o_url, encoding, headers, data, method, allow_cache, callmethod)
-            except:
-                logging.exception("_get_url error")
+            _get_url(queue, url_json, o_url, encoding, headers, data, method, allow_cache, callmethod)
         result = queue.get()
         if result is not None:
             return result

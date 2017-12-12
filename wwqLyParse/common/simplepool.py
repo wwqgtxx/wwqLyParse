@@ -19,7 +19,7 @@ class Pool(object):
         self.queue = Queue(0)
         self.pool_threads = []
         self.running = True
-        if (self.pool_size is not None):
+        if self.pool_size is not None:
             for i in range(size):
                 self.pool_threads.append(
                     threading.Thread(target=self._pool_runner, name="[" + str(self) + "-thread-" + str(i) + "]",
@@ -31,11 +31,11 @@ class Pool(object):
     def _pool_runner(self, queue):
         while self.running:
             f = queue.get()
-            f();
+            f()
 
     def spawn(self, call_method, *k, **kk):
         f = functools.partial(call_method, *k, **kk)
-        if (self.pool_size is not None):
+        if self.pool_size is not None:
             self.queue.put(f)
         else:
             pool_thread = threading.Thread(target=f,

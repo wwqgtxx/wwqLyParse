@@ -40,8 +40,6 @@ if __name__ == "__main__":
         else:
             logging.info("use simple pool")
 
-pool = Pool()
-
 try:
     from .lib.lib_wwqLyParse import *
 except Exception as e:
@@ -70,7 +68,7 @@ version = {
     'note': ''
 }
 
-PARSE_TIMEOUT = 60  # must > 5
+PARSE_TIMEOUT = 90  # must > 5
 CLOSE_TIMEOUT = 10
 
 parser_class_map = import_by_name(module_names=get_all_filename_by_dir('./parsers'), prefix="parsers.",
@@ -155,6 +153,8 @@ def parse(input_text, types=None, parsers_name=None, url_handles_name=None, *k, 
                             data['code'] = str(data['code']) + "@" + parser.__class__.__name__
                     q_result = {"result": result, "parser": parser}
                     queue.put(q_result)
+        except GreenletExit:
+            logging.warning("%s timeout exit" % parser)
         except Exception as e:
             logging.exception(str(parser))
             # print(e)
@@ -165,21 +165,21 @@ def parse(input_text, types=None, parsers_name=None, url_handles_name=None, *k, 
 
     input_text = url_handle_parse(input_text, url_handles_name)
     results = []
-    parser_threads = []
     t_results = []
     q_results = Queue()
-    for parser in parsers:
-        for filter_str in parser.get_filters():
-            if (types is None) or (not parser.get_types()) or (is_in(types, parser.get_types(), strict=False)):
-                if re.search(filter_str, input_text):
-                    support = True
-                    for un_support in parser.get_un_supports():
-                        if re.search(un_support, input_text):
-                            support = False
-                            break
-                    if support:
-                        parser_threads.append(pool.spawn(run, q_results, parser, input_text, *k, **kk))
-    joinall(parser_threads, timeout=PARSE_TIMEOUT)
+    with Pool() as pool:
+        for parser in parsers:
+            for filter_str in parser.get_filters():
+                if (types is None) or (not parser.get_types()) or (is_in(types, parser.get_types(), strict=False)):
+                    if re.search(filter_str, input_text):
+                        support = True
+                        for un_support in parser.get_un_supports():
+                            if re.search(un_support, input_text):
+                                support = False
+                                break
+                        if support:
+                            pool.spawn(run, q_results, parser, input_text, *k, **kk)
+        pool.join(timeout=PARSE_TIMEOUT)
     while not q_results.empty():
         t_results.append(q_results.get())
     for parser in parsers:
@@ -206,6 +206,8 @@ def parse_url(input_text, label, min=None, max=None, url_handles_name=None, *k, 
                     logging.error(result["error"])
                     return
                 queue.put(result)
+        except GreenletExit:
+            logging.warning("%s timeout exit" % parser)
         except Exception as e:
             logging.exception(str(parser))
 
@@ -220,8 +222,9 @@ def parse_url(input_text, label, min=None, max=None, url_handles_name=None, *k, 
     input_text = url_handle_parse(input_text, url_handles_name)
     parser = parsers[0]
     q_results = Queue(1)
-    parser_thread = pool.spawn(run, q_results, parser, input_text, label, min, max, *k, **kk)
-    joinall([parser_thread], timeout=PARSE_TIMEOUT)
+    with Pool() as pool:
+        pool.spawn(run, q_results, parser, input_text, label, min, max, *k, **kk)
+        pool.join(timeout=PARSE_TIMEOUT)
     if not q_results.empty():
         result = q_results.get()
     else:
@@ -248,12 +251,12 @@ def close():
         time.sleep(0.001)
         os._exit(0)
 
-    close_threads = []
-    for parser in parsers:
-        close_threads.append(pool.spawn(parser.close_parser))
-    for url_handle_obj in url_handles:
-        close_threads.append(pool.spawn(url_handle_obj.close_url_handle))
-    joinall(close_threads, timeout=CLOSE_TIMEOUT)
+    with Pool() as pool:
+        for parser in parsers:
+            pool.spawn(parser.close_parser)
+        for url_handle_obj in url_handles:
+            pool.spawn(url_handle_obj.close_url_handle)
+        pool.join(timeout=CLOSE_TIMEOUT)
     pool.spawn(exit)
 
 

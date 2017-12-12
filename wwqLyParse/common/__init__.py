@@ -5,6 +5,7 @@
 from .for_path import *
 from .get_size import *
 from .get_url import *
+from .gevent_pool import *
 from .http_cache import *
 from .import_class import *
 from .lru_cache import *

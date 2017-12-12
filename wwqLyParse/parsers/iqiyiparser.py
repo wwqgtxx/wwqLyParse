@@ -170,25 +170,41 @@ class IQiYiParser(Parser):
             fs_array = vs['fs']
             stream_type = self.get_stream_type(bid)
             if label == stream_type['id']:
+                url_dict = dict()
                 for seg_info in fs_array:
                     url = url_prefix + seg_info['l']
+                    url_list = list()
+                    url_dict[url] = url_list
                     info = {
                         "protocol": "http",
-                        "urls": [],
+                        "urls": url_list,
                         "duration": seg_info['d'],
                         "length": seg_info['b'],
                         # "maxDown" : 1,
                         "unfixIp": True
                     }
-                    for _ in range(10):
-                        json_data = json.loads(get_url(url, allow_cache=False))
-                        logging.debug(json_data)
-                        down_url = json_data['l']
-                        if down_url not in info["urls"]:
-                            info["urls"].append(down_url)
-                        # if len(info["urls"]) > 3:
-                        #     break
-
                     data.append(info)
+                with Pool(10) as pool:
+                    for _ in range(10):
+                        for seg_info in fs_array:
+                            url = url_prefix + seg_info['l']
+                            url_list = url_dict[url]
+
+                            def _worker():
+                                try:
+                                    if len(url_list) > 5:
+                                        return
+                                    json_data = json.loads(get_url(url, allow_cache=False))
+                                    logging.debug(json_data)
+                                    down_url = json_data['l']
+                                    # url_head = r1(r'https?://([^/]*)', down_url)
+                                    if down_url not in url_list:
+                                        url_list.append(down_url)
+                                except GreenletExit:
+                                    pass
+
+                            pool.spawn(_worker)
+                    pool.join()
+
                 return data
         return []

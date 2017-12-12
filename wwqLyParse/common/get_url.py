@@ -109,7 +109,7 @@ def get_url(o_url, encoding='utf-8', headers=None, data=None, method=None, allow
         use_pool = False
 
     if requests and session:
-        retry_num = 1
+        retry_num = 3
     else:
         retry_num = 10
 
@@ -118,7 +118,10 @@ def get_url(o_url, encoding='utf-8', headers=None, data=None, method=None, allow
         if use_pool:
             pool.spawn(_get_url, queue, url_json, o_url, encoding, headers, data, method, allow_cache, callmethod)
         else:
-            _get_url(queue, url_json, o_url, encoding, headers, data, method, allow_cache, callmethod)
+            try:
+                _get_url(queue, url_json, o_url, encoding, headers, data, method, allow_cache, callmethod)
+            except:
+                logging.exception("_get_url error")
         result = queue.get()
         if result is not None:
             return result

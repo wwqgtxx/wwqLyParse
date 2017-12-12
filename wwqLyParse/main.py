@@ -59,7 +59,7 @@ app = Flask(__name__)
 version = {
     'port_version': "0.5.0",
     'type': 'parse',
-    'version': '1.1.1',
+    'version': '1.1.2',
     'uuid': '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter': [],
     'name': 'WWQ猎影解析插件',
@@ -189,7 +189,7 @@ def parse(input_text, types=None, parsers_name=None, url_handles_name=None, *k, 
                 try:
                     if "sorted" not in data or data["sorted"] != 1:
                         data["data"] = sorted(data["data"], key=lambda d: d["label"], reverse=True)
-                        logging.info("sorted the " + str(t_result["parser"]) + "'s data['data'']")
+                        logging.info("sorted the " + str(t_result["parser"]) + "'s data['data']")
                 except:
                     pass
                 results.append(data)

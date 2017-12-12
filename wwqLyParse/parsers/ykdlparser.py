@@ -20,7 +20,7 @@ try:
 
     class YKDLParser(yougetparser.YouGetParser):
 
-        # un_supports = ['list.iqiyi.com']
+        un_supports = yougetparser.YouGetParser.un_supports  # + ['www.iqiyi.com']
         bin = './ykdl/ykdl.py'
         name = "YouKuDownLoader解析"
 

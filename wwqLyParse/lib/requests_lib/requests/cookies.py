@@ -124,7 +124,7 @@ def extract_cookies_to_jar(jar, request, response):
     :param response: urllib3.HTTPResponse object
     """
     if not (hasattr(response, '_original_response') and
-                response._original_response):
+            response._original_response):
         return
     # the _original_response field is the wrapped httplib.HTTPResponse object,
     req = MockRequest(request)
@@ -306,8 +306,10 @@ class RequestsCookieJar(cookielib.CookieJar, collections.MutableMapping):
         """
         dictionary = {}
         for cookie in iter(self):
-            if (domain is None or cookie.domain == domain) and (path is None
-                                                                or cookie.path == path):
+            if (
+                (domain is None or cookie.domain == domain) and
+                (path is None or cookie.path == path)
+            ):
                 dictionary[cookie.name] = cookie.value
         return dictionary
 
@@ -451,7 +453,7 @@ def create_cookie(name, value, **kwargs):
         comment=None,
         comment_url=None,
         rest={'HttpOnly': None},
-        rfc2109=False, )
+        rfc2109=False,)
 
     badargs = set(kwargs) - set(result)
     if badargs:

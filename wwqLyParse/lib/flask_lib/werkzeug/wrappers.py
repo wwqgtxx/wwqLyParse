@@ -22,6 +22,7 @@
 """
 from functools import update_wrapper
 from datetime import datetime, timedelta
+from warnings import warn
 
 from werkzeug.http import HTTP_STATUS_CODES, \
     parse_accept_header, parse_cache_control_header, parse_etags, \
@@ -30,7 +31,8 @@ from werkzeug.http import HTTP_STATUS_CODES, \
     parse_www_authenticate_header, remove_entity_headers, \
     parse_options_header, dump_options_header, http_date, \
     parse_if_range_header, parse_cookie, dump_cookie, \
-    parse_range_header, parse_content_range_header, dump_header
+    parse_range_header, parse_content_range_header, dump_header, \
+    parse_age, dump_age
 from werkzeug.urls import url_decode, iri_to_uri, url_join
 from werkzeug.formparser import FormDataParser, default_stream_factory
 from werkzeug.utils import cached_property, environ_property, \
@@ -62,7 +64,6 @@ def _warn_if_string(iterable):
     to the WSGI server is not a string.
     """
     if isinstance(iterable, string_types):
-        from warnings import warn
         warn(Warning('response iterable was set to a string.  This appears '
                      'to work but means that the server will send the '
                      'data to the client char, by char.  This is almost '
@@ -322,8 +323,11 @@ class BaseRequest(object):
                                not provided because webbrowsers do not provide
                                this value.
         """
-        return default_stream_factory(total_content_length, content_type,
-                                      filename, content_length)
+        return default_stream_factory(
+            total_content_length=total_content_length,
+            content_type=content_type,
+            filename=filename,
+            content_length=content_length)
 
     @property
     def want_form_data_parsed(self):
@@ -335,7 +339,7 @@ class BaseRequest(object):
         return bool(self.environ.get('CONTENT_TYPE'))
 
     def make_form_data_parser(self):
-        """Creates the form data parser.  Instanciates the
+        """Creates the form data parser. Instantiates the
         :attr:`form_data_parser_class` with some parameters.
 
         .. versionadded:: 0.8
@@ -669,12 +673,24 @@ class BaseRequest(object):
 
         .. versionadded:: 0.7''')
 
-    is_xhr = property(lambda x: x.environ.get('HTTP_X_REQUESTED_WITH', '')
-                      .lower() == 'xmlhttprequest', doc='''
-        True if the request was triggered via a JavaScript XMLHttpRequest.
-        This only works with libraries that support the `X-Requested-With`
+    @property
+    def is_xhr(self):
+        """True if the request was triggered via a JavaScript XMLHttpRequest.
+        This only works with libraries that support the ``X-Requested-With``
         header and set it to "XMLHttpRequest".  Libraries that do that are
-        prototype, jQuery and Mochikit and probably some more.''')
+        prototype, jQuery and Mochikit and probably some more.
+
+        .. deprecated:: 0.13
+            ``X-Requested-With`` is not standard and is unreliable.
+        """
+        warn(DeprecationWarning(
+            'Request.is_xhr is deprecated. Given that the X-Requested-With '
+            'header is not a part of any spec, it is not reliable'
+        ), stacklevel=2)
+        return self.environ.get(
+            'HTTP_X_REQUESTED_WITH', ''
+        ).lower() == 'xmlhttprequest'
+
     is_secure = property(lambda x: x.environ['wsgi.url_scheme'] == 'https',
                          doc='`True` if the request is secure.')
     is_multithread = environ_property('wsgi.multithread', doc='''
@@ -790,6 +806,16 @@ class BaseResponse(object):
     #:
     #: .. versionadded:: 0.8
     automatically_set_content_length = True
+
+    #: Warn if a cookie header exceeds this size. The default, 4093, should be
+    #: safely `supported by most browsers <cookie_>`_. A cookie larger than
+    #: this size will still be sent, but it may be ignored or handled
+    #: incorrectly by some browsers. Set to 0 to disable this check.
+    #:
+    #: .. versionadded:: 0.13
+    #:
+    #: .. _`cookie`: http://browsercookielimits.squawky.net/
+    max_cookie_size = 4093
 
     def __init__(self, response=None, status=None, headers=None,
                  mimetype=None, content_type=None, direct_passthrough=False):
@@ -919,12 +945,18 @@ class BaseResponse(object):
         return self._status
 
     def _set_status(self, value):
-        self._status = to_native(value)
+        try:
+            self._status = to_native(value)
+        except AttributeError:
+            raise TypeError('Invalid status argument')
+
         try:
             self._status_code = int(self._status.split(None, 1)[0])
         except ValueError:
             self._status_code = 0
             self._status = '0 %s' % self._status
+        except IndexError:
+            raise ValueError('Empty status argument')
     status = property(_get_status, _set_status, doc='The HTTP Status code')
     del _get_status, _set_status
 
@@ -975,7 +1007,7 @@ class BaseResponse(object):
             self._ensure_sequence()
         except RuntimeError:
             return None
-        return sum(len(x) for x in self.response)
+        return sum(len(x) for x in self.iter_encoded())
 
     def _ensure_sequence(self, mutable=False):
         """This method can be called by methods that need a sequence.  If
@@ -1035,6 +1067,9 @@ class BaseResponse(object):
         """Sets a cookie. The parameters are the same as in the cookie `Morsel`
         object in the Python standard library but it accepts unicode data, too.
 
+        A warning is raised if the size of the cookie header exceeds
+        :attr:`max_cookie_size`, but the header will still be set.
+
         :param key: the key (name) of the cookie to be set.
         :param value: the value of the cookie.
         :param max_age: should be a number of seconds, or `None` (default) if
@@ -1053,15 +1088,18 @@ class BaseResponse(object):
                          extension to the cookie standard and probably not
                          supported by all browsers.
         """
-        self.headers.add('Set-Cookie', dump_cookie(key,
-                                                   value=value,
-                                                   max_age=max_age,
-                                                   expires=expires,
-                                                   path=path,
-                                                   domain=domain,
-                                                   secure=secure,
-                                                   httponly=httponly,
-                                                   charset=self.charset))
+        self.headers.add('Set-Cookie', dump_cookie(
+            key,
+            value=value,
+            max_age=max_age,
+            expires=expires,
+            path=path,
+            domain=domain,
+            secure=secure,
+            httponly=httponly,
+            charset=self.charset,
+            max_size=self.max_cookie_size
+        ))
 
     def delete_cookie(self, key, path='/', domain=None):
         """Delete a cookie.  Fails silently if key doesn't exist.
@@ -1647,6 +1685,7 @@ class ResponseStream(object):
         self.response._ensure_sequence(mutable=True)
         self.response.response.append(value)
         self.response.headers.pop('Content-Length', None)
+        return len(value)
 
     def writelines(self, seq):
         for item in seq:
@@ -1663,6 +1702,10 @@ class ResponseStream(object):
         if self.closed:
             raise ValueError('I/O operation on closed file')
         return False
+
+    def tell(self):
+        self.response._ensure_sequence()
+        return sum(map(len, self.response.response))
 
     @property
     def encoding(self):
@@ -1806,7 +1849,7 @@ class CommonResponseDescriptorsMixin(object):
         The Location response-header field is used to redirect the recipient
         to a location other than the Request-URI for completion of the request
         or identification of a new resource.''')
-    age = header_property('Age', None, parse_date, http_date, doc='''
+    age = header_property('Age', None, parse_age, dump_age, doc='''
         The Age response-header field conveys the sender's estimate of the
         amount of time since the response (or its revalidation) was
         generated at the origin server.

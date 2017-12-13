@@ -8,23 +8,24 @@
     :copyright: (c) 2014 by the Werkzeug Team, see AUTHORS for more details.
     :license: BSD, see LICENSE for more details.
 """
-import re
+import io
+import mimetypes
 import os
 import posixpath
-import mimetypes
-from itertools import chain
-from zlib import adler32
-from time import time, mktime
+import re
 from datetime import datetime
 from functools import partial, update_wrapper
+from itertools import chain
+from time import mktime, time
+from zlib import adler32
 
-from werkzeug._compat import iteritems, text_type, string_types, \
-    implements_iterator, make_literal_wrapper, to_unicode, to_bytes, \
-    wsgi_get_bytes, try_coerce_native, PY2, BytesIO
+from werkzeug._compat import BytesIO, PY2, implements_iterator, iteritems, \
+    make_literal_wrapper, string_types, text_type, to_bytes, to_unicode, \
+    try_coerce_native, wsgi_get_bytes
 from werkzeug._internal import _empty_stream, _encode_idna
-from werkzeug.http import is_resource_modified, http_date
-from werkzeug.urls import uri_to_iri, url_quote, url_parse, url_join
 from werkzeug.filesystem import get_filesystem_encoding
+from werkzeug.http import http_date, is_resource_modified
+from werkzeug.urls import uri_to_iri, url_join, url_parse, url_quote
 
 
 def responder(f):
@@ -165,12 +166,16 @@ def get_host(environ, trusted_hosts=None):
 
 def get_content_length(environ):
     """Returns the content length from the WSGI environment as
-    integer.  If it's not available `None` is returned.
+    integer. If it's not available or chunked transfer encoding is used,
+    ``None`` is returned.
 
     .. versionadded:: 0.9
 
     :param environ: the WSGI environ to fetch the content length from.
     """
+    if environ.get('HTTP_TRANSFER_ENCODING', '') == 'chunked':
+        return None
+
     content_length = environ.get('CONTENT_LENGTH')
     if content_length is not None:
         try:
@@ -181,17 +186,20 @@ def get_content_length(environ):
 
 def get_input_stream(environ, safe_fallback=True):
     """Returns the input stream from the WSGI environment and wraps it
-    in the most sensible way possible.  The stream returned is not the
+    in the most sensible way possible. The stream returned is not the
     raw WSGI stream in most cases but one that is safe to read from
     without taking into account the content length.
+
+    If content length is not set, the stream will be empty for safety reasons.
+    If the WSGI server supports chunked or infinite streams, it should set
+    the ``wsgi.input_terminated`` value in the WSGI environ to indicate that.
 
     .. versionadded:: 0.9
 
     :param environ: the WSGI environ to fetch the stream from.
-    :param safe: indicates whether the function should use an empty
-                 stream as safe fallback or just return the original
-                 WSGI input stream if it can't wrap it safely.  The
-                 default is to return an empty string in those cases.
+    :param safe_fallback: use an empty stream as a safe fallback when the
+        content length is not set. Disabling this allows infinite streams,
+        which can be a denial-of-service risk.
     """
     stream = environ['wsgi.input']
     content_length = get_content_length(environ)
@@ -202,10 +210,9 @@ def get_input_stream(environ, safe_fallback=True):
     if environ.get('wsgi.input_terminated'):
         return stream
 
-    # If we don't have a content length we fall back to an empty stream
-    # in case of a safe fallback, otherwise we return the stream unchanged.
-    # The non-safe fallback is not recommended but might be useful in
-    # some situations.
+    # If the request doesn't specify a content length, returning the stream is
+    # potentially dangerous because it could be infinite, malicious or not. If
+    # safe_fallback is true, return an empty stream instead for safety.
     if content_length is None:
         return safe_fallback and _empty_stream or stream
 
@@ -481,7 +488,7 @@ class SharedDataMiddleware(object):
 
     :param app: the application to wrap.  If you don't want to wrap an
                 application you can pass it :exc:`NotFound`.
-    :param exports: a dict of exported files and folders.
+    :param exports: a list or dict of exported files and folders.
     :param disallow: a list of :func:`~fnmatch.fnmatch` rules.
     :param fallback_mimetype: the fallback mimetype for unknown files.
     :param cache: enable or disable caching headers.
@@ -491,10 +498,12 @@ class SharedDataMiddleware(object):
     def __init__(self, app, exports, disallow=None, cache=True,
                  cache_timeout=60 * 60 * 12, fallback_mimetype='text/plain'):
         self.app = app
-        self.exports = {}
+        self.exports = []
         self.cache = cache
         self.cache_timeout = cache_timeout
-        for key, value in iteritems(exports):
+        if hasattr(exports, 'items'):
+            exports = iteritems(exports)
+        for key, value in exports:
             if isinstance(value, tuple):
                 loader = self.get_package_loader(*value)
             elif isinstance(value, string_types):
@@ -504,7 +513,7 @@ class SharedDataMiddleware(object):
                     loader = self.get_directory_loader(value)
             else:
                 raise TypeError('unknown def %r' % value)
-            self.exports[key] = loader
+            self.exports.append((key, loader))
         if disallow is not None:
             from fnmatch import fnmatch
             self.is_allowed = lambda x: not fnmatch(x, disallow)
@@ -585,7 +594,7 @@ class SharedDataMiddleware(object):
         path = '/' + '/'.join(x for x in cleaned_path.split('/')
                               if x and x != '..')
         file_loader = None
-        for search_path, loader in iteritems(self.exports):
+        for search_path, loader in self.exports:
             if search_path == path:
                 real_filename, file_loader = loader(None)
                 if file_loader is not None:
@@ -1041,7 +1050,7 @@ def make_chunk_iter(stream, separator, limit=None, buffer_size=10 * 1024,
 
 
 @implements_iterator
-class LimitedStream(object):
+class LimitedStream(io.IOBase):
 
     """Wraps a stream so that it doesn't read more than n bytes.  If the
     stream is exhausted and the caller tries to get more bytes from it
@@ -1193,3 +1202,6 @@ class LimitedStream(object):
         if not line:
             raise StopIteration()
         return line
+
+    def readable(self):
+        return True

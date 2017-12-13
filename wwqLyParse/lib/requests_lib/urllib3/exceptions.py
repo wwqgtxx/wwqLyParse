@@ -2,8 +2,6 @@ from __future__ import absolute_import
 from .packages.six.moves.http_client import (
     IncompleteRead as httplib_IncompleteRead
 )
-
-
 # Base Exceptions
 
 
@@ -19,7 +17,6 @@ class HTTPWarning(Warning):
 
 class PoolError(HTTPError):
     "Base exception for errors caused within a pool."
-
     def __init__(self, pool, message):
         self.pool = pool
         HTTPError.__init__(self, "%s: %s" % (pool, message))
@@ -31,7 +28,6 @@ class PoolError(HTTPError):
 
 class RequestError(PoolError):
     "Base exception for PoolErrors that have associated URLs."
-
     def __init__(self, pool, url, message):
         self.url = url
         PoolError.__init__(self, pool, message)
@@ -216,7 +212,6 @@ class IncompleteRead(HTTPError, httplib_IncompleteRead):
     for `partial` to avoid creating large objects on streamed
     reads.
     """
-
     def __init__(self, partial, expected):
         super(IncompleteRead, self).__init__(partial, expected)
 
@@ -232,7 +227,6 @@ class InvalidHeader(HTTPError):
 
 class ProxySchemeUnknown(AssertionError, ValueError):
     "ProxyManager does not support the supplied scheme"
-
     # TODO(t-8ch): Stop inheriting from AssertionError in v2.0.
 
     def __init__(self, scheme):
@@ -242,7 +236,6 @@ class ProxySchemeUnknown(AssertionError, ValueError):
 
 class HeaderParsingError(HTTPError):
     "Raised by assert_header_parsing, but we convert it to a log.warning statement."
-
     def __init__(self, defects, unparsed_data):
         message = '%s, unparsed data: %r' % (defects or 'Unknown', unparsed_data)
         super(HeaderParsingError, self).__init__(message)

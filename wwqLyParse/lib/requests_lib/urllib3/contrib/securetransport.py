@@ -91,6 +91,9 @@ SSL_WRITE_BLOCKSIZE = 16384
 # individual cipher suites. We need to do this becuase this is how
 # SecureTransport wants them.
 CIPHER_SUITES = [
+    SecurityConst.TLS_AES_256_GCM_SHA384,
+    SecurityConst.TLS_CHACHA20_POLY1305_SHA256,
+    SecurityConst.TLS_AES_128_GCM_SHA256,
     SecurityConst.TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
     SecurityConst.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
     SecurityConst.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
@@ -296,7 +299,6 @@ class WrappedSocket(object):
     Note: _makefile_refs, _drop(), and _reuse() are needed for the garbage
     collector of PyPy.
     """
-
     def __init__(self, socket):
         self.socket = socket
         self.context = None
@@ -701,7 +703,6 @@ class SecureTransportContext(object):
     interface of the standard library ``SSLContext`` object to calls into
     SecureTransport.
     """
-
     def __init__(self, protocol):
         self._min_version, self._max_version = _protocol_to_min_max[protocol]
         self._options = 0

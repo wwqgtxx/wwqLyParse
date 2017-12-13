@@ -17,6 +17,7 @@ import tempfile
 
 from .bindings import Security, CoreFoundation, CFConst
 
+
 # This regular expression is used to grab PEM data out of a PEM bundle.
 _PEM_CERTS_RE = re.compile(
     b"-----BEGIN CERTIFICATE-----\n(.*?)\n-----END CERTIFICATE-----", re.DOTALL

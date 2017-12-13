@@ -33,7 +33,7 @@ except ImportError:
         'SOCKS support in urllib3 requires the installation of optional '
         'dependencies: specifically, PySocks.  For more information, see '
         'https://urllib3.readthedocs.io/en/latest/contrib.html#socks-proxies'
-    ),
+        ),
         DependencyWarning
     )
     raise
@@ -60,7 +60,6 @@ class SOCKSConnection(HTTPConnection):
     """
     A plain-text HTTP connection that connects via a SOCKS proxy.
     """
-
     def __init__(self, *args, **kwargs):
         self._socks_options = kwargs.pop('_socks_options')
         super(SOCKSConnection, self).__init__(*args, **kwargs)
@@ -92,7 +91,7 @@ class SOCKSConnection(HTTPConnection):
         except SocketTimeout as e:
             raise ConnectTimeoutError(
                 self, "Connection to %s timed out. (connect timeout=%s)" %
-                      (self.host, self.timeout))
+                (self.host, self.timeout))
 
         except socks.ProxyError as e:
             # This is fragile as hell, but it seems to be the only way to raise

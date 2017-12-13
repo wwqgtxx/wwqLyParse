@@ -3,6 +3,7 @@ from collections import namedtuple
 
 from ..exceptions import LocationParseError
 
+
 url_attrs = ['scheme', 'auth', 'host', 'port', 'path', 'query', 'fragment']
 
 # We only want to normalize urls with an HTTP(S) scheme.

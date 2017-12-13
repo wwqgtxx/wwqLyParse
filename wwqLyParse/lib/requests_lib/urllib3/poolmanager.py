@@ -12,7 +12,9 @@ from .request import RequestMethods
 from .util.url import parse_url
 from .util.retry import Retry
 
+
 __all__ = ['PoolManager', 'ProxyManager', 'proxy_from_url']
+
 
 log = logging.getLogger(__name__)
 

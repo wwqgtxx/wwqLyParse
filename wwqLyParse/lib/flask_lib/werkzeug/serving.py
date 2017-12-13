@@ -28,8 +28,8 @@
     You can also pass it a `extra_files` keyword argument with a list of
     additional files (like configuration files) you want to observe.
 
-    For bigger applications you should consider using `werkzeug.script`
-    instead of a simple start file.
+    For bigger applications you should consider using `click`
+    (http://click.pocoo.org) instead of a simple start file.
 
 
     :copyright: (c) 2014 by the Werkzeug Team, see AUTHORS for more details.
@@ -37,6 +37,7 @@
 """
 from __future__ import with_statement
 
+import io
 import os
 import socket
 import sys
@@ -97,6 +98,59 @@ LISTEN_QUEUE = 128
 can_open_by_fd = not WIN and hasattr(socket, 'fromfd')
 
 
+class DechunkedInput(io.RawIOBase):
+    """An input stream that handles Transfer-Encoding 'chunked'"""
+
+    def __init__(self, rfile):
+        self._rfile = rfile
+        self._done = False
+        self._len = 0
+
+    def readable(self):
+        return True
+
+    def read_chunk_len(self):
+        try:
+            line = self._rfile.readline().decode('latin1')
+            _len = int(line.strip(), 16)
+        except ValueError:
+            raise IOError('Invalid chunk header')
+        if _len < 0:
+            raise IOError('Negative chunk length not allowed')
+        return _len
+
+    def readinto(self, buf):
+        read = 0
+        while not self._done and read < len(buf):
+            if self._len == 0:
+                # This is the first chunk or we fully consumed the previous
+                # one. Read the next length of the next chunk
+                self._len = self.read_chunk_len()
+
+            if self._len == 0:
+                # Found the final chunk of size 0. The stream is now exhausted,
+                # but there is still a final newline that should be consumed
+                self._done = True
+
+            if self._len > 0:
+                # There is data (left) in this chunk, so append it to the
+                # buffer. If this operation fully consumes the chunk, this will
+                # reset self._len to 0.
+                n = min(len(buf), self._len)
+                buf[read:read + n] = self._rfile.read(n)
+                self._len -= n
+                read += n
+
+            if self._len == 0:
+                # Skip the terminating newline of a chunk that has been fully
+                # consumed. This also applies to the 0-sized final chunk
+                terminator = self._rfile.readline()
+                if terminator not in (b'\n', b'\r\n', b'\r'):
+                    raise IOError('Missing chunk terminating newline')
+
+        return read
+
+
 class WSGIRequestHandler(BaseHTTPRequestHandler, object):
 
     """A request handler that implements WSGI dispatching."""
@@ -140,6 +194,10 @@ class WSGIRequestHandler(BaseHTTPRequestHandler, object):
             if key not in ('CONTENT_TYPE', 'CONTENT_LENGTH'):
                 key = 'HTTP_' + key
             environ[key] = value
+
+        if environ.get('HTTP_TRANSFER_ENCODING', '').strip().lower() == 'chunked':
+            environ['wsgi.input_terminated'] = True
+            environ['wsgi.input'] = DechunkedInput(environ['wsgi.input'])
 
         if request_url.scheme and request_url.netloc:
             environ['HTTP_HOST'] = request_url.netloc
@@ -296,7 +354,7 @@ class WSGIRequestHandler(BaseHTTPRequestHandler, object):
 
             if code[0] == '1':    # 1xx - Informational
                 msg = color(msg, attrs=['bold'])
-            if code[0] == '2':    # 2xx - Success
+            elif code[0] == '2':    # 2xx - Success
                 msg = color(msg, color='white')
             elif code == '304':   # 304 - Resource Not Modified
                 msg = color(msg, color='cyan')
@@ -342,11 +400,11 @@ def generate_adhoc_ssl_pair(cn=None):
 
     subject = cert.get_subject()
     subject.CN = cn
-    subject.O = 'Dummy Certificate'
+    subject.O = 'Dummy Certificate'  # noqa: E741
 
     issuer = cert.get_issuer()
     issuer.CN = 'Untrusted Authority'
-    issuer.O = 'Self-Signed'
+    issuer.O = 'Self-Signed'  # noqa: E741
 
     pkey = crypto.PKey()
     pkey.generate_key(crypto.TYPE_RSA, 2048)
@@ -356,6 +414,7 @@ def generate_adhoc_ssl_pair(cn=None):
     return cert, pkey
 
 
+# noinspection PyUnresolvedReferences
 def make_ssl_devcert(base_path, host=None, cn=None):
     """Creates an SSL key for development.  This should be used instead of
     the ``'adhoc'`` key which generates a new cert on each server start.
@@ -544,6 +603,7 @@ class BaseWSGIServer(HTTPServer, object):
 
     def handle_error(self, request, client_address):
         if self.passthrough_errors:
+            # noinspection Annotator
             raise
         return HTTPServer.handle_error(self, request, client_address)
 
@@ -658,8 +718,8 @@ def run_simple(hostname, port, application, use_reloader=False,
                             with a different
                             :class:`~BaseHTTPServer.BaseHTTPRequestHandler`
                             subclass.
-    :param static_files: a dict of paths for static files.  This works exactly
-                         like :class:`SharedDataMiddleware`, it's actually
+    :param static_files: a list or dict of paths for static files.  This works
+                         exactly like :class:`SharedDataMiddleware`, it's actually
                          just wrapping the application in that middleware before
                          serving.
     :param passthrough_errors: set this to `True` to disable the error catching.
@@ -671,6 +731,8 @@ def run_simple(hostname, port, application, use_reloader=False,
                         the server should automatically create one, or ``None``
                         to disable SSL (which is the default).
     """
+    if not isinstance(port, int):
+        raise TypeError('port must be an integer')
     if use_debugger:
         from werkzeug.debug import DebuggedApplication
         application = DebuggedApplication(application, use_evalex)

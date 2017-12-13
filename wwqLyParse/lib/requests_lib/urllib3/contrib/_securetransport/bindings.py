@@ -39,13 +39,16 @@ from ctypes import (
 )
 from ctypes import CDLL, POINTER, CFUNCTYPE
 
+
 security_path = find_library('Security')
 if not security_path:
     raise ImportError('The library Security could not be found')
 
+
 core_foundation_path = find_library('CoreFoundation')
 if not core_foundation_path:
     raise ImportError('The library CoreFoundation could not be found')
+
 
 version = platform.mac_ver()[0]
 version_info = tuple(map(int, version.split('.')))
@@ -102,6 +105,7 @@ SecTrustOptionFlags = c_uint32
 SSLProtocolSide = c_uint32
 SSLConnectionType = c_uint32
 SSLSessionOption = c_uint32
+
 
 try:
     Security.SecItemImport.argtypes = [
@@ -584,3 +588,6 @@ class SecurityConst(object):
     TLS_RSA_WITH_AES_128_CBC_SHA256 = 0x003C
     TLS_RSA_WITH_AES_256_CBC_SHA = 0x0035
     TLS_RSA_WITH_AES_128_CBC_SHA = 0x002F
+    TLS_AES_128_GCM_SHA256 = 0x1301
+    TLS_AES_256_GCM_SHA384 = 0x1302
+    TLS_CHACHA20_POLY1305_SHA256 = 0x1303

@@ -17,6 +17,7 @@
     :license: BSD, see LICENSE for more details.
 """
 import re
+import warnings
 from time import time, gmtime
 try:
     from email.utils import parsedate_tz
@@ -61,12 +62,30 @@ _token_chars = frozenset("!#$%&'*+-.0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                          '^_`abcdefghijklmnopqrstuvwxyz|~')
 _etag_re = re.compile(r'([Ww]/)?(?:"(.*?)"|(.*?))(?:\s*,\s*|$)')
 _unsafe_header_chars = set('()<>@,;:\"/[]?={} \t')
-_quoted_string_re = r'"[^"\\]*(?:\\.[^"\\]*)*"'
-_option_header_piece_re = re.compile(
-    r';\s*(%s|[^\s;,=\*]+)\s*'
-    r'(?:\*?=\s*(?:([^\s]+?)\'([^\s]*?)\')?(%s|[^;,]+)?)?\s*' %
-    (_quoted_string_re, _quoted_string_re)
-)
+_option_header_piece_re = re.compile(r'''
+    ;\s*
+    (?P<key>
+        "[^"\\]*(?:\\.[^"\\]*)*"  # quoted string
+    |
+        [^\s;,=*]+  # token
+    )
+    \s*
+    (?:  # optionally followed by =value
+        (?:  # equals sign, possibly with encoding
+            \*\s*=\s*  # * indicates extended notation
+            (?P<encoding>[^\s]+?)
+            '(?P<language>[^\s]*?)'
+        |
+            =\s*  # basic notation
+        )
+        (?P<value>
+            "[^"\\]*(?:\\.[^"\\]*)*"  # quoted string
+        |
+            [^;,]+  # token
+        )?
+    )?
+    \s*
+''', flags=re.VERBOSE)
 _option_header_start_mime_type = re.compile(r',\s*([^;,\s]+)([;,]\s*.+)?')
 
 _entity_headers = frozenset([
@@ -781,6 +800,49 @@ def http_date(timestamp=None):
     return _dump_date(timestamp, ' ')
 
 
+def parse_age(value=None):
+    """Parses a base-10 integer count of seconds into a timedelta.
+
+    If parsing fails, the return value is `None`.
+
+    :param value: a string consisting of an integer represented in base-10
+    :return: a :class:`datetime.timedelta` object or `None`.
+    """
+    if not value:
+        return None
+    try:
+        seconds = int(value)
+    except ValueError:
+        return None
+    if seconds < 0:
+        return None
+    try:
+        return timedelta(seconds=seconds)
+    except OverflowError:
+        return None
+
+
+def dump_age(age=None):
+    """Formats the duration as a base-10 integer.
+
+    :param age: should be an integer number of seconds,
+                a :class:`datetime.timedelta` object, or,
+                if the age is unknown, `None` (default).
+    """
+    if age is None:
+        return
+    if isinstance(age, timedelta):
+        # do the equivalent of Python 2.7's timedelta.total_seconds(),
+        # but disregarding fractional seconds
+        age = age.seconds + (age.days * 24 * 3600)
+
+    age = int(age)
+    if age < 0:
+        raise ValueError('age cannot be negative')
+
+    return str(age)
+
+
 def is_resource_modified(environ, etag=None, data=None, last_modified=None,
                          ignore_if_range=True):
     """Convenience method for conditional requests.
@@ -937,7 +999,7 @@ def parse_cookie(header, charset='utf-8', errors='replace', cls=None):
 
 def dump_cookie(key, value='', max_age=None, expires=None, path='/',
                 domain=None, secure=False, httponly=False,
-                charset='utf-8', sync_expires=True):
+                charset='utf-8', sync_expires=True, max_size=4093):
     """Creates a new Set-Cookie header without the ``Set-Cookie`` prefix
     The parameters are the same as in the cookie Morsel object in the
     Python standard library but it accepts unicode data, too.
@@ -973,6 +1035,11 @@ def dump_cookie(key, value='', max_age=None, expires=None, path='/',
     :param charset: the encoding for unicode values.
     :param sync_expires: automatically set expires if max_age is defined
                          but expires not.
+    :param max_size: Warn if the final header value exceeds this size. The
+        default, 4093, should be safely `supported by most browsers
+        <cookie_>`_. Set to 0 to disable this check.
+
+    .. _`cookie`: http://browsercookielimits.squawky.net/
     """
     key = to_bytes(key, charset)
     value = to_bytes(value, charset)
@@ -1021,6 +1088,28 @@ def dump_cookie(key, value='', max_age=None, expires=None, path='/',
     rv = b'; '.join(buf)
     if not PY2:
         rv = rv.decode('latin1')
+
+    # Warn if the final value of the cookie is less than the limit. If the
+    # cookie is too large, then it may be silently ignored, which can be quite
+    # hard to debug.
+    cookie_size = len(rv)
+
+    if max_size and cookie_size > max_size:
+        value_size = len(value)
+        warnings.warn(
+            'The "{key}" cookie is too large: the value was {value_size} bytes'
+            ' but the header required {extra_size} extra bytes. The final size'
+            ' was {cookie_size} bytes but the limit is {max_size} bytes.'
+            ' Browsers may silently ignore cookies larger than this.'.format(
+                key=key,
+                value_size=value_size,
+                extra_size=cookie_size - value_size,
+                cookie_size=cookie_size,
+                max_size=max_size
+            ),
+            stacklevel=2
+        )
+
     return rv
 
 

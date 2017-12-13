@@ -16,6 +16,7 @@ from ..exceptions import (
 )
 from ..packages import six
 
+
 log = logging.getLogger(__name__)
 
 # Data structure for representing the metadata of requests that result in a retry.
@@ -393,7 +394,7 @@ class Retry(object):
     def __repr__(self):
         return ('{cls.__name__}(total={self.total}, connect={self.connect}, '
                 'read={self.read}, redirect={self.redirect}, status={self.status})').format(
-            cls=type(self), self=self)
+                    cls=type(self), self=self)
 
 
 # For backwards compatibility (equivalent to pre-v1.9):

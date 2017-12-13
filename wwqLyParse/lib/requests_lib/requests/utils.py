@@ -38,6 +38,7 @@ NETRC_FILES = ('.netrc', '_netrc')
 
 DEFAULT_CA_BUNDLE_PATH = certs.where()
 
+
 if platform.system() == 'Windows':
     # provide a proxy_bypass version on Windows without DNS lookups
 
@@ -48,7 +49,7 @@ if platform.system() == 'Windows':
             import _winreg as winreg
         try:
             internetSettings = winreg.OpenKey(winreg.HKEY_CURRENT_USER,
-                                              r'Software\Microsoft\Windows\CurrentVersion\Internet Settings')
+                r'Software\Microsoft\Windows\CurrentVersion\Internet Settings')
             proxyEnable = winreg.QueryValueEx(internetSettings,
                                               'ProxyEnable')[0]
             proxyOverride = winreg.QueryValueEx(internetSettings,
@@ -67,13 +68,12 @@ if platform.system() == 'Windows':
             if test == '<local>':
                 if '.' not in host:
                     return True
-            test = test.replace(".", r"\.")  # mask dots
-            test = test.replace("*", r".*")  # change glob sequence
-            test = test.replace("?", r".")  # change glob char
+            test = test.replace(".", r"\.")     # mask dots
+            test = test.replace("*", r".*")     # change glob sequence
+            test = test.replace("?", r".")      # change glob char
             if re.match(test, host, re.I):
                 return True
         return False
-
 
     def proxy_bypass(host):  # noqa
         """Return True, if the host should be bypassed.
@@ -212,7 +212,7 @@ def guess_filename(obj):
     """Tries to guess the filename of the given object."""
     name = getattr(obj, 'name', None)
     if (name and isinstance(name, basestring) and name[0] != '<' and
-                name[-1] != '>'):
+            name[-1] != '>'):
         return os.path.basename(name)
 
 
@@ -494,8 +494,7 @@ def get_unicode_from_response(r):
 
 # The unreserved URI characters (RFC 3986)
 UNRESERVED_SET = frozenset(
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-    + "0123456789-._~")
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz" + "0123456789-._~")
 
 
 def unquote_unreserved(uri):
@@ -613,18 +612,18 @@ def set_environ(env_name, value):
     the environment variable 'env_name'.
 
     If 'value' is None, do nothing"""
-    if value is not None:
+    value_changed = value is not None
+    if value_changed:
         old_value = os.environ.get(env_name)
         os.environ[env_name] = value
     try:
         yield
     finally:
-        if value is None:
-            return
-        if old_value is None:
-            del os.environ[env_name]
-        else:
-            os.environ[env_name] = old_value
+        if value_changed:
+            if old_value is None:
+                del os.environ[env_name]
+            else:
+                os.environ[env_name] = old_value
 
 
 def should_bypass_proxies(url, no_proxy):
@@ -791,26 +790,26 @@ def guess_json_utf(data):
     # determine the encoding. Also detect a BOM, if present.
     sample = data[:4]
     if sample in (codecs.BOM_UTF32_LE, codecs.BOM_UTF32_BE):
-        return 'utf-32'  # BOM included
+        return 'utf-32'     # BOM included
     if sample[:3] == codecs.BOM_UTF8:
         return 'utf-8-sig'  # BOM included, MS style (discouraged)
     if sample[:2] in (codecs.BOM_UTF16_LE, codecs.BOM_UTF16_BE):
-        return 'utf-16'  # BOM included
+        return 'utf-16'     # BOM included
     nullcount = sample.count(_null)
     if nullcount == 0:
         return 'utf-8'
     if nullcount == 2:
-        if sample[::2] == _null2:  # 1st and 3rd are null
+        if sample[::2] == _null2:   # 1st and 3rd are null
             return 'utf-16-be'
         if sample[1::2] == _null2:  # 2nd and 4th are null
             return 'utf-16-le'
-            # Did not detect 2 valid UTF-16 ascii-range characters
+        # Did not detect 2 valid UTF-16 ascii-range characters
     if nullcount == 3:
         if sample[:3] == _null3:
             return 'utf-32-be'
         if sample[1:] == _null3:
             return 'utf-32-le'
-            # Did not detect a valid UTF-32 ascii-range character
+        # Did not detect a valid UTF-32 ascii-range character
     return None
 
 
@@ -869,8 +868,8 @@ def check_header_validity(header):
         if not pat.match(value):
             raise InvalidHeader("Invalid return character or leading space in header: %s" % name)
     except TypeError:
-        raise InvalidHeader("Header value %s must be of type str or bytes, "
-                            "not %s" % (value, type(value)))
+        raise InvalidHeader("Value for header {%s: %s} must be of type str or "
+                            "bytes, not %s" % (name, value, type(value)))
 
 
 def urldefragauth(url):

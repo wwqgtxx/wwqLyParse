@@ -146,14 +146,12 @@ class HTTPDigestAuth(AuthBase):
                 if isinstance(x, str):
                     x = x.encode('utf-8')
                 return hashlib.md5(x).hexdigest()
-
             hash_utf8 = md5_utf8
         elif _algorithm == 'SHA':
             def sha_utf8(x):
                 if isinstance(x, str):
                     x = x.encode('utf-8')
                 return hashlib.sha1(x).hexdigest()
-
             hash_utf8 = sha_utf8
 
         KD = lambda s, d: hash_utf8("%s:%s" % (s, d))
@@ -241,6 +239,7 @@ class HTTPDigestAuth(AuthBase):
         s_auth = r.headers.get('www-authenticate', '')
 
         if 'digest' in s_auth.lower() and self._thread_local.num_401_calls < 2:
+
             self._thread_local.num_401_calls += 1
             pat = re.compile(r'digest ', flags=re.IGNORECASE)
             self._thread_local.chal = parse_dict_header(pat.sub('', s_auth, count=1))

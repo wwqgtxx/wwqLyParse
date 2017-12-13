@@ -8,6 +8,7 @@ from hashlib import md5, sha1, sha256
 
 from ..exceptions import SSLError, InsecurePlatformWarning, SNIMissingWarning
 
+
 SSLContext = None
 HAS_SNI = False
 IS_PYOPENSSL = False
@@ -37,12 +38,14 @@ def _const_compare_digest_backport(a, b):
 _const_compare_digest = getattr(hmac, 'compare_digest',
                                 _const_compare_digest_backport)
 
+
 try:  # Test for SSL features
     import ssl
     from ssl import wrap_socket, CERT_NONE, PROTOCOL_SSLv23
     from ssl import HAS_SNI  # Has SNI?
 except ImportError:
     pass
+
 
 try:
     from ssl import OP_NO_SSLv2, OP_NO_SSLv3, OP_NO_COMPRESSION
@@ -58,13 +61,17 @@ except ImportError:
 # - https://hynek.me/articles/hardening-your-web-servers-ssl-ciphers/
 #
 # The general intent is:
-# - Prefer cipher suites that offer perfect forward secrecy (DHE/ECDHE),
+# - Prefer TLS 1.3 cipher suites
+# - prefer cipher suites that offer perfect forward secrecy (DHE/ECDHE),
 # - prefer ECDHE over DHE for better performance,
 # - prefer any AES-GCM and ChaCha20 over any AES-CBC for better performance and
 #   security,
 # - prefer AES-GCM over ChaCha20 because hardware-accelerated AES is common,
 # - disable NULL authentication, MD5 MACs and DSS for security reasons.
 DEFAULT_CIPHERS = ':'.join([
+    'TLS13-AES-256-GCM-SHA384',
+    'TLS13-CHACHA20-POLY1305-SHA256',
+    'TLS13-AES-128-GCM-SHA256',
     'ECDH+AESGCM',
     'ECDH+CHACHA20',
     'DH+AESGCM',
@@ -84,7 +91,6 @@ try:
     from ssl import SSLContext  # Modern SSL?
 except ImportError:
     import sys
-
 
     class SSLContext(object):  # Platform-specific: Python 2 & 3.1
         supports_set_ciphers = ((2, 7) <= sys.version_info < (3,) or

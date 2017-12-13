@@ -1,6 +1,5 @@
 from __future__ import absolute_import
 from collections import Mapping, MutableMapping
-
 try:
     from threading import RLock
 except ImportError:  # Platform-specific: No threads available
@@ -11,13 +10,16 @@ except ImportError:  # Platform-specific: No threads available
         def __exit__(self, exc_type, exc_value, traceback):
             pass
 
+
 try:  # Python 2.7+
     from collections import OrderedDict
 except ImportError:
     from .packages.ordered_dict import OrderedDict
 from .packages.six import iterkeys, itervalues, PY3
 
+
 __all__ = ['RecentlyUsedContainer', 'HTTPHeaderDict']
+
 
 _Null = object()
 
@@ -245,13 +247,15 @@ class HTTPHeaderDict(MutableMapping):
         for key, value in kwargs.items():
             self.add(key, value)
 
-    def getlist(self, key):
+    def getlist(self, key, default=__marker):
         """Returns a list of all the values for the named field. Returns an
         empty list if the key doesn't exist."""
         try:
             vals = self._container[key.lower()]
         except KeyError:
-            return []
+            if default is self.__marker:
+                return []
+            return default
         else:
             return vals[1:]
 
@@ -259,6 +263,9 @@ class HTTPHeaderDict(MutableMapping):
     getheaders = getlist
     getallmatchingheaders = getlist
     iget = getlist
+
+    # Backwards compatibility for http.cookiejar
+    get_all = getlist
 
     def __repr__(self):
         return "%s(%s)" % (type(self).__name__, dict(self.itermerged()))

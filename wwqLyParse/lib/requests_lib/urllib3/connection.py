@@ -12,14 +12,13 @@ from .packages.six.moves.http_client import HTTPException  # noqa: F401
 
 try:  # Compiled with SSL?
     import ssl
-
     BaseSSLError = ssl.SSLError
 except (ImportError, AttributeError):  # Platform-specific: No SSL.
     ssl = None
 
-
     class BaseSSLError(BaseException):
         pass
+
 
 try:  # Python 3:
     # Not a no-op, we're adding this to the namespace so it can be imported.
@@ -27,6 +26,7 @@ try:  # Python 3:
 except NameError:  # Python 2:
     class ConnectionError(Exception):
         pass
+
 
 from .exceptions import (
     NewConnectionError,
@@ -43,6 +43,7 @@ from .util.ssl_ import (
     create_urllib3_context,
     ssl_wrap_socket
 )
+
 
 from .util import connection
 
@@ -142,7 +143,7 @@ class HTTPConnection(_HTTPConnection, object):
         except SocketTimeout as e:
             raise ConnectTimeoutError(
                 self, "Connection to %s timed out. (connect timeout=%s)" %
-                      (self.host, self.timeout))
+                (self.host, self.timeout))
 
         except SocketError as e:
             raise NewConnectionError(
@@ -212,6 +213,7 @@ class HTTPSConnection(HTTPConnection):
     def __init__(self, host, port=None, key_file=None, cert_file=None,
                  strict=None, timeout=socket._GLOBAL_DEFAULT_TIMEOUT,
                  ssl_context=None, **kw):
+
         HTTPConnection.__init__(self, host, port, strict=strict,
                                 timeout=timeout, **kw)
 
@@ -299,10 +301,10 @@ class VerifiedHTTPSConnection(HTTPSConnection):
         is_time_off = datetime.date.today() < RECENT_DATE
         if is_time_off:
             warnings.warn((
-                              'System time is way off (before {0}). This will probably '
-                              'lead to SSL verification errors').format(RECENT_DATE),
-                          SystemTimeWarning
-                          )
+                'System time is way off (before {0}). This will probably '
+                'lead to SSL verification errors').format(RECENT_DATE),
+                SystemTimeWarning
+            )
 
         # Wrap socket using verification with the root certs in
         # trusted_root_certs

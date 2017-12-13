@@ -123,6 +123,7 @@ else:
                     raise
         return result
 
+
 SelectorKey = namedtuple('SelectorKey', ['fileobj', 'fd', 'events', 'data'])
 
 
@@ -161,7 +162,6 @@ class BaseSelector(object):
     and kqueue()) depending on the platform. The 'DefaultSelector' class uses
     the most efficient implementation for the current platform.
     """
-
     def __init__(self):
         # Maps file descriptors to keys.
         self._fd_to_key = {}
@@ -286,7 +286,6 @@ class BaseSelector(object):
 if hasattr(select, "select"):
     class SelectSelector(BaseSelector):
         """ Select-based selector. """
-
         def __init__(self):
             super(SelectSelector, self).__init__()
             self._readers = set()
@@ -333,10 +332,10 @@ if hasattr(select, "select"):
                     ready.append((key, events & key.events))
             return ready
 
+
 if hasattr(select, "poll"):
     class PollSelector(BaseSelector):
         """ Poll-based selector """
-
         def __init__(self):
             super(PollSelector, self).__init__()
             self._poll = select.poll()
@@ -386,10 +385,10 @@ if hasattr(select, "poll"):
 
             return ready
 
+
 if hasattr(select, "epoll"):
     class EpollSelector(BaseSelector):
         """ Epoll-based selector """
-
         def __init__(self):
             super(EpollSelector, self).__init__()
             self._epoll = select.epoll()
@@ -453,10 +452,10 @@ if hasattr(select, "epoll"):
             self._epoll.close()
             super(EpollSelector, self).close()
 
+
 if hasattr(select, "kqueue"):
     class KqueueSelector(BaseSelector):
         """ Kqueue / Kevent-based selector """
-
         def __init__(self):
             super(KqueueSelector, self).__init__()
             self._kqueue = select.kqueue()
@@ -535,6 +534,7 @@ if hasattr(select, "kqueue"):
         def close(self):
             self._kqueue.close()
             super(KqueueSelector, self).close()
+
 
 if not hasattr(select, 'select'):  # Platform-specific: AppEngine
     HAS_SELECT = False

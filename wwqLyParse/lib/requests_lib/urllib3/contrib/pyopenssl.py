@@ -59,7 +59,7 @@ except ImportError:  # Platform-specific: Python 3
 
 import logging
 import ssl
-import six
+from ..packages import six
 import sys
 
 from .. import util
@@ -101,6 +101,7 @@ SSL_WRITE_BLOCKSIZE = 16384
 
 orig_util_HAS_SNI = util.HAS_SNI
 orig_util_SSLContext = util.ssl_.SSLContext
+
 
 log = logging.getLogger(__name__)
 
@@ -157,7 +158,6 @@ def _dnsname_to_stdlib(name):
     then on Python 3 we also need to convert to unicode via UTF-8 (the stdlib
     uses PyUnicode_FromStringAndSize on it, which decodes via UTF-8).
     """
-
     def idna_encode(name):
         """
         Borrowed wholesale from the Python Cryptography Project. It turns out
@@ -183,9 +183,12 @@ def get_subj_alt_name(peer_cert):
     Given an PyOpenSSL certificate, provides all the subject alternative names.
     """
     # Pass the cert to cryptography, which has much better APIs for this.
-    # This is technically using private APIs, but should work across all
-    # relevant versions until PyOpenSSL gets something proper for this.
-    cert = _Certificate(openssl_backend, peer_cert._x509)
+    if hasattr(peer_cert, "to_cryptography"):
+        cert = peer_cert.to_cryptography()
+    else:
+        # This is technically using private APIs, but should work across all
+        # relevant versions before PyOpenSSL got a proper API for this.
+        cert = _Certificate(openssl_backend, peer_cert._x509)
 
     # We want to find the SAN extension. Ask Cryptography to locate it (it's
     # faster than looping in Python)
@@ -371,7 +374,6 @@ class PyOpenSSLContext(object):
     for translating the interface of the standard library ``SSLContext`` object
     to calls into PyOpenSSL.
     """
-
     def __init__(self, protocol):
         self.protocol = _openssl_versions[protocol]
         self._ctx = OpenSSL.SSL.Context(self.protocol)

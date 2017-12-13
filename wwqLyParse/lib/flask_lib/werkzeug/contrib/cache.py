@@ -126,7 +126,7 @@ class BaseCache(object):
 
     def get_many(self, *keys):
         """Returns a list of values for the given keys.
-        For each key a item in the list is created::
+        For each key an item in the list is created::
 
             foo, bar = cache.get_many("foo", "bar")
 
@@ -135,7 +135,7 @@ class BaseCache(object):
         :param keys: The function accepts multiple keys as positional
                      arguments.
         """
-        return map(self.get, keys)
+        return [self.get(k) for k in keys]
 
     def get_dict(self, *keys):
         """Like :meth:`get_many` but return a dict::
@@ -355,6 +355,7 @@ class MemcachedCache(BaseCache):
         - ``pylibmc``
         - ``google.appengine.api.memcached``
         - ``memcached``
+        - ``libmc``
 
     Implementation notes:  This cache backend works around some limitations in
     memcached to simplify the interface.  For example unicode keys are encoded
@@ -506,6 +507,13 @@ class MemcachedCache(BaseCache):
             pass
         else:
             return memcache.Client(servers)
+
+        try:
+            import libmc
+        except ImportError:
+            pass
+        else:
+            return libmc.Client(servers)
 
 
 # backwards compatibility

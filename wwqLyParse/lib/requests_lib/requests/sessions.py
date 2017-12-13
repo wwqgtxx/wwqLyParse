@@ -61,8 +61,8 @@ def merge_setting(request_setting, session_setting, dict_class=OrderedDict):
 
     # Bypass if not a dictionary (e.g. verify)
     if not (
-                isinstance(session_setting, Mapping) and
-                isinstance(request_setting, Mapping)
+            isinstance(session_setting, Mapping) and
+            isinstance(request_setting, Mapping)
     ):
         return request_setting
 
@@ -94,8 +94,15 @@ def merge_hooks(request_hooks, session_hooks, dict_class=OrderedDict):
 
 
 class SessionRedirectMixin(object):
+
     def get_redirect_target(self, resp):
         """Receives a Response. Returns a redirect URI or ``None``"""
+        # Due to the nature of how requests processes redirects this method will
+        # be called at least once upon the original response and at least twice
+        # on each subsequent redirect response (if any).
+        # If a custom mixin is used to handle this logic, it may be advantageous
+        # to cache the redirect location onto the response object as a private
+        # attribute.
         if resp.is_redirect:
             location = resp.headers['location']
             # Currently the underlying http module on py3 decode headers
@@ -432,20 +439,9 @@ class Session(SessionRedirectMixin):
         return p
 
     def request(self, method, url,
-                params=None,
-                data=None,
-                headers=None,
-                cookies=None,
-                files=None,
-                auth=None,
-                timeout=None,
-                allow_redirects=True,
-                proxies=None,
-                hooks=None,
-                stream=None,
-                verify=None,
-                cert=None,
-                json=None):
+            params=None, data=None, headers=None, cookies=None, files=None,
+            auth=None, timeout=None, allow_redirects=True, proxies=None,
+            hooks=None, stream=None, verify=None, cert=None, json=None):
         """Constructs a :class:`Request <Request>`, prepares it and sends it.
         Returns :class:`Response <Response>` object.
 
@@ -714,7 +710,7 @@ class Session(SessionRedirectMixin):
     def mount(self, prefix, adapter):
         """Registers a connection adapter to a prefix.
 
-        Adapters are sorted in descending order by key length.
+        Adapters are sorted in descending order by prefix length.
         """
         self.adapters[prefix] = adapter
         keys_to_move = [k for k in self.adapters if len(k) < len(prefix)]

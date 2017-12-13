@@ -35,7 +35,7 @@ class Pool(object):
 
     def join(self, *k, timeout=None, **kk):
         if self.pool_size is not None:
-            concurrent.futures.wait(self.ex, timeout)
+            concurrent.futures.wait(self.pool_threads, timeout)
         else:
             for _thread in self.pool_threads:
                 _thread.join(timeout)

@@ -11,8 +11,6 @@ if __name__ == "__main__":
 
     print(sys.path)
 
-    os.environ["GEVENT_RESOLVER"] = "ares"
-
     del sys
     del os
 

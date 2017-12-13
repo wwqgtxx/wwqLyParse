@@ -109,9 +109,10 @@ class AnyPageParser(Parser):
             parse_urls = []
             t_results = []
             q_results = Queue()
-            for url in urls:
-                parser_threads.append(main.pool.spawn(runlist_parser, q_results, url, pool))
-            joinall(parser_threads, timeout=self.TWICE_PARSE_TIMEOUT)
+            with Pool() as pool:
+                for url in urls:
+                    pool.spawn(runlist_parser, q_results, url, pool)
+                pool.join(timeout=self.TWICE_PARSE_TIMEOUT)
             while not q_results.empty():
                 t_results.append(q_results.get())
 

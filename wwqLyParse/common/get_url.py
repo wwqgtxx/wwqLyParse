@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
 
-from .gevent_pool import *
+from .pool import *
 
 try:
     import requests.adapters

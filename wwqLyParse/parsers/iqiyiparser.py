@@ -184,27 +184,38 @@ class IQiYiParser(Parser):
                         "unfixIp": True
                     }
                     data.append(info)
-                with Pool(10) as pool:
-                    for _ in range(10):
-                        for seg_info in fs_array:
-                            url = url_prefix + seg_info['l']
-                            url_list = url_dict[url]
+                if POOL_TYPE == "simplepool":
+                    for seg_info in fs_array:
+                        url = url_prefix + seg_info['l']
+                        url_list = url_dict[url]
+                        json_data = json.loads(get_url(url, allow_cache=False))
+                        logging.debug(json_data)
+                        down_url = json_data['l']
+                        # url_head = r1(r'https?://([^/]*)', down_url)
+                        if down_url not in url_list:
+                            url_list.append(down_url)
+                else:
+                    with Pool(10) as pool:
+                        for _ in range(10):
+                            for seg_info in fs_array:
+                                url = url_prefix + seg_info['l']
+                                url_list = url_dict[url]
 
-                            def _worker():
-                                try:
-                                    if len(url_list) > 5:
-                                        return
-                                    json_data = json.loads(get_url(url, allow_cache=False))
-                                    logging.debug(json_data)
-                                    down_url = json_data['l']
-                                    # url_head = r1(r'https?://([^/]*)', down_url)
-                                    if down_url not in url_list:
-                                        url_list.append(down_url)
-                                except GreenletExit:
-                                    pass
+                                def _worker():
+                                    try:
+                                        if len(url_list) > 5:
+                                            return
+                                        json_data = json.loads(get_url(url, allow_cache=False))
+                                        logging.debug(json_data)
+                                        down_url = json_data['l']
+                                        # url_head = r1(r'https?://([^/]*)', down_url)
+                                        if down_url not in url_list:
+                                            url_list.append(down_url)
+                                    except GreenletExit:
+                                        pass
 
-                            pool.spawn(_worker)
-                    pool.join()
+                                pool.spawn(_worker)
+                        pool.join(timeout=60)
 
                 return data
         return []

@@ -1,12 +1,16 @@
 #!/usr/bin/env python3.5
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
-import gevent
-from gevent.pool import Pool as _Pool
-from gevent.queue import Queue
-from gevent import joinall
-from gevent import killall
-from gevent import GreenletExit
+try:
+    from gevent import GreenletExit
+    from gevent.pool import Pool as _Pool
+    from gevent.queue import Queue
+    POOL_TYPE = "geventpool"
+except:
+    from .simplepool import GreenletExit
+    from .simplepool import Pool as _Pool
+    from queue import Queue
+    POOL_TYPE = "simplepool"
 
 
 def call_method_and_save_to_queue(queue, method, args, kwargs):

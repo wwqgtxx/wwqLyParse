@@ -5,16 +5,10 @@
 from .pool import *
 
 try:
-    import requests.adapters
-
-    requests.adapters.DEFAULT_POOLSIZE = 50
-
     import requests
-
-    session = requests.Session()
+    import requests.adapters
 except:
     requests = None
-    session = None
 
 import logging
 import urllib.request, json, re, gzip, socket, urllib.error, http.client, urllib
@@ -22,10 +16,10 @@ import urllib.request, json, re, gzip, socket, urllib.error, http.client, urllib
 from .lru_cache import LRUCache
 from .utils import get_caller_info
 
-URL_CACHE_MAX = 1000
+URL_CACHE_MAX = 10000
 URL_CACHE_TIMEOUT = 6 * 60 * 60
 URL_CACHE_POOL = 20
-url_cache = LRUCache(URL_CACHE_TIMEOUT)
+url_cache = LRUCache(size=URL_CACHE_MAX, timeout=URL_CACHE_TIMEOUT)
 
 pool_get_url = Pool(URL_CACHE_POOL)
 pool_clean_url_cache = Pool(1)
@@ -40,8 +34,34 @@ fake_headers = {
 }
 
 
+class FuckSession(object):
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
+
+    def __enter__(self):
+        return None
+
+
+def get_session(size=50, retry=3):
+    if requests:
+        session = requests.Session()
+        session.mount("http://",
+                      requests.adapters.HTTPAdapter(pool_connections=size, pool_maxsize=size, max_retries=retry))
+        session.mount('https://',
+                      requests.adapters.HTTPAdapter(pool_connections=size, pool_maxsize=size, max_retries=retry))
+        return session
+    else:
+        return FuckSession()
+
+
+if requests:
+    common_session = get_session()
+else:
+    common_session = None
+
+
 def get_url(o_url, encoding='utf-8', headers=None, data=None, method=None, allow_cache=True, use_pool=True,
-            pool=pool_get_url):
+            pool=pool_get_url, session=common_session):
     def _get_url(result_queue, url_json, o_url, encoding, headers, data, method, allowCache, callmethod):
         try:
             html_text = None
@@ -77,7 +97,7 @@ def get_url(o_url, encoding='utf-8', headers=None, data=None, method=None, allow
                         html_text = data
                     else:
                         html_text = data.decode(encoding, 'ignore')
-            if allowCache:
+            if allowCache and html_text:
                 url_cache[url_json] = html_text
             result_queue.put(html_text)
             return
@@ -111,7 +131,7 @@ def get_url(o_url, encoding='utf-8', headers=None, data=None, method=None, allow
         use_pool = False
 
     if requests and session:
-        retry_num = 3
+        retry_num = 1
     else:
         retry_num = 10
 

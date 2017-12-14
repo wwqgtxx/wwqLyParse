@@ -93,6 +93,8 @@ class IQiYiParser(Parser):
         10: '4K-H264',
     }
 
+    parse_timeout = 60
+
     def get_stream_type(self, stream_id):
         try:
             stream_id = self.vd_2_id[stream_id]
@@ -104,7 +106,7 @@ class IQiYiParser(Parser):
         except:
             stream_id = str(stream_id)
             logging.warning("can't match stream_id " + stream_id)
-            stream_type = {'id': stream_id, 'container': 'ts', 'video_profile': stream_id}
+            stream_type = {'id': stream_id, 'container': 'flv', 'video_profile': stream_id}
         return stream_type
 
     def get_vps_data(self, url):
@@ -155,15 +157,19 @@ class IQiYiParser(Parser):
             }
 
             data["data"].append(info)
+            info = info.copy()
+            info["label"] = '-'.join([info["label"], "S"])
+            info["code"] = '-'.join([str(info["code"]), "S"])
+            data["data"].append(info)
 
         return data
 
     def parse_url(self, input_text, label, min=None, max=None, *k, **kk):
-        def _worker(url, url_list):
+        def _worker(url, url_list, session):
             try:
                 if len(url_list) > 5:
                     return
-                json_data = json.loads(get_url(url, allow_cache=False))
+                json_data = json.loads(get_url(url, allow_cache=False, session=session))
                 logging.debug(json_data)
                 down_url = json_data['l']
                 # url_head = r1(r'https?://([^/]*)', down_url)
@@ -172,6 +178,12 @@ class IQiYiParser(Parser):
             except GreenletExit:
                 pass
 
+        use_pool = True
+        logging.debug(label)
+        if "-S" in label:
+            label = label.split("-S")[0]
+            use_pool = False
+            logging.debug(label)
         url = input_text
         data = []
         vps_data = self.get_vps_data(url)
@@ -197,13 +209,21 @@ class IQiYiParser(Parser):
                         "unfixIp": True
                     }
                     data.append(info)
-                with Pool(10) as pool:
-                    for _ in range(10):
-                        for seg_info in fs_array:
-                            url = url_prefix + seg_info['l']
-                            url_list = url_dict[url]
-                            pool.spawn(_worker, url, url_list)
-                    pool.join(timeout=60)
+                with get_session() as session:
+                    if use_pool:
+                        with Pool(10) as pool:
+                            for _ in range(10):
+                                for seg_info in fs_array:
+                                    url = url_prefix + seg_info['l']
+                                    url_list = url_dict[url]
+                                    pool.spawn(_worker, url, url_list, session)
+                            pool.join(timeout=self.parse_timeout)
+
+                    for seg_info in fs_array:
+                        url = url_prefix + seg_info['l']
+                        url_list = url_dict[url]
+                        if len(url_list) == 0:
+                            _worker(url, url_list, session)
 
                 return data
         return []

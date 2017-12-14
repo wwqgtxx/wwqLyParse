@@ -58,7 +58,7 @@ app = Flask(__name__)
 version = {
     'port_version': "0.5.0",
     'type': 'parse',
-    'version': '1.1.5',
+    'version': '1.1.6',
     'uuid': '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter': [],
     'name': 'WWQ猎影解析插件',
@@ -79,6 +79,7 @@ urlhandle_class_map = import_by_name(module_names=get_all_filename_by_dir('./url
 
 
 def url_handle_parse(input_text, url_handles_name=None):
+    start_time = time.time()
     if url_handles_name is not None:
         _url_handle_class_map = import_by_name(class_names=url_handles_name, prefix="urlhandles.",
                                                super_class=UrlHandle)
@@ -93,11 +94,24 @@ def url_handle_parse(input_text, url_handles_name=None):
                     result = url_handle_obj.url_handle(input_text)
                     if (result is not None) and (result is not ""):
                         input_text = result
+                    end_time = time.time()
+                    if (end_time - start_time) > PARSE_TIMEOUT / 2:
+                        break
                 except Exception as e:
                     logging.exception(str(url_handle_obj))
                     # print(e)
                     # import traceback
                     # traceback.print_exc()
+    if re.match(r'^(http|https)://', input_text):
+        try:
+            get_url(input_text)
+        except GreenletExit:
+            return None
+        except Exception:
+            logging.exception("get_url for cache")
+    end_time = time.time()
+    if (end_time - start_time) >= PARSE_TIMEOUT:
+        return None
     return input_text
 
 
@@ -165,6 +179,8 @@ def parse(input_text, types=None, parsers_name=None, url_handles_name=None, *k, 
     input_text = parse_password(input_text, kk)
 
     input_text = url_handle_parse(input_text, url_handles_name)
+    if not input_text:
+        return None
     results = []
     t_results = []
     q_results = Queue()
@@ -221,6 +237,8 @@ def parse_url(input_text, label, min=None, max=None, url_handles_name=None, *k, 
     input_text = parse_password(input_text, kk)
 
     input_text = url_handle_parse(input_text, url_handles_name)
+    if not input_text:
+        return None
     parser = parsers[0]
     q_results = Queue(1)
     with Pool() as pool:

@@ -156,11 +156,12 @@ class IQiYiParser(Parser):
                 # "download": []
             }
 
-            data["data"].append(info)
-            info = info.copy()
-            info["label"] = '-'.join([info["label"], "S"])
-            info["code"] = '-'.join([str(info["code"]), "S"])
-            data["data"].append(info)
+            info1 = info.copy()
+            data["data"].append(info1)
+            info2 = info.copy()
+            info2["label"] = '-'.join([info["label"], "单线程"])
+            info2["code"] = '-'.join([str(info["code"]), "S"])
+            data["data"].append(info2)
 
         return data
 
@@ -179,11 +180,9 @@ class IQiYiParser(Parser):
                 pass
 
         use_pool = True
-        logging.debug(label)
         if "-S" in label:
             label = label.split("-S")[0]
             use_pool = False
-            logging.debug(label)
         url = input_text
         data = []
         vps_data = self.get_vps_data(url)

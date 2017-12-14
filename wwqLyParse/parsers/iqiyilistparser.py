@@ -225,19 +225,9 @@ class IQiYiAListParser(Parser):
                     "url": url
                 }
                 data.append(info)
-                i = i + 1
             return data
 
         # print("2"+input_text)
-        def run(queue, get_list_info, html_text):
-            try:
-                result = get_list_info(html_text)
-                if result != []:
-                    queue.put(result)
-            except Exception as e:
-                # import traceback
-                # traceback.print_exc()
-                logging.error(str(get_list_info) + str(e))
 
         html_text = get_url(input_text, pool=pool)
         html = PyQuery(html_text)
@@ -252,24 +242,21 @@ class IQiYiAListParser(Parser):
                 title = match1(html_text, '<title>([^<]+)').split('-')[0]
             except AttributeError:
                 pass
-        i = 0
         data = {
             "data": [],
             "more": False,
             "title": title,
-            "total": i,
+            "total": 0,
             "type": "list",
             "caption": "271视频全集"
         }
-        results = []
-        parser_threads = []
         q_results = queue.Queue()
-        parser_threads.append(threading.Thread(target=run, args=(q_results, get_list_info_api1, html_text)))
-        parser_threads.append(threading.Thread(target=run, args=(q_results, get_list_info_api2, html_text)))
-        for parser_thread in parser_threads:
-            parser_thread.start()
-        for parser_thread in parser_threads:
-            parser_thread.join()
+        with Pool() as pool:
+            pool.spawn(call_method_and_save_to_queue, queue=q_results, method=get_list_info_api1, args=[html_text],
+                       allow_none=False)
+            pool.spawn(call_method_and_save_to_queue, queue=q_results, method=get_list_info_api2, args=[html_text],
+                       allow_none=False)
+            pool.join()
         while not q_results.empty():
             data["data"] = q_results.get()
             break

@@ -30,7 +30,7 @@ if __name__ == "__main__":
     # main("http://www.mgtv.com/b/316045/4096972.html", parsers_name=["MgTVParser"])
     # main("http://www.mgtv.com/b/316045/4096972.html", label="3@MgTVParser")
     # url_cache.timeout = 10
-    # main("http://www.iqiyi.com/v_19rrl8pmn8.html", types="list")
+    main("http://www.iqiyi.com/v_19rrl8pmn8.html", types="list")
     # main("http://www.iqiyi.com/v_19rrl8pmn8.html", types="list")
     # time.sleep(10)
     # main("http://www.iqiyi.com/v_19rrl8pmn8.html", types="list")
@@ -61,6 +61,6 @@ if __name__ == "__main__":
     # main("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474", label="3_BD_1080p_2.00 GB@YKDLParser")
     # main("http://v.youku.com/v_show/id_XMzg1ODY1MTIw.html||123", parsers_name=["YouGetParser"])
     # main("http://list.youku.com/albumlist/show/id_2336634.html", types="collection")
-    main("https://v.youku.com/v_show/id_XMzE2MzM2NTMyNA==.html?spm=a2hww.20027244.m_250379.5~5~1~3!4~A")
+    # main("https://v.youku.com/v_show/id_XMzE2MzM2NTMyNA==.html?spm=a2hww.20027244.m_250379.5~5~1~3!4~A")
     # main("http://video.tudou.com/v/XMzAxODM2MDA1Mg==.html?spm=a2h28.8313475.c1.dtitle2")
     # close()

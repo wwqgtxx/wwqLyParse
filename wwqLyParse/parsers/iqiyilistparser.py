@@ -252,9 +252,9 @@ class IQiYiAListParser(Parser):
         }
         q_results = queue.Queue()
         with Pool() as pool:
-            pool.spawn(call_method_and_save_to_queue, queue=q_results, method=get_list_info_api1, args=[html_text],
+            pool.spawn(call_method_and_save_to_queue, queue=q_results, method=get_list_info_api1, args=(html_text,),
                        allow_none=False)
-            pool.spawn(call_method_and_save_to_queue, queue=q_results, method=get_list_info_api2, args=[html_text],
+            pool.spawn(call_method_and_save_to_queue, queue=q_results, method=get_list_info_api2, args=(html_text,),
                        allow_none=False)
             pool.join()
         while not q_results.empty():

@@ -25,15 +25,13 @@ class PostfixUrlHandle(UrlHandle):
         result = re.match('^(http|https)://[^\s]+/[^\s]+\.[s]{0,1}html', url).group()
         q_results = queue.Queue()
         htmls = []
-        t1 = threading.Thread(target=_getUrl, args=(q_results, url))
-        t2 = threading.Thread(target=_getUrl, args=(q_results, result))
-        t1.start()
-        t2.start()
-        t1.join()
-        t2.join()
+        with Pool() as pool:
+            pool.spawn(call_method_and_save_to_queue, queue=q_results, method=get_url, args=(url,))
+            pool.spawn(call_method_and_save_to_queue, queue=q_results, method=get_url, args=(result,))
+            pool.join()
         while not q_results.empty():
             htmls.append(q_results.get())
-        if htmls[0] == htmls[1]:
+        if str(htmls[0]).strip() == str(htmls[1]).strip():
             logging.debug('urlHandle:"' + url + '"-->"' + result + '"')
             return result
         return url

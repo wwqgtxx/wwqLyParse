@@ -17,7 +17,7 @@ except:
 
 def call_method_and_save_to_queue(queue, method, args=None, kwargs=None, allow_none=True):
     if args is None:
-        args = []
+        args = ()
     if kwargs is None:
         kwargs = {}
     try:

@@ -3,7 +3,7 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 
 
-import urllib.request, io, os, sys, json, re, math, subprocess, traceback
+import urllib.request, io, os, sys, json, re, math, subprocess, traceback, logging
 
 try:
     from ..common import *
@@ -45,6 +45,19 @@ try:
 
         def _run(self, arg, need_stderr=False):
             return super(YKDLParser, self)._run(arg, need_stderr)
+
+        def get_version(self):
+            try:
+                stdout, stderr = self._run(['-h'], True)
+                if "Errno" in stderr:
+                    return ""
+                return stdout.split('(')[1].split(')')[0]
+            except Exception as e:
+                logging.exception("get version error")
+                # print(e)
+                # import traceback
+                # traceback.print_exc()
+            return ""
 
 except:
     logging.exception("can't load yougetparser.py,it need to be super class")

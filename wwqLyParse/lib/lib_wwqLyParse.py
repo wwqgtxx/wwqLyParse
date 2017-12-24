@@ -14,6 +14,8 @@ def init_lib():
         lib_wwqLyParse = ctypes.cdll.LoadLibrary(get_real_path("./wwqLyParse64.dll"))
     else:
         lib_wwqLyParse = ctypes.cdll.LoadLibrary(get_real_path("./wwqLyParse32.dll"))
+    lib_wwqLyParse.get_uuid.restype = ctypes.c_char_p
+    lib_wwqLyParse.get_name.restype = ctypes.c_char_p
     logging.debug("successful load lib_wwqLyParse %s" % lib_wwqLyParse)
 
 

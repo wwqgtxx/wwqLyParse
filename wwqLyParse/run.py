@@ -112,6 +112,7 @@ def init_lib():
     else:
         lib_wwqLyParse = ctypes.cdll.LoadLibrary(get_real_path("./wwqLyParse32.dll"))
     lib_wwqLyParse.get_uuid.restype = ctypes.c_char_p
+    lib_wwqLyParse.get_name.restype = ctypes.c_char_p
     assert lib_wwqLyParse.get_uuid().decode() == CONFIG["uuid"]
 
 
@@ -297,6 +298,7 @@ def get_version():
             values = {"uuid": CONFIG["uuid"]}
             results = process(url, values)
             assert results["uuid"] == CONFIG["uuid"]
+            assert lib_wwqLyParse.get_name().decode() in results["name"]
             version = results
             logging.info(version)
             return version

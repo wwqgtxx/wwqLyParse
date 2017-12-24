@@ -2,6 +2,14 @@
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
 if __name__ == "__main__":
+
+    try:
+        import gevent
+        from gevent import monkey
+
+        monkey.patch_all()
+    except Exception:
+        gevent = None
     import os
     import sys
 
@@ -13,14 +21,6 @@ if __name__ == "__main__":
 
     del sys
     del os
-
-    try:
-        import gevent
-        from gevent import monkey
-
-        monkey.patch_all()
-    except Exception:
-        gevent = None
 
 try:
     from .common import *
@@ -58,7 +58,7 @@ app = Flask(__name__)
 version = {
     'port_version': "0.5.0",
     'type': 'parse',
-    'version': '1.1.6',
+    'version': '1.1.7',
     'uuid': '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter': [],
     'name': 'WWQ猎影解析插件',
@@ -125,9 +125,13 @@ def init_version():
         for filter_str in url_handle_obj.get_filters():
             version['filter'].append(filter_str)
 
-    version['name'] = version['name'] + version['version'] + "[Include "
+    version['name'] = lib_wwqLyParse.get_name().decode() + version['version'] + "[Include "
     try:
-        version['name'] = version['name'] + parser_class_map["YouGetParser"]().getYouGetVersion() + "&"
+        version['name'] = version['name'] + parser_class_map["YouGetParser"]().get_version() + "&"
+    except:
+        logging.warning("YouGetParser version get error")
+    try:
+        version['name'] = version['name'] + parser_class_map["YKDLParser"]().get_version() + "&"
     except:
         logging.warning("YouGetParser version get error")
     version['name'] = version['name'] + "]" + " Running on Python %s" % sys.version

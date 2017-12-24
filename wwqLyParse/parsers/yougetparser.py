@@ -417,7 +417,7 @@ streams:             # Available quality and codecs
 
         return out
 
-    def getYouGetVersion(self):
+    def get_version(self):
         try:
             stdout, stderr = self._run(['--version'], True)
             if "Errno" in stderr:

@@ -298,14 +298,14 @@ def app_close():
     debug(result)
     j_json = json.dumps(result)
     byte_str = j_json.encode("utf-8")
-    lib_parse(byte_str)
+    byte_str = lib_parse(byte_str)
     return byte_str
 
 
 @app.route('/GetVersion', methods=['POST', 'GET'])
 def app_get_version():
     values = bytes(request.data)
-    lib_parse(values)
+    values = lib_parse(values)
     values = values.decode("utf-8")
     logging.debug(values)
     values = json.loads(values)
@@ -322,14 +322,14 @@ def app_get_version():
     debug(result)
     j_json = json.dumps(result)
     byte_str = j_json.encode("utf-8")
-    lib_parse(byte_str)
+    byte_str = lib_parse(byte_str)
     return byte_str
 
 
 @app.route('/Parse', methods=['POST', 'GET'])
 def app_parse():
     values = bytes(request.data)
-    lib_parse(values)
+    values = lib_parse(values)
     values = values.decode("utf-8")
     logging.debug(values)
     values = json.loads(values)
@@ -356,14 +356,14 @@ def app_parse():
     debug(result)
     j_json = json.dumps(result)
     byte_str = j_json.encode("utf-8")
-    lib_parse(byte_str)
+    byte_str = lib_parse(byte_str)
     return byte_str
 
 
 @app.route('/ParseURL', methods=['POST', 'GET'])
 def app_parse_url():
     values = bytes(request.data)
-    lib_parse(values)
+    values = lib_parse(values)
     values = values.decode("utf-8")
     logging.debug(values)
     values = json.loads(values)
@@ -390,7 +390,7 @@ def app_parse_url():
     debug(result)
     j_json = json.dumps(result)
     byte_str = j_json.encode("utf-8")
-    lib_parse(byte_str)
+    byte_str = lib_parse(byte_str)
     return byte_str
 
 

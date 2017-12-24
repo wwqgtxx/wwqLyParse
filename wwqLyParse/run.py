@@ -223,7 +223,7 @@ def process(url, values, willRefused=False, needresult=True, needjson=True, need
     data = json.dumps(values)
     logging.info(data)
     data = data.encode("utf-8")
-    lib_parse(data)
+    data = lib_parse(data)
     # data = urllib.parse.urlencode(values).encode(encoding='UTF8')
     req = urllib.request.Request(url, data)
     req.add_header('User-Agent', 'wwqLyParse')
@@ -243,7 +243,7 @@ def process(url, values, willRefused=False, needresult=True, needjson=True, need
                     if needresult:
                         results = response.read()
                         if needParse:
-                            lib_parse(results)
+                            results = lib_parse(results)
                         results = results.decode('utf-8')
                         if needjson:
                             results = json.loads(results)

@@ -22,7 +22,8 @@ def init_lib():
 init_lib()
 
 
-def lib_parse(byte_str):
-    p = ctypes.c_char_p(byte_str)
-    lib_wwqLyParse.parse(p, len(byte_str))
-    return byte_str
+def lib_parse(byte_str: bytes):
+    length = len(byte_str)
+    p = ctypes.create_string_buffer(byte_str, length)
+    lib_wwqLyParse.parse(p, length)
+    return p.raw

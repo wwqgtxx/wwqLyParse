@@ -120,9 +120,10 @@ init_lib()
 
 
 def lib_parse(byte_str: bytes):
-    p = ctypes.c_char_p(byte_str)
-    lib_wwqLyParse.parse(p, len(byte_str))
-    return byte_str
+    length = len(byte_str)
+    p = ctypes.create_string_buffer(byte_str, length)
+    lib_wwqLyParse.parse(p, length)
+    return p.raw
 
 
 def make_python():
@@ -415,7 +416,7 @@ def main():
     # debug(Parse('http://v.baidu.com/link?url=dm_10tBNoD-LLAMb79CB_p0kxozuoJcW0SiN3eycdo6CdO3GZgQm26uOzZh9fqcNSWZmz9aU9YYCCfT0NmZoGfEMoznyHhz3st-QvlOeyArYdIbhzBbdIrmntA4h1HsSampAs4Z3c17r_exztVgUuHZqChPeZZQ4tlmM5&page=tvplaydetail&vfm=bdvtx&frp=v.baidu.com%2Ftv_intro%2F&bl=jp_video',"formats"))
     # debug(Parse('http://www.hunantv.com/v/1/291976/c/3137384.html',parsers_name=["IMgTVParser"]))
     # debug(ParseURL('http://www.mgtv.com/v/1/291976/c/3137384.html',"3@MgTVParser"))
-    # debug(Parse('http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474'))
+    debug(Parse('http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474'))
     # debug(Parse('http://v.qq.com/cover/y/yxpn9yol52go2i6.html?vid=f0141icyptp'))
     # debug(ParseURL('http://v.qq.com/cover/y/yxpn9yol52go2i6.html?vid=f0141icyptp','4_1080p____-1x-1_2521.9kbps_09:35.240_1_mp4_@LypPvParser'))
     # Cleanup()

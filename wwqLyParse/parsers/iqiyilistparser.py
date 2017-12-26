@@ -373,7 +373,7 @@ class IQiYiVListParser(Parser):
                             for item1 in data["mixinVideos"]:
                                 if type(item1) == dict and 'crumbList' in item1 and type(item1['crumbList']) == list:
                                     for item2 in item1['crumbList']:
-                                        if type(item2) == dict and 'level' in item2 and\
+                                        if type(item2) == dict and 'level' in item2 and \
                                                 item2['level'] == 3 and 'url' in item2:
                                             url = item2['url']
                                             if url:
@@ -392,9 +392,10 @@ class IQiYiVListParser(Parser):
                     data = json.loads(text)
                     if "itemListElement" in data and type(data["itemListElement"]) == list:
                         for item1 in data["itemListElement"]:
-                            if type(item1) == dict and 'position' in item1 and item1['position'] == 3 and 'item' in item1:
-                                    if type(item1['item']) == dict and '@id' in item1['item']:
-                                        url = item1['item']['@id']
+                            if type(item1) == dict and 'position' in item1 and \
+                                    item1['position'] == 3 and 'item' in item1:
+                                if type(item1['item']) == dict and '@id' in item1['item']:
+                                    url = item1['item']['@id']
                         if url:
                             break
                 except json.JSONDecodeError:
@@ -415,3 +416,41 @@ class IQiYiVListParser(Parser):
             result = get_main_parse()(input_text=url, types="list")
             if result:
                 return result[0]
+
+    # plan B
+    # http://cache.video.qiyi.com/jp/vi/451038600/faca833cc73ec8d7d8d248199bc3e7b8/?callback=Q9edfe6276cafa46823e1a575b86be2cb
+    # <script type="text/javascript">
+    #   QiyiPlayerLoader.ready(function(playerManager) {
+    #     var param = {};
+    #     param['parentId'] = 'flashbox';
+    #     param['albumid'] = "203622401";
+    #     param['tvid'] = "451038600";
+    #     param['vid'] = "faca833cc73ec8d7d8d248199bc3e7b8";
+    #     param['albumId'] = "203622401";
+    #     param['channelID'] = "2";
+    #     param['isMember'] = "false";
+    #     param['qiyiProduced'] = "0";
+    #     param['exclusive'] = "0";
+    #     param['origin'] = "flash";
+    #     param['collectionID'] = "";
+    #     param['share_sTime'] = "";
+    #     param['share_eTime'] = "";
+    #     param['autoplay'] = true;
+    #     param['cyclePlay'] = false;
+    #     param['isSource'] = "0";
+    #     param['pgct'] = window.__qlt.statisticsStart;
+    #     param['usevr'] = false;
+    #     param['supportedDrmTypes']  = 0;
+    #     param['ppt']  = 0;
+    #     playerManager.createPlayer(param);
+    #   });
+    # </script>
+    # ------result------
+    # try{Q9edfe6276cafa46823e1a575b86be2cb(
+    # {"shortTitle":"五鼠闹东京DVD版第1集",
+    #  "editorInfo":"王明芸 AS003",
+    #  "videoQipuId":451038600,
+    #  "rewardAllowed":0,
+    #  "nurl":"http:\/\/www.iqiyi.com\/v_19rrl8pofw.html",
+    # ...................................................
+    #  });}catch(e){};

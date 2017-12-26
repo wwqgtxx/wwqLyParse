@@ -31,7 +31,7 @@ if __name__ == "__main__":
     # main("http://www.mgtv.com/b/316045/4096972.html", label="3@MgTVParser")
     # url_cache.timeout = 10
     main("http://www.iqiyi.com/v_19rrl8pmn8.html", types="list")
-    # main("http://www.iqiyi.com/v_19rrl8pmn8.html", types="list")
+    # main("http://www.iqiyi.com/v_19rr8jbmeo.html", types="list")
     # time.sleep(10)
     # main("http://www.iqiyi.com/v_19rrl8pmn8.html", types="list")
     # main("http://www.iqiyi.com/v_19rrl8pmn8.html", parsers_name=["IQiYiMTsParser"])
@@ -48,6 +48,9 @@ if __name__ == "__main__":
     # main("http://www.mgtv.com/b/308710/3917451.html", label="2_hd_超清_982.06 MB@YouGetParser")
     # main("http://www.mgtv.com/b/308710/3917451.html", parsers_name=["YKDLParser"])
     # main("http://www.mgtv.com/b/308710/3917451.html", label="1_TD_超清_0@YKDLParser")
+    # main("https://www.bilibili.com/video/av17246756/", parsers_name=["YKDLParser"])
+    # main("https://www.bilibili.com/video/av17246756/", parsers_name=["YouGetParser"])
+    # main("https://www.bilibili.com/video/av17246756/", label="flv@YouGetParser")
     # main("http://www.bilibili.com/video/av3153352/", parsers_name=["YouGetParser"])
     # main("http://www.bilibili.com/video/av3153352/", label="2_flv__13.31 MB@YouGetParser")
     # main("http://www.le.com/ptv/vplay/27416375.html", parsers_name=["YouGetParser"])

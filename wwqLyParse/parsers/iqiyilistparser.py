@@ -353,10 +353,62 @@ class IQiYiVListParser(Parser):
     def parse(self, input_text, pool=pool_get_url, *k, **kk):
         logging.debug(input_text)
         html = PyQuery(get_url(input_text, pool=pool))
-        datainfo_navlist = PyQuery(html("#drama-series-title"))
-        for a in datainfo_navlist.children('a'):
-            a = PyQuery(a)
-            url = a.attr("href")
+        url = ""
+        if not url:
+            jss = html("script[type='text/javascript']")
+            for item in jss:
+                text = PyQuery(item).text()
+                if "Q.PageInfo.playPageData = {" in text:
+                    split_text = text.replace("\r", ""). \
+                                     replace("\n", ""). \
+                                     replace("Q.PageInfo.playPageData = {", ""). \
+                                     strip(). \
+                                     replace("albumData:", ""). \
+                                     strip()[:-1].strip()
+                    logging.debug(split_text)
+                    try:
+                        data = json.loads(split_text)
+                        print(json.dumps(data))
+                        if "mixinVideos" in data and type(data["mixinVideos"]) == list:
+                            for item1 in data["mixinVideos"]:
+                                if type(item1) == dict and 'crumbList' in item1 and type(item1['crumbList']) == list:
+                                    for item2 in item1['crumbList']:
+                                        if type(item2) == dict and 'level' in item2 and\
+                                                item2['level'] == 3 and 'url' in item2:
+                                            url = item2['url']
+                                            if url:
+                                                break
+                                if url:
+                                    break
+                    except json.JSONDecodeError:
+                        logging.exception("IQiYiVListParser Error")
+                if url:
+                    break
+        if not url:
+            ld_json = html("script[type='application/ld+json']")
+            for item in ld_json:
+                text = PyQuery(item).text().replace("\n", "").replace("\r", "")
+                try:
+                    data = json.loads(text)
+                    if "itemListElement" in data and type(data["itemListElement"]) == list:
+                        for item1 in data["itemListElement"]:
+                            if type(item1) == dict and 'position' in item1 and item1['position'] == 3 and 'item' in item1:
+                                    if type(item1['item']) == dict and '@id' in item1['item']:
+                                        url = item1['item']['@id']
+                        if url:
+                            break
+                except json.JSONDecodeError:
+                    logging.exception("IQiYiVListParser Error")
+                if url:
+                    break
+        if not url:
+            data_info_list = PyQuery(html("h2.playList-title-txt"))
+            for a in data_info_list.children('a'):
+                a = PyQuery(a)
+                url = a.attr("href")
+                if url:
+                    break
+        if url:
             if str(url).startswith("//"):
                 url = "http:" + str(url)
             logging.info("change %s to %s" % (input_text, url))

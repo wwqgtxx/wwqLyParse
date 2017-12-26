@@ -28,7 +28,7 @@ def get_real_path(abstract_path):
 
 need_close = True
 if __name__ == '__main__':
-    CONFIG["port"] = 8000
+    CONFIG["port"] = 8005
 else:
     try:
         with open(get_real_path('../../../ver.txt')) as f:
@@ -111,6 +111,9 @@ def init_lib():
         lib_wwqLyParse = ctypes.cdll.LoadLibrary(get_real_path("./wwqLyParse64.dll"))
     else:
         lib_wwqLyParse = ctypes.cdll.LoadLibrary(get_real_path("./wwqLyParse32.dll"))
+    lib_wwqLyParse.parse.argtypes = [ctypes.c_char_p, ctypes.c_int,
+                                     ctypes.POINTER(ctypes.POINTER(ctypes.c_char)),
+                                     ctypes.POINTER(ctypes.c_int)]
     lib_wwqLyParse.get_uuid.restype = ctypes.c_char_p
     lib_wwqLyParse.get_name.restype = ctypes.c_char_p
     assert lib_wwqLyParse.get_uuid().decode() == CONFIG["uuid"]
@@ -121,9 +124,15 @@ init_lib()
 
 def lib_parse(byte_str: bytes):
     length = len(byte_str)
-    p = ctypes.create_string_buffer(byte_str, length)
-    lib_wwqLyParse.parse(p, length)
-    return p.raw
+    result_length = ctypes.c_int()
+    result_p = ctypes.POINTER(ctypes.c_char)()
+    # p = ctypes.create_string_buffer(byte_str, length)
+    p = ctypes.c_char_p(byte_str)
+    lib_wwqLyParse.parse(p, length, ctypes.byref(result_p), ctypes.byref(result_length))
+    result_arr = ctypes.cast(result_p, ctypes.POINTER(ctypes.c_char * result_length.value)).contents
+    result = b''.join(result_arr)
+    lib_wwqLyParse.free_str(result_p)
+    return result
 
 
 def make_python():
@@ -409,14 +418,13 @@ def main():
     # debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html',"formats",parsers_name=["IQiYiParser"]))
     # debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html',"formats",parsers_name=["PVideoParser"]))
     # debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html'))
-    # debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","2.0@PVideoParser"))
-    # #debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html","fullhd@IQiYiParser"))
+    # debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html", "1080P-H264-S@IQiYiParser"))
     # debug(Parse('http://v.pptv.com/show/NWR29Yzj2hh7ibWE.html?rcc_src=S1'))
     # debug(Parse('http://www.bilibili.com/video/av2557971/')) #don't support
     # debug(Parse('http://v.baidu.com/link?url=dm_10tBNoD-LLAMb79CB_p0kxozuoJcW0SiN3eycdo6CdO3GZgQm26uOzZh9fqcNSWZmz9aU9YYCCfT0NmZoGfEMoznyHhz3st-QvlOeyArYdIbhzBbdIrmntA4h1HsSampAs4Z3c17r_exztVgUuHZqChPeZZQ4tlmM5&page=tvplaydetail&vfm=bdvtx&frp=v.baidu.com%2Ftv_intro%2F&bl=jp_video',"formats"))
     # debug(Parse('http://www.hunantv.com/v/1/291976/c/3137384.html',parsers_name=["IMgTVParser"]))
     # debug(ParseURL('http://www.mgtv.com/v/1/291976/c/3137384.html',"3@MgTVParser"))
-    debug(Parse('http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474'))
+    # debug(Parse('http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474'))
     # debug(Parse('http://v.qq.com/cover/y/yxpn9yol52go2i6.html?vid=f0141icyptp'))
     # debug(ParseURL('http://v.qq.com/cover/y/yxpn9yol52go2i6.html?vid=f0141icyptp','4_1080p____-1x-1_2521.9kbps_09:35.240_1_mp4_@LypPvParser'))
     # Cleanup()

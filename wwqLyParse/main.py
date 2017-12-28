@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
 if __name__ == "__main__":
+    # import sys
+    #
+    # sys.modules["gevent"] = None
 
     try:
         import gevent
@@ -47,18 +50,19 @@ except Exception as e:
     from lib.lib_wwqLyParse import *
 
 import re, threading, sys, json, os, time, logging, importlib
+import multiprocessing.connection
 from argparse import ArgumentParser
 
-try:
-    from flask import Flask, request, abort
-except Exception:
-    from .flask import Flask, request, abort
-app = Flask(__name__)
+# try:
+#     from flask import Flask, request, abort
+# except Exception:
+#     from .flask import Flask, request, abort
+# app = Flask(__name__)
 
 version = {
     'port_version': "0.5.0",
     'type': 'parse',
-    'version': '1.1.9',
+    'version': '1.2.0',
     'uuid': '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter': [],
     'name': 'WWQ猎影解析插件',
@@ -283,102 +287,40 @@ def close():
     pool.spawn(exit)
 
 
-@app.route('/close', methods=['POST', 'GET'])
-def app_close():
+# @app.route('/cache/<url>', methods=['POST', 'GET'])
+# def cache(url):
+#     data = get_http_cache_data(url)
+#     if data is not None:
+#         return data
+#     else:
+#         abort(404)
+
+def _handle(data):
+    req_type = data["type"]
+    req_data = data["data"]
+    req_data = lib_parse(req_data)
+    req_data = req_data.decode()
     try:
-        if request.user_agent.string != "wwqLyParse":
-            result = {"type": "error", "error": "Error UserAgent{%s}!" % request.user_agent.string}
-        else:
+        result = ""
+        if req_type == "close":
             close()
-            return ""
-    except Exception as e:
-        info = traceback.format_exc()
-        logging.error(info)
-        result = {"type": "error", "error": info}
-    debug(result)
-    j_json = json.dumps(result)
-    byte_str = j_json.encode("utf-8")
-    byte_str = lib_parse(byte_str)
-    return byte_str
-
-
-@app.route('/GetVersion', methods=['POST', 'GET'])
-def app_get_version():
-    values = bytes(request.data)
-    values = lib_parse(values)
-    values = values.decode("utf-8")
-    logging.debug(values)
-    values = json.loads(values)
-
-    try:
-        if request.user_agent.string != "wwqLyParse":
-            result = {"type": "error", "error": "Error UserAgent{%s}!" % request.user_agent.string}
-        else:
+        elif req_type == "GetVersion":
             result = get_version()
-    except Exception as e:
-        info = traceback.format_exc()
-        logging.error(info)
-        result = {"type": "error", "error": info}
-    debug(result)
-    j_json = json.dumps(result)
-    byte_str = j_json.encode("utf-8")
-    byte_str = lib_parse(byte_str)
-    return byte_str
-
-
-@app.route('/Parse', methods=['POST', 'GET'])
-def app_parse():
-    values = bytes(request.data)
-    values = lib_parse(values)
-    values = values.decode("utf-8")
-    logging.debug(values)
-    values = json.loads(values)
-
-    try:
-        if request.user_agent.string != "wwqLyParse":
-            result = {"type": "error", "error": "Error UserAgent{%s}!" % request.user_agent.string}
-        else:
-            uuid = values.get('uuid', None)
-            if uuid is None or uuid != version["uuid"]:
-                raise Exception("get the error uuid:" + str(uuid))
-            s_json = values.get('json', None)
-            if s_json is not None:
-                logging.debug("input json:" + s_json)
-                j_json = json.loads(s_json)
+        elif req_type == "Parse":
+            if req_data is not None:
+                logging.debug("input json:" + req_data)
+                j_json = req_data
+                j_json = json.loads(j_json)
                 logging.debug("load json:" + str(j_json))
-                result = parse(j_json["input_text"], j_json["types"], j_json["parsers_name"], j_json["urlhandles_name"])
+                result = parse(j_json["input_text"], j_json["types"], j_json["parsers_name"],
+                               j_json["urlhandles_name"])
             else:
                 raise Exception("can't get input json")
-    except Exception as e:
-        info = traceback.format_exc()
-        logging.error(info)
-        result = {"type": "error", "error": info}
-    debug(result)
-    j_json = json.dumps(result)
-    byte_str = j_json.encode("utf-8")
-    byte_str = lib_parse(byte_str)
-    return byte_str
-
-
-@app.route('/ParseURL', methods=['POST', 'GET'])
-def app_parse_url():
-    values = bytes(request.data)
-    values = lib_parse(values)
-    values = values.decode("utf-8")
-    logging.debug(values)
-    values = json.loads(values)
-
-    try:
-        if request.user_agent.string != "wwqLyParse":
-            result = {"type": "error", "error": "Error UserAgent{%s}!" % request.user_agent.string}
-        else:
-            uuid = values.get('uuid', None)
-            if uuid is None or uuid != version["uuid"]:
-                raise Exception("get the error uuid:" + str(uuid))
-            s_json = values.get('json', None)
-            if s_json is not None:
-                logging.debug("input json:" + s_json)
-                j_json = json.loads(s_json)
+        elif req_type == "ParseURL":
+            if req_data is not None:
+                logging.debug("input json:" + req_data)
+                j_json = req_data
+                j_json = json.loads(j_json)
                 logging.debug("load json:" + str(j_json))
                 result = parse_url(j_json["input_text"], j_json["label"], j_json["min"], j_json["max"],
                                    j_json["urlhandles_name"])
@@ -386,6 +328,7 @@ def app_parse_url():
                 raise Exception("can't get input json")
     except Exception as e:
         info = traceback.format_exc()
+        logging.error(info)
         result = {"type": "error", "error": info}
     debug(result)
     j_json = json.dumps(result)
@@ -394,19 +337,64 @@ def app_parse_url():
     return byte_str
 
 
-@app.route('/cache/<url>', methods=['POST', 'GET'])
-def cache(url):
-    data = get_http_cache_data(url)
-    if data is not None:
-        return data
-    else:
-        abort(404)
+def _recv(conn: multiprocessing.connection.Connection):
+    try:
+        return conn.recv()
+    except EOFError:
+        pass
+    except BrokenPipeError:
+        pass
+    return None
+
+
+def _send(conn: multiprocessing.connection.Connection, *k, **kk):
+    try:
+        conn.send(*k, **kk)
+    except EOFError:
+        pass
+    except BrokenPipeError:
+        pass
+    return False
+
+
+def handle(conn: multiprocessing.connection.Connection, listener_threadpool):
+    with conn:
+        logging.debug("parse conn %s" % conn)
+        while True:
+            data = listener_threadpool.apply(_recv, args=(conn,))
+            if not data:
+                break
+            logging.debug(data)
+            result = _handle(data)
+            if listener_threadpool.apply(_send, args=(conn, result,)) is False:
+                break
+
+
+def _run(address):
+    listener_threadpool = ThreadPool(20)
+    parser_pool = Pool()
+    with multiprocessing.connection.Listener(address, authkey=lib_wwqLyParse.get_uuid()) as listener:
+        while True:
+            try:
+                conn = listener_threadpool.apply(listener.accept, args=())
+                logging.debug("get a new conn %s" % conn)
+                parser_pool.spawn(handle, conn, listener_threadpool)
+            except:
+                pass
+
+
+def run(pipe):
+    address = r'\\.\pipe\%s' % pipe
+    logging.info("listen address:'%s'" % address)
+    _run(address)
+    # gevent.get_hub().threadpool.apply(_run, args=(pipe,))
 
 
 def arg_parser():
     parser = ArgumentParser(description=version["name"])
-    parser.add_argument('--host', type=str, default='127.0.0.1', help="set listening ip")
-    parser.add_argument('-p', '--port', type=int, default=5000, help="set listening port")
+    parser.add_argument('--pipe', type=str, default='wwqLyParse', help="set PipeName")
+    # parser.add_argument('--host', type=str, default='127.0.0.1', help="set listening ip")
+    # parser.add_argument('-p', '--port', type=int, default=5000, help="set listening port")
     parser.add_argument('-t', '--timeout', type=int, default=PARSE_TIMEOUT,
                         help="set parse timeout seconds, default 60s")
     parser.add_argument('--close_timeout', type=int, default=CLOSE_TIMEOUT,
@@ -426,7 +414,7 @@ def arg_parser():
     return args
 
 
-def main(debugstr=None, parsers_name=None, types=None, label=None, host="127.0.0.1", port="5000", timeout=PARSE_TIMEOUT,
+def main(debugstr=None, parsers_name=None, types=None, label=None, pipe="wwqLyParse", timeout=PARSE_TIMEOUT,
          close_timeout=CLOSE_TIMEOUT):
     logging.debug("\n------------------------------------------------------------\n")
     global PARSE_TIMEOUT
@@ -439,13 +427,13 @@ def main(debugstr=None, parsers_name=None, types=None, label=None, host="127.0.0
         else:
             debug(parse_url(debugstr, label))
     else:
-        app.run(host=host, port=port, debug=False, use_reloader=False, threaded=True)
+        run(pipe)
 
 
 if __name__ == '__main__':
     init_version()
     args = arg_parser()
     globals()["args"] = args
-    main(args.debug, args.parser, args.types, args.label, args.host, args.port, args.timeout, args.close_timeout)
+    main(args.debug, args.parser, args.types, args.label, args.pipe, args.timeout, args.close_timeout)
 
     # main()

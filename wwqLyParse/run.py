@@ -3,12 +3,19 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 
 CONFIG = {
-    "host": "127.0.0.1",
-    "port": 5000,
+    "pipe": 'wwqLyParse',
     "uuid": '{C35B9DFC-559F-49E2-B80B-79B66EC77471}'
 }
 
+address = r'\\.\pipe\%s' % CONFIG["pipe"]
+
 import urllib.request, urllib.parse, json, sys, subprocess, time, logging, traceback, ctypes, sysconfig
+import multiprocessing
+import multiprocessing.connection
+try:
+    import _winapi
+except:
+    _winapi = None
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(filename)s[line:%(lineno)d]<%(funcName)s> %(threadName)s %(levelname)s : %(message)s',
@@ -176,17 +183,21 @@ def check_embed_python():
 check_embed_python()
 
 
-def is_open(ip, port):
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.settimeout(0.1)
+def is_open(addr):
     try:
-        s.connect((ip, int(port)))
-        s.shutdown(2)
-        logging.info(get_caller_info() + '%d is open' % port)
+        with multiprocessing.connection.Client(addr, authkey=lib_wwqLyParse.get_uuid()) as conn:
+            pass
+        # _winapi.WaitNamedPipe(addr, 1000)
+        logging.info(get_caller_info() + "'%s' is open" % addr)
         return True
-    except:
-        logging.info(get_caller_info() + '%d is down' % port)
-        return False
+    except multiprocessing.AuthenticationError:
+        pass
+    except FileNotFoundError:
+        pass
+    except EOFError:
+        pass
+    logging.info(get_caller_info() + "'%s' is close" % addr)
+    return False
 
 
 def _run_main():
@@ -201,8 +212,7 @@ def _run_main():
         args = [py_bin, '--normal', y_bin]
     else:
         args = [py_bin, y_bin]
-    args += ['--host', CONFIG["host"]]
-    args += ['--port', str(CONFIG["port"])]
+    args += ['--pipe', CONFIG["pipe"]]
     logging.info(args)
     p = subprocess.Popen(args, shell=False, cwd=get_real_root_path(), close_fds=True)
     globals()["p"] = p
@@ -210,17 +220,17 @@ def _run_main():
 
 def init():
     for n in range(2):
-        if not is_open(CONFIG["host"], CONFIG["port"]):
+        if not is_open(address):
             _run_main()
         else:
             return
         for i in range(100):
-            if not is_open(CONFIG["host"], CONFIG["port"]):
-                time.sleep(0.05)
+            if not is_open(address):
+                time.sleep(0.1)
             else:
                 return
         for i in range(10):
-            if not is_open(CONFIG["host"], CONFIG["port"]):
+            if not is_open(address):
                 time.sleep(1)
             else:
                 return
@@ -229,44 +239,66 @@ def init():
     raise Exception("can't init server")
 
 
-def process(url, values, willRefused=False, needresult=True, needjson=True, needParse=True):
-    data = json.dumps(values)
+def process(url, data, willRefused=False, needresult=True, needjson=True, needParse=True):
     logging.info(data)
     data = data.encode("utf-8")
     data = lib_parse(data)
-    # data = urllib.parse.urlencode(values).encode(encoding='UTF8')
-    req = urllib.request.Request(url, data)
-    req.add_header('User-Agent', 'wwqLyParse')
-    req.add_header('Content-type', 'wwqLyParse')
-    # req.add_header('Referer', 'http://www.python.org/')
-    for n in range(3):
-        try:
+    try:
+        with multiprocessing.connection.Client(address, authkey=lib_wwqLyParse.get_uuid()) as conn:
+            req = {"type": url, "data": data}
+            logging.debug(req)
+            conn.send(req)
             if willRefused:
-                try:
-                    urllib.request.urlopen(req)
-                    return
-                except:
-                    return
-            for i in range(10):
-                try:
-                    response = urllib.request.urlopen(req)
-                    if needresult:
-                        results = response.read()
-                        if needParse:
-                            results = lib_parse(results)
-                        results = results.decode('utf-8')
-                        if needjson:
-                            results = json.loads(results)
-                        return results
-                    else:
-                        return
-                except socket.timeout:
-                    logging.info('request attempt %s timeout' % str(i + 1))
-        except Exception as e:
-            # logging.info(e)
-            import traceback
-            traceback.print_exc()
-    raise Exception("can't process " + str(url) + str(values))
+                return
+            if needresult:
+                results = conn.recv()
+                if needParse:
+                    results = lib_parse(results)
+                results = results.decode('utf-8')
+                if needjson:
+                    results = json.loads(results)
+                return results
+            else:
+                return
+    except EOFError:
+        if willRefused:
+            return
+        else:
+            raise
+
+    # # data = urllib.parse.urlencode(values).encode(encoding='UTF8')
+    # req = urllib.request.Request(url, data)
+    # req.add_header('User-Agent', 'wwqLyParse')
+    # req.add_header('Content-type', 'wwqLyParse')
+    # # req.add_header('Referer', 'http://www.python.org/')
+    # for n in range(3):
+    #     try:
+    #         if willRefused:
+    #             try:
+    #                 urllib.request.urlopen(req)
+    #                 return
+    #             except:
+    #                 return
+    #         for i in range(10):
+    #             try:
+    #                 response = urllib.request.urlopen(req)
+    #                 if needresult:
+    #                     results = response.read()
+    #                     if needParse:
+    #                         results = lib_parse(results)
+    #                     results = results.decode('utf-8')
+    #                     if needjson:
+    #                         results = json.loads(results)
+    #                     return results
+    #                 else:
+    #                     return
+    #             except socket.timeout:
+    #                 logging.info('request attempt %s timeout' % str(i + 1))
+    #     except Exception as e:
+    #         # logging.info(e)
+    #         import traceback
+    #         traceback.print_exc()
+    # raise Exception("can't process " + str(url) + str(values))
 
 
 def close_server():
@@ -277,16 +309,16 @@ def close_server():
     except:
         pass
     for n in range(2):
-        if is_open(CONFIG["host"], CONFIG["port"]):
-            url = 'http://%s:%d/close' % (CONFIG["host"], CONFIG["port"])
+        if is_open(address):
+            url = 'close'
             values = {"uuid": CONFIG["uuid"]}
             process(url, values, willRefused=True)
             for n in range(100):
-                if not is_open(CONFIG["host"], CONFIG["port"]):
+                if not is_open(address):
                     return
                 time.sleep(0.05)
             for n in range(5):
-                if not is_open(CONFIG["host"], CONFIG["port"]):
+                if not is_open(address):
                     return
                 time.sleep(1)
         return
@@ -300,20 +332,20 @@ def get_version():
     global version
     for n in range(3):
         try:
-            if need_close:
-                close_server()
             init()
-            url = 'http://%s:%d/GetVersion' % (CONFIG["host"], CONFIG["port"])
-            # user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
-            values = {"uuid": CONFIG["uuid"]}
-            results = process(url, values)
+            url = 'GetVersion'
+            values = {}
+            jjson = json.dumps(values)
+            results = process(url, jjson)
             assert results["uuid"] == CONFIG["uuid"]
             assert lib_wwqLyParse.get_name().decode() in results["name"]
             version = results
             logging.info(version)
             return version
         except:
-            logging.exception("getVersion fail on %s:%d" % (CONFIG["host"], CONFIG["port"]))
+            logging.exception("getVersion fail on '%s'" % address)
+        if need_close:
+            close_server()
         CONFIG["port"] += 1
 
 
@@ -323,6 +355,8 @@ def Cleanup():
 
 def GetVersion(debug=False):
     if not version:
+        if need_close:
+            close_server()
         get_version()
     if not debug:
         close_server()
@@ -336,7 +370,7 @@ def Parse(input_text, types=None, parsers_name=None, urlhandles_name=None):
     for n in range(3):
         try:
             init()
-            url = 'http://%s:%d/Parse' % (CONFIG["host"], CONFIG["port"])
+            url = 'Parse'
             # user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
             values = {}
             values["input_text"] = input_text
@@ -344,8 +378,7 @@ def Parse(input_text, types=None, parsers_name=None, urlhandles_name=None):
             values["parsers_name"] = parsers_name
             values["urlhandles_name"] = urlhandles_name
             jjson = json.dumps(values)
-            values = {"json": jjson, "uuid": CONFIG["uuid"]}
-            results = process(url, values)
+            results = process(url, jjson)
             return results
         except Exception as e:
             # logging.info(e)
@@ -362,7 +395,7 @@ def ParseURL(input_text, label, min=None, max=None, urlhandles_name=None):
     for n in range(3):
         try:
             init()
-            url = 'http://%s:%d/ParseURL' % (CONFIG["host"], CONFIG["port"])
+            url = 'ParseURL'
             # user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
             values = {}
             values["input_text"] = input_text
@@ -371,8 +404,7 @@ def ParseURL(input_text, label, min=None, max=None, urlhandles_name=None):
             values["max"] = max
             values["urlhandles_name"] = urlhandles_name
             jjson = json.dumps(values)
-            values = {"json": jjson, "uuid": CONFIG["uuid"]}
-            results = process(url, values)
+            results = process(url, jjson)
             return results
         except Exception as e:
             # logging.info(e)
@@ -398,7 +430,7 @@ def main():
     # Cleanup()
     # debug(Parse('http://www.iqiyi.com/lib/m_209445514.html?src=search'))
     # debug(Parse('http://www.iqiyi.com/a_19rrhacdwt.html#vfrm=2-4-0-1'))
-    # debug(Parse('http://www.iqiyi.com/a_19rrhaare5.html'))
+    debug(Parse('http://www.iqiyi.com/a_19rrhaare5.html'))
     # debug(Parse('http://www.iqiyi.com/a_19rrhbhf6d.html#vfrm=2-3-0-1'))
     # debug(Parse('http://www.le.com'))
     # debug(Parse('http://www.letv.com/comic/10010294.html'))
@@ -418,12 +450,12 @@ def main():
     # debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html',"formats",parsers_name=["IQiYiParser"]))
     # debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html',"formats",parsers_name=["PVideoParser"]))
     # debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html'))
-    # debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html", "1080P-H264-S@IQiYiParser"))
+    # debug(ParseURL("http://www.iqiyi.com/v_19rrl8pmn8.html", "1080P-H264@IQiYiParser"))
     # debug(Parse('http://v.pptv.com/show/NWR29Yzj2hh7ibWE.html?rcc_src=S1'))
     # debug(Parse('http://www.bilibili.com/video/av2557971/')) #don't support
     # debug(Parse('http://v.baidu.com/link?url=dm_10tBNoD-LLAMb79CB_p0kxozuoJcW0SiN3eycdo6CdO3GZgQm26uOzZh9fqcNSWZmz9aU9YYCCfT0NmZoGfEMoznyHhz3st-QvlOeyArYdIbhzBbdIrmntA4h1HsSampAs4Z3c17r_exztVgUuHZqChPeZZQ4tlmM5&page=tvplaydetail&vfm=bdvtx&frp=v.baidu.com%2Ftv_intro%2F&bl=jp_video',"formats"))
-    # debug(Parse('http://www.hunantv.com/v/1/291976/c/3137384.html',parsers_name=["IMgTVParser"]))
-    # debug(ParseURL('http://www.mgtv.com/v/1/291976/c/3137384.html',"3@MgTVParser"))
+    # debug(Parse('https://www.mgtv.com/b/318221/4222532.html',parsers_name=["MgTVParser"]))
+    debug(ParseURL('https://www.mgtv.com/b/318221/4222532.html',"3@MgTVParser"))
     # debug(Parse('http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474'))
     # debug(Parse('http://v.qq.com/cover/y/yxpn9yol52go2i6.html?vid=f0141icyptp'))
     # debug(ParseURL('http://v.qq.com/cover/y/yxpn9yol52go2i6.html?vid=f0141icyptp','4_1080p____-1x-1_2521.9kbps_09:35.240_1_mp4_@LypPvParser'))
@@ -435,4 +467,5 @@ if __name__ == '__main__':
     try:
         main()
     finally:
+        # pass
         Cleanup()

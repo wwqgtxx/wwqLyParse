@@ -8,6 +8,7 @@ import urllib, io, os, sys, json, re, math, subprocess, time, binascii, math, lo
 from uuid import uuid4
 from math import floor
 import hashlib
+import tempfile
 
 try:
     from ..common import *
@@ -184,8 +185,12 @@ class LeParser(Parser):
                 while not m3u8:
                     m3u8 = result_queue.get()
                 m3u8_list = self.decode_m3u8(m3u8)
-                file_name = put_new_http_cache_data(m3u8_list, ".m3u8")
-                file_url = get_http_cache_data_url(file_name)
-                info["urls"] = [file_url]
+                with tempfile.NamedTemporaryFile(suffix=".m3u8") as f:
+                    f.write(m3u8_list)
+                    file_url = f.name
+                    info["urls"] = ["file:///" + file_url]
+                # file_name = put_new_http_cache_data(m3u8_list, ".m3u8")
+                # file_url = get_http_cache_data_url(file_name)
+                # info["urls"] = [file_url]
 
         return [info]

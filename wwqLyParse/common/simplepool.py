@@ -43,3 +43,11 @@ class Pool(object):
     def kill(self, *k, block=False, **kk):
         if self.pool_size is not None:
             self.ex.shutdown(wait=block)
+
+
+class ThreadPool(Pool):
+    def apply(self, func, args=None, kwds=None):
+        from .pool import call_method_and_save_to_queue
+        queue = Queue(1)
+        self.spawn(call_method_and_save_to_queue, queue, func, args, kwds)
+        return queue.get()

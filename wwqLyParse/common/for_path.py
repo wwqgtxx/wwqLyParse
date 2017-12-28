@@ -15,5 +15,5 @@ def get_real_path(abstract_path):
     return os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(COMMON_PATH)), abstract_path))
 
 
-sys.path.insert(0, get_real_path('./lib/flask_lib'))
+# sys.path.insert(0, get_real_path('./lib/flask_lib'))
 sys.path.insert(0, get_real_path('./lib/requests_lib'))

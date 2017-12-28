@@ -21,10 +21,10 @@ try:
 except Exception as e:
     from common import *
 
-try:
-    from flask import Flask,request
-except Exception:
-    from .flask import Flask,request
+# try:
+#     from flask import Flask,request
+# except Exception:
+#     from .flask import Flask,request
 
 if __name__ == "__main__":
     print("ok")

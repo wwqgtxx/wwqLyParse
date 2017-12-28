@@ -4,12 +4,14 @@
 try:
     from gevent import GreenletExit
     from gevent.pool import Pool as _Pool
+    from gevent.threadpool import ThreadPool
     from gevent.queue import Queue
 
     POOL_TYPE = "geventpool"
 except:
     from .simplepool import GreenletExit
     from .simplepool import Pool as _Pool
+    from .simplepool import ThreadPool
     from queue import Queue
 
     POOL_TYPE = "simplepool"

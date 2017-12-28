@@ -602,9 +602,9 @@ class BaseWSGIServer(HTTPServer, object):
             self.server_close()
 
     def handle_error(self, request, client_address):
-        if self.passthrough_errors:
-            # noinspection Annotator
-            raise
+        # if self.passthrough_errors:
+        #     # noinspection Annotator
+        #     raise
         return HTTPServer.handle_error(self, request, client_address)
 
     def get_request(self):

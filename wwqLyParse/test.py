@@ -30,7 +30,7 @@ if __name__ == "__main__":
     # main("http://www.mgtv.com/b/316045/4096972.html", parsers_name=["MgTVParser"])
     # main("http://www.mgtv.com/b/316045/4096972.html", label="3@MgTVParser")
     # url_cache.timeout = 10
-    main("http://www.iqiyi.com/v_19rrl8pmn8.html", types="list")
+    # main("http://www.iqiyi.com/v_19rrl8pmn8.html", types="list")
     # main("http://www.iqiyi.com/v_19rr8jbmeo.html", types="list")
     # time.sleep(10)
     # main("http://www.iqiyi.com/v_19rrl8pmn8.html", types="list")
@@ -56,7 +56,7 @@ if __name__ == "__main__":
     # main("http://www.le.com/ptv/vplay/27416375.html", parsers_name=["YouGetParser"])
     # main("http://www.le.com/ptv/vplay/1981824.html", types="list")
     # main("http://www.le.com/ptv/vplay/27416375.html", parsers_name=["LeParser"])
-    # main("http://www.le.com/ptv/vplay/27416375.html", label="1080p@LeParser")
+    main("http://www.le.com/ptv/vplay/27416375.html", label="1080p@LeParser")
     # main("http://v.youku.com/v_show/id_XMjcxMzkwMjU3Mg==.html", types="list")
     # main("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474")
     # main("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474", parsers_name=["YouGetParser"])

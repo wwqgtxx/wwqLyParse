@@ -2,7 +2,10 @@
   <dictionary name="Administrator">
     <words>
       <w>argtypes</w>
+      <w>fileno</w>
       <w>kwds</w>
+      <w>maxlength</w>
+      <w>recv</w>
       <w>systeminfo</w>
       <w>threadpool</w>
       <w>ykdl</w>

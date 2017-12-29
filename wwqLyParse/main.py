@@ -50,7 +50,6 @@ except Exception as e:
     from lib.lib_wwqLyParse import *
 
 import re, threading, sys, json, os, time, logging, importlib
-import multiprocessing.connection
 from argparse import ArgumentParser
 
 # try:
@@ -62,7 +61,7 @@ from argparse import ArgumentParser
 version = {
     'port_version': "0.5.0",
     'type': 'parse',
-    'version': '1.2.0',
+    'version': '1.2.1',
     'uuid': '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter': [],
     'name': 'WWQ猎影解析插件',
@@ -337,57 +336,39 @@ def _handle(data):
     return byte_str
 
 
-def _recv(conn: multiprocessing.connection.Connection):
+def handle(conn: multiprocessing_connection.Connection):
     try:
-        return conn.recv()
+        with conn:
+            logging.debug("parse conn %s" % conn)
+            while not conn.closed:
+                data = conn.recv()
+                if not data:
+                    break
+                logging.debug(data)
+                result = _handle(data)
+                conn.send(result)
     except EOFError:
         pass
     except BrokenPipeError:
         pass
-    return None
-
-
-def _send(conn: multiprocessing.connection.Connection, *k, **kk):
-    try:
-        conn.send(*k, **kk)
-    except EOFError:
-        pass
-    except BrokenPipeError:
-        pass
-    return False
-
-
-def handle(conn: multiprocessing.connection.Connection, listener_threadpool):
-    with conn:
-        logging.debug("parse conn %s" % conn)
-        while True:
-            data = listener_threadpool.apply(_recv, args=(conn,))
-            if not data:
-                break
-            logging.debug(data)
-            result = _handle(data)
-            if listener_threadpool.apply(_send, args=(conn, result,)) is False:
-                break
 
 
 def _run(address):
-    listener_threadpool = ThreadPool(20)
-    parser_pool = Pool()
-    with multiprocessing.connection.Listener(address, authkey=lib_wwqLyParse.get_uuid()) as listener:
-        while True:
-            try:
-                conn = listener_threadpool.apply(listener.accept, args=())
-                logging.debug("get a new conn %s" % conn)
-                parser_pool.spawn(handle, conn, listener_threadpool)
-            except:
-                pass
+    with Pool() as parser_pool:
+        with multiprocessing_connection.Listener(address, authkey=lib_wwqLyParse.get_uuid()) as listener:
+            while True:
+                try:
+                    conn = listener.accept()
+                    logging.debug("get a new conn %s" % conn)
+                    parser_pool.spawn(handle, conn)
+                except:
+                    logging.exception("error")
 
 
 def run(pipe):
     address = r'\\.\pipe\%s' % pipe
     logging.info("listen address:'%s'" % address)
     _run(address)
-    # gevent.get_hub().threadpool.apply(_run, args=(pipe,))
 
 
 def arg_parser():

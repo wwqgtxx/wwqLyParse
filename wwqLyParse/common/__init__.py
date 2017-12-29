@@ -14,3 +14,5 @@ from .re import *
 from .try_decode import *
 from .urlhandle import *
 from .utils import *
+
+from . import multiprocessing_connection

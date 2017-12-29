@@ -266,40 +266,6 @@ def process(url, data, willRefused=False, needresult=True, needjson=True, needPa
         else:
             raise
 
-    # # data = urllib.parse.urlencode(values).encode(encoding='UTF8')
-    # req = urllib.request.Request(url, data)
-    # req.add_header('User-Agent', 'wwqLyParse')
-    # req.add_header('Content-type', 'wwqLyParse')
-    # # req.add_header('Referer', 'http://www.python.org/')
-    # for n in range(3):
-    #     try:
-    #         if willRefused:
-    #             try:
-    #                 urllib.request.urlopen(req)
-    #                 return
-    #             except:
-    #                 return
-    #         for i in range(10):
-    #             try:
-    #                 response = urllib.request.urlopen(req)
-    #                 if needresult:
-    #                     results = response.read()
-    #                     if needParse:
-    #                         results = lib_parse(results)
-    #                     results = results.decode('utf-8')
-    #                     if needjson:
-    #                         results = json.loads(results)
-    #                     return results
-    #                 else:
-    #                     return
-    #             except socket.timeout:
-    #                 logging.info('request attempt %s timeout' % str(i + 1))
-    #     except Exception as e:
-    #         # logging.info(e)
-    #         import traceback
-    #         traceback.print_exc()
-    # raise Exception("can't process " + str(url) + str(values))
-
 
 def close_server():
     try:

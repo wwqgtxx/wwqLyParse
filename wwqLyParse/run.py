@@ -9,9 +9,10 @@ CONFIG = {
 
 address = r'\\.\pipe\%s' % CONFIG["pipe"]
 
-import urllib.request, urllib.parse, json, sys, subprocess, time, logging, traceback, ctypes, sysconfig
+import json, sys, subprocess, time, logging, traceback, ctypes, sysconfig
 import multiprocessing
 import multiprocessing.connection
+
 try:
     import _winapi
 except:
@@ -35,7 +36,7 @@ def get_real_path(abstract_path):
 
 need_close = True
 if __name__ == '__main__':
-    CONFIG["port"] = 8005
+    pass
 else:
     try:
         with open(get_real_path('../../../ver.txt')) as f:
@@ -185,9 +186,11 @@ check_embed_python()
 
 def is_open(addr):
     try:
-        with multiprocessing.connection.Client(addr, authkey=lib_wwqLyParse.get_uuid()) as conn:
-            pass
-        # _winapi.WaitNamedPipe(addr, 1000)
+        if _winapi and getattr(_winapi, "WaitNamedPipe", None):
+            _winapi.WaitNamedPipe(addr, 1000)
+        else:
+            with multiprocessing.connection.Client(addr, authkey=lib_wwqLyParse.get_uuid()) as conn:
+                pass
         logging.info(get_caller_info() + "'%s' is open" % addr)
         return True
     except multiprocessing.AuthenticationError:
@@ -239,7 +242,7 @@ def init():
     raise Exception("can't init server")
 
 
-def process(url, data, willRefused=False, needresult=True, needjson=True, needParse=True):
+def process(url, data, will_refused=False, need_result=True, need_json=True, need_parse=True)->dict:
     logging.info(data)
     data = data.encode("utf-8")
     data = lib_parse(data)
@@ -248,21 +251,21 @@ def process(url, data, willRefused=False, needresult=True, needjson=True, needPa
             req = {"type": url, "data": data}
             logging.debug(req)
             conn.send(req)
-            if willRefused:
-                return
-            if needresult:
+            if will_refused:
+                return {}
+            if need_result:
                 results = conn.recv()
-                if needParse:
+                if need_parse:
                     results = lib_parse(results)
                 results = results.decode('utf-8')
-                if needjson:
+                if need_json:
                     results = json.loads(results)
                 return results
             else:
-                return
+                return {}
     except EOFError:
-        if willRefused:
-            return
+        if will_refused:
+            return {}
         else:
             raise
 
@@ -279,7 +282,7 @@ def close_server():
             url = 'close'
             values = {}
             jjson = json.dumps(values)
-            process(url, jjson, willRefused=True)
+            process(url, jjson, will_refused=True)
             for n in range(100):
                 if not is_open(address):
                     return
@@ -339,11 +342,11 @@ def Parse(input_text, types=None, parsers_name=None, urlhandles_name=None):
             init()
             url = 'Parse'
             # user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
-            values = {}
-            values["input_text"] = input_text
-            values["types"] = types
-            values["parsers_name"] = parsers_name
-            values["urlhandles_name"] = urlhandles_name
+            values = {"input_text": input_text,
+                      "types": types,
+                      "parsers_name": parsers_name,
+                      "urlhandles_name": urlhandles_name
+                      }
             jjson = json.dumps(values)
             results = process(url, jjson)
             return results
@@ -364,12 +367,12 @@ def ParseURL(input_text, label, min=None, max=None, urlhandles_name=None):
             init()
             url = 'ParseURL'
             # user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
-            values = {}
-            values["input_text"] = input_text
-            values["label"] = label
-            values["min"] = min
-            values["max"] = max
-            values["urlhandles_name"] = urlhandles_name
+            values = {"input_text": input_text,
+                      "label": label,
+                      "min": min,
+                      "max": max,
+                      "urlhandles_name": urlhandles_name
+                      }
             jjson = json.dumps(values)
             results = process(url, jjson)
             return results
@@ -422,7 +425,7 @@ def main():
     # debug(Parse('http://www.bilibili.com/video/av2557971/')) #don't support
     # debug(Parse('http://v.baidu.com/link?url=dm_10tBNoD-LLAMb79CB_p0kxozuoJcW0SiN3eycdo6CdO3GZgQm26uOzZh9fqcNSWZmz9aU9YYCCfT0NmZoGfEMoznyHhz3st-QvlOeyArYdIbhzBbdIrmntA4h1HsSampAs4Z3c17r_exztVgUuHZqChPeZZQ4tlmM5&page=tvplaydetail&vfm=bdvtx&frp=v.baidu.com%2Ftv_intro%2F&bl=jp_video',"formats"))
     # debug(Parse('https://www.mgtv.com/b/318221/4222532.html',parsers_name=["MgTVParser"]))
-    debug(ParseURL('https://www.mgtv.com/b/318221/4222532.html',"3@MgTVParser"))
+    debug(ParseURL('https://www.mgtv.com/b/318221/4222532.html', "3@MgTVParser"))
     # debug(Parse('http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474'))
     # debug(Parse('http://v.qq.com/cover/y/yxpn9yol52go2i6.html?vid=f0141icyptp'))
     # debug(ParseURL('http://v.qq.com/cover/y/yxpn9yol52go2i6.html?vid=f0141icyptp','4_1080p____-1x-1_2521.9kbps_09:35.240_1_mp4_@LypPvParser'))

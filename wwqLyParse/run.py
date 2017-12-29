@@ -277,8 +277,9 @@ def close_server():
     for n in range(2):
         if is_open(address):
             url = 'close'
-            values = {"uuid": CONFIG["uuid"]}
-            process(url, values, willRefused=True)
+            values = {}
+            jjson = json.dumps(values)
+            process(url, jjson, willRefused=True)
             for n in range(100):
                 if not is_open(address):
                     return

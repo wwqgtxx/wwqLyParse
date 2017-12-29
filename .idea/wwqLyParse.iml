@@ -4,6 +4,8 @@
     <content url="file://$MODULE_DIR$/wwqLyParse">
       <sourceFolder url="file://$MODULE_DIR$/wwqLyParse/lib/flask_lib" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/wwqLyParse/lib/requests_lib" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/wwqLyParse/lib/python-3.6.3-embed-amd64" />
+      <excludeFolder url="file://$MODULE_DIR$/wwqLyParse/lib/python-3.6.3-embed-win32" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.6.1" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

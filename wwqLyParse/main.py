@@ -283,7 +283,7 @@ def close():
         for url_handle_obj in url_handles:
             pool.spawn(url_handle_obj.close_url_handle)
         pool.join(timeout=CLOSE_TIMEOUT)
-    pool.spawn(exit)
+        pool.spawn(exit)
 
 
 # @app.route('/cache/<url>', methods=['POST', 'GET'])

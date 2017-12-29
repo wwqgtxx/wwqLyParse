@@ -54,6 +54,11 @@ def _apply(_func, _args, _kwds):
 
 class ThreadPool(_ThreadPool):
 
+    def __init__(self, maxsize=None, hub=None):
+        if not maxsize:
+            maxsize = 1000
+        super(ThreadPool, self).__init__(maxsize, hub)
+
     def apply(self, func, args=None, kwds=None):
         result = super(ThreadPool, self).apply(_apply, args=(func, args, kwds))
         if result["type"] == "ok":

@@ -6,6 +6,7 @@ import os
 import socket
 import logging
 import traceback
+import functools
 
 
 def get_main():
@@ -18,7 +19,7 @@ def get_main():
 
 
 def get_main_parse():
-    return get_main().parse
+    return functools.partial(get_main().parse, use_inside=True)
 
 
 def get_caller_info():

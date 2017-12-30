@@ -27,7 +27,7 @@ class YouKuListParser1(Parser):
         new_url = "http:" + m[0]
         result = get_main_parse()(input_text=new_url, types="list")
         if result:
-            return result[0]
+            return result
 
 
 class YouKuListParser2(Parser):
@@ -42,7 +42,7 @@ class YouKuListParser2(Parser):
         new_url = "http:" + m[0]
         result = get_main_parse()(input_text=new_url, types="collection")
         if result:
-            return result[0]
+            return result
 
 
 class YouKuListParser3(Parser):

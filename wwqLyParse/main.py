@@ -152,7 +152,7 @@ def get_version():
     return version
 
 
-def parse(input_text, types=None, parsers_name=None, url_handles_name=None, *k, **kk):
+def parse(input_text, types=None, parsers_name=None, url_handles_name=None, use_inside=False, *k, **kk):
     if parsers_name is not None:
         _parser_class_map = import_by_name(class_names=parsers_name, prefix="parsers.", super_class=Parser)
     else:
@@ -163,7 +163,7 @@ def parse(input_text, types=None, parsers_name=None, url_handles_name=None, *k, 
         try:
             logging.debug(parser)
             result = parser.parse(input_text, *k, **kk)
-            if (result is not None) and (result != []):
+            if type(result) == dict:
                 if "error" in result:
                     logging.error(result["error"])
                     return
@@ -175,6 +175,8 @@ def parse(input_text, types=None, parsers_name=None, url_handles_name=None, *k, 
                             data['code'] = str(data['code']) + "@" + parser.__class__.__name__
                     q_result = {"result": result, "parser": parser}
                     queue.put(q_result)
+            elif type(result) == list:
+                queue.put(result)
         except GreenletExit:
             logging.warning("%s timeout exit" % parser)
         except Exception as e:
@@ -205,18 +207,22 @@ def parse(input_text, types=None, parsers_name=None, url_handles_name=None, *k, 
                             pool.spawn(run, q_results, parser, input_text, *k, **kk)
         pool.join(timeout=PARSE_TIMEOUT)
     while not q_results.empty():
-        t_results.append(q_results.get())
-    for parser in parsers:
-        for t_result in t_results:
-            if t_result["parser"] is parser:
-                data = t_result["result"]
-                try:
-                    if "sorted" not in data or data["sorted"] != 1:
-                        data["data"] = sorted(data["data"], key=lambda d: d["label"], reverse=True)
-                        logging.info("sorted the " + str(t_result["parser"]) + "'s data['data']")
-                except:
-                    pass
-                results.append(data)
+        result = q_results.get()
+        if type(result) == dict:
+            t_results.append(result)
+        if type(result) == list:
+            t_results.extend(result)
+    if use_inside:
+        return t_results
+    for t_result in t_results:
+        data = t_result["result"]
+        try:
+            if "sorted" not in data or data["sorted"] != 1:
+                data["data"] = sorted(data["data"], key=lambda d: d["label"], reverse=True)
+                logging.info("sorted the " + str(t_result["parser"]) + "'s data['data']")
+        except:
+            pass
+        results.append(data)
     return results
 
 

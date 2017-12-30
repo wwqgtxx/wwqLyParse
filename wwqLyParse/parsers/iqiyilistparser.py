@@ -285,7 +285,7 @@ class IQiYiLibMListParser(Parser):
         logging.info("change %s to %s" % (input_text, url))
         result = get_main_parse()(input_text=url, types="list")
         if result:
-            return result[0]
+            return result
 
         """
         album_items = html('div.clearfix').children('li.album_item')
@@ -415,7 +415,7 @@ class IQiYiVListParser(Parser):
             logging.info("change %s to %s" % (input_text, url))
             result = get_main_parse()(input_text=url, types="list")
             if result:
-                return result[0]
+                return result
 
     # plan B
     # http://cache.video.qiyi.com/jp/vi/451038600/faca833cc73ec8d7d8d248199bc3e7b8/?callback=Q9edfe6276cafa46823e1a575b86be2cb

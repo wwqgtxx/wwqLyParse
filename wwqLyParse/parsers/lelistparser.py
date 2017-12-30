@@ -25,7 +25,7 @@ class LeListParser1(Parser):
         html2_url = html("a.more").attr("href")
         result = get_main_parse()(input_text=html2_url, types="list")
         if result:
-            return result[0]
+            return result
 
 
 class LeListParser2(Parser):

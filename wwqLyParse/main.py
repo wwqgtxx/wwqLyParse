@@ -61,7 +61,7 @@ from argparse import ArgumentParser
 version = {
     'port_version': "0.5.0",
     'type': 'parse',
-    'version': '1.2.2',
+    'version': '1.2.3',
     'uuid': '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter': [],
     'name': 'WWQ猎影解析插件',
@@ -290,6 +290,7 @@ def close():
             pool.spawn(url_handle_obj.close_url_handle)
         pool.join(timeout=CLOSE_TIMEOUT)
         pool.spawn(exit)
+        pool.join()
 
 
 # @app.route('/cache/<url>', methods=['POST', 'GET'])

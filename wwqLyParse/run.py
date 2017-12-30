@@ -186,11 +186,11 @@ check_embed_python()
 
 def is_open(addr):
     try:
-        if _winapi and getattr(_winapi, "WaitNamedPipe", None):
-            _winapi.WaitNamedPipe(addr, 1000)
-        else:
-            with multiprocessing.connection.Client(addr, authkey=lib_wwqLyParse.get_uuid()) as conn:
-                pass
+        # if _winapi and getattr(_winapi, "WaitNamedPipe", None):
+        #     _winapi.WaitNamedPipe(addr, 1000)
+        # else:
+        with multiprocessing.connection.Client(addr, authkey=lib_wwqLyParse.get_uuid()) as conn:
+            pass
         logging.info(get_caller_info() + "'%s' is open" % addr)
         return True
     except multiprocessing.AuthenticationError:
@@ -396,7 +396,7 @@ def debug(input_str):
 
 
 def main():
-    # debug(GetVersion())
+    debug(GetVersion())
     # Cleanup()
     # debug(Parse('http://www.iqiyi.com/lib/m_209445514.html?src=search'))
     # debug(Parse('http://www.iqiyi.com/a_19rrhacdwt.html#vfrm=2-4-0-1'))

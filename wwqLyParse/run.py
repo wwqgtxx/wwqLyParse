@@ -396,7 +396,7 @@ def debug(input_str):
 
 
 def main():
-    debug(GetVersion())
+    # debug(GetVersion())
     # Cleanup()
     # debug(Parse('http://www.iqiyi.com/lib/m_209445514.html?src=search'))
     # debug(Parse('http://www.iqiyi.com/a_19rrhacdwt.html#vfrm=2-4-0-1'))
@@ -437,5 +437,5 @@ if __name__ == '__main__':
     try:
         main()
     finally:
-        # pass
-        Cleanup()
+        pass
+        # Cleanup()

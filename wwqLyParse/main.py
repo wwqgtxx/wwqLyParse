@@ -61,7 +61,7 @@ from argparse import ArgumentParser
 version = {
     'port_version': "0.5.0",
     'type': 'parse',
-    'version': '1.2.3',
+    'version': '',
     'uuid': '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter': [],
     'name': 'WWQ猎影解析插件',
@@ -127,6 +127,10 @@ def init_version():
     for url_handle_obj in url_handles:
         for filter_str in url_handle_obj.get_filters():
             version['filter'].append(filter_str)
+
+    with open(get_real_path('./version.txt')) as f:
+        ver = f.readline().strip()
+        version['version'] = ver
 
     version['name'] = lib_wwqLyParse.get_name().decode() + version['version'] + "[Include "
     try:
@@ -373,7 +377,7 @@ def _run(address):
 
 
 def run(pipe):
-    address = r'\\.\pipe\%s' % pipe
+    address = r'\\.\pipe\%s@%s' % (pipe, version['version'])
     logging.info("listen address:'%s'" % address)
     _run(address)
 

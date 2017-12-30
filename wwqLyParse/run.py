@@ -4,10 +4,9 @@
 
 CONFIG = {
     "pipe": 'wwqLyParse',
-    "uuid": '{C35B9DFC-559F-49E2-B80B-79B66EC77471}'
+    "uuid": '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
+    "version": ''
 }
-
-address = r'\\.\pipe\%s' % CONFIG["pipe"]
 
 import json, sys, subprocess, time, logging, traceback, ctypes, sysconfig
 import multiprocessing
@@ -53,6 +52,12 @@ else:
     if CONFIG["uuid"] in str(get_real_path('./run.py')).replace('_', '-'):
         need_close = False
     logging.info(need_close)
+
+with open(get_real_path('./version.txt')) as f:
+    ver = f.readline().strip()
+    CONFIG['version'] = ver
+
+address = r'\\.\pipe\%s@%s' % (CONFIG["pipe"],CONFIG["version"])
 
 
 def get_caller_info():

@@ -61,7 +61,7 @@ from argparse import ArgumentParser
 version = {
     'port_version': "0.5.0",
     'type': 'parse',
-    'version': '1.2.1',
+    'version': '1.2.2',
     'uuid': '{C35B9DFC-559F-49E2-B80B-79B66EC77471}',
     'filter': [],
     'name': 'WWQ猎影解析插件',

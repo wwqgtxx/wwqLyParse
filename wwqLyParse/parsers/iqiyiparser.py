@@ -210,7 +210,7 @@ class IQiYiParser(Parser):
                     data.append(info)
                 with get_session() as session:
                     if use_pool:
-                        with Pool(10) as pool:
+                        with WorkerPool(10) as pool:
                             for _ in range(10):
                                 for seg_info in fs_array:
                                     url = url_prefix + seg_info['l']

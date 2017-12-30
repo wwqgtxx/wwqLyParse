@@ -152,7 +152,7 @@ class LeParser(Parser):
         data = self.get_first_json(vid)
         data = data['msgs']
         available_stream_id = self.get_available_stream_id(data)
-        with Pool() as pool:
+        with WorkerPool() as pool:
             result_queue = queue.Queue()
             location_list = list()
             if label in available_stream_id:

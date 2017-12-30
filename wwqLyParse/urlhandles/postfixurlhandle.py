@@ -25,7 +25,7 @@ class PostfixUrlHandle(UrlHandle):
         result = re.match('^(http|https)://[^\s]+/[^\s]+\.[s]{0,1}html', url).group()
         q_results = queue.Queue()
         htmls = []
-        with Pool() as pool:
+        with WorkerPool() as pool:
             pool.spawn(call_method_and_save_to_queue, queue=q_results, method=get_url, args=(url,))
             pool.spawn(call_method_and_save_to_queue, queue=q_results, method=get_url, args=(result,))
             pool.join()

@@ -191,7 +191,7 @@ def parse(input_text, types=None, parsers_name=None, url_handles_name=None, *k, 
     results = []
     t_results = []
     q_results = Queue()
-    with Pool() as pool:
+    with WorkerPool() as pool:
         for parser in parsers:
             for filter_str in parser.get_filters():
                 if (types is None) or (not parser.get_types()) or (is_in(types, parser.get_types(), strict=False)):
@@ -248,7 +248,7 @@ def parse_url(input_text, label, min=None, max=None, url_handles_name=None, *k, 
         return None
     parser = parsers[0]
     q_results = Queue(1)
-    with Pool() as pool:
+    with WorkerPool() as pool:
         pool.spawn(run, q_results, parser, input_text, label, min, max, *k, **kk)
         pool.join(timeout=PARSE_TIMEOUT)
     if not q_results.empty():
@@ -277,7 +277,7 @@ def close():
         time.sleep(0.001)
         os._exit(0)
 
-    with Pool() as pool:
+    with WorkerPool(thread_name_prefix="ClosePool") as pool:
         for parser in parsers:
             pool.spawn(parser.close_parser)
         for url_handle_obj in url_handles:
@@ -354,13 +354,13 @@ def handle(conn: multiprocessing_connection.Connection):
 
 
 def _run(address):
-    with Pool() as parser_pool:
+    with WorkerPool(thread_name_prefix="HandlePool") as handle_pool:
         with multiprocessing_connection.Listener(address, authkey=lib_wwqLyParse.get_uuid()) as listener:
             while True:
                 try:
                     conn = listener.accept()
                     logging.debug("get a new conn %s" % conn)
-                    parser_pool.spawn(handle, conn)
+                    handle_pool.spawn(handle, conn)
                 except:
                     logging.exception("error")
 

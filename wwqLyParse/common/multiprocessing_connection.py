@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
 import multiprocessing.connection
-from .pool import ThreadPool, POOL_TYPE
+from .workerpool import ThreadPool, POOL_TYPE
 
 if POOL_TYPE == "geventpool":
     class Connection(object):

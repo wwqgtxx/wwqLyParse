@@ -33,7 +33,7 @@ def call_method_and_save_to_queue(queue, method, args=None, kwargs=None, allow_n
         pass
 
 
-class Pool(_Pool):
+class WorkerPool(_Pool):
     def __enter__(self):
         return self
 
@@ -57,7 +57,7 @@ class Pool(_Pool):
                 t.name = thread_name
                 _fn(*args, **kwargs)
 
-            return super(Pool, self).spawn(_spawn)
+            return super(WorkerPool, self).spawn(_spawn)
 
 
 def _apply(_func, _args, _kwds):

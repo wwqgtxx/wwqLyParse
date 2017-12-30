@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
 
-from .pool import *
+from .workerpool import *
 
 try:
     import requests
@@ -18,11 +18,11 @@ from .utils import get_caller_info
 
 URL_CACHE_MAX = 10000
 URL_CACHE_TIMEOUT = 6 * 60 * 60
-URL_CACHE_POOL = 20
+URL_CACHE_POOL = 50
 url_cache = LRUCache(size=URL_CACHE_MAX, timeout=URL_CACHE_TIMEOUT)
 
-pool_get_url = Pool(URL_CACHE_POOL)
-pool_clean_url_cache = Pool(1)
+pool_get_url = WorkerPool(URL_CACHE_POOL, thread_name_prefix="GetUrlPool")
+pool_clean_url_cache = WorkerPool(1, thread_name_prefix="CleanUrlCache")
 
 fake_headers = {
     'Connection': 'keep-alive',
@@ -128,7 +128,7 @@ def get_url(o_url, encoding='utf-8', headers=None, data=None, method=None, allow
         logging.debug(callmethod + "normal get:" + url_json)
     else:
         logging.debug(callmethod + "nocache get:" + url_json)
-        use_pool = False
+        # use_pool = False
 
     if requests and session:
         retry_num = 1

@@ -104,12 +104,12 @@ class AnyPageParser(Parser):
                     # import traceback
                     # traceback.print_exc()
 
-            pool = Pool(20)
+            pool = WorkerPool(20)
             parser_threads = []
             parse_urls = []
             t_results = []
             q_results = Queue()
-            with Pool() as pool:
+            with WorkerPool() as pool:
                 for url in urls:
                     pool.spawn(runlist_parser, q_results, url, pool)
                 pool.join(timeout=self.TWICE_PARSE_TIMEOUT)

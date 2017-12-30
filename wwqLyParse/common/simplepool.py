@@ -2,16 +2,15 @@
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
 
-
-import re, threading, queue, sys, json, os, time
 import functools
-import concurrent.futures
-from concurrent.futures.thread import _shutdown, _threads_queues
 import itertools
 import weakref
 import threading
 from queue import Queue, Empty
 import time
+from .concurrent_futures import ThreadPoolExecutor as _ThreadPoolExecutor
+from .concurrent_futures import wait as _wait
+from .concurrent_futures.thread import _shutdown, _threads_queues
 
 
 class GreenletExit(Exception):
@@ -44,11 +43,11 @@ def _worker(executor_reference, work_queue: Queue, timeout):
         pass
 
 
-class ThreadPoolExecutor(concurrent.futures.ThreadPoolExecutor):
+class ThreadPoolExecutor(_ThreadPoolExecutor):
     _counter = itertools.count().__next__
 
     def __init__(self, max_workers=None, thread_name_prefix='', thread_dead_timeout=5 * 60):
-        super(ThreadPoolExecutor, self).__init__(max_workers)
+        super(ThreadPoolExecutor, self).__init__(max_workers, thread_name_prefix=thread_name_prefix)
         self._max_workers = max_workers
         self._thread_name_prefix = (thread_name_prefix or
                                     ("ThreadPool-%d" % self._counter()))
@@ -106,7 +105,7 @@ class Pool(object):
     def join(self, *k, timeout=None, **kk):
         while True:
             try:
-                return concurrent.futures.wait(self.pool_threads, timeout)
+                return _wait(self.pool_threads, timeout)
             except ValueError:
                 pass
 

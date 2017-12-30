@@ -6,7 +6,7 @@ from .workerpool import ThreadPool, POOL_TYPE
 
 if POOL_TYPE == "geventpool":
     class Connection(object):
-        def __init__(self, _connection, _connection_threadpool=None):
+        def __init__(self, _connection: multiprocessing.connection.Connection, _connection_threadpool=None):
             self._connection = _connection
             self._need_close_connection_threadpool = False
             if not _connection_threadpool:
@@ -44,7 +44,7 @@ if POOL_TYPE == "geventpool":
             return self._connection_threadpool.apply(self._connection.recv)
 
         def poll(self, timeout=0.0):
-            return self._connection_threadpool.apply(self._connection.pool, args=(timeout,))
+            return self._connection_threadpool.apply(self._connection.poll, args=(timeout,))
 
         def __enter__(self):
             return self

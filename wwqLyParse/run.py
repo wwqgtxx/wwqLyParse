@@ -57,7 +57,7 @@ with open(get_real_path('./version.txt')) as f:
     ver = f.readline().strip()
     CONFIG['version'] = ver
 
-address = r'\\.\pipe\%s@%s' % (CONFIG["pipe"],CONFIG["version"])
+address = r'\\.\pipe\%s@%s' % (CONFIG["pipe"], CONFIG["version"])
 
 
 def get_caller_info():
@@ -130,9 +130,12 @@ def init_lib():
     lib_wwqLyParse.get_uuid.restype = ctypes.c_char_p
     lib_wwqLyParse.get_name.restype = ctypes.c_char_p
     assert lib_wwqLyParse.get_uuid().decode() == CONFIG["uuid"]
+    logging.debug("successful load lib_wwqLyParse %s" % lib_wwqLyParse)
 
 
 init_lib()
+get_uuid = lib_wwqLyParse.get_uuid
+get_name = lib_wwqLyParse.get_name
 
 
 def lib_parse(byte_str: bytes):
@@ -194,7 +197,7 @@ def is_open(addr):
         # if _winapi and getattr(_winapi, "WaitNamedPipe", None):
         #     _winapi.WaitNamedPipe(addr, 1000)
         # else:
-        with multiprocessing.connection.Client(addr, authkey=lib_wwqLyParse.get_uuid()) as conn:
+        with multiprocessing.connection.Client(addr, authkey=get_uuid()) as conn:
             pass
         logging.info(get_caller_info() + "'%s' is open" % addr)
         return True
@@ -247,24 +250,23 @@ def init():
     raise Exception("can't init server")
 
 
-def process(url, data, will_refused=False, need_result=True, need_json=True, need_parse=True)->dict:
-    logging.info(data)
-    data = data.encode("utf-8")
-    data = lib_parse(data)
+def process(url, data, will_refused=False, need_result=True) -> dict:
+    req = {"type": "get", "url": url, "data": data}
+    logging.debug(req)
+    req = json.dumps(req)
+    req = req.encode("utf-8")
+    req = lib_parse(req)
     try:
-        with multiprocessing.connection.Client(address, authkey=lib_wwqLyParse.get_uuid()) as conn:
-            req = {"type": url, "data": data}
-            logging.debug(req)
-            conn.send(req)
+        with multiprocessing.connection.Client(address, authkey=get_uuid()) as conn:
+            conn.send_bytes(req)
             if will_refused:
                 return {}
             if need_result:
-                results = conn.recv()
-                if need_parse:
-                    results = lib_parse(results)
+                results = conn.recv_bytes()
+                results = lib_parse(results)
                 results = results.decode('utf-8')
-                if need_json:
-                    results = json.loads(results)
+                results = json.loads(results)
+                results = results["data"]
                 return results
             else:
                 return {}
@@ -286,8 +288,7 @@ def close_server():
         if is_open(address):
             url = 'close'
             values = {}
-            jjson = json.dumps(values)
-            process(url, jjson, will_refused=True)
+            process(url, values, will_refused=True)
             for n in range(100):
                 if not is_open(address):
                     return
@@ -310,18 +311,18 @@ def get_version():
             init()
             url = 'GetVersion'
             values = {}
-            jjson = json.dumps(values)
-            results = process(url, jjson)
+            results = process(url, values)
             assert results["uuid"] == CONFIG["uuid"]
-            assert lib_wwqLyParse.get_name().decode() in results["name"]
+            assert get_name().decode() in results["name"]
             version = results
             logging.info(version)
             return version
+        except AssertionError:
+            raise
         except:
             logging.exception("getVersion fail on '%s'" % address)
         if need_close:
             close_server()
-        CONFIG["port"] += 1
 
 
 def Cleanup():
@@ -339,21 +340,17 @@ def GetVersion(debug=False):
 
 
 def Parse(input_text, types=None, parsers_name=None, urlhandles_name=None):
-    if not version:
-        get_version()
     error = None
     for n in range(3):
         try:
             init()
             url = 'Parse'
-            # user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
             values = {"input_text": input_text,
                       "types": types,
                       "parsers_name": parsers_name,
                       "urlhandles_name": urlhandles_name
                       }
-            jjson = json.dumps(values)
-            results = process(url, jjson)
+            results = process(url, values)
             return results
         except Exception as e:
             # logging.info(e)
@@ -364,22 +361,18 @@ def Parse(input_text, types=None, parsers_name=None, urlhandles_name=None):
 
 
 def ParseURL(input_text, label, min=None, max=None, urlhandles_name=None):
-    if not version:
-        get_version()
     error = None
     for n in range(3):
         try:
             init()
             url = 'ParseURL'
-            # user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
             values = {"input_text": input_text,
                       "label": label,
                       "min": min,
                       "max": max,
                       "urlhandles_name": urlhandles_name
                       }
-            jjson = json.dumps(values)
-            results = process(url, jjson)
+            results = process(url, values)
             return results
         except Exception as e:
             # logging.info(e)
@@ -405,7 +398,7 @@ def main():
     # Cleanup()
     # debug(Parse('http://www.iqiyi.com/lib/m_209445514.html?src=search'))
     # debug(Parse('http://www.iqiyi.com/a_19rrhacdwt.html#vfrm=2-4-0-1'))
-    debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html'))
+    # debug(Parse('http://www.iqiyi.com/v_19rrl8pmn8.html'))
     # debug(Parse('http://www.iqiyi.com/a_19rrhaare5.html'))
     # debug(Parse('http://www.iqiyi.com/a_19rrhbhf6d.html#vfrm=2-3-0-1'))
     # debug(Parse('http://www.le.com'))
@@ -431,7 +424,7 @@ def main():
     # debug(Parse('http://www.bilibili.com/video/av2557971/')) #don't support
     # debug(Parse('http://v.baidu.com/link?url=dm_10tBNoD-LLAMb79CB_p0kxozuoJcW0SiN3eycdo6CdO3GZgQm26uOzZh9fqcNSWZmz9aU9YYCCfT0NmZoGfEMoznyHhz3st-QvlOeyArYdIbhzBbdIrmntA4h1HsSampAs4Z3c17r_exztVgUuHZqChPeZZQ4tlmM5&page=tvplaydetail&vfm=bdvtx&frp=v.baidu.com%2Ftv_intro%2F&bl=jp_video',"formats"))
     # debug(Parse('https://www.mgtv.com/b/318221/4222532.html',parsers_name=["MgTVParser"]))
-    debug(ParseURL('https://www.mgtv.com/b/318221/4222532.html', "3@MgTVParser"))
+    # debug(ParseURL('https://www.mgtv.com/b/318221/4222532.html', "3@MgTVParser"))
     # debug(Parse('http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474'))
     # debug(Parse('http://v.qq.com/cover/y/yxpn9yol52go2i6.html?vid=f0141icyptp'))
     # debug(ParseURL('http://v.qq.com/cover/y/yxpn9yol52go2i6.html?vid=f0141icyptp','4_1080p____-1x-1_2521.9kbps_09:35.240_1_mp4_@LypPvParser'))
@@ -443,5 +436,5 @@ if __name__ == '__main__':
     try:
         main()
     finally:
-        pass
-        # Cleanup()
+        # pass
+        Cleanup()

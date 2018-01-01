@@ -132,7 +132,7 @@ def init_version():
         ver = f.readline().strip()
         version['version'] = ver
 
-    version['name'] = lib_wwqLyParse.get_name().decode() + version['version'] + "[Include "
+    version['name'] = get_name().decode() + version['version'] + "[Include "
     try:
         version['name'] = version['name'] + parser_class_map["YouGetParser"]().get_version() + "&"
     except:
@@ -306,31 +306,29 @@ def close():
 #         abort(404)
 
 def _handle(data):
-    req_type = data["type"]
-    req_data = data["data"]
-    req_data = lib_parse(req_data)
+    req_data = lib_parse(data)
     req_data = req_data.decode()
+    logging.debug("input json:" + req_data)
+    data = json.loads(req_data)
+    req_url = data["url"]
+    req_data = data["data"]
     try:
         result = ""
-        if req_type == "close":
+        if req_url == "close":
             close()
-        elif req_type == "GetVersion":
+        elif req_url == "GetVersion":
             result = get_version()
-        elif req_type == "Parse":
+        elif req_url == "Parse":
             if req_data is not None:
-                logging.debug("input json:" + req_data)
                 j_json = req_data
-                j_json = json.loads(j_json)
                 logging.debug("load json:" + str(j_json))
                 result = parse(j_json["input_text"], j_json["types"], j_json["parsers_name"],
                                j_json["urlhandles_name"])
             else:
                 raise Exception("can't get input json")
-        elif req_type == "ParseURL":
+        elif req_url == "ParseURL":
             if req_data is not None:
-                logging.debug("input json:" + req_data)
                 j_json = req_data
-                j_json = json.loads(j_json)
                 logging.debug("load json:" + str(j_json))
                 result = parse_url(j_json["input_text"], j_json["label"], j_json["min"], j_json["max"],
                                    j_json["urlhandles_name"])
@@ -340,6 +338,7 @@ def _handle(data):
         info = traceback.format_exc()
         logging.error(info)
         result = {"type": "error", "error": info}
+    result = {"type": "result", "url": req_url, "data": result}
     debug(result)
     j_json = json.dumps(result)
     byte_str = j_json.encode("utf-8")
@@ -352,12 +351,12 @@ def handle(conn: multiprocessing_connection.Connection):
         with conn:
             logging.debug("parse conn %s" % conn)
             while not conn.closed:
-                data = conn.recv()
+                data = conn.recv_bytes()
                 if not data:
                     break
-                logging.debug(data)
+                # logging.debug(data)
                 result = _handle(data)
-                conn.send(result)
+                conn.send_bytes(result)
     except EOFError:
         pass
     except BrokenPipeError:
@@ -366,7 +365,7 @@ def handle(conn: multiprocessing_connection.Connection):
 
 def _run(address):
     with WorkerPool(thread_name_prefix="HandlePool") as handle_pool:
-        with multiprocessing_connection.Listener(address, authkey=lib_wwqLyParse.get_uuid()) as listener:
+        with multiprocessing_connection.Listener(address, authkey=get_uuid()) as listener:
             while True:
                 try:
                     conn = listener.accept()

@@ -24,8 +24,11 @@ def init_lib():
 
 init_lib()
 
+get_uuid = lib_wwqLyParse.get_uuid
+get_name = lib_wwqLyParse.get_name
 
-def lib_parse(byte_str: bytes):
+
+def _lib_parse(byte_str: bytes):
     length = len(byte_str)
     result_length = ctypes.c_int()
     result_p = ctypes.POINTER(ctypes.c_char)()
@@ -36,3 +39,13 @@ def lib_parse(byte_str: bytes):
     result = b''.join(result_arr)
     lib_wwqLyParse.free_str(result_p)
     return result
+
+
+if POOL_TYPE == "geventpool":
+    _pool = ThreadPool()
+
+
+    def lib_parse(byte_str: bytes):
+        return _pool.apply(_lib_parse, args=(byte_str,))
+else:
+    lib_parse = _lib_parse

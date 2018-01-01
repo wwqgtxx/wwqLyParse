@@ -9,6 +9,7 @@
       <w>recv</w>
       <w>systeminfo</w>
       <w>threadpool</w>
+      <w>urlhandles</w>
       <w>weakref</w>
       <w>ykdl</w>
       <w>youget</w>

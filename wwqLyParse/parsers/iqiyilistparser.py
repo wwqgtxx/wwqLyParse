@@ -283,9 +283,12 @@ class IQiYiLibMListParser(Parser):
         if str(url).startswith("//"):
             url = "http:" + str(url)
         logging.info("change %s to %s" % (input_text, url))
-        result = get_main_parse()(input_text=url, types="list")
-        if result:
-            return result
+        if url and re.search(r"www.iqiyi.com/lib/m", url):
+            url = None
+        if url:
+            result = get_main_parse()(input_text=url, types="list")
+            if result:
+                return result
 
         """
         album_items = html('div.clearfix').children('li.album_item')
@@ -415,6 +418,8 @@ class IQiYiVListParser(Parser):
                 if url:
                     logging.debug(url)
                     break
+        if url and re.search(r"www.iqiyi.com/v_", url):
+            url = None
         if url:
             if str(url).startswith("//"):
                 url = "http:" + str(url)

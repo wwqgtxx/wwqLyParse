@@ -324,25 +324,26 @@ class IQiYiLibMListParser(Parser):
         }
 
         data_doc_id = html('span.play_source').attr('data-doc-id')
-        ejson_url = 'http://rq.video.iqiyi.com/aries/e.json?site=iqiyi&docId=' + data_doc_id + '&count=100000'
-        ejson = json.loads(get_url(ejson_url))
-        ejson_datas = ejson["data"]["objs"]
-        data["total"] = ejson_datas["info"]["total_video_number"]
-        data["title"] = ejson_datas["info"]["album_title"]
-        album_items = ejson_datas["episode"]["data"]
-        for album_item in album_items:
-            no = '第' + str(album_item["play_order"]) + '集'
-            name = album_item["title"]
-            url = album_item["play_url"]
-            subtitle = album_item["desciption"]
-            info = {
-                "name": name,
-                "no": no,
-                "subtitle": subtitle,
-                "url": url
-            }
-            data["data"].append(info)
-        # print(ejson)
+        if data_doc_id:
+            ejson_url = 'http://rq.video.iqiyi.com/aries/e.json?site=iqiyi&docId=' + data_doc_id + '&count=100000'
+            ejson = json.loads(get_url(ejson_url))
+            ejson_datas = ejson["data"]["objs"]
+            data["total"] = ejson_datas["info"]["total_video_number"]
+            data["title"] = ejson_datas["info"]["album_title"]
+            album_items = ejson_datas["episode"]["data"]
+            for album_item in album_items:
+                no = '第' + str(album_item["play_order"]) + '集'
+                name = album_item["title"]
+                url = album_item["play_url"]
+                subtitle = album_item["desciption"]
+                info = {
+                    "name": name,
+                    "no": no,
+                    "subtitle": subtitle,
+                    "url": url
+                }
+                data["data"].append(info)
+            # print(ejson)
         return data
 
 
@@ -376,9 +377,10 @@ class IQiYiVListParser(Parser):
                                         if type(item2) == dict and 'level' in item2 and \
                                                 item2['level'] == 3 and 'url' in item2:
                                             url = item2['url']
-                                            if url:
-                                                break
+                                            if url and re.search(r"www.iqiyi.com/v_", url):
+                                                url = None
                                 if url:
+                                    logging.debug(url)
                                     break
                     except json.JSONDecodeError:
                         logging.exception("IQiYiVListParser Error")
@@ -396,7 +398,10 @@ class IQiYiVListParser(Parser):
                                     item1['position'] == 3 and 'item' in item1:
                                 if type(item1['item']) == dict and '@id' in item1['item']:
                                     url = item1['item']['@id']
+                                    if url and re.search(r"www.iqiyi.com/v_", url):
+                                        url = None
                         if url:
+                            logging.debug(url)
                             break
                 except json.JSONDecodeError:
                     logging.exception("IQiYiVListParser Error")
@@ -408,6 +413,7 @@ class IQiYiVListParser(Parser):
                 a = PyQuery(a)
                 url = a.attr("href")
                 if url:
+                    logging.debug(url)
                     break
         if url:
             if str(url).startswith("//"):

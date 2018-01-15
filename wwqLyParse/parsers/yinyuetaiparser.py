@@ -46,6 +46,7 @@ class YinYueTaiParser(Parser):
         video_data = api_data['videoInfo']['coreVideoInfo']
 
         title = video_data['videoName']
+        title = str(title).replace("&lt;", "《").replace("&gt;", "》")
         artist = video_data['artistNames']
         data["name"] = title
         for s in video_data['videoUrlModels']:

@@ -21,7 +21,12 @@ class YouKuListParser1(Parser):
 
     def parse(self, input_text, *k, **kk):
         html = get_url(input_text)
-        m = re.findall('<a class="desc-link" href="(//list\.youku\.com/show/id_[^\s]+\.html)"', html)
+        # html = PyQuery(html)
+        # m = html("div.tvinfom > h2 > a").attr("href")
+        # if not m:
+        #     return []
+        # new_url = "http:" + m
+        m = re.findall('<a href="(//list\.youku\.com/show/id_[^\s]+\.html)"', html)
         if not m:
             return []
         new_url = "http:" + m[0]

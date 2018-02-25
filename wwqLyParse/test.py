@@ -15,7 +15,6 @@ if __name__ == "__main__":
     del os
 
 from common import *
-from pyquery.pyquery import PyQuery
 
 if __name__ == "__main__":
     from main import *
@@ -71,3 +70,5 @@ if __name__ == "__main__":
     # main("https://v.youku.com/v_show/id_XMzE2MzM2NTMyNA==.html?spm=a2hww.20027244.m_250379.5~5~1~3!4~A")
     # main("http://video.tudou.com/v/XMzAxODM2MDA1Mg==.html?spm=a2h28.8313475.c1.dtitle2")
     # close()
+    # init_version()
+    # print(version)

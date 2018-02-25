@@ -40,14 +40,16 @@ class YinYueTaiParser(Parser):
         if not vid:
             vid = match1(input_text, 'http://\w+.yinyuetai.com/video/h5/(\d+)')
         api_data = json.loads(
-            get_url('http://ext.yinyuetai.com/main/get-h-mv-info?json=true&videoId={}'.format(vid), allow_cache=False))
+            get_url('http://www.yinyuetai.com/insite/get-video-info?json=true&videoId={}'.format(vid), allow_cache=False))
+        # api_data = json.loads(
+        #     get_url('http://ext.yinyuetai.com/main/get-h-mv-info?json=true&videoId={}'.format(vid), allow_cache=False))
         # if api_data['error']:
         #     return []
         video_data = api_data['videoInfo']['coreVideoInfo']
 
         title = video_data['videoName']
         title = str(title).replace("&lt;", "《").replace("&gt;", "》")
-        artist = video_data['artistNames']
+        # artist = video_data['artistNames']
         data["name"] = title
         for s in video_data['videoUrlModels']:
             data["data"].append({

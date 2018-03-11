@@ -60,15 +60,15 @@ else:
     common_session = None
 
 
-def get_url(o_url, encoding='utf-8', headers=None, data=None, method=None, allow_cache=True, use_pool=True,
-            pool=pool_get_url, session=common_session):
+def get_url(o_url, encoding='utf-8', headers=None, data=None, method=None, cookies=None, allow_cache=True,
+            use_pool=True, pool=pool_get_url, session=common_session):
     def _get_url(result_queue, url_json, o_url, encoding, headers, data, method, allowCache, callmethod):
         try:
             html_text = None
             if requests and session:
                 try:
                     req = requests.Request(method=method if method else "GET", url=o_url,
-                                           headers=headers if headers else fake_headers, data=data)
+                                           headers=headers if headers else fake_headers, data=data, cookies=cookies)
                     prepped = req.prepare()
                     resp = session.send(prepped)
                     if encoding == "raw":
@@ -118,9 +118,10 @@ def get_url(o_url, encoding='utf-8', headers=None, data=None, method=None, allow
         return
 
     callmethod = get_caller_info()
-    url_json = {"o_url": o_url, "encoding": encoding, "headers": headers, "data": data, "method": method}
+    url_json = {"o_url": o_url, "encoding": encoding, "headers": headers, "data": data, "method": method,
+                "cookies": cookies}
     url_json = json.dumps(url_json, sort_keys=True, ensure_ascii=False)
-    if allow_cache:
+    if allow_cache and session == common_session and cookies is not None:
         if url_json in url_cache:
             html_text = url_cache[url_json]
             logging.debug(callmethod + "cache get:" + url_json)

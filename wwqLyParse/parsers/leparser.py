@@ -63,7 +63,7 @@ class LeParser(Parser):
         magic = 185025305
         return ror(t, magic % 17) ^ magic
 
-    def getStream_type(self, stream_id):
+    def get_stream_type(self, stream_id):
         try:
             stream_type = None
             for item in self.stream_types:
@@ -110,7 +110,7 @@ class LeParser(Parser):
         info['name'] = data['playurl']['title']
         available_stream_id = self.get_available_stream_id(data)
         for stream in available_stream_id:
-            stream_type = self.getStream_type(stream)
+            stream_type = self.get_stream_type(stream)
             info['data'].append({
                 "label": '-'.join([stream_type['video_profile'], stream_type['container']]),
                 "code": stream_type['id'],

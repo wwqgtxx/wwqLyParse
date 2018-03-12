@@ -20,7 +20,7 @@ class YouGetParser(Parser):
     filters = ['^(http|https)://.+']
     types = ["formats"]
     un_supports = ["www.iqiyi.com", "www.iqiyi.com/a_", 'www.iqiyi.com/lib/m', 'list.iqiyi.com', 'list.youku.com',
-                   'www.le.com', 'www.mgtv.com', 'yinyuetai.com','pptv.com']
+                   'www.le.com', 'www.mgtv.com', 'yinyuetai.com']
     bin = './you-get/you-get'
     name = "you-get解析"
 

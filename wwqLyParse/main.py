@@ -74,6 +74,7 @@ version = {
 
 PARSE_TIMEOUT = 90  # must > 5
 CLOSE_TIMEOUT = 10
+RECV_TIMEOUT = 60
 
 parser_class_map = import_by_name(module_names=get_all_filename_by_dir('./parsers'), prefix="parsers.",
                                   super_class=Parser)
@@ -355,12 +356,16 @@ def handle(conn: multiprocessing_connection.Connection):
         with conn:
             logging.debug("parse conn %s" % conn)
             while not conn.closed:
-                data = conn.recv_bytes()
-                if not data:
+                if conn.poll(RECV_TIMEOUT * 60):
+                    data = conn.recv_bytes()
+                    if not data:
+                        break
+                    # logging.debug(data)
+                    result = _handle(data)
+                    conn.send_bytes(result)
+                else:
+                    logging.debug("conn %s recv timeout, close it!" % conn)
                     break
-                # logging.debug(data)
-                result = _handle(data)
-                conn.send_bytes(result)
     except EOFError:
         pass
     except BrokenPipeError:

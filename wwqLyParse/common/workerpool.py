@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
 try:
-    from gevent import GreenletExit
-    from gevent.pool import Pool as _Pool
-    from gevent.threadpool import ThreadPool as _ThreadPool
-    from gevent.queue import Queue
+    from .geventpool import GreenletExit
+    from .geventpool import Pool as _Pool
+    from .geventpool import ThreadPool as _ThreadPool
+    from .geventpool import Queue
 
     POOL_TYPE = "geventpool"
 except:
@@ -15,10 +15,6 @@ except:
     from queue import Queue
 
     POOL_TYPE = "simplepool"
-
-import threading
-import itertools
-import logging
 
 
 def call_method_and_save_to_queue(queue, method, args=None, kwargs=None, allow_none=True):
@@ -40,25 +36,6 @@ class WorkerPool(_Pool):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.kill(block=False)
-
-    if POOL_TYPE == "geventpool":
-        _counter = itertools.count().__next__
-
-        def __init__(self, size=None, thread_name_prefix=''):
-            super().__init__(size)
-            self._thread_name_prefix = (thread_name_prefix or
-                                        ("GeventPool-%d" % self._counter()))
-            self._thread_name_counter = itertools.count().__next__
-
-        def spawn(self, _fn, *args, **kwargs):
-            def _spawn():
-                thread_name = '%s_%d' % (self._thread_name_prefix or self,
-                                         self._thread_name_counter())
-                t = threading.current_thread()
-                t.name = thread_name
-                _fn(*args, **kwargs)
-
-            return super(WorkerPool, self).spawn(_spawn)
 
 
 def _apply(_func, _args, _kwds):
@@ -91,11 +68,3 @@ class ThreadPool(_ThreadPool):
 
     def __bool__(self):
         return True
-
-    if POOL_TYPE == "geventpool":
-        def __init__(self, maxsize=None, hub=None):
-            if not maxsize:
-                maxsize = 1000
-            self.__size = 0
-            super(ThreadPool, self).__init__(maxsize, hub)
-            logging.debug("new pool %s" % self)

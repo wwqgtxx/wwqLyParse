@@ -198,6 +198,7 @@ def is_open(addr):
         #     _winapi.WaitNamedPipe(addr, 1000)
         # else:
         with multiprocessing.connection.Client(addr, authkey=get_uuid()) as conn:
+            conn.send_bytes(b'')
             pass
         logging.info(get_caller_info() + "'%s' is open" % addr)
         return True

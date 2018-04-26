@@ -76,7 +76,7 @@ version = {
 PARSE_TIMEOUT = 90  # must > 5
 CLOSE_TIMEOUT = 10
 RECV_TIMEOUT = 60
-PROCESS_WAIT_SECS = 1
+PROCESS_WAIT_SECS = 0.5
 
 parser_class_map = import_by_name(module_names=get_all_filename_by_dir('./parsers'), prefix="parsers.",
                                   super_class=Parser)
@@ -355,12 +355,13 @@ def _handle(data):
 
 def handle(conn_list: list, conn: multiprocessing_connection.Connection):
     try:
-        logging.debug("parse conn %s" % conn)
         if not conn.closed:
             data = conn.recv_bytes()
             if not data:
+                logging.debug("conn %s was closed" % conn)
                 conn.close()
-                raise EOFError
+                return
+            logging.debug("parse conn %s" % conn)
             # logging.debug(data)
             result = _handle(data)
             conn.send_bytes(result)
@@ -370,10 +371,8 @@ def handle(conn_list: list, conn: multiprocessing_connection.Connection):
         pass
     except BrokenPipeError:
         pass
-    try:
-        logging.debug("remove conn %s" % conn)
-    except ValueError:
-        pass
+    logging.debug("close conn %s" % conn)
+    conn.close()
 
 
 def _process(conn_list: list, handle_pool: WorkerPool, wait=multiprocessing_connection.wait):
@@ -383,7 +382,10 @@ def _process(conn_list: list, handle_pool: WorkerPool, wait=multiprocessing_conn
                 time.sleep(PROCESS_WAIT_SECS)
             for conn in wait(conn_list, PROCESS_WAIT_SECS):
                 conn_list.remove(conn)
-                handle_pool.spawn(handle, conn_list, conn)
+                if not conn.closed:
+                    handle_pool.spawn(handle, conn_list, conn)
+                else:
+                    logging.debug("conn %s is closed" % conn)
         except:
             logging.exception("error")
 

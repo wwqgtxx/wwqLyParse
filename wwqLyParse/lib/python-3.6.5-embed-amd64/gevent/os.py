@@ -45,7 +45,9 @@ from __future__ import absolute_import
 
 import os
 import sys
-from gevent.hub import get_hub, reinit
+from gevent.hub import _get_hub_noargs as get_hub
+from gevent.hub import reinit
+from gevent._config import config
 from gevent._compat import PY3
 from gevent._util import copy_globals
 import errno
@@ -90,7 +92,10 @@ if fcntl:
         hub, event = None, None
         while True:
             try:
-                return _read(fd, n)
+                result = _read(fd, n)
+                if event is not None:
+                    event.close()
+                return result
             except OSError as e:
                 if e.errno not in ignored_errors:
                     raise
@@ -101,6 +106,7 @@ if fcntl:
                 event = hub.loop.io(fd, 1)
             hub.wait(event)
 
+
     def nb_write(fd, buf):
         """Write bytes from buffer `buf` to file descriptor `fd`. Return the
         number of bytes written.
@@ -110,7 +116,10 @@ if fcntl:
         hub, event = None, None
         while True:
             try:
-                return _write(fd, buf)
+                result = _write(fd, buf)
+                if event is not None:
+                    event.close()
+                return result
             except OSError as e:
                 if e.errno not in ignored_errors:
                     raise
@@ -224,13 +233,16 @@ if hasattr(os, 'fork'):
             # XXX: Could handle tracing here by not stopping
             # until the pid is terminated
             watcher.stop()
-            _watched_children[watcher.pid] = (watcher.pid, watcher.rstatus, time.time())
-            if callback:
-                callback(watcher)
-            # dispatch an "event"; used by gevent.signal.signal
-            _on_child_hook()
-            # now is as good a time as any to reap children
-            _reap_children()
+            try:
+                _watched_children[watcher.pid] = (watcher.pid, watcher.rstatus, time.time())
+                if callback:
+                    callback(watcher)
+                # dispatch an "event"; used by gevent.signal.signal
+                _on_child_hook()
+                # now is as good a time as any to reap children
+                _reap_children()
+            finally:
+                watcher.close()
 
         def _reap_children(timeout=60):
             # Remove all the dead children that haven't been waited on
@@ -277,6 +289,7 @@ if hasattr(os, 'fork'):
             .. versionchanged:: 1.2a1
                More cases are handled in a cooperative manner.
             """
+            # pylint: disable=too-many-return-statements
             # XXX Does not handle tracing children
 
             # So long as libev's loop doesn't run, it's OK to add
@@ -303,14 +316,19 @@ if hasattr(os, 'fork'):
                     # pass through to the OS.
                     if pid == -1 and options == 0:
                         hub = get_hub()
-                        watcher = hub.loop.child(0, False)
-                        hub.wait(watcher)
-                        return watcher.rpid, watcher.rstatus
+                        with hub.loop.child(0, False) as watcher:
+                            hub.wait(watcher)
+                            return watcher.rpid, watcher.rstatus
                     # There were funky options/pid, so we must go to the OS.
                     return _waitpid(pid, options)
 
             if pid in _watched_children:
                 # yes, we're watching it
+
+                # Note that the remainder of this code must be careful to NOT
+                # yield to the event loop except at well known times, or
+                # we have a race condition between the _on_child callback and the
+                # code here that could lead to a process to hang.
                 if options & _WNOHANG or isinstance(_watched_children[pid], tuple):
                     # We're either asked not to block, or it already finished, in which
                     # case blocking doesn't matter
@@ -327,9 +345,12 @@ if hasattr(os, 'fork'):
                     # cooperative. We know it's our child, etc, so this should work.
                     watcher = _watched_children[pid]
                     # We can't start a watcher that's already started,
-                    # so we can't reuse the existing watcher.
-                    new_watcher = watcher.loop.child(pid, False)
-                    get_hub().wait(new_watcher)
+                    # so we can't reuse the existing watcher. Notice that the
+                    # old watcher must not have fired already, or during this time, but
+                    # only after we successfully `start()` the watcher. So this must
+                    # not yield to the event loop.
+                    with watcher.loop.child(pid, False) as new_watcher:
+                        get_hub().wait(new_watcher)
                     # Ok, so now the new watcher is done. That means
                     # the old watcher's callback (_on_child) should
                     # have fired, potentially taking this child out of
@@ -341,6 +362,12 @@ if hasattr(os, 'fork'):
 
             # we're not watching it and it may not even  be our child,
             # so we must go to the OS to be sure to get the right semantics (exception)
+            # XXX
+            # libuv has a race condition because the signal
+            # handler is a Python function, so the InterruptedError
+            # is raised before the signal handler runs and calls the
+            # child watcher
+            # we're not watching it
             return _waitpid(pid, options)
 
         def fork_and_watch(callback=None, loop=None, ref=False, fork=fork_gevent):
@@ -401,7 +428,7 @@ if hasattr(os, 'fork'):
             __extensions__.append('forkpty_and_watch')
 
         # Watch children by default
-        if not os.getenv('GEVENT_NOWAITPID'):
+        if not config.disable_watch_children:
             # Broken out into separate functions instead of simple name aliases
             # for documentation purposes.
             def fork(*args, **kwargs):

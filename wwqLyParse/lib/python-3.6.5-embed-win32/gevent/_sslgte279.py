@@ -553,7 +553,10 @@ class SSLSocket(socket):
         if self._sslobj:
             s = self._sslobj_shutdown()
             self._sslobj = None
-            return socket(_sock=s) # match _ssl2; critical to drop/reuse here on PyPy
+            # match _ssl2; critical to drop/reuse here on PyPy
+            # XXX: _ssl3 returns an SSLSocket. Is that what the standard lib does on
+            # Python 2? Should we do that?
+            return socket(_sock=s)
         else:
             raise ValueError("No SSL wrapper around " + str(self))
 
@@ -622,6 +625,7 @@ class SSLSocket(socket):
         SSL channel, and the address of the remote client."""
 
         newsock, addr = socket.accept(self)
+        newsock._drop_events()
         newsock = self._context.wrap_socket(newsock,
                                             do_handshake_on_connect=self.do_handshake_on_connect,
                                             suppress_ragged_eofs=self.suppress_ragged_eofs,

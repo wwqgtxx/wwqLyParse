@@ -41,6 +41,7 @@ if __name__ == "__main__":
         if gevent:
             logging.info("gevent.monkey.patch_all()")
             logging.info("use gevent.pool")
+            logging.info("use %s" % gevent.config.loop)
         else:
             logging.info("use simple pool")
 

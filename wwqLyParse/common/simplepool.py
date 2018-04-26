@@ -95,6 +95,13 @@ class Pool(object):
         except ValueError:
             pass
 
+    def apply(self, func, args=None, kwds=None):
+        if args is None:
+            args = ()
+        if kwds is None:
+            kwds = {}
+        return self.spawn(func, *args, **kwds).result()
+
     def spawn(self, call_method, *k, **kk):
         f = functools.partial(call_method, *k, **kk)
         future = self.ex.submit(f)

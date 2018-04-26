@@ -27,7 +27,7 @@ class Pool(_Pool):
                                      self._thread_name_counter())
             t = threading.current_thread()
             t.name = thread_name
-            _fn(*args, **kwargs)
+            return _fn(*args, **kwargs)
 
         return super(Pool, self).spawn(_spawn)
 

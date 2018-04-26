@@ -11,6 +11,7 @@ except:
     requests = None
 
 import logging
+import functools
 import urllib.request, json, re, gzip, socket, urllib.error, http.client, urllib
 
 from .lru_cache import LRUCache
@@ -62,7 +63,7 @@ else:
 
 def get_url(o_url, encoding='utf-8', headers=None, data=None, method=None, cookies=None, allow_cache=True,
             use_pool=True, pool=pool_get_url, session=common_session):
-    def _get_url(result_queue, url_json, o_url, encoding, headers, data, method, allowCache, callmethod):
+    def _get_url(url_json, o_url, encoding, headers, data, method, allowCache, callmethod, use_pool):
         try:
             html_text = None
             if requests and session:
@@ -99,8 +100,7 @@ def get_url(o_url, encoding='utf-8', headers=None, data=None, method=None, cooki
                         html_text = data.decode(encoding, 'ignore')
             if allowCache and html_text:
                 url_cache[url_json] = html_text
-            result_queue.put(html_text)
-            return
+            return html_text
         except socket.timeout:
             logging.warning(callmethod + 'request attempt timeout')
         except urllib.error.URLError:
@@ -110,12 +110,13 @@ def get_url(o_url, encoding='utf-8', headers=None, data=None, method=None, cooki
         except http.client.IncompleteRead:
             logging.warning(callmethod + 'request attempt IncompleteRead')
         except GreenletExit as e:
-            result_queue.put(None)
-            raise e
+            if use_pool:
+                return None
+            else:
+                raise e
         except:
             logging.exception(callmethod + "get url " + url_json + "fail")
-        result_queue.put(None)
-        return
+        return None
 
     callmethod = get_caller_info()
     url_json = {"o_url": o_url, "encoding": encoding, "headers": headers, "data": data, "method": method,
@@ -136,13 +137,14 @@ def get_url(o_url, encoding='utf-8', headers=None, data=None, method=None, cooki
     else:
         retry_num = 10
 
+    fn = functools.partial(_get_url, url_json, o_url, encoding, headers, data, method, allow_cache, callmethod,
+                           use_pool)
+
     for i in range(retry_num):
-        queue = Queue(1)
         if use_pool:
-            pool.spawn(_get_url, queue, url_json, o_url, encoding, headers, data, method, allow_cache, callmethod)
+            result = pool.apply(fn)
         else:
-            _get_url(queue, url_json, o_url, encoding, headers, data, method, allow_cache, callmethod)
-        result = queue.get()
+            result = fn()
         if result is not None:
             return result
     return None

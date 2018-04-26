@@ -76,6 +76,7 @@ version = {
 PARSE_TIMEOUT = 90  # must > 5
 CLOSE_TIMEOUT = 10
 RECV_TIMEOUT = 60
+PROCESS_WAIT_SECS = 1
 
 parser_class_map = import_by_name(module_names=get_all_filename_by_dir('./parsers'), prefix="parsers.",
                                   super_class=Parser)
@@ -352,37 +353,54 @@ def _handle(data):
     return byte_str
 
 
-def handle(conn: multiprocessing_connection.Connection):
+def handle(conn_list: list, conn: multiprocessing_connection.Connection):
     try:
-        with conn:
-            logging.debug("parse conn %s" % conn)
-            while not conn.closed:
-                if conn.poll(RECV_TIMEOUT * 60):
-                    data = conn.recv_bytes()
-                    if not data:
-                        break
-                    # logging.debug(data)
-                    result = _handle(data)
-                    conn.send_bytes(result)
-                else:
-                    logging.debug("conn %s recv timeout, close it!" % conn)
-                    break
+        logging.debug("parse conn %s" % conn)
+        if not conn.closed:
+            data = conn.recv_bytes()
+            if not data:
+                conn.close()
+                raise EOFError
+            # logging.debug(data)
+            result = _handle(data)
+            conn.send_bytes(result)
+            conn_list.append(conn)
+            return
     except EOFError:
         pass
     except BrokenPipeError:
         pass
+    try:
+        logging.debug("remove conn %s" % conn)
+    except ValueError:
+        pass
+
+
+def _process(conn_list: list, handle_pool: WorkerPool, wait=multiprocessing_connection.wait):
+    while True:
+        try:
+            if not conn_list:
+                time.sleep(PROCESS_WAIT_SECS)
+            for conn in wait(conn_list, PROCESS_WAIT_SECS):
+                conn_list.remove(conn)
+                handle_pool.spawn(handle, conn_list, conn)
+        except:
+            logging.exception("error")
 
 
 def _run(address):
     with WorkerPool(thread_name_prefix="HandlePool") as handle_pool:
-        with multiprocessing_connection.Listener(address, authkey=get_uuid()) as listener:
-            while True:
-                try:
-                    conn = listener.accept()
-                    logging.debug("get a new conn %s" % conn)
-                    handle_pool.spawn(handle, conn)
-                except:
-                    logging.exception("error")
+        with multiprocessing_connection.Wait() as wait:
+            with multiprocessing_connection.Listener(address, authkey=get_uuid()) as listener:
+                conn_list = list()
+                handle_pool.spawn(_process, conn_list, handle_pool, wait)
+                while True:
+                    try:
+                        conn = listener.accept()
+                        logging.debug("get a new conn %s" % conn)
+                        conn_list.append(conn)
+                    except:
+                        logging.exception("error")
 
 
 def run(pipe):

@@ -18,6 +18,7 @@ except:
 
 import threading
 import itertools
+import logging
 
 
 def call_method_and_save_to_queue(queue, method, args=None, kwargs=None, allow_none=True):
@@ -82,8 +83,19 @@ class ThreadPool(_ThreadPool):
         else:
             raise result["result"]
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.kill()
+
+    def __bool__(self):
+        return True
+
     if POOL_TYPE == "geventpool":
         def __init__(self, maxsize=None, hub=None):
             if not maxsize:
                 maxsize = 1000
+            self.__size = 0
             super(ThreadPool, self).__init__(maxsize, hub)
+            logging.debug("new pool %s" % self)

@@ -2,17 +2,19 @@
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
 import multiprocessing.connection
+import functools
 from .workerpool import ThreadPool, POOL_TYPE
 
 if POOL_TYPE == "geventpool":
     class Connection(object):
         def __init__(self, _connection: multiprocessing.connection.Connection, _connection_threadpool=None):
             self._connection = _connection
-            self._need_close_connection_threadpool = False
-            if not _connection_threadpool:
-                _connection_threadpool = ThreadPool()
+            if _connection_threadpool is None:
+                self._connection_threadpool = ThreadPool()
                 self._need_close_connection_threadpool = True
-            self._connection_threadpool = _connection_threadpool
+            else:
+                self._connection_threadpool = _connection_threadpool
+                self._need_close_connection_threadpool = False
 
         closed = property(lambda self: self._connection.closed)
         readable = property(lambda self: self._connection.readable)
@@ -57,8 +59,12 @@ if POOL_TYPE == "geventpool":
         def __init__(self, address=None, family=None, backlog=1, authkey=None, _listener_threadpool=None):
             self._listener = multiprocessing.connection.Listener(address=address, family=family, backlog=backlog,
                                                                  authkey=authkey)
-            self._listener_threadpool_need_closed = bool(_listener_threadpool)
-            self._listener_threadpool = _listener_threadpool or ThreadPool()
+            if _listener_threadpool is None:
+                self._listener_threadpool = ThreadPool()
+                self._listener_threadpool_need_closed = True
+            else:
+                self._listener_threadpool = _listener_threadpool
+                self._listener_threadpool_need_closed = False
 
         def accept(self):
             return Connection(self._listener_threadpool.apply(self._listener.accept), self._listener_threadpool)
@@ -89,3 +95,20 @@ else:
 
     def wait(object_list, timeout=None, _threadpool=None):
         return multiprocessing.connection.wait(object_list, timeout)
+
+
+class Wait(object):
+    def __init__(self, _wait_threadpool=None):
+        if _wait_threadpool is None:
+            self._wait_threadpool = ThreadPool()
+            self._wait_threadpool_need_closed = True
+        else:
+            self._wait_threadpool = _wait_threadpool
+            self._wait_threadpool_need_closed = False
+
+    def __enter__(self):
+        return functools.partial(wait, _threadpool=self._wait_threadpool)
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if self._wait_threadpool_need_closed:
+            self._wait_threadpool.kill()

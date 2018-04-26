@@ -54,10 +54,11 @@ if POOL_TYPE == "geventpool":
 
 
     class Listener(object):
-        def __init__(self, address=None, family=None, backlog=1, authkey=None):
+        def __init__(self, address=None, family=None, backlog=1, authkey=None, _listener_threadpool=None):
             self._listener = multiprocessing.connection.Listener(address=address, family=family, backlog=backlog,
                                                                  authkey=authkey)
-            self._listener_threadpool = ThreadPool()
+            self._listener_threadpool_need_closed = bool(_listener_threadpool)
+            self._listener_threadpool = _listener_threadpool or ThreadPool()
 
         def accept(self):
             return Connection(self._listener_threadpool.apply(self._listener.accept), self._listener_threadpool)
@@ -66,7 +67,8 @@ if POOL_TYPE == "geventpool":
             try:
                 return self._listener_threadpool.apply(self._listener.close)
             finally:
-                self._listener_threadpool.kill()
+                if self._listener_threadpool_need_closed:
+                    self._listener_threadpool.kill()
 
         address = property(lambda self: self._listener.address)
         last_accepted = property(lambda self: self._listener.last_accepted)
@@ -76,6 +78,14 @@ if POOL_TYPE == "geventpool":
 
         def __exit__(self, exc_type, exc_value, exc_tb):
             self.close()
+
+
+    def wait(object_list, timeout=None, _threadpool=None):
+        return _threadpool.apply(multiprocessing.connection.wait, args=(object_list, timeout))
 else:
     Connection = multiprocessing.connection.Connection
     Listener = multiprocessing.connection.Listener
+
+
+    def wait(object_list, timeout=None, _threadpool=None):
+        return multiprocessing.connection.wait(object_list, timeout)

@@ -17,3 +17,4 @@ def get_real_path(abstract_path):
 
 # sys.path.insert(0, get_real_path('./lib/flask_lib'))
 sys.path.insert(0, get_real_path('./lib/requests_lib'))
+sys.path.insert(0, get_real_path('./lib/dns_lib'))

@@ -47,6 +47,15 @@ try:
 except Exception as e:
     from common import *
 
+if __name__ == "__main__":
+    if not os.environ.get("NOT_LOGGING", None):
+        if gevent:
+            try:
+                gevent.config.resolver = 'dnspython'
+            except Exception:
+                pass
+            logging.info("use %s" % gevent.config.resolver)
+
 try:
     from .lib.lib_wwqLyParse import *
 except Exception as e:

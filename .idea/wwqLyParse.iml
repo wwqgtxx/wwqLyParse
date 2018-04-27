@@ -5,6 +5,7 @@
       <sourceFolder url="file://$MODULE_DIR$/wwqLyParse/lib/flask_lib" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/wwqLyParse/lib/requests_lib" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/wwqLyParse/lib/bs4_lib" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/wwqLyParse/lib/dns_lib" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/wwqLyParse/lib/python-3.6.5-embed-amd64" />
       <excludeFolder url="file://$MODULE_DIR$/wwqLyParse/lib/python-3.6.5-embed-win32" />
     </content>

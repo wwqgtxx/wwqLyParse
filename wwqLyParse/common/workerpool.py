@@ -68,3 +68,6 @@ class ThreadPool(_ThreadPool):
 
     def __bool__(self):
         return True
+
+
+common_threadpool = ThreadPool()

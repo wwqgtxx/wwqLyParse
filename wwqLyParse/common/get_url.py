@@ -23,7 +23,7 @@ URL_CACHE_POOL = 50
 url_cache = LRUCache(size=URL_CACHE_MAX, timeout=URL_CACHE_TIMEOUT)
 
 pool_get_url = WorkerPool(URL_CACHE_POOL, thread_name_prefix="GetUrlPool")
-pool_clean_url_cache = WorkerPool(1, thread_name_prefix="CleanUrlCache")
+# pool_clean_url_cache = WorkerPool(1, thread_name_prefix="CleanUrlCache")
 
 fake_headers = {
     'Connection': 'keep-alive',

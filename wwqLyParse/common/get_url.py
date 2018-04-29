@@ -122,7 +122,7 @@ def get_url(o_url, encoding='utf-8', headers=None, data=None, method=None, cooki
     url_json = {"o_url": o_url, "encoding": encoding, "headers": headers, "data": data, "method": method,
                 "cookies": cookies}
     url_json = json.dumps(url_json, sort_keys=True, ensure_ascii=False)
-    if allow_cache and session == common_session and cookies is not None:
+    if allow_cache and session == common_session:
         if url_json in url_cache:
             html_text = url_cache[url_json]
             logging.debug(callmethod + "cache get:" + url_json)

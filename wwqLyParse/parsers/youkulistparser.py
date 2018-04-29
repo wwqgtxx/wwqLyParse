@@ -28,8 +28,11 @@ class YouKuListParser1(Parser):
         # new_url = "http:" + m
         m = re.findall('<a href="(//list\.youku\.com/show/id_[^\s]+\.html)"', html)
         if not m:
-            return []
-        new_url = "http:" + m[0]
+            m = re.findall('(//list\.youku\.com/show/id_[^\s]+\.html)', html)
+            if not m:
+                return []
+        new_url = "https:" + m[0]
+        logging.debug(new_url)
         result = get_main_parse()(input_text=new_url, types="list")
         if result:
             return result
@@ -44,7 +47,8 @@ class YouKuListParser2(Parser):
         m = re.findall('(//list\.youku\.com/albumlist/show/id_[^\s]+\.html)', html)
         if not m:
             return []
-        new_url = "http:" + m[0]
+        new_url = "https:" + m[0]
+        logging.debug(new_url)
         result = get_main_parse()(input_text=new_url, types="collection")
         if result:
             return result
@@ -79,7 +83,7 @@ class YouKuListParser3(Parser):
         }
         last_num = 0
         while True:
-            new_url = "http://list.youku.com/show/episode?id=" + m[0] + "&stage=reload_" + str(last_num) + "&callback=a"
+            new_url = "https://list.youku.com/show/episode?id=" + m[0] + "&stage=reload_" + str(last_num) + "&callback=a"
             json_data = get_url(new_url)[14:-2]
             info = json.loads(json_data)
             if info.get("error", None) == 0 and info.get("message", None) == "success":
@@ -121,7 +125,7 @@ class YouKuListParser4(Parser):
         p_title = html("div.pl-title")
         title = p_title.attr("title")
         list_id = re.search('https?://list.youku.com/albumlist/show/id_(\d+)\.html', input_text).group(1)
-        ep = 'http://list.youku.com/albumlist/items?id={}&page={}&size=20&ascending=1&callback=a'
+        ep = 'https://list.youku.com/albumlist/items?id={}&page={}&size=20&ascending=1&callback=a'
 
         first_u = ep.format(list_id, 1)
         xhr_page = get_url(first_u)

@@ -358,6 +358,7 @@ class IQiYiVListParser(Parser):
         logging.debug(input_text)
         html = PyQuery(get_url(input_text))
         url = ""
+        # logging.debug(html)
         if not url:
             jss = html("script[type='text/javascript']")
             for item in jss:
@@ -418,6 +419,10 @@ class IQiYiVListParser(Parser):
                 if url:
                     logging.debug(url)
                     break
+        if not url:
+            a = PyQuery(html("a[data-albumurlkey]"))
+            url = a.attr("href")
+            logging.debug(url)
         if url and re.search(r"www.iqiyi.com/v_", url):
             url = None
         if url:

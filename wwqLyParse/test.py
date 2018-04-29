@@ -3,6 +3,13 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 
 if __name__ == "__main__":
+    try:
+        import gevent
+        from gevent import monkey
+
+        monkey.patch_all()
+    except Exception:
+        gevent = None
     import os
     import sys
 
@@ -13,6 +20,14 @@ if __name__ == "__main__":
     print(sys.path)
     del sys
     del os
+
+import sys
+import os
+import logging
+
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s{%(name)s}%(filename)s[line:%(lineno)d]<%(funcName)s> pid:%(process)d %(threadName)s %(levelname)s : %(message)s',
+                    datefmt='%H:%M:%S', stream=sys.stdout)
 
 from common import *
 
@@ -33,8 +48,9 @@ if __name__ == "__main__":
     # main("http://www.mgtv.com/b/316045/4096972.html", label="3@MgTVParser")
     # url_cache.timeout = 10
     # main("http://www.iqiyi.com/lib/m_201087714.html")
-    # main("http://www.iqiyi.com/v_19rrl8pmn8.html")
+    main("http://www.iqiyi.com/v_19rrcl8dck.html", types="list")
     # main("http://www.iqiyi.com/v_19rr8jbmeo.html", types="list")
+    # main("http://www.iqiyi.com/v_19rrl8pmn8.html")
     # time.sleep(10)
     # main("http://www.iqiyi.com/v_19rrl8pmn8.html", types="list")
     # main("http://www.iqiyi.com/v_19rrl8pmn8.html", parsers_name=["IQiYiMTsParser"])
@@ -60,9 +76,11 @@ if __name__ == "__main__":
     # main("http://www.le.com/ptv/vplay/1981824.html", types="list")
     # main("http://www.le.com/ptv/vplay/27416375.html", parsers_name=["LeParser"])
     # main("http://www.le.com/ptv/vplay/27416375.html", label="1080p@LeParser")
+    # main("https://v.youku.com/v_show/id_XMzU1MjQyNzk2OA==.html", types="list")
+    # main("https://v.youku.com/v_show/id_XMzU3MTI0OTgyMA==.html", types="list")
     # main("http://v.youku.com/v_show/id_XMjcxMzkwMjU3Mg==.html", types="list")
     # main("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474")
-    main("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474", parsers_name=["LuluParser"])
+    # main("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474", parsers_name=["LuluParser"])
     # main("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474", label="7_mp4hd3_1080P_1.39 GB@LuluParser")
     # main("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474", parsers_name=["YouGetParser"])
     # main("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474", parsers_name=["YKDLParser"])

@@ -3,7 +3,7 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 
 
-import urllib.request, io, os, sys, json, re, math, subprocess, traceback, logging
+import urllib.request, io, os, sys, json, re, math, subprocess, traceback, logging, sysconfig
 
 try:
     from ..common import *
@@ -25,8 +25,7 @@ try:
         name = "Annie解析"
 
         def _get_py_bin(self):
-            py_bin = sys.executable
-            if "wwqLyParse64.exe" in py_bin:
+            if sysconfig.get_platform() == "win-amd64":
                 py_bin = get_real_path('./annie/annie64.exe')
             else:
                 py_bin = get_real_path('./annie/annie32.exe')

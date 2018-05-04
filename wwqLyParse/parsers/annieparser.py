@@ -171,7 +171,7 @@ try:
             return out
 
         def parse(self, url, *k, **kk):
-            out = self._Parse(url, *k, **kk)
+            out = self._parse(url, *k, **kk)
             if "bilibili" in url:
                 for item in out['data']:
                     if isinstance(item, dict):
@@ -189,7 +189,7 @@ try:
             return out
 
         def parse_url(self, url, label, min=None, max=None, *k, **kk):
-            out = self._ParseURL(url, label, min, max, *k, **kk)
+            out = self._parse_url(url, label, min, max, *k, **kk)
             if "iqiyi" in url:
                 for item in out:
                     item["unfixIp"] = True

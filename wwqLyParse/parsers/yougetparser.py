@@ -13,10 +13,6 @@ except Exception as e:
 __MODULE_CLASS_NAMES__ = ["YouGetParser"]
 
 
-# # paths from plugin root_path
-# proxy_config_file = './etc/proxy_config.json'
-
-
 class YouGetParser(Parser):
     filters = ['^(http|https)://.+']
     types = ["formats"]
@@ -28,32 +24,11 @@ class YouGetParser(Parser):
     name = "you-get解析"
 
     # print exception function
-    def _print_exception(self, e):
+    @staticmethod
+    def _print_exception(e):
         line = traceback.format_exception(Exception, e, e.__traceback__)
         text = ''.join(line)
         return text
-
-    # # load config file
-    # def _load_config_file(self):
-    #     fpath = get_real_path(proxy_config_file)
-    #     with open(fpath, 'rb') as f:
-    #         blob = f.read()
-    #     text = blob.decode('utf-8')
-    #     info = json.loads(text)
-    #     return info
-    #
-    # # make proxy arg
-    # def _make_proxy_arg(self):
-    #     try:
-    #         info = self._load_config_file()
-    #         ptype = info['proxy_type']
-    #         if ptype == 'no_proxy':
-    #             return ['--no-proxy']
-    #         elif ptype == 'user_proxy':
-    #             return ['--extractor-proxy', info['proxy_server']]
-    #         return []
-    #     except Exception as e:
-    #         return []  # use system default proxy
 
     # make you-get arg
     def _make_arg(self, url, _format=None, use_info=True, password=None, *k, **kk):
@@ -124,7 +99,8 @@ class YouGetParser(Parser):
         return l, _format, size, ext
 
     # parse label
-    def _parse_label(self, raw):
+    @staticmethod
+    def _parse_label(raw):
         if '_' in raw:
             parts = raw.split('_')
             _format = parts[1]
@@ -211,7 +187,8 @@ class YouGetParser(Parser):
         return out
 
     # try parse json
-    def _try_parse_json(self, raw_text):
+    @staticmethod
+    def _try_parse_json(raw_text):
         while True:
             try:
                 info = json.loads(raw_text)
@@ -336,7 +313,7 @@ streams:             # Available quality and codecs
         return info
 
     # parse functions
-    def _Parse(self, url, *k, **kk):
+    def _parse(self, url, *k, **kk):
         yarg = self._make_arg(url, *k, **kk)
         stdout, stderr = self._run(yarg)
         # print(stdout)
@@ -368,7 +345,7 @@ streams:             # Available quality and codecs
         return out
 
     def parse(self, url, *k, **kk):
-        out = self._Parse(url, *k, **kk)
+        out = self._parse(url, *k, **kk)
         # if "bilibili" in url:
         #     for item in out['data']:
         #         if isinstance(item, dict):
@@ -385,7 +362,7 @@ streams:             # Available quality and codecs
         #                             item2["args"] = {'Referer': url}
         return out
 
-    def _ParseURL(self, url, label, min=None, max=None, *k, **kk):
+    def _parse_url(self, url, label, min=None, max=None, *k, **kk):
         _format = self._parse_label(label)
         yarg = self._make_arg(url, _format, *k, **kk)
         stdout, stderr = self._run(yarg)
@@ -396,7 +373,7 @@ streams:             # Available quality and codecs
         return out
 
     def parse_url(self, url, label, min=None, max=None, *k, **kk):
-        out = self._ParseURL(url, label, min, max, *k, **kk)
+        out = self._parse_url(url, label, min, max, *k, **kk)
         if "iqiyi" in url:
             for item in out:
                 item["unfixIp"] = True

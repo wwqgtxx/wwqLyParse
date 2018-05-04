@@ -219,9 +219,6 @@ try:
                 return stdout.split(',')[0]
             except Exception as e:
                 logging.exception("get version error")
-                # print(e)
-                # import traceback
-                # traceback.print_exc()
             return ""
 
 except:

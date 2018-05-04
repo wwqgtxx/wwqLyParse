@@ -31,7 +31,6 @@ class YouGetParser(Parser):
 
     # make you-get arg
     def _make_arg(self, url, _format=None, use_info=True, password=None, *k, **kk):
-        # arg = self._make_proxy_arg()
         arg = []
         if password:
             arg += ['--password', password]
@@ -400,7 +399,4 @@ streams:             # Available quality and codecs
             return stderr.split(',')[0]
         except Exception as e:
             logging.exception("get version error")
-            # print(e)
-            # import traceback
-            # traceback.print_exc()
         return ""

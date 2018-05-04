@@ -39,6 +39,12 @@ if __name__ == "__main__":
             logging.info("gevent.monkey.patch_all()")
             logging.info("use gevent.pool")
             logging.info("use %s" % gevent.config.loop)
+            logging.info("gevent version: %s" % gevent.__version__)
+            try:
+                import gevent.libuv.loop
+                logging.info(gevent.libuv.loop.get_version())
+            except Exception:
+                pass
         else:
             logging.info("use simple pool")
 

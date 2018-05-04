@@ -267,8 +267,10 @@ class signal(object):
             self.hub.handle_error(None, *sys.exc_info())
 
 
-def reinit():
+def reinit(hub=None):
     """
+    reinit() -> None
+
     Prepare the gevent hub to run in a new (forked) process.
 
     This should be called *immediately* after :func:`os.fork` in the
@@ -290,47 +292,47 @@ def reinit():
        if the fork process can be more smoothly managed.
 
     .. warning:: See remarks in :func:`gevent.os.fork` about greenlets
-       and libev watchers in the child process.
+       and event loop watchers in the child process.
     """
+    # Note the signature line in the docstring: hub is not a public param.
+
     # The loop reinit function in turn calls libev's ev_loop_fork
     # function.
-    hub = _get_hub()
+    hub = _get_hub() if hub is None else hub
+    if hub is None:
+        return
 
-    if hub is not None:
-        # Note that we reinit the existing loop, not destroy it.
-        # See https://github.com/gevent/gevent/issues/200.
-        hub.loop.reinit()
-        # libev's fork watchers are slow to fire because the only fire
-        # at the beginning of a loop; due to our use of callbacks that
-        # run at the end of the loop, that may be too late. The
-        # threadpool and resolvers depend on the fork handlers being
-        # run (specifically, the threadpool will fail in the forked
-        # child if there were any threads in it, which there will be
-        # if the resolver_thread was in use (the default) before the
-        # fork.)
-        #
-        # If the forked process wants to use the threadpool or
-        # resolver immediately (in a queued callback), it would hang.
-        #
-        # The below is a workaround. Fortunately, both of these
-        # methods are idempotent and can be called multiple times
-        # following a fork if the suddenly started working, or were
-        # already working on some platforms. Other threadpools and fork handlers
-        # will be called at an arbitrary time later ('soon')
-        if hasattr(hub.threadpool, '_on_fork'):
-            hub.threadpool._on_fork()
-        # resolver_ares also has a fork watcher that's not firing
-        if hasattr(hub.resolver, '_on_fork'):
-            hub.resolver._on_fork()
+    # Note that we reinit the existing loop, not destroy it.
+    # See https://github.com/gevent/gevent/issues/200.
+    hub.loop.reinit()
+    # libev's fork watchers are slow to fire because the only fire
+    # at the beginning of a loop; due to our use of callbacks that
+    # run at the end of the loop, that may be too late. The
+    # threadpool and resolvers depend on the fork handlers being
+    # run (specifically, the threadpool will fail in the forked
+    # child if there were any threads in it, which there will be
+    # if the resolver_thread was in use (the default) before the
+    # fork.)
+    #
+    # If the forked process wants to use the threadpool or
+    # resolver immediately (in a queued callback), it would hang.
+    #
+    # The below is a workaround. Fortunately, all of these
+    # methods are idempotent and can be called multiple times
+    # following a fork if the suddenly started working, or were
+    # already working on some platforms. Other threadpools and fork handlers
+    # will be called at an arbitrary time later ('soon')
+    for obj in (hub._threadpool, hub._resolver, hub.periodic_monitoring_thread):
+        getattr(obj, '_on_fork', lambda: None)()
 
-        # TODO: We'd like to sleep for a non-zero amount of time to force the loop to make a
-        # pass around before returning to this greenlet. That will allow any
-        # user-provided fork watchers to run. (Two calls are necessary.) HOWEVER, if
-        # we do this, certain tests that heavily mix threads and forking,
-        # like 2.7/test_threading:test_reinit_tls_after_fork, fail. It's not immediately clear
-        # why.
-        #sleep(0.00001)
-        #sleep(0.00001)
+    # TODO: We'd like to sleep for a non-zero amount of time to force the loop to make a
+    # pass around before returning to this greenlet. That will allow any
+    # user-provided fork watchers to run. (Two calls are necessary.) HOWEVER, if
+    # we do this, certain tests that heavily mix threads and forking,
+    # like 2.7/test_threading:test_reinit_tls_after_fork, fail. It's not immediately clear
+    # why.
+    #sleep(0.00001)
+    #sleep(0.00001)
 
 
 hub_ident_registry = IdentRegistry()
@@ -359,7 +361,8 @@ class Hub(WaitOperationsGreenlet):
     #: do not get logged/printed when raised by the event loop.
     NOT_ERROR = (GreenletExit, SystemExit)
 
-
+    #: The size we use for our threadpool. Either use a subclass
+    #: for this, or change it immediately after creating the hub.
     threadpool_size = 10
 
     # An instance of PeriodicMonitoringThread, if started.
@@ -374,6 +377,10 @@ class Hub(WaitOperationsGreenlet):
     #:
     #: .. versionadded:: 1.3b1
     name = ''
+
+    # NOTE: We cannot define a class-level 'loop' attribute
+    # because that conflicts with the slot we inherit from the
+    # Cythonized-bases.
 
     def __init__(self, loop=None, default=None):
         WaitOperationsGreenlet.__init__(self, None, None)
@@ -465,6 +472,13 @@ class Hub(WaitOperationsGreenlet):
             self.handle_system_error(type, value)
 
     def handle_system_error(self, type, value):
+        """
+        Called from `handle_error` when the exception type is determined
+        to be a :attr:`system error <SYSTEM_ERROR>`.
+
+        System errors cause the exception to be raised in the main
+        greenlet (the parent of this hub).
+        """
         current = getcurrent()
         if current is self or current is self.parent or self.loop is None:
             self.parent.throw(type, value)
@@ -607,6 +621,12 @@ class Hub(WaitOperationsGreenlet):
         return False
 
     def destroy(self, destroy_loop=None):
+        """
+        Destroy this hub and clean up its resources.
+
+        If you manually create hubs, you *should* call this
+        method before disposing of the hub object reference.
+        """
         if self.periodic_monitoring_thread is not None:
             self.periodic_monitoring_thread.kill()
             self.periodic_monitoring_thread = None
@@ -651,7 +671,12 @@ class Hub(WaitOperationsGreenlet):
     def _del_resolver(self):
         self._resolver = None
 
-    resolver = property(_get_resolver, _set_resolver, _del_resolver)
+    resolver = property(_get_resolver, _set_resolver, _del_resolver,
+                        """
+                        The DNS resolver that the socket functions will use.
+
+                        .. seealso:: :doc:`/dns`
+                        """)
 
 
     @property
@@ -670,7 +695,19 @@ class Hub(WaitOperationsGreenlet):
     def _del_threadpool(self):
         self._threadpool = None
 
-    threadpool = property(_get_threadpool, _set_threadpool, _del_threadpool)
+    threadpool = property(_get_threadpool, _set_threadpool, _del_threadpool,
+                          """
+                          The threadpool associated with this hub.
+
+                          Usually this is a
+                          :class:`gevent.threadpool.ThreadPool`, but
+                          you :attr:`can customize that
+                          <gevent._config.Config.threadpool>`.
+
+                          Use this object to schedule blocking
+                          (non-cooperative) operations in a different
+                          thread to prevent them from halting the event loop.
+                          """)
 
 
 set_default_hub_class(Hub)

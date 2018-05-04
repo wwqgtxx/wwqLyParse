@@ -18,11 +18,12 @@ __all__ = [
 
 class LoopExit(Exception):
     """
-    Exception thrown when the hub finishes running.
+    Exception thrown when the hub finishes running (`gevent.hub.Hub.run`
+    would return).
 
     In a normal application, this is never thrown or caught
     explicitly. The internal implementation of functions like
-    :func:`join` and :func:`joinall` may catch it, but user code
+    :meth:`gevent.hub.Hub.join` and :func:`gevent.joinall` may catch it, but user code
     generally should not.
 
     .. caution::
@@ -35,18 +36,43 @@ class LoopExit(Exception):
 
     """
 
+    def __repr__(self):
+        if len(self.args) == 3: # From the hub
+            import pprint
+            return "%s\n\tHub: %s\n\tHandles:\n%s" % (
+                self.args[0], self.args[1],
+                pprint.pformat(self.args[2])
+            )
+        return Exception.__repr__(self)
+
+    def __str__(self):
+        return repr(self)
 
 class BlockingSwitchOutError(AssertionError):
-    pass
+    """
+    Raised when a gevent synchronous function is called from a
+    low-level event loop callback.
+
+    This is usually a programming error.
+    """
 
 
 class InvalidSwitchError(AssertionError):
-    pass
+    """
+    Raised when the event loop returns control to a greenlet in an
+    unexpected way.
 
+    This is usually a bug in gevent, greenlet, or the event loop.
+    """
 
 class ConcurrentObjectUseError(AssertionError):
-    # raised when an object is used (waited on) by two greenlets
-    # independently, meaning the object was entered into a blocking
-    # state by one greenlet and then another while still blocking in the
-    # first one
-    pass
+    """
+    Raised when an object is used (waited on) by two greenlets
+    independently, meaning the object was entered into a blocking
+    state by one greenlet and then another while still blocking in the
+    first one.
+
+    This is usually a programming error.
+
+    .. seealso:: `gevent.socket.wait`
+    """

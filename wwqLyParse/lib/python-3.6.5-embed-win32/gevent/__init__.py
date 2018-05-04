@@ -27,7 +27,7 @@ version_info = _version_info(1, 3, 0, 'dev', 0)
 #: Use ``pkg_resources.parse_version(__version__)`` or
 #: ``packaging.version.Version(__version__)`` to get a machine-usable
 #: value.
-__version__ = '1.3b1'
+__version__ = '1.3b2'
 
 
 __all__ = [
@@ -46,7 +46,8 @@ __all__ = [
     'sleep',
     'idle',
     'kill',
-    'signal',
+    'signal', # deprecated
+    'signal_handler',
     'fork',
     'reinit',
     'getswitchinterval',
@@ -106,6 +107,7 @@ except ImportError:
 # to treat 'from gevent import signal' as a callable, to matter whether
 # the 'gevent.signal' module has been imported first
 from gevent.hub import signal as _signal_class
+signal_handler = _signal_class
 from gevent import signal as _signal_module
 
 # The object 'gevent.signal' must:

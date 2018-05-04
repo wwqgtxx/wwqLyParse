@@ -98,6 +98,7 @@ class AbstractCallbacks(object):
         This function should never return 0, as that's the default value that
         Python exceptions will produce.
         """
+        #print("Running callback", handle)
         orig_ffi_watcher = None
         try:
             # Even dereferencing the handle needs to be inside the try/except;
@@ -121,6 +122,7 @@ class AbstractCallbacks(object):
                 args = _NOARGS
             if args and args[0] == GEVENT_CORE_EVENTS:
                 args = (revents, ) + args[1:]
+            #print("Calling function", the_watcher.callback, args)
             the_watcher.callback(*args)
         except: # pylint:disable=bare-except
             _dbg("Got exception servicing watcher with handle", handle, sys.exc_info())
@@ -493,14 +495,6 @@ class AbstractLoop(object):
         raise NotImplementedError()
 
     def destroy(self):
-        """
-        Clean up resources used by this loop.
-
-        Note that, unlike the libev C loop implementation, this object
-        *does not* have a finalizer (``__del__``). If you create loops
-        (especially loops that are not the default) you *should* call
-        this method when you are done with the loop.
-        """
         if self._ptr:
             try:
                 if not self._can_destroy_loop(self._ptr):
@@ -588,17 +582,9 @@ class AbstractLoop(object):
         pass
 
     def now(self):
-        """
-        Return the loop's notion of the current time.
-
-        This may not necessarily be related to :func:`time.time` (it
-        may have a different starting point), but it must be expressed
-        in fractional seconds (the same *units* used by :func:`time.time`).
-        """
         raise NotImplementedError()
 
     def update_now(self):
-        "Update the loop's notion of the current time."
         raise NotImplementedError()
 
     def update(self):

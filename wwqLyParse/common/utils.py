@@ -35,6 +35,33 @@ def get_caller_info():
     return callmethod
 
 
+def print_exception(e):
+    line = traceback.format_exception(Exception, e, e.__traceback__)
+    text = ''.join(line)
+    return text
+
+
+def get_item_from_str(string, key):
+    string = str(string)
+    if string.startswith(key):
+        string_array = string.split(key, 1)
+        if len(string_array) == 2:
+            return string_array[1].strip()
+
+
+def mime_to_container(mime):
+    mapping = {
+        'video/3gpp': '3gp',
+        'video/mp4': 'mp4',
+        'video/webm': 'webm',
+        'video/x-flv': 'flv',
+    }
+    if mime in mapping:
+        return mapping[mime]
+    else:
+        return mime.split('/')[1]
+
+
 def is_in(a, b, strict=True):
     result = False
     if isinstance(a, list):

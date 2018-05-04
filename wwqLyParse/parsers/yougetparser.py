@@ -12,8 +12,9 @@ except Exception as e:
 
 __MODULE_CLASS_NAMES__ = ["YouGetParser"]
 
-# paths from plugin root_path
-proxy_config_file = './etc/proxy_config.json'
+
+# # paths from plugin root_path
+# proxy_config_file = './etc/proxy_config.json'
 
 
 class YouGetParser(Parser):
@@ -29,34 +30,35 @@ class YouGetParser(Parser):
     # print exception function
     def _print_exception(self, e):
         line = traceback.format_exception(Exception, e, e.__traceback__)
-        text = ('').join(line)
+        text = ''.join(line)
         return text
 
-    # load config file
-    def _load_config_file(self):
-        fpath = get_real_path(proxy_config_file)
-        with open(fpath, 'rb') as f:
-            blob = f.read()
-        text = blob.decode('utf-8')
-        info = json.loads(text)
-        return info
-
-    # make proxy arg
-    def _make_proxy_arg(self):
-        try:
-            info = self._load_config_file()
-            ptype = info['proxy_type']
-            if ptype == 'no_proxy':
-                return ['--no-proxy']
-            elif ptype == 'user_proxy':
-                return ['--extractor-proxy', info['proxy_server']]
-            return []
-        except Exception as e:
-            return []  # use system default proxy
+    # # load config file
+    # def _load_config_file(self):
+    #     fpath = get_real_path(proxy_config_file)
+    #     with open(fpath, 'rb') as f:
+    #         blob = f.read()
+    #     text = blob.decode('utf-8')
+    #     info = json.loads(text)
+    #     return info
+    #
+    # # make proxy arg
+    # def _make_proxy_arg(self):
+    #     try:
+    #         info = self._load_config_file()
+    #         ptype = info['proxy_type']
+    #         if ptype == 'no_proxy':
+    #             return ['--no-proxy']
+    #         elif ptype == 'user_proxy':
+    #             return ['--extractor-proxy', info['proxy_server']]
+    #         return []
+    #     except Exception as e:
+    #         return []  # use system default proxy
 
     # make you-get arg
     def _make_arg(self, url, _format=None, use_info=True, password=None, *k, **kk):
-        arg = self._make_proxy_arg()
+        # arg = self._make_proxy_arg()
+        arg = []
         if password:
             arg += ['--password', password]
         # NOTE ignore __default__ format
@@ -80,12 +82,14 @@ class YouGetParser(Parser):
 
     # run you-get
     def _run(self, arg, need_stderr=False):
-        y_bin = get_real_path(self.bin)
+        y_bin = get_real_path(self.bin) if self.bin else None
         py_bin = self._get_py_bin()
         if "PyRun.exe" in py_bin:
             args = [py_bin, '--normal', y_bin]
         else:
             args = [py_bin, y_bin]
+        if y_bin is None:
+            args.pop()
         args = args + arg
         PIPE = subprocess.PIPE
         logging.debug(args)
@@ -107,6 +111,7 @@ class YouGetParser(Parser):
         _format = stream['_format']
         _id = stream['_id']
         quality = stream['video_profile']
+        quality = quality.replace(' ', '')
         try:
             size_str = byte2size(stream['size'], False)
             size = byte2size(stream['size'], True)
@@ -130,10 +135,7 @@ class YouGetParser(Parser):
 
     # parse you-get output for parse
     def _parse_parse(self, raw):
-        out = {}
-        out['type'] = 'formats'
-        out['name'] = raw['title'] + '_' + raw['site']
-        out['data'] = []
+        out = {'type': 'formats', 'name': raw['title'] + '_' + raw['site'], 'data': []}
         stream = []
         for _format, s in raw['streams'].items():
             s['_format'] = _format
@@ -190,10 +192,7 @@ class YouGetParser(Parser):
             referer = stream['refer']
         out = []
         for u in urls:
-            one = {}
-            one['protocol'] = 'http'
-            one['args'] = {}
-            one['urls'] = u
+            one = {'protocol': 'http', 'args': {}, 'urls': u}
             if container == "m3u8":
                 one['protocol'] = 'm3u8'
                 if not isinstance(one['urls'], list):
@@ -225,6 +224,14 @@ class YouGetParser(Parser):
                 if rest == raw_text:
                     raise
                 raw_text = rest
+
+    @staticmethod
+    def _get_item_from_str(string, key):
+        string = str(string)
+        if string.startswith(key):
+            string_array = string.split(key, 1)
+            if len(string_array) == 2:
+                return string_array[1].strip()
 
     def _try_parse_info(self, raw_text):
         """
@@ -264,13 +271,6 @@ streams:             # Available quality and codecs
         :return: 
         """
 
-        def get_item_from_str(string, key):
-            string = str(string)
-            if string.startswith(key):
-                string_array = string.split(key, 1)
-                if len(string_array) == 2:
-                    return string_array[1].strip()
-
         def mime_to_container(mime):
             mapping = {
                 'video/3gpp': '3gp',
@@ -290,13 +290,13 @@ streams:             # Available quality and codecs
             item = str(item.strip()).lower()
             if not item:
                 continue
-            site = get_item_from_str(item, "site:")
+            site = self._get_item_from_str(item, "site:")
             if site:
                 info["site"] = site
-            title = get_item_from_str(item, "title:")
+            title = self._get_item_from_str(item, "title:")
             if title:
                 info["title"] = title
-            format = get_item_from_str(item, "- format:")
+            format = self._get_item_from_str(item, "- format:")
             if format:
                 last_format_dict = {
                     "container": "",
@@ -304,13 +304,13 @@ streams:             # Available quality and codecs
                     "size": ""
                 }
                 info["streams"][format] = last_format_dict
-            container = get_item_from_str(item, "container:")
+            container = self._get_item_from_str(item, "container:")
             if container:
                 last_format_dict["container"] = container
-            video_profile = get_item_from_str(item, "video-profile:")
+            video_profile = self._get_item_from_str(item, "video-profile:")
             if video_profile:
                 last_format_dict["video_profile"] = video_profile
-            size = get_item_from_str(item, "size:")
+            size = self._get_item_from_str(item, "size:")
             if size:
                 size_array = size.split("(", 1)
                 if len(size_array) == 2:
@@ -320,7 +320,7 @@ streams:             # Available quality and codecs
                     except ValueError:
                         pass
                 last_format_dict["size"] = size
-            type = get_item_from_str(item, "type:")
+            type = self._get_item_from_str(item, "type:")
             if type:
                 last_format_dict = {
                     "container": "",

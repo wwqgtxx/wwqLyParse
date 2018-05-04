@@ -3,3 +3,5 @@ __pycache__
 wwqLyParse*.zip
 .idea/workspace.xml
 .idea/deployment.xml
+/wwqLyParse/annie/annie32.exe
+/wwqLyParse/annie/annie64.exe

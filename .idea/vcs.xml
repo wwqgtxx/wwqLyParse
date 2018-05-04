@@ -2,7 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/wwqLyParse/lulu" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/wwqLyParse/annie/src/github.com/iawia002/annie" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/wwqLyParse/ykdl" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/wwqLyParse/you-get" vcs="Git" />
   </component>

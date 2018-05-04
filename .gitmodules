@@ -1,15 +1,9 @@
-[submodule "wwqLyParse/lyp_pv"]
-	path = wwqLyParse/lyp_pv
-	url = https://github.com/wwqgtxx/lyp_pv.git
 [submodule "wwqLyParse/ykdl"]
 	path = wwqLyParse/ykdl
 	url = git@github.com:wwqgtxx/ykdl.git
 [submodule "wwqLyParse/you-get"]
 	path = wwqLyParse/you-get
 	url = git@github.com:wwqgtxx/you-get.git
-[submodule "wwqLyParse/p_video"]
-	path = wwqLyParse/p_video
-	url = git@github.com:wwqgtxx/p_video.git
-[submodule "wwqLyParse/lulu"]
-	path = wwqLyParse/lulu
-	url = git@github.com:wwqgtxx/Lulu.git
+[submodule "wwqLyParse/annie/src/github.com/iawia002/annie"]
+	path = wwqLyParse/annie/src/github.com/iawia002/annie
+	url = git@github.com:wwqgtxx/annie.git

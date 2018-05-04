@@ -34,7 +34,8 @@ try:
 
         # make arg
         def _make_arg(self, url, _format=None, use_info=False, *k, **kk):
-            arg = self._make_proxy_arg()
+            # arg = self._make_proxy_arg()
+            arg = []
             # NOTE ignore __default__ format
             if _format and (_format != '__default__'):
                 arg += ['--format', _format]

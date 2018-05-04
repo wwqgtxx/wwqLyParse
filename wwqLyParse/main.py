@@ -156,9 +156,9 @@ def init_version():
     except:
         logging.warning("YKDLParser version get error")
     try:
-        version['name'] = version['name'] + parser_class_map["LuluParser"]().get_version() + "&"
+        version['name'] = version['name'] + parser_class_map["AnnieParser"]().get_version() + "&"
     except:
-        logging.warning("LuluParser version get error")
+        logging.warning("AnnieParser version get error")
     version['name'] = version['name'] + "]" + " Running on Python %s" % sys.version
 
 

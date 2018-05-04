@@ -45,6 +45,12 @@ try:
                     arg += ['-j', url]
             return arg
 
+        # try parse json
+        def _try_parse_json(self, raw_text):
+            if "annie doesn't support this URL right now, but it will try to download it directly" in raw_text:
+                return {}
+            return super(AnnieParser, self)._try_parse_json(raw_text)
+
         def _try_parse_info(self, raw_text):
             """
     type1:
@@ -76,6 +82,8 @@ try:
             :param raw_text:
             :return:
             """
+            if "annie doesn't support this URL right now, but it will try to download it directly" in raw_text:
+                return {}
             data_array = raw_text.splitlines()
             info = {"site": "", "title": "", "streams": {}}
             last_format_dict = None
@@ -116,7 +124,7 @@ try:
                     last_format_dict["size"] = size
             logging.info(info)
             return info
-        
+
         # parse for parse_url
         def _parse_parse_url(self, raw, _format):
             stream = raw['Formats'].get(_format, None)

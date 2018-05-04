@@ -24,8 +24,7 @@ class YouGetParser(Parser):
     name = "you-get解析"
 
     # print exception function
-    @staticmethod
-    def _print_exception(e):
+    def _print_exception(self, e):
         line = traceback.format_exception(Exception, e, e.__traceback__)
         text = ''.join(line)
         return text
@@ -99,8 +98,7 @@ class YouGetParser(Parser):
         return l, _format, size, ext
 
     # parse label
-    @staticmethod
-    def _parse_label(raw):
+    def _parse_label(self, raw):
         if '_' in raw:
             parts = raw.split('_')
             _format = parts[1]
@@ -187,8 +185,7 @@ class YouGetParser(Parser):
         return out
 
     # try parse json
-    @staticmethod
-    def _try_parse_json(raw_text):
+    def _try_parse_json(self, raw_text):
         while True:
             try:
                 info = json.loads(raw_text)
@@ -202,8 +199,7 @@ class YouGetParser(Parser):
                     raise
                 raw_text = rest
 
-    @staticmethod
-    def _get_item_from_str(string, key):
+    def _get_item_from_str(self, string, key):
         string = str(string)
         if string.startswith(key):
             string_array = string.split(key, 1)

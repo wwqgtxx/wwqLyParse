@@ -61,7 +61,7 @@ else:
     common_session = None
 
 
-def get_url(o_url, encoding='utf-8', headers=None, data=None, method=None, cookies=None, allow_cache=True,
+def get_url(o_url, encoding='utf-8', headers=None, data=None, method=None, cookies=None, verify=True, allow_cache=True,
             use_pool=True, pool=pool_get_url, session=common_session):
     def _get_url(url_json, o_url, encoding, headers, data, method, allowCache, callmethod, use_pool):
         try:
@@ -71,12 +71,17 @@ def get_url(o_url, encoding='utf-8', headers=None, data=None, method=None, cooki
                     req = requests.Request(method=method if method else "GET", url=o_url,
                                            headers=headers if headers else fake_headers, data=data, cookies=cookies)
                     prepped = req.prepare()
-                    resp = session.send(prepped)
+                    resp = session.send(prepped, verify=verify)
                     if encoding == "raw":
                         html_text = resp.content
                     else:
                         resp.encoding = encoding
                         html_text = resp.text
+                        if o_url.startswith("http://") and re.match(r'http://\d+\.\d+\.\d+\.\d+:89/cookie/flash.js',
+                                                                    html_text):
+                            logging.warning("get 'cookie/flash.js' in html ,retry")
+                            return _get_url(url_json, o_url, encoding, headers, data, method, allowCache, callmethod,
+                                            use_pool)
                 except requests.exceptions.RequestException as e:
                     logging.warning(callmethod + 'requests error %s' % e)
 

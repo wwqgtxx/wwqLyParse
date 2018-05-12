@@ -42,6 +42,7 @@ if __name__ == "__main__":
             logging.info("gevent version: %s" % gevent.__version__)
             try:
                 import gevent.libuv.loop
+
                 logging.info(gevent.libuv.loop.get_version())
             except Exception:
                 pass
@@ -94,6 +95,7 @@ version = {
 PARSE_TIMEOUT = 90  # must > 5
 CLOSE_TIMEOUT = 10
 RECV_TIMEOUT = 60
+CONN_LRU_TIMEOUT = 60 * 60  # 1 hour
 
 parser_class_map = import_by_name(module_names=get_all_filename_by_dir('./parsers'), prefix="parsers.",
                                   super_class=Parser)
@@ -370,18 +372,21 @@ def _handle(data):
     return byte_str
 
 
-def handle(conn_list: list, conn: multiprocessing_connection.Connection, c_send: multiprocessing_connection.Connection):
+def handle(conn_lru_dict: LRUCacheType[multiprocessing_connection.Connection, bool],
+           conn: multiprocessing_connection.Connection, c_send: multiprocessing_connection.Connection):
     try:
-        if not conn.closed:
-            data = conn.recv_bytes()
-            if not data:
-                raise EOFError
-            logging.debug("parse conn %s" % conn)
-            # logging.debug(data)
-            result = _handle(data)
-            conn.send_bytes(result)
-            conn_list.append(conn)
-            c_send.send_bytes(b'ok')
+        data = conn.recv_bytes()
+        if not data:
+            raise EOFError
+        logging.debug("parse conn %s" % conn)
+        # logging.debug(data)
+        result = _handle(data)
+        conn.send_bytes(result)
+        conn_lru_dict[conn] = True
+        c_send.send_bytes(b'ok')
+    except OSError:
+        logging.debug("conn %s was closed" % conn)
+        conn.close()
     except EOFError:
         logging.debug("conn %s was eof" % conn)
         conn.close()
@@ -390,22 +395,26 @@ def handle(conn_list: list, conn: multiprocessing_connection.Connection, c_send:
         conn.close()
 
 
-def _process(conn_list: List[multiprocessing_connection.Connection],
+def _process(conn_lru_dict: LRUCacheType[multiprocessing_connection.Connection, bool],
              handle_pool: WorkerPool,
              c_recv: multiprocessing_connection.Connection,
              c_send: multiprocessing_connection.Connection,
              wait=multiprocessing_connection.wait):
     while True:
         try:
-            for conn in wait(conn_list):
+            for conn in wait(list(conn_lru_dict.keys()) + [c_recv]):
                 if conn == c_recv:
                     c_recv.recv_bytes()
                     continue
-                conn_list.remove(conn)
+                del conn_lru_dict[conn]
                 if not conn.closed:
-                    handle_pool.spawn(handle, conn_list, conn, c_send)
+                    handle_pool.spawn(handle, conn_lru_dict, conn, c_send)
                 else:
                     logging.debug("conn %s was closed" % conn)
+        except OSError as e:
+            if getattr(e, "winerror", 0) == 6:
+                continue
+            logging.exception("OSError")
         except:
             logging.exception("error")
 
@@ -414,14 +423,20 @@ def _run(address):
     with WorkerPool(thread_name_prefix="HandlePool") as handle_pool:
         with multiprocessing_connection.Listener(address, authkey=get_uuid()) as listener:
             c_recv, c_send = multiprocessing_connection.Pipe(False)
-            conn_list = list()
-            conn_list.append(c_recv)
-            handle_pool.spawn(_process, conn_list, handle_pool, c_recv, c_send)
+
+            def after_delete_handle(t: Tuple[multiprocessing_connection.Connection, bool]):
+                k, v = t
+                logging.debug("close timeout conn %s" % k)
+                c_send.send_bytes(b'ok')
+                k.close()
+
+            conn_lru_dict = LRUCache(size=1024, timeout=CONN_LRU_TIMEOUT, after_delete_handle=after_delete_handle)
+            handle_pool.spawn(_process, conn_lru_dict, handle_pool, c_recv, c_send)
             while True:
                 try:
                     conn = listener.accept()
                     logging.debug("get a new conn %s" % conn)
-                    conn_list.append(conn)
+                    conn_lru_dict[conn] = True
                     c_send.send_bytes(b'ok')
                 except:
                     logging.exception("error")

@@ -161,7 +161,7 @@ Streams:   # All available quality
             one = {}
             _label, code, size = make_label(s['_format'], s['_id'], s['Quality'], s.get('Size', 0))
             ext = ""
-            one['label'] = process_label
+            one['label'] = _label
             one['code'] = code
             one['ext'] = ext
             one['size'] = size

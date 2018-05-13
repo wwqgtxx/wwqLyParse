@@ -4,10 +4,10 @@
 
 if __name__ == "__main__":
     try:
-        import gevent
         from gevent import monkey
 
         monkey.patch_all()
+        del monkey
     except Exception:
         gevent = None
     import os
@@ -21,19 +21,9 @@ if __name__ == "__main__":
     del sys
     del os
 
-import sys
-import os
-import logging
-
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s{%(name)s}%(filename)s[line:%(lineno)d]<%(funcName)s> pid:%(process)d %(threadName)s %(levelname)s : %(message)s',
-                    datefmt='%H:%M:%S', stream=sys.stdout)
-
-from common import *
+from main import *
 
 if __name__ == "__main__":
-    from main import *
-
     # main(r"file:///E:\QQDownloads\11.m3u8")
     # main(r"file:///E:\QQDownloads\a.list")
     # main(r"file:///E:\QQDownloads\url.media")
@@ -54,27 +44,19 @@ if __name__ == "__main__":
     # time.sleep(10)
     # main("http://www.iqiyi.com/v_19rrl8pmn8.html", types="list")
     # main("http://www.iqiyi.com/v_19rrl8pmn8.html", parsers_name=["IQiYiMTsParser"])
-    main("http://www.iqiyi.com/v_19rrl8pmn8.html", label="fullhd@IQiYiParser")
-    # main("http://www.iqiyi.com/v_19rrl8pmn8.html", parsers_name=["ykdlparser.YKDLParser"])
-    # main("http://www.iqiyi.com/v_19rrl8pmn8.html", label="1_BD_1080p_0@YKDLParser")
-    # main("http://www.iqiyi.com/v_19rrl8pmn8.html", parsers_name=["yougetparser.YouGetParser"])
-    # main("http://www.iqiyi.com/v_19rrl8pmn8.html", label="4_BD_1080p_0@YouGetParser")
-    # main("http://www.le.com/ptv/vplay/25047584.html", parsers_name=["LypPvParser"])
-    # main("http://www.le.com/ptv/vplay/25047584.html", label="4.0@LypPvParser")
-    # main("http://www.le.com/ptv/vplay/25047584.html", parsers_name=["ykdlparser.YKDLParser"], types="formats")
+    # main("http://www.iqiyi.com/v_19rrl8pmn8.html", parsers_name=["IQiYiParser"])
+    # main("http://www.iqiyi.com/v_19rrl8pmn8.html", label="1080P-H264@IQiYiParser")
+    # main("http://www.le.com/ptv/vplay/25047584.html", parsers_name=["YKDLParser"], types="formats")
     # main("http://www.le.com/ptv/vplay/25047584.html", label="0_TD_超清_0@YKDLParser")
-    # main("http://www.mgtv.com/b/308710/3917451.html", parsers_name=["YouGetParser"])
-    # main("http://www.mgtv.com/b/308710/3917451.html", label="2_hd_超清_982.06 MB@YouGetParser")
-    # main("http://www.mgtv.com/b/308710/3917451.html", parsers_name=["YKDLParser"])
-    # main("http://www.mgtv.com/b/308710/3917451.html", label="1_TD_超清_0@YKDLParser")
     # main("https://www.bilibili.com/video/av21877586", parsers_name=["AnnieParser"])
     # main("https://www.bilibili.com/video/av21877586", label="default@AnnieParser")
     # main("https://www.bilibili.com/video/av21877586", label="64@AnnieParser")
     # main("https://www.bilibili.com/video/av17246756/", parsers_name=["YKDLParser"])
+    main("https://www.bilibili.com/video/av21877586", label="BD@YKDLParser")
     # main("https://www.bilibili.com/video/av17246756/", parsers_name=["YouGetParser"])
     # main("https://www.bilibili.com/video/av17246756/", label="flv@YouGetParser")
     # main("http://www.bilibili.com/video/av3153352/", parsers_name=["YouGetParser"])
-    # main("http://www.bilibili.com/video/av3153352/", label="2_flv__13.31 MB@YouGetParser")
+    # main("http://www.bilibili.com/video/av3153352/", label="hdflv@YouGetParser")
     # main("http://www.le.com/ptv/vplay/27416375.html", parsers_name=["YouGetParser"])
     # main("http://www.le.com/ptv/vplay/1981824.html", types="list")
     # main("http://www.le.com/ptv/vplay/27416375.html", parsers_name=["LeParser"])
@@ -85,9 +67,9 @@ if __name__ == "__main__":
     # main("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474")
     # main("http://v.youku.com/v_show/id_XMjQ4MTc0ODMyOA==.html?spm=a2h1n.8251845.0.0", parsers_name=["AnnieParser"])
     # main("http://v.youku.com/v_show/id_XMjQ4MTc0ODMyOA==.html?spm=a2h1n.8251845.0.0", label="default@AnnieParser")
-    # main("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474", parsers_name=["YouGetParser"])
-    # main("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474", parsers_name=["YKDLParser"])
-    # main("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474", label="3_BD_1080p_2.00 GB@YKDLParser")
+    # main("http://v.youku.com/v_show/id_XMjQ4MTc0ODMyOA==.html?spm=a2h1n.8251845.0.0", parsers_name=["YouGetParser"])
+    # main("http://v.youku.com/v_show/id_XMjQ4MTc0ODMyOA==.html?spm=a2h1n.8251845.0.0", parsers_name=["YKDLParser"])
+    # main("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474", label="BD@YKDLParser")
     # main("http://v.youku.com/v_show/id_XMzg1ODY1MTIw.html||123", parsers_name=["YouGetParser"])
     # main("http://list.youku.com/albumlist/show/id_2336634.html", types="collection")
     # main("https://v.youku.com/v_show/id_XMzE2MzM2NTMyNA==.html?spm=a2hww.20027244.m_250379.5~5~1~3!4~A")
@@ -95,3 +77,4 @@ if __name__ == "__main__":
     # close()
     # init_version()
     # print(version)
+    pass

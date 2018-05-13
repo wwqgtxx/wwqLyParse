@@ -7,12 +7,12 @@ if __name__ == "__main__":
     # sys.modules["gevent"] = None
 
     try:
-        import gevent
         from gevent import monkey
 
         monkey.patch_all()
+        del monkey
     except Exception:
-        gevent = None
+        pass
     import os
     import sys
 
@@ -24,6 +24,11 @@ if __name__ == "__main__":
 
     del sys
     del os
+
+try:
+    import gevent
+except Exception:
+    gevent = None
 
 import sys
 import os

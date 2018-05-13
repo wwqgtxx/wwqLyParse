@@ -6,10 +6,6 @@ import json, sys, subprocess, time, logging, traceback, ctypes, sysconfig
 import multiprocessing
 import multiprocessing.connection
 
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s %(filename)s[line:%(lineno)d]<%(funcName)s> %(threadName)s %(levelname)s : %(message)s',
-                    datefmt='%H:%M:%S', stream=sys.stdout)
-
 import main
 
 main.init_version()

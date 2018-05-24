@@ -6,6 +6,7 @@
 import urllib.request, io, os, sys, json, re
 
 from pyquery.pyquery import PyQuery
+import base64
 
 try:
     from ..common import *
@@ -17,19 +18,44 @@ JUDGE_VIP = True
 __MODULE_CLASS_NAMES__ = ["MgTVParser", "MgTVListParser"]
 
 
+def encode_tk2(string: str):
+    string = base64.b64encode(string.encode()).decode()  # type:str
+    string = re.sub(r'/\+/g', "_", string)
+    string = re.sub(r'///g', "~", string)
+    string = re.sub(r'/=/g', "-", string)
+    string = string[::-1]
+    return string
+
+
 class MgTVParser(Parser):
     filters = [r'https?://www.mgtv.com/(?:b|l)/\d+/(\d+).html', r'https?://www.mgtv.com/hz/bdpz/\d+/(\d+).html']
     types = ["formats"]
+    cookies = {"PM_CHKID": "1"}
 
-    def get_api_data(self, url, allow_cache=True):
+    def get_api_data(self, url, only_api1=False):
         # id = re.match('^http://[^\s]+/[^\s]+/([^\s]+)\.html', url).group(1)
+
         vid = match1(url, r'https?://www.mgtv.com/(?:b|l)/\d+/(\d+).html')
         if not vid:
             vid = match1(url, r'https?://www.mgtv.com/hz/bdpz/\d+/(\d+).html')
-        api_url = 'http://pcweb.api.mgtv.com/player/video?video_id={}'.format(vid)
-        api_data = get_url(api_url, allow_cache=allow_cache)
-        api_data = json.loads(api_data)
-        # print(api_data)
+        clit = "clit=%d" % int(time.time())
+        tk2 = "did=f11dee65-4e0d-4d25-bfce-719ad9dc991d|pno=1030|ver=5.5.1|{}".format(clit)
+        api_url = 'http://pcweb.api.mgtv.com/player/video?video_id={}&tk2={}'.format(vid, encode_tk2(tk2))
+        api_data1 = get_url(api_url, allow_cache=False, cookies=self.cookies)
+        api_data1 = json.loads(api_data1)
+        logging.debug(api_data1)
+        assert api_data1['code'] == 200
+        api_data = api_data1['data']
+        if not only_api1:
+            pm2 = api_data['atc']['pm2']
+            api_url2 = 'https://pcweb.api.mgtv.com/player/getSource?video_id={}&tk2={}&pm2={}'.format(vid, encode_tk2(clit),
+                                                                                                      pm2)
+            api_data2 = get_url(api_url2, allow_cache=False, cookies=self.cookies)
+            api_data2 = json.loads(api_data2)
+            logging.debug(api_data2)
+            assert api_data2['code'] == 200
+            api_data.update(api_data2['data'])
+        logging.debug(api_data)
         return api_data
 
     def parse(self, input_text, types=None, *k, **kk):
@@ -44,12 +70,10 @@ class MgTVParser(Parser):
             "data": []
         }
         api_data = self.get_api_data(input_text)
-        if api_data['code'] != 200 or not api_data['data']:
-            return []
-        info = api_data['data']['info']
+        info = api_data['info']
         data["name"] = info['series'] + ' ' + info['title'] + ' ' + info['desc']
         data["icon"] = info['thumb']
-        for lstream in api_data['data']['stream']:
+        for lstream in api_data['stream']:
             if lstream['url']:
                 data["data"].append({
                     "label": lstream['name'],
@@ -76,14 +100,12 @@ class MgTVParser(Parser):
             # "convert" : "",
             # "convertData" : "",
         }
-        api_data = self.get_api_data(input_text, allow_cache=False)
-        if api_data['code'] != 200 and api_data['data']:
-            return []
+        api_data = self.get_api_data(input_text)
         # domain = api_data['data']['stream_domain'][0]
-        for lstream in api_data['data']['stream']:
+        for lstream in api_data['stream']:
             if lstream['url'] and lstream['def'] == label:
-                for domain in api_data['data']['stream_domain']:
-                    api_data2 = json.loads(get_url(domain + lstream['url'], allow_cache=False))
+                for domain in api_data['stream_domain']:
+                    api_data2 = json.loads(get_url(domain + lstream['url'], allow_cache=False, cookies=self.cookies))
                     # print(api_data2)
                     url = api_data2['info']
                     data["urls"].append(url)
@@ -106,10 +128,8 @@ class MgTVListParser(MgTVParser):
         }
         collection_id = match1(input_text, r'https?://www.mgtv.com/h/(\d+).html')
         if not collection_id:
-            api_data = self.get_api_data(input_text)
-            if api_data['code'] != 200 and api_data['data']:
-                return []
-            info = api_data['data']['info']
+            api_data = self.get_api_data(input_text,only_api1=True)
+            info = api_data['info']
             collection_id = info['collection_id']
         url1 = 'http://pcweb.api.mgtv.com/variety/showlist?collection_id=' + collection_id
         api_data1 = json.loads(get_url(url1))

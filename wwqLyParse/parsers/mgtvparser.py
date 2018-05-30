@@ -39,7 +39,8 @@ class MgTVParser(Parser):
         if not vid:
             vid = match1(url, r'https?://www.mgtv.com/hz/bdpz/\d+/(\d+).html')
         clit = "clit=%d" % int(time.time())
-        tk2 = "did=f11dee65-4e0d-4d25-bfce-719ad9dc991d|pno=1030|ver=5.5.1|{}".format(clit)
+        did = str(uuid.uuid4())
+        tk2 = "did={}|pno=1030|ver=5.5.1|{}".format(did, clit)
         api_url = 'http://pcweb.api.mgtv.com/player/video?video_id={}&tk2={}'.format(vid, encode_tk2(tk2))
         api_data1 = get_url(api_url, allow_cache=False, cookies=self.cookies)
         api_data1 = json.loads(api_data1)
@@ -48,7 +49,8 @@ class MgTVParser(Parser):
         api_data = api_data1['data']
         if not only_api1:
             pm2 = api_data['atc']['pm2']
-            api_url2 = 'https://pcweb.api.mgtv.com/player/getSource?video_id={}&tk2={}&pm2={}'.format(vid, encode_tk2(clit),
+            api_url2 = 'https://pcweb.api.mgtv.com/player/getSource?video_id={}&tk2={}&pm2={}'.format(vid,
+                                                                                                      encode_tk2(clit),
                                                                                                       pm2)
             api_data2 = get_url(api_url2, allow_cache=False, cookies=self.cookies)
             api_data2 = json.loads(api_data2)
@@ -128,7 +130,7 @@ class MgTVListParser(MgTVParser):
         }
         collection_id = match1(input_text, r'https?://www.mgtv.com/h/(\d+).html')
         if not collection_id:
-            api_data = self.get_api_data(input_text,only_api1=True)
+            api_data = self.get_api_data(input_text, only_api1=True)
             info = api_data['info']
             collection_id = info['collection_id']
         url1 = 'http://pcweb.api.mgtv.com/variety/showlist?collection_id=' + collection_id

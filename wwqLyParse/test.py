@@ -28,7 +28,7 @@ if __name__ == "__main__":
     # main(r"file:///E:\QQDownloads\a.list")
     # main(r"file:///E:\QQDownloads\url.media")
     # main("http://v.qq.com/detail/4/479ci9i9ua5n1sl.html", types="list")
-    main("http://v.qq.com/x/cover/479ci9i9ua5n1sl.html?vid=q0015cmtbk4", types="list")
+    # main("http://v.qq.com/x/cover/479ci9i9ua5n1sl.html?vid=q0015cmtbk4", types="list")
     # main("http://v.qq.com/detail/j/jcalf255t3psbgs.html", types="list")
     # main("https://v.qq.com/x/cover/jcalf255t3psbgs/j00266kl1ud.html?ptag=qqbrowser", types="list")
     # main("http://v.pptv.com/show/MxfOTcmjmtg7uSE.html", parsers_name=["PPTVParser"])
@@ -39,7 +39,7 @@ if __name__ == "__main__":
     # main("http://v.yinyuetai.com/video/2796852", parsers_name=["YinYueTaiParser"])
     # main("http://www.mgtv.com/b/316045/4096972.html", types="collection")
     # main("http://www.mgtv.com/b/316045/4096972.html", parsers_name=["MgTVParser"])
-    # main("http://www.mgtv.com/b/316045/4096972.html", label="3@MgTVParser")
+    main("http://www.mgtv.com/b/316045/4096972.html", label="3@MgTVParser")
     # url_cache.timeout = 10
     # main("http://www.iqiyi.com/lib/m_201087714.html")
     # main("http://www.iqiyi.com/v_19rrcl8dck.html", types="list")

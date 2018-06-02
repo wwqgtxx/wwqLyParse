@@ -12,6 +12,7 @@ except:
 
 import logging
 import functools
+import threading
 import urllib.request, json, re, gzip, socket, urllib.error, http.client, urllib
 
 from .lru_cache import LRUCache
@@ -21,6 +22,7 @@ URL_CACHE_MAX = 10000
 URL_CACHE_TIMEOUT = 6 * 60 * 60
 URL_CACHE_POOL = 50
 url_cache = LRUCache(size=URL_CACHE_MAX, timeout=URL_CACHE_TIMEOUT)
+get_url_lock_cache = LRUCache(size=URL_CACHE_MAX, timeout=URL_CACHE_TIMEOUT, default_factory=threading.Lock)
 
 pool_get_url = WorkerPool(URL_CACHE_POOL, thread_name_prefix="GetUrlPool")
 # pool_clean_url_cache = WorkerPool(1, thread_name_prefix="CleanUrlCache")
@@ -127,29 +129,43 @@ def get_url(o_url, encoding='utf-8', headers=None, data=None, method=None, cooki
     url_json = {"o_url": o_url, "encoding": encoding, "headers": headers, "data": data, "method": method,
                 "cookies": cookies}
     url_json = json.dumps(url_json, sort_keys=True, ensure_ascii=False)
-    if allow_cache and session == common_session:
-        if url_json in url_cache:
-            html_text = url_cache[url_json]
-            logging.debug(callmethod + "cache get:" + url_json)
-            return html_text
-        logging.debug(callmethod + "normal get:" + url_json)
-    else:
-        logging.debug(callmethod + "nocache get:" + url_json)
-        # use_pool = False
 
-    if requests and session:
-        retry_num = 1
-    else:
-        retry_num = 10
-
-    fn = functools.partial(_get_url, url_json, o_url, encoding, headers, data, method, allow_cache, callmethod,
-                           use_pool)
-
-    for i in range(retry_num):
-        if use_pool:
-            result = pool.apply(fn)
+    def _do_get():
+        if allow_cache and session == common_session:
+            if url_json in url_cache:
+                html_text = url_cache[url_json]
+                logging.debug(callmethod + "cache get:" + url_json)
+                return html_text
+            logging.debug(callmethod + "normal get:" + url_json)
         else:
-            result = fn()
-        if result is not None:
-            return result
-    return None
+            logging.debug(callmethod + "nocache get:" + url_json)
+            # use_pool = False
+
+        if requests and session:
+            retry_num = 1
+        else:
+            retry_num = 10
+
+        fn = functools.partial(_get_url, url_json, o_url, encoding, headers, data, method, allow_cache, callmethod,
+                               use_pool)
+
+        for i in range(retry_num):
+            if use_pool:
+                result = pool.apply(fn)
+            else:
+                result = fn()
+            if result is not None:
+                return result
+        return None
+
+    if allow_cache and session == common_session:
+        lock = get_url_lock_cache[url_json]  # type: threading.Lock
+        try:
+            # logging.debug(id(lock))
+            lock.acquire()
+            return _do_get()
+        finally:
+            del get_url_lock_cache[url_json]
+            lock.release()
+    else:
+        return _do_get()

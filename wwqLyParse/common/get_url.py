@@ -16,13 +16,14 @@ import threading
 import urllib.request, json, re, gzip, socket, urllib.error, http.client, urllib
 
 from .lru_cache import LRUCache
+from .key_lock import KeyLockDict
 from .utils import get_caller_info
 
 URL_CACHE_MAX = 10000
 URL_CACHE_TIMEOUT = 6 * 60 * 60
 URL_CACHE_POOL = 50
 url_cache = LRUCache(size=URL_CACHE_MAX, timeout=URL_CACHE_TIMEOUT)
-get_url_lock_cache = LRUCache(size=URL_CACHE_MAX, timeout=URL_CACHE_TIMEOUT, default_factory=threading.Lock)
+get_url_key_lock = KeyLockDict()
 
 pool_get_url = WorkerPool(URL_CACHE_POOL, thread_name_prefix="GetUrlPool")
 # pool_clean_url_cache = WorkerPool(1, thread_name_prefix="CleanUrlCache")
@@ -159,13 +160,7 @@ def get_url(o_url, encoding='utf-8', headers=None, data=None, method=None, cooki
         return None
 
     if allow_cache and session == common_session:
-        lock = get_url_lock_cache[url_json]  # type: threading.Lock
-        try:
-            # logging.debug(id(lock))
-            lock.acquire()
+        with get_url_key_lock[url_json]:
             return _do_get()
-        finally:
-            del get_url_lock_cache[url_json]
-            lock.release()
     else:
         return _do_get()

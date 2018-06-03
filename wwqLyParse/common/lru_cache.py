@@ -53,7 +53,6 @@ class LRUCache(collections.MutableMapping):
 
     def __delitem__(self, key):
         with self._lock:
-            self.flush(key, not_sweep=True)
             self._delete(key, call_handle=False)
 
     def __iter__(self):
@@ -63,6 +62,18 @@ class LRUCache(collections.MutableMapping):
     def __len__(self):
         with self._lock:
             return len(self._store)
+
+    def __contains__(self, item):
+        with self._lock:
+            return item in self._store
+
+    def __str__(self):
+        with self._lock:
+            return str(self._store)
+
+    def __repr__(self):
+        with self._lock:
+            return repr(self._store)
 
     def items(self):
         with self._lock:
@@ -100,15 +111,16 @@ class LRUCache(collections.MutableMapping):
                     return
 
     def _delete(self, key, call_handle=True):
-        value = self._store[key]
         if call_handle and self.delete_handle:
+            value = self._store[key]
             if self.delete_handle((key, value)) is False:
                 self.flush(key)
                 return False
-        del self._store[key]
-        del self._keys_to_last_time[key]
-        if call_handle and self.after_delete_handle:
+            self._delete(key, call_handle=False)
             self.after_delete_handle((key, value))
+        else:
+            del self._store[key]
+            del self._keys_to_last_time[key]
 
 
 import typing

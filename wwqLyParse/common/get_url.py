@@ -66,7 +66,7 @@ if aiohttp:
     threading.Thread(target=_run_forever, name="GetUrlLoopThread", daemon=True).start()
     common_connector = aiohttp.TCPConnector(limit=URL_CACHE_POOL, loop=common_loop)
     common_cookie_jar = aiohttp.CookieJar(loop=common_loop)
-    common_client_timeout = aiohttp.ClientTimeout(total=0.01)
+    common_client_timeout = aiohttp.ClientTimeout(total=1*60)
     logging.debug("init %s" % common_connector)
     atexit.register(common_connector.close)
     del _run_forever

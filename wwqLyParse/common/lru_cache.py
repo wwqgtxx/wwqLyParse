@@ -124,13 +124,17 @@ class LRUCache(collections.MutableMapping):
 
 
 import typing
+import sys
 
 KT = typing.TypeVar('KT')  # Key type.
 VT = typing.TypeVar('VT')  # Value type.
 
 
-class LRUCacheType(LRUCache, typing.MutableMapping[KT, VT], extra=LRUCache):
-    pass
+if sys.version_info[0:2] >= (3, 6):
+    class LRUCacheType(LRUCache, typing.MutableMapping[KT, VT], extra=LRUCache):
+        pass
+else:
+    LRUCacheType = typing.MutableMapping[KT, VT]
 
 
 if __name__ == '__main__':

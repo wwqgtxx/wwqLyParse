@@ -25,6 +25,7 @@ try:
 except:
     pass
 
+from .select import SelectSelector
 from .lru_cache import LRUCache
 from .key_lock import KeyLockDict
 from .utils import get_caller_info
@@ -55,7 +56,7 @@ common_client_timeout = None
 common_session = None
 
 if aiohttp:
-    common_loop = asyncio.SelectorEventLoop()
+    common_loop = asyncio.SelectorEventLoop(SelectSelector())
 
 
     def _run_forever():

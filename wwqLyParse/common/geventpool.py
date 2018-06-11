@@ -38,4 +38,4 @@ class ThreadPool(_ThreadPool):
             maxsize = 1000
         self.__size = 0
         super(ThreadPool, self).__init__(maxsize, hub)
-        logging.debug("new pool %s" % self)
+        logging.debug("new GeventThreadPool %s" % self)

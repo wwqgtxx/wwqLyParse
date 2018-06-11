@@ -12,6 +12,7 @@ from .lru_cache import *
 from .parser import *
 from .process_label import *
 from .re import *
+from .select import *
 from .subprocess import *
 from .urlhandle import *
 from .utils import *

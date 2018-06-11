@@ -166,11 +166,11 @@ class IQiYiParser(Parser):
         return data
 
     def parse_url(self, input_text, label, min=None, max=None, *k, **kk):
-        def _worker(url, url_list, session):
+        def _worker(url, url_list):
             try:
                 if len(url_list) > 5:
                     return
-                json_data = json.loads(get_url(url, allow_cache=False, session=session))
+                json_data = json.loads(get_url(url, allow_cache=False))
                 logging.debug(json_data)
                 down_url = json_data['l']
                 # url_head = r1(r'https?://([^/]*)', down_url)
@@ -208,21 +208,20 @@ class IQiYiParser(Parser):
                         "unfixIp": True
                     }
                     data.append(info)
-                with get_session() as session:
-                    if use_pool:
-                        with WorkerPool(10) as pool:
-                            for _ in range(10):
-                                for seg_info in fs_array:
-                                    url = url_prefix + seg_info['l']
-                                    url_list = url_dict[url]
-                                    pool.spawn(_worker, url, url_list, session)
-                            pool.join(timeout=self.parse_timeout)
+                if use_pool:
+                    with WorkerPool(10) as pool:
+                        for _ in range(10):
+                            for seg_info in fs_array:
+                                url = url_prefix + seg_info['l']
+                                url_list = url_dict[url]
+                                pool.spawn(_worker, url, url_list)
+                        pool.join(timeout=self.parse_timeout)
 
-                    for seg_info in fs_array:
-                        url = url_prefix + seg_info['l']
-                        url_list = url_dict[url]
-                        if len(url_list) == 0:
-                            _worker(url, url_list, session)
+                for seg_info in fs_array:
+                    url = url_prefix + seg_info['l']
+                    url_list = url_dict[url]
+                    if len(url_list) == 0:
+                        _worker(url, url_list)
 
                 return data
         return []

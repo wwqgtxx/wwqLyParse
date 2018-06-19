@@ -883,7 +883,7 @@ struct __pyx_vtabstruct_6gevent_8__waiter_Waiter {
 static struct __pyx_vtabstruct_6gevent_8__waiter_Waiter *__pyx_vtabptr_6gevent_8__waiter_Waiter;
 
 
-/* "src/gevent/_waiter.py":167
+/* "src/gevent/_waiter.py":166
  * 
  * 
  * class MultipleWaiter(Waiter):             # <<<<<<<<<<<<<<
@@ -3111,7 +3111,7 @@ static PyObject *__pyx_f_6gevent_8__waiter_6Waiter_get(struct __pyx_obj_6gevent_
  *         if self._exception is not _NONE:
  *             if self._exception is None:             # <<<<<<<<<<<<<<
  *                 return self.value
- *             else:
+ *             getcurrent().throw(*self._exception) # pylint:disable=undefined-variable
  */
     __pyx_t_6 = (__pyx_v_self->_exception == Py_None);
     __pyx_t_5 = (__pyx_t_6 != 0);
@@ -3121,8 +3121,8 @@ static PyObject *__pyx_f_6gevent_8__waiter_6Waiter_get(struct __pyx_obj_6gevent_
  *         if self._exception is not _NONE:
  *             if self._exception is None:
  *                 return self.value             # <<<<<<<<<<<<<<
- *             else:
- *                 getcurrent().throw(*self._exception) # pylint:disable=undefined-variable
+ *             getcurrent().throw(*self._exception) # pylint:disable=undefined-variable
+ *         else:
  */
       __Pyx_XDECREF(__pyx_r);
       __Pyx_INCREF(__pyx_v_self->value);
@@ -3134,31 +3134,29 @@ static PyObject *__pyx_f_6gevent_8__waiter_6Waiter_get(struct __pyx_obj_6gevent_
  *         if self._exception is not _NONE:
  *             if self._exception is None:             # <<<<<<<<<<<<<<
  *                 return self.value
- *             else:
+ *             getcurrent().throw(*self._exception) # pylint:disable=undefined-variable
  */
     }
 
-    /* "src/gevent/_waiter.py":146
+    /* "src/gevent/_waiter.py":145
+ *             if self._exception is None:
  *                 return self.value
- *             else:
- *                 getcurrent().throw(*self._exception) # pylint:disable=undefined-variable             # <<<<<<<<<<<<<<
+ *             getcurrent().throw(*self._exception) # pylint:disable=undefined-variable             # <<<<<<<<<<<<<<
  *         else:
  *             if self.greenlet is not None:
  */
-    /*else*/ {
-      __pyx_t_1 = ((PyObject *)__pyx_f_6gevent_8__waiter_getcurrent()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 146, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_throw); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 146, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_2);
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __pyx_t_1 = __Pyx_PySequence_Tuple(__pyx_v_self->_exception); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 146, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_1, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 146, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_3);
-      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    }
+    __pyx_t_1 = ((PyObject *)__pyx_f_6gevent_8__waiter_getcurrent()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 145, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_throw); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 145, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __pyx_t_1 = __Pyx_PySequence_Tuple(__pyx_v_self->_exception); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 145, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_1, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 145, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
     /* "src/gevent/_waiter.py":142
  *     def get(self):
@@ -3170,8 +3168,8 @@ static PyObject *__pyx_f_6gevent_8__waiter_6Waiter_get(struct __pyx_obj_6gevent_
     goto __pyx_L3;
   }
 
-  /* "src/gevent/_waiter.py":148
- *                 getcurrent().throw(*self._exception) # pylint:disable=undefined-variable
+  /* "src/gevent/_waiter.py":147
+ *             getcurrent().throw(*self._exception) # pylint:disable=undefined-variable
  *         else:
  *             if self.greenlet is not None:             # <<<<<<<<<<<<<<
  *                 raise ConcurrentObjectUseError('This Waiter is already used by %r' % (self.greenlet, ))
@@ -3182,19 +3180,19 @@ static PyObject *__pyx_f_6gevent_8__waiter_6Waiter_get(struct __pyx_obj_6gevent_
     __pyx_t_6 = (__pyx_t_5 != 0);
     if (unlikely(__pyx_t_6)) {
 
-      /* "src/gevent/_waiter.py":149
+      /* "src/gevent/_waiter.py":148
  *         else:
  *             if self.greenlet is not None:
  *                 raise ConcurrentObjectUseError('This Waiter is already used by %r' % (self.greenlet, ))             # <<<<<<<<<<<<<<
  *             self.greenlet = getcurrent() # pylint:disable=undefined-variable
  *             try:
  */
-      __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 149, __pyx_L1_error)
+      __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 148, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_INCREF(((PyObject *)__pyx_v_self->greenlet));
       __Pyx_GIVEREF(((PyObject *)__pyx_v_self->greenlet));
       PyTuple_SET_ITEM(__pyx_t_1, 0, ((PyObject *)__pyx_v_self->greenlet));
-      __pyx_t_2 = __Pyx_PyString_Format(__pyx_kp_s_This_Waiter_is_already_used_by_r, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 149, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyString_Format(__pyx_kp_s_This_Waiter_is_already_used_by_r, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 148, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __Pyx_INCREF(__pyx_v_6gevent_8__waiter_ConcurrentObjectUseError);
@@ -3209,14 +3207,14 @@ static PyObject *__pyx_f_6gevent_8__waiter_6Waiter_get(struct __pyx_obj_6gevent_
         }
       }
       if (!__pyx_t_4) {
-        __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 149, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 148, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __Pyx_GOTREF(__pyx_t_3);
       } else {
         #if CYTHON_FAST_PYCALL
         if (PyFunction_Check(__pyx_t_1)) {
           PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_t_2};
-          __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_1, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 149, __pyx_L1_error)
+          __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_1, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 148, __pyx_L1_error)
           __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_GOTREF(__pyx_t_3);
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -3225,20 +3223,20 @@ static PyObject *__pyx_f_6gevent_8__waiter_6Waiter_get(struct __pyx_obj_6gevent_
         #if CYTHON_FAST_PYCCALL
         if (__Pyx_PyFastCFunction_Check(__pyx_t_1)) {
           PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_t_2};
-          __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_1, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 149, __pyx_L1_error)
+          __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_1, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 148, __pyx_L1_error)
           __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_GOTREF(__pyx_t_3);
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         } else
         #endif
         {
-          __pyx_t_7 = PyTuple_New(1+1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 149, __pyx_L1_error)
+          __pyx_t_7 = PyTuple_New(1+1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 148, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_7);
           __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_4); __pyx_t_4 = NULL;
           __Pyx_GIVEREF(__pyx_t_2);
           PyTuple_SET_ITEM(__pyx_t_7, 0+1, __pyx_t_2);
           __pyx_t_2 = 0;
-          __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_7, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 149, __pyx_L1_error)
+          __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_7, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 148, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_3);
           __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
         }
@@ -3246,10 +3244,10 @@ static PyObject *__pyx_f_6gevent_8__waiter_6Waiter_get(struct __pyx_obj_6gevent_
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __Pyx_Raise(__pyx_t_3, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __PYX_ERR(0, 149, __pyx_L1_error)
+      __PYX_ERR(0, 148, __pyx_L1_error)
 
-      /* "src/gevent/_waiter.py":148
- *                 getcurrent().throw(*self._exception) # pylint:disable=undefined-variable
+      /* "src/gevent/_waiter.py":147
+ *             getcurrent().throw(*self._exception) # pylint:disable=undefined-variable
  *         else:
  *             if self.greenlet is not None:             # <<<<<<<<<<<<<<
  *                 raise ConcurrentObjectUseError('This Waiter is already used by %r' % (self.greenlet, ))
@@ -3257,14 +3255,14 @@ static PyObject *__pyx_f_6gevent_8__waiter_6Waiter_get(struct __pyx_obj_6gevent_
  */
     }
 
-    /* "src/gevent/_waiter.py":150
+    /* "src/gevent/_waiter.py":149
  *             if self.greenlet is not None:
  *                 raise ConcurrentObjectUseError('This Waiter is already used by %r' % (self.greenlet, ))
  *             self.greenlet = getcurrent() # pylint:disable=undefined-variable             # <<<<<<<<<<<<<<
  *             try:
  *                 return self.hub.switch()
  */
-    __pyx_t_3 = ((PyObject *)__pyx_f_6gevent_8__waiter_getcurrent()); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 150, __pyx_L1_error)
+    __pyx_t_3 = ((PyObject *)__pyx_f_6gevent_8__waiter_getcurrent()); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 149, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_GIVEREF(__pyx_t_3);
     __Pyx_GOTREF(__pyx_v_self->greenlet);
@@ -3272,7 +3270,7 @@ static PyObject *__pyx_f_6gevent_8__waiter_6Waiter_get(struct __pyx_obj_6gevent_
     __pyx_v_self->greenlet = ((PyGreenlet *)__pyx_t_3);
     __pyx_t_3 = 0;
 
-    /* "src/gevent/_waiter.py":151
+    /* "src/gevent/_waiter.py":150
  *                 raise ConcurrentObjectUseError('This Waiter is already used by %r' % (self.greenlet, ))
  *             self.greenlet = getcurrent() # pylint:disable=undefined-variable
  *             try:             # <<<<<<<<<<<<<<
@@ -3281,7 +3279,7 @@ static PyObject *__pyx_f_6gevent_8__waiter_6Waiter_get(struct __pyx_obj_6gevent_
  */
     /*try:*/ {
 
-      /* "src/gevent/_waiter.py":152
+      /* "src/gevent/_waiter.py":151
  *             self.greenlet = getcurrent() # pylint:disable=undefined-variable
  *             try:
  *                 return self.hub.switch()             # <<<<<<<<<<<<<<
@@ -3289,14 +3287,14 @@ static PyObject *__pyx_f_6gevent_8__waiter_6Waiter_get(struct __pyx_obj_6gevent_
  *                 self.greenlet = None
  */
       __Pyx_XDECREF(__pyx_r);
-      __pyx_t_3 = ((struct __pyx_vtabstruct_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop *)__pyx_v_self->hub->__pyx_vtab)->__pyx_switch(__pyx_v_self->hub, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 152, __pyx_L7_error)
+      __pyx_t_3 = ((struct __pyx_vtabstruct_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop *)__pyx_v_self->hub->__pyx_vtab)->__pyx_switch(__pyx_v_self->hub, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 151, __pyx_L7_error)
       __Pyx_GOTREF(__pyx_t_3);
       __pyx_r = __pyx_t_3;
       __pyx_t_3 = 0;
       goto __pyx_L6_return;
     }
 
-    /* "src/gevent/_waiter.py":154
+    /* "src/gevent/_waiter.py":153
  *                 return self.hub.switch()
  *             finally:
  *                 self.greenlet = None             # <<<<<<<<<<<<<<
@@ -3423,7 +3421,7 @@ static PyObject *__pyx_pf_6gevent_8__waiter_6Waiter_16get(struct __pyx_obj_6geve
   return __pyx_r;
 }
 
-/* "src/gevent/_waiter.py":156
+/* "src/gevent/_waiter.py":155
  *                 self.greenlet = None
  * 
  *     def __call__(self, source):             # <<<<<<<<<<<<<<
@@ -3457,7 +3455,7 @@ static PyObject *__pyx_pw_6gevent_8__waiter_6Waiter_19__call__(PyObject *__pyx_v
         else goto __pyx_L5_argtuple_error;
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__call__") < 0)) __PYX_ERR(0, 156, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__call__") < 0)) __PYX_ERR(0, 155, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 1) {
       goto __pyx_L5_argtuple_error;
@@ -3468,7 +3466,7 @@ static PyObject *__pyx_pw_6gevent_8__waiter_6Waiter_19__call__(PyObject *__pyx_v
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__call__", 1, 1, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 156, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__call__", 1, 1, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 155, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gevent.__waiter.Waiter.__call__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -3493,30 +3491,30 @@ static PyObject *__pyx_pf_6gevent_8__waiter_6Waiter_18__call__(struct __pyx_obj_
   PyObject *__pyx_t_7 = NULL;
   __Pyx_RefNannySetupContext("__call__", 0);
 
-  /* "src/gevent/_waiter.py":157
+  /* "src/gevent/_waiter.py":156
  * 
  *     def __call__(self, source):
  *         if source.exception is None:             # <<<<<<<<<<<<<<
  *             self.switch(source.value)
  *         else:
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_source, __pyx_n_s_exception); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 157, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_source, __pyx_n_s_exception); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 156, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_2 = (__pyx_t_1 == Py_None);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_t_3 = (__pyx_t_2 != 0);
   if (__pyx_t_3) {
 
-    /* "src/gevent/_waiter.py":158
+    /* "src/gevent/_waiter.py":157
  *     def __call__(self, source):
  *         if source.exception is None:
  *             self.switch(source.value)             # <<<<<<<<<<<<<<
  *         else:
  *             self.throw(source.exception)
  */
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_switch); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 158, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_switch); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 157, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_source, __pyx_n_s_value); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 158, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_source, __pyx_n_s_value); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 157, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __pyx_t_6 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
@@ -3529,14 +3527,14 @@ static PyObject *__pyx_pf_6gevent_8__waiter_6Waiter_18__call__(struct __pyx_obj_
       }
     }
     if (!__pyx_t_6) {
-      __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 158, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 157, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       __Pyx_GOTREF(__pyx_t_1);
     } else {
       #if CYTHON_FAST_PYCALL
       if (PyFunction_Check(__pyx_t_4)) {
         PyObject *__pyx_temp[2] = {__pyx_t_6, __pyx_t_5};
-        __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_4, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 158, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_4, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 157, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
@@ -3545,20 +3543,20 @@ static PyObject *__pyx_pf_6gevent_8__waiter_6Waiter_18__call__(struct __pyx_obj_
       #if CYTHON_FAST_PYCCALL
       if (__Pyx_PyFastCFunction_Check(__pyx_t_4)) {
         PyObject *__pyx_temp[2] = {__pyx_t_6, __pyx_t_5};
-        __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_4, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 158, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_4, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 157, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       } else
       #endif
       {
-        __pyx_t_7 = PyTuple_New(1+1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 158, __pyx_L1_error)
+        __pyx_t_7 = PyTuple_New(1+1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 157, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_7);
         __Pyx_GIVEREF(__pyx_t_6); PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_6); __pyx_t_6 = NULL;
         __Pyx_GIVEREF(__pyx_t_5);
         PyTuple_SET_ITEM(__pyx_t_7, 0+1, __pyx_t_5);
         __pyx_t_5 = 0;
-        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_7, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 158, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_7, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 157, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       }
@@ -3566,7 +3564,7 @@ static PyObject *__pyx_pf_6gevent_8__waiter_6Waiter_18__call__(struct __pyx_obj_
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "src/gevent/_waiter.py":157
+    /* "src/gevent/_waiter.py":156
  * 
  *     def __call__(self, source):
  *         if source.exception is None:             # <<<<<<<<<<<<<<
@@ -3576,7 +3574,7 @@ static PyObject *__pyx_pf_6gevent_8__waiter_6Waiter_18__call__(struct __pyx_obj_
     goto __pyx_L3;
   }
 
-  /* "src/gevent/_waiter.py":160
+  /* "src/gevent/_waiter.py":159
  *             self.switch(source.value)
  *         else:
  *             self.throw(source.exception)             # <<<<<<<<<<<<<<
@@ -3584,9 +3582,9 @@ static PyObject *__pyx_pf_6gevent_8__waiter_6Waiter_18__call__(struct __pyx_obj_
  *     # can also have a debugging version, that wraps the value in a tuple (self, value) in switch()
  */
   /*else*/ {
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_throw); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 160, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_throw); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 159, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_v_source, __pyx_n_s_exception); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 160, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_v_source, __pyx_n_s_exception); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 159, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     __pyx_t_5 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
@@ -3599,14 +3597,14 @@ static PyObject *__pyx_pf_6gevent_8__waiter_6Waiter_18__call__(struct __pyx_obj_
       }
     }
     if (!__pyx_t_5) {
-      __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_7); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 160, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_7); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 159, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       __Pyx_GOTREF(__pyx_t_1);
     } else {
       #if CYTHON_FAST_PYCALL
       if (PyFunction_Check(__pyx_t_4)) {
         PyObject *__pyx_temp[2] = {__pyx_t_5, __pyx_t_7};
-        __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_4, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 160, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_4, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 159, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
@@ -3615,20 +3613,20 @@ static PyObject *__pyx_pf_6gevent_8__waiter_6Waiter_18__call__(struct __pyx_obj_
       #if CYTHON_FAST_PYCCALL
       if (__Pyx_PyFastCFunction_Check(__pyx_t_4)) {
         PyObject *__pyx_temp[2] = {__pyx_t_5, __pyx_t_7};
-        __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_4, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 160, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_4, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 159, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       } else
       #endif
       {
-        __pyx_t_6 = PyTuple_New(1+1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 160, __pyx_L1_error)
+        __pyx_t_6 = PyTuple_New(1+1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 159, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
         __Pyx_GIVEREF(__pyx_t_5); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_5); __pyx_t_5 = NULL;
         __Pyx_GIVEREF(__pyx_t_7);
         PyTuple_SET_ITEM(__pyx_t_6, 0+1, __pyx_t_7);
         __pyx_t_7 = 0;
-        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 160, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 159, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       }
@@ -3638,7 +3636,7 @@ static PyObject *__pyx_pf_6gevent_8__waiter_6Waiter_18__call__(struct __pyx_obj_
   }
   __pyx_L3:;
 
-  /* "src/gevent/_waiter.py":156
+  /* "src/gevent/_waiter.py":155
  *                 self.greenlet = None
  * 
  *     def __call__(self, source):             # <<<<<<<<<<<<<<
@@ -3774,7 +3772,7 @@ static PyObject *__pyx_pf_6gevent_8__waiter_6Waiter_5value___get__(struct __pyx_
   return __pyx_r;
 }
 
-/* "src/gevent/_waiter.py":178
+/* "src/gevent/_waiter.py":177
  *     __slots__ = ['_values']
  * 
  *     def __init__(self, hub=None):             # <<<<<<<<<<<<<<
@@ -3811,7 +3809,7 @@ static int __pyx_pw_6gevent_8__waiter_14MultipleWaiter_1__init__(PyObject *__pyx
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 178, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 177, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -3825,7 +3823,7 @@ static int __pyx_pw_6gevent_8__waiter_14MultipleWaiter_1__init__(PyObject *__pyx
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__init__", 0, 0, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 178, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__init__", 0, 0, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 177, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gevent.__waiter.MultipleWaiter.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -3848,14 +3846,14 @@ static int __pyx_pf_6gevent_8__waiter_14MultipleWaiter___init__(struct __pyx_obj
   PyObject *__pyx_t_5 = NULL;
   __Pyx_RefNannySetupContext("__init__", 0);
 
-  /* "src/gevent/_waiter.py":179
+  /* "src/gevent/_waiter.py":178
  * 
  *     def __init__(self, hub=None):
  *         Waiter.__init__(self, hub)             # <<<<<<<<<<<<<<
  *         # we typically expect a relatively small number of these to be outstanding.
  *         # since we pop from the left, a deque might be slightly
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_ptype_6gevent_8__waiter_Waiter), __pyx_n_s_init); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 179, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_ptype_6gevent_8__waiter_Waiter), __pyx_n_s_init); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 178, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   __pyx_t_4 = 0;
@@ -3872,7 +3870,7 @@ static int __pyx_pf_6gevent_8__waiter_14MultipleWaiter___init__(struct __pyx_obj
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_3, ((PyObject *)__pyx_v_self), __pyx_v_hub};
-    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 179, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 178, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_GOTREF(__pyx_t_1);
   } else
@@ -3880,13 +3878,13 @@ static int __pyx_pf_6gevent_8__waiter_14MultipleWaiter___init__(struct __pyx_obj
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_3, ((PyObject *)__pyx_v_self), __pyx_v_hub};
-    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 179, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 178, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_GOTREF(__pyx_t_1);
   } else
   #endif
   {
-    __pyx_t_5 = PyTuple_New(2+__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 179, __pyx_L1_error)
+    __pyx_t_5 = PyTuple_New(2+__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 178, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     if (__pyx_t_3) {
       __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_3); __pyx_t_3 = NULL;
@@ -3897,21 +3895,21 @@ static int __pyx_pf_6gevent_8__waiter_14MultipleWaiter___init__(struct __pyx_obj
     __Pyx_INCREF(__pyx_v_hub);
     __Pyx_GIVEREF(__pyx_v_hub);
     PyTuple_SET_ITEM(__pyx_t_5, 1+__pyx_t_4, __pyx_v_hub);
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 179, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 178, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/gevent/_waiter.py":185
+  /* "src/gevent/_waiter.py":184
  *         # we can help it to better support monkey-patching, and delaying the import
  *         # here can be impractical (see https://github.com/gevent/gevent/issues/652)
  *         self._values = list()             # <<<<<<<<<<<<<<
  * 
  *     def switch(self, value):
  */
-  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 185, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 184, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
   __Pyx_GOTREF(__pyx_v_self->_values);
@@ -3919,7 +3917,7 @@ static int __pyx_pf_6gevent_8__waiter_14MultipleWaiter___init__(struct __pyx_obj
   __pyx_v_self->_values = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/gevent/_waiter.py":178
+  /* "src/gevent/_waiter.py":177
  *     __slots__ = ['_values']
  * 
  *     def __init__(self, hub=None):             # <<<<<<<<<<<<<<
@@ -3942,7 +3940,7 @@ static int __pyx_pf_6gevent_8__waiter_14MultipleWaiter___init__(struct __pyx_obj
   return __pyx_r;
 }
 
-/* "src/gevent/_waiter.py":187
+/* "src/gevent/_waiter.py":186
  *         self._values = list()
  * 
  *     def switch(self, value):             # <<<<<<<<<<<<<<
@@ -3976,7 +3974,7 @@ static PyObject *__pyx_pf_6gevent_8__waiter_14MultipleWaiter_2switch(struct __py
   PyObject *__pyx_t_6 = NULL;
   __Pyx_RefNannySetupContext("switch", 0);
 
-  /* "src/gevent/_waiter.py":188
+  /* "src/gevent/_waiter.py":187
  * 
  *     def switch(self, value):
  *         self._values.append(value)             # <<<<<<<<<<<<<<
@@ -3985,18 +3983,18 @@ static PyObject *__pyx_pf_6gevent_8__waiter_14MultipleWaiter_2switch(struct __py
  */
   if (unlikely(__pyx_v_self->_values == Py_None)) {
     PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-    __PYX_ERR(0, 188, __pyx_L1_error)
+    __PYX_ERR(0, 187, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_PyList_Append(__pyx_v_self->_values, __pyx_v_value); if (unlikely(__pyx_t_1 == ((int)-1))) __PYX_ERR(0, 188, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyList_Append(__pyx_v_self->_values, __pyx_v_value); if (unlikely(__pyx_t_1 == ((int)-1))) __PYX_ERR(0, 187, __pyx_L1_error)
 
-  /* "src/gevent/_waiter.py":189
+  /* "src/gevent/_waiter.py":188
  *     def switch(self, value):
  *         self._values.append(value)
  *         Waiter.switch(self, True)             # <<<<<<<<<<<<<<
  * 
  *     def get(self):
  */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_ptype_6gevent_8__waiter_Waiter), __pyx_n_s_switch); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 189, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_ptype_6gevent_8__waiter_Waiter), __pyx_n_s_switch); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 188, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_4 = NULL;
   __pyx_t_5 = 0;
@@ -4013,7 +4011,7 @@ static PyObject *__pyx_pf_6gevent_8__waiter_14MultipleWaiter_2switch(struct __py
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_3)) {
     PyObject *__pyx_temp[3] = {__pyx_t_4, ((PyObject *)__pyx_v_self), Py_True};
-    __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 189, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 188, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_GOTREF(__pyx_t_2);
   } else
@@ -4021,13 +4019,13 @@ static PyObject *__pyx_pf_6gevent_8__waiter_14MultipleWaiter_2switch(struct __py
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_3)) {
     PyObject *__pyx_temp[3] = {__pyx_t_4, ((PyObject *)__pyx_v_self), Py_True};
-    __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 189, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 188, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_GOTREF(__pyx_t_2);
   } else
   #endif
   {
-    __pyx_t_6 = PyTuple_New(2+__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 189, __pyx_L1_error)
+    __pyx_t_6 = PyTuple_New(2+__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 188, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     if (__pyx_t_4) {
       __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_4); __pyx_t_4 = NULL;
@@ -4038,14 +4036,14 @@ static PyObject *__pyx_pf_6gevent_8__waiter_14MultipleWaiter_2switch(struct __py
     __Pyx_INCREF(Py_True);
     __Pyx_GIVEREF(Py_True);
     PyTuple_SET_ITEM(__pyx_t_6, 1+__pyx_t_5, Py_True);
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_6, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 189, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_6, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 188, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   }
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "src/gevent/_waiter.py":187
+  /* "src/gevent/_waiter.py":186
  *         self._values = list()
  * 
  *     def switch(self, value):             # <<<<<<<<<<<<<<
@@ -4069,7 +4067,7 @@ static PyObject *__pyx_pf_6gevent_8__waiter_14MultipleWaiter_2switch(struct __py
   return __pyx_r;
 }
 
-/* "src/gevent/_waiter.py":191
+/* "src/gevent/_waiter.py":190
  *         Waiter.switch(self, True)
  * 
  *     def get(self):             # <<<<<<<<<<<<<<
@@ -4086,7 +4084,7 @@ static PyObject *__pyx_f_6gevent_8__waiter_14MultipleWaiter_get(struct __pyx_obj
   PyObject *__pyx_t_3 = NULL;
   __Pyx_RefNannySetupContext("get", 0);
 
-  /* "src/gevent/_waiter.py":192
+  /* "src/gevent/_waiter.py":191
  * 
  *     def get(self):
  *         if not self._values:             # <<<<<<<<<<<<<<
@@ -4097,29 +4095,29 @@ static PyObject *__pyx_f_6gevent_8__waiter_14MultipleWaiter_get(struct __pyx_obj
   __pyx_t_2 = ((!__pyx_t_1) != 0);
   if (__pyx_t_2) {
 
-    /* "src/gevent/_waiter.py":193
+    /* "src/gevent/_waiter.py":192
  *     def get(self):
  *         if not self._values:
  *             Waiter.get(self)             # <<<<<<<<<<<<<<
  *             Waiter.clear(self)
  * 
  */
-    __pyx_t_3 = __pyx_f_6gevent_8__waiter_6Waiter_get(((struct __pyx_obj_6gevent_8__waiter_Waiter *)__pyx_v_self), 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 193, __pyx_L1_error)
+    __pyx_t_3 = __pyx_f_6gevent_8__waiter_6Waiter_get(((struct __pyx_obj_6gevent_8__waiter_Waiter *)__pyx_v_self), 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 192, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "src/gevent/_waiter.py":194
+    /* "src/gevent/_waiter.py":193
  *         if not self._values:
  *             Waiter.get(self)
  *             Waiter.clear(self)             # <<<<<<<<<<<<<<
  * 
  *         return self._values.pop(0)
  */
-    __pyx_t_3 = __pyx_f_6gevent_8__waiter_6Waiter_clear(((struct __pyx_obj_6gevent_8__waiter_Waiter *)__pyx_v_self), 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 194, __pyx_L1_error)
+    __pyx_t_3 = __pyx_f_6gevent_8__waiter_6Waiter_clear(((struct __pyx_obj_6gevent_8__waiter_Waiter *)__pyx_v_self), 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 193, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "src/gevent/_waiter.py":192
+    /* "src/gevent/_waiter.py":191
  * 
  *     def get(self):
  *         if not self._values:             # <<<<<<<<<<<<<<
@@ -4128,7 +4126,7 @@ static PyObject *__pyx_f_6gevent_8__waiter_14MultipleWaiter_get(struct __pyx_obj
  */
   }
 
-  /* "src/gevent/_waiter.py":196
+  /* "src/gevent/_waiter.py":195
  *             Waiter.clear(self)
  * 
  *         return self._values.pop(0)             # <<<<<<<<<<<<<<
@@ -4138,15 +4136,15 @@ static PyObject *__pyx_f_6gevent_8__waiter_14MultipleWaiter_get(struct __pyx_obj
   __Pyx_XDECREF(__pyx_r);
   if (unlikely(__pyx_v_self->_values == Py_None)) {
     PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "pop");
-    __PYX_ERR(0, 196, __pyx_L1_error)
+    __PYX_ERR(0, 195, __pyx_L1_error)
   }
-  __pyx_t_3 = __Pyx_PyList_PopIndex(__pyx_v_self->_values, __pyx_int_0, 0, 1, Py_ssize_t, PyInt_FromSsize_t); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 196, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyList_PopIndex(__pyx_v_self->_values, __pyx_int_0, 0, 1, Py_ssize_t, PyInt_FromSsize_t); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 195, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_r = __pyx_t_3;
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "src/gevent/_waiter.py":191
+  /* "src/gevent/_waiter.py":190
  *         Waiter.switch(self, True)
  * 
  *     def get(self):             # <<<<<<<<<<<<<<
@@ -4186,7 +4184,7 @@ static PyObject *__pyx_pf_6gevent_8__waiter_14MultipleWaiter_4get(struct __pyx_o
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("get", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_6gevent_8__waiter_14MultipleWaiter_get(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 191, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_6gevent_8__waiter_14MultipleWaiter_get(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 190, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -4203,7 +4201,7 @@ static PyObject *__pyx_pf_6gevent_8__waiter_14MultipleWaiter_4get(struct __pyx_o
   return __pyx_r;
 }
 
-/* "src/gevent/_waiter.py":198
+/* "src/gevent/_waiter.py":197
  *         return self._values.pop(0)
  * 
  * def _init():             # <<<<<<<<<<<<<<
@@ -4231,7 +4229,7 @@ static PyObject *__pyx_pf_6gevent_8__waiter__init(CYTHON_UNUSED PyObject *__pyx_
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("_init", 0);
 
-  /* "src/gevent/_waiter.py":199
+  /* "src/gevent/_waiter.py":198
  * 
  * def _init():
  *     greenlet_init() # pylint:disable=undefined-variable             # <<<<<<<<<<<<<<
@@ -4240,7 +4238,7 @@ static PyObject *__pyx_pf_6gevent_8__waiter__init(CYTHON_UNUSED PyObject *__pyx_
  */
   __pyx_f_6gevent_8__waiter_greenlet_init();
 
-  /* "src/gevent/_waiter.py":198
+  /* "src/gevent/_waiter.py":197
  *         return self._values.pop(0)
  * 
  * def _init():             # <<<<<<<<<<<<<<
@@ -5022,38 +5020,38 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GIVEREF(__pyx_tuple__16);
   __pyx_codeobj__17 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__16, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent__waiter_py, __pyx_n_s_get, 140, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__17)) __PYX_ERR(0, 140, __pyx_L1_error)
 
-  /* "src/gevent/_waiter.py":187
+  /* "src/gevent/_waiter.py":186
  *         self._values = list()
  * 
  *     def switch(self, value):             # <<<<<<<<<<<<<<
  *         self._values.append(value)
  *         Waiter.switch(self, True)
  */
-  __pyx_tuple__18 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_value); if (unlikely(!__pyx_tuple__18)) __PYX_ERR(0, 187, __pyx_L1_error)
+  __pyx_tuple__18 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_value); if (unlikely(!__pyx_tuple__18)) __PYX_ERR(0, 186, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__18);
   __Pyx_GIVEREF(__pyx_tuple__18);
-  __pyx_codeobj__19 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__18, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent__waiter_py, __pyx_n_s_switch, 187, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__19)) __PYX_ERR(0, 187, __pyx_L1_error)
+  __pyx_codeobj__19 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__18, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent__waiter_py, __pyx_n_s_switch, 186, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__19)) __PYX_ERR(0, 186, __pyx_L1_error)
 
-  /* "src/gevent/_waiter.py":191
+  /* "src/gevent/_waiter.py":190
  *         Waiter.switch(self, True)
  * 
  *     def get(self):             # <<<<<<<<<<<<<<
  *         if not self._values:
  *             Waiter.get(self)
  */
-  __pyx_tuple__20 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__20)) __PYX_ERR(0, 191, __pyx_L1_error)
+  __pyx_tuple__20 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__20)) __PYX_ERR(0, 190, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__20);
   __Pyx_GIVEREF(__pyx_tuple__20);
-  __pyx_codeobj__21 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__20, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent__waiter_py, __pyx_n_s_get, 191, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__21)) __PYX_ERR(0, 191, __pyx_L1_error)
+  __pyx_codeobj__21 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__20, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent__waiter_py, __pyx_n_s_get, 190, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__21)) __PYX_ERR(0, 190, __pyx_L1_error)
 
-  /* "src/gevent/_waiter.py":198
+  /* "src/gevent/_waiter.py":197
  *         return self._values.pop(0)
  * 
  * def _init():             # <<<<<<<<<<<<<<
  *     greenlet_init() # pylint:disable=undefined-variable
  * 
  */
-  __pyx_codeobj__22 = (PyObject*)__Pyx_PyCode_New(0, 0, 0, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent__waiter_py, __pyx_n_s_init_2, 198, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__22)) __PYX_ERR(0, 198, __pyx_L1_error)
+  __pyx_codeobj__22 = (PyObject*)__Pyx_PyCode_New(0, 0, 0, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent__waiter_py, __pyx_n_s_init_2, 197, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__22)) __PYX_ERR(0, 197, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -5131,13 +5129,13 @@ static int __Pyx_modinit_type_init_code(void) {
   __pyx_vtable_6gevent_8__waiter_MultipleWaiter.__pyx_base = *__pyx_vtabptr_6gevent_8__waiter_Waiter;
   __pyx_vtable_6gevent_8__waiter_MultipleWaiter.__pyx_base.get = (PyObject *(*)(struct __pyx_obj_6gevent_8__waiter_Waiter *, int __pyx_skip_dispatch))__pyx_f_6gevent_8__waiter_14MultipleWaiter_get;
   __pyx_type_6gevent_8__waiter_MultipleWaiter.tp_base = __pyx_ptype_6gevent_8__waiter_Waiter;
-  if (PyType_Ready(&__pyx_type_6gevent_8__waiter_MultipleWaiter) < 0) __PYX_ERR(0, 167, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_6gevent_8__waiter_MultipleWaiter) < 0) __PYX_ERR(0, 166, __pyx_L1_error)
   __pyx_type_6gevent_8__waiter_MultipleWaiter.tp_print = 0;
   if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_6gevent_8__waiter_MultipleWaiter.tp_dictoffset && __pyx_type_6gevent_8__waiter_MultipleWaiter.tp_getattro == PyObject_GenericGetAttr)) {
     __pyx_type_6gevent_8__waiter_MultipleWaiter.tp_getattro = __Pyx_PyObject_GenericGetAttrNoDict;
   }
-  if (__Pyx_SetVtable(__pyx_type_6gevent_8__waiter_MultipleWaiter.tp_dict, __pyx_vtabptr_6gevent_8__waiter_MultipleWaiter) < 0) __PYX_ERR(0, 167, __pyx_L1_error)
-  if (PyObject_SetAttrString(__pyx_m, "MultipleWaiter", (PyObject *)&__pyx_type_6gevent_8__waiter_MultipleWaiter) < 0) __PYX_ERR(0, 167, __pyx_L1_error)
+  if (__Pyx_SetVtable(__pyx_type_6gevent_8__waiter_MultipleWaiter.tp_dict, __pyx_vtabptr_6gevent_8__waiter_MultipleWaiter) < 0) __PYX_ERR(0, 166, __pyx_L1_error)
+  if (PyObject_SetAttrString(__pyx_m, "MultipleWaiter", (PyObject *)&__pyx_type_6gevent_8__waiter_MultipleWaiter) < 0) __PYX_ERR(0, 166, __pyx_L1_error)
   __pyx_ptype_6gevent_8__waiter_MultipleWaiter = &__pyx_type_6gevent_8__waiter_MultipleWaiter;
   __Pyx_RefNannyFinishContext();
   return 0;
@@ -5612,104 +5610,104 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_8__waiter_Waiter);
 
-  /* "src/gevent/_waiter.py":176
+  /* "src/gevent/_waiter.py":175
  *     This does not handle exceptions or throw methods.
  *     """
  *     __slots__ = ['_values']             # <<<<<<<<<<<<<<
  * 
  *     def __init__(self, hub=None):
  */
-  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 176, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 175, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_n_s_values);
   __Pyx_GIVEREF(__pyx_n_s_values);
   PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_values);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_8__waiter_MultipleWaiter->tp_dict, __pyx_n_s_slots, __pyx_t_2) < 0) __PYX_ERR(0, 176, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_8__waiter_MultipleWaiter->tp_dict, __pyx_n_s_slots, __pyx_t_2) < 0) __PYX_ERR(0, 175, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_8__waiter_MultipleWaiter);
 
-  /* "src/gevent/_waiter.py":187
+  /* "src/gevent/_waiter.py":186
  *         self._values = list()
  * 
  *     def switch(self, value):             # <<<<<<<<<<<<<<
  *         self._values.append(value)
  *         Waiter.switch(self, True)
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_8__waiter_14MultipleWaiter_3switch, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_MultipleWaiter_switch, NULL, __pyx_n_s_gevent___waiter, __pyx_d, ((PyObject *)__pyx_codeobj__19)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 187, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_8__waiter_14MultipleWaiter_3switch, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_MultipleWaiter_switch, NULL, __pyx_n_s_gevent___waiter, __pyx_d, ((PyObject *)__pyx_codeobj__19)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 186, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_8__waiter_MultipleWaiter->tp_dict, __pyx_n_s_switch, __pyx_t_2) < 0) __PYX_ERR(0, 187, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_8__waiter_MultipleWaiter->tp_dict, __pyx_n_s_switch, __pyx_t_2) < 0) __PYX_ERR(0, 186, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_8__waiter_MultipleWaiter);
 
-  /* "src/gevent/_waiter.py":191
+  /* "src/gevent/_waiter.py":190
  *         Waiter.switch(self, True)
  * 
  *     def get(self):             # <<<<<<<<<<<<<<
  *         if not self._values:
  *             Waiter.get(self)
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_8__waiter_14MultipleWaiter_5get, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_MultipleWaiter_get, NULL, __pyx_n_s_gevent___waiter, __pyx_d, ((PyObject *)__pyx_codeobj__21)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 191, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_8__waiter_14MultipleWaiter_5get, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_MultipleWaiter_get, NULL, __pyx_n_s_gevent___waiter, __pyx_d, ((PyObject *)__pyx_codeobj__21)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 190, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_8__waiter_MultipleWaiter->tp_dict, __pyx_n_s_get, __pyx_t_2) < 0) __PYX_ERR(0, 191, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_8__waiter_MultipleWaiter->tp_dict, __pyx_n_s_get, __pyx_t_2) < 0) __PYX_ERR(0, 190, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_8__waiter_MultipleWaiter);
 
-  /* "src/gevent/_waiter.py":198
+  /* "src/gevent/_waiter.py":197
  *         return self._values.pop(0)
  * 
  * def _init():             # <<<<<<<<<<<<<<
  *     greenlet_init() # pylint:disable=undefined-variable
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_8__waiter_1_init, 0, __pyx_n_s_init_2, NULL, __pyx_n_s_gevent___waiter, __pyx_d, ((PyObject *)__pyx_codeobj__22)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 198, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_8__waiter_1_init, 0, __pyx_n_s_init_2, NULL, __pyx_n_s_gevent___waiter, __pyx_d, ((PyObject *)__pyx_codeobj__22)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 197, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_init_2, __pyx_t_2) < 0) __PYX_ERR(0, 198, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_init_2, __pyx_t_2) < 0) __PYX_ERR(0, 197, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "src/gevent/_waiter.py":201
+  /* "src/gevent/_waiter.py":200
  *     greenlet_init() # pylint:disable=undefined-variable
  * 
  * _init()             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_init_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 201, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_init_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 200, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 201, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 200, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/gevent/_waiter.py":204
+  /* "src/gevent/_waiter.py":203
  * 
  * 
  * from gevent._util import import_c_accel             # <<<<<<<<<<<<<<
  * import_c_accel(globals(), 'gevent.__waiter')
  */
-  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 204, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 203, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_n_s_import_c_accel);
   __Pyx_GIVEREF(__pyx_n_s_import_c_accel);
   PyList_SET_ITEM(__pyx_t_1, 0, __pyx_n_s_import_c_accel);
-  __pyx_t_2 = __Pyx_Import(__pyx_n_s_gevent__util, __pyx_t_1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 204, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_Import(__pyx_n_s_gevent__util, __pyx_t_1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 203, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_import_c_accel); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 204, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_import_c_accel); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 203, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_import_c_accel, __pyx_t_1) < 0) __PYX_ERR(0, 204, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_import_c_accel, __pyx_t_1) < 0) __PYX_ERR(0, 203, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "src/gevent/_waiter.py":205
+  /* "src/gevent/_waiter.py":204
  * 
  * from gevent._util import import_c_accel
  * import_c_accel(globals(), 'gevent.__waiter')             # <<<<<<<<<<<<<<
  */
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_import_c_accel); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 205, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_import_c_accel); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 204, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_Globals(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 205, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_Globals(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 204, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 205, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 204, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1);
@@ -5717,7 +5715,7 @@ if (!__Pyx_RefNanny) {
   __Pyx_GIVEREF(__pyx_n_s_gevent___waiter);
   PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_n_s_gevent___waiter);
   __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 205, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 204, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;

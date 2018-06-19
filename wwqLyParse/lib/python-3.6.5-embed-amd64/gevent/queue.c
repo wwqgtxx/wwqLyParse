@@ -17578,7 +17578,7 @@ if (!__Pyx_RefNanny) {
  * import collections
  * 
  * if sys.version_info[0] == 2:             # <<<<<<<<<<<<<<
- *     import Queue as __queue__
+ *     import Queue as __queue__ # python 3: pylint:disable=import-error
  * else:
  */
   __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_sys); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 37, __pyx_L1_error)
@@ -17599,7 +17599,7 @@ if (!__Pyx_RefNanny) {
     /* "src/gevent/queue.py":38
  * 
  * if sys.version_info[0] == 2:
- *     import Queue as __queue__             # <<<<<<<<<<<<<<
+ *     import Queue as __queue__ # python 3: pylint:disable=import-error             # <<<<<<<<<<<<<<
  * else:
  *     import queue as __queue__ # python 2: pylint:disable=import-error
  */
@@ -17612,14 +17612,14 @@ if (!__Pyx_RefNanny) {
  * import collections
  * 
  * if sys.version_info[0] == 2:             # <<<<<<<<<<<<<<
- *     import Queue as __queue__
+ *     import Queue as __queue__ # python 3: pylint:disable=import-error
  * else:
  */
     goto __pyx_L2;
   }
 
   /* "src/gevent/queue.py":40
- *     import Queue as __queue__
+ *     import Queue as __queue__ # python 3: pylint:disable=import-error
  * else:
  *     import queue as __queue__ # python 2: pylint:disable=import-error             # <<<<<<<<<<<<<<
  * Full = __queue__.Full
@@ -17809,7 +17809,7 @@ if (!__Pyx_RefNanny) {
  * __imports__ = ['Empty', 'Full']
  * if hasattr(__queue__, 'SimpleQueue'):             # <<<<<<<<<<<<<<
  *     __imports__.append('SimpleQueue') # New in 3.7
- *     SimpleQueue = __queue__.SimpleQueue
+ *     SimpleQueue = __queue__.SimpleQueue # pylint:disable=no-member
  */
   __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_queue_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 53, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -17822,7 +17822,7 @@ if (!__Pyx_RefNanny) {
  * __imports__ = ['Empty', 'Full']
  * if hasattr(__queue__, 'SimpleQueue'):
  *     __imports__.append('SimpleQueue') # New in 3.7             # <<<<<<<<<<<<<<
- *     SimpleQueue = __queue__.SimpleQueue
+ *     SimpleQueue = __queue__.SimpleQueue # pylint:disable=no-member
  * __all__ = __implements__ + __extensions__ + __imports__
  */
     __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_imports); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 54, __pyx_L1_error)
@@ -17833,7 +17833,7 @@ if (!__Pyx_RefNanny) {
     /* "src/gevent/queue.py":55
  * if hasattr(__queue__, 'SimpleQueue'):
  *     __imports__.append('SimpleQueue') # New in 3.7
- *     SimpleQueue = __queue__.SimpleQueue             # <<<<<<<<<<<<<<
+ *     SimpleQueue = __queue__.SimpleQueue # pylint:disable=no-member             # <<<<<<<<<<<<<<
  * __all__ = __implements__ + __extensions__ + __imports__
  * 
  */
@@ -17850,13 +17850,13 @@ if (!__Pyx_RefNanny) {
  * __imports__ = ['Empty', 'Full']
  * if hasattr(__queue__, 'SimpleQueue'):             # <<<<<<<<<<<<<<
  *     __imports__.append('SimpleQueue') # New in 3.7
- *     SimpleQueue = __queue__.SimpleQueue
+ *     SimpleQueue = __queue__.SimpleQueue # pylint:disable=no-member
  */
   }
 
   /* "src/gevent/queue.py":56
  *     __imports__.append('SimpleQueue') # New in 3.7
- *     SimpleQueue = __queue__.SimpleQueue
+ *     SimpleQueue = __queue__.SimpleQueue # pylint:disable=no-member
  * __all__ = __implements__ + __extensions__ + __imports__             # <<<<<<<<<<<<<<
  * 
  * 

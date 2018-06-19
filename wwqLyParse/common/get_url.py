@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
 
-from .workerpool import *
-
 import sys
 import logging
 import functools
@@ -20,11 +18,12 @@ except:
 aiohttp = None
 # if sys.version_info[0:2] >= (3, 6):
 try:
-    import aiohttp
+    from . import aiohttp
     import asyncio
 except:
     pass
 
+from .workerpool import *
 from .select import SelectSelector
 from .lru_cache import LRUCache
 from .key_lock import KeyLockDict
@@ -67,7 +66,7 @@ if aiohttp:
     threading.Thread(target=_run_forever, name="GetUrlLoopThread", daemon=True).start()
     common_connector = aiohttp.TCPConnector(limit=URL_CACHE_POOL, loop=common_loop)
     common_cookie_jar = aiohttp.CookieJar(loop=common_loop)
-    common_client_timeout = aiohttp.ClientTimeout(total=1*60)
+    common_client_timeout = aiohttp.ClientTimeout(total=1 * 60)
     logging.debug("init %s" % common_connector)
     atexit.register(common_connector.close)
     del _run_forever
@@ -163,11 +162,11 @@ def get_url(o_url, encoding='utf-8', headers=None, data=None, method=None, cooki
                 except asyncio.TimeoutError:
                     if i == retry_num:
                         raise
-                    logging.warning(callmethod + 'request %s TimeoutError! retry %d in %d.' % (o_url, i+1, retry_num))
+                    logging.warning(callmethod + 'request %s TimeoutError! retry %d in %d.' % (o_url, i + 1, retry_num))
                 except aiohttp.ClientError:
                     if i == retry_num:
                         raise
-                    logging.warning(callmethod + 'request %s ClientError! retry %d in %d.' % (o_url, i+1, retry_num))
+                    logging.warning(callmethod + 'request %s ClientError! retry %d in %d.' % (o_url, i + 1, retry_num))
                 except:
                     logging.exception(callmethod + "get url " + url_json + "fail")
 

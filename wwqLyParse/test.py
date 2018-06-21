@@ -31,7 +31,7 @@ if __name__ == "__main__":
     # main("http://v.qq.com/x/cover/479ci9i9ua5n1sl.html?vid=q0015cmtbk4", types="list")
     # main("http://v.qq.com/detail/j/jcalf255t3psbgs.html", types="list")
     # main("https://v.qq.com/x/cover/jcalf255t3psbgs/j00266kl1ud.html?ptag=qqbrowser", types="list")
-    main("http://v.pptv.com/show/MxfOTcmjmtg7uSE.html", parsers_name=["PPTVParser"])
+    # main("http://v.pptv.com/show/MxfOTcmjmtg7uSE.html", parsers_name=["PPTVParser"])
     # main("http://v.pptv.com/show/MxfOTcmjmtg7uSE.html", types="list")
     # main(r"https://youku.pohaier.com/yk.php?url=d1BTTTFlVnRTell1VDhtQmlLZ3lrTkZSUGtTdlhrY3JOZlJOTnZZRmE2ZDZiSVNkNU9rdVJoMlBoL1doR1FDRGVmWkJCR25rbkE=")
     # main("http://defaultts.tc.qq.com/defaultts.tc.qq.com/mcvctgljBW77YvaEtxIhsDu81rGkBDNrvJH-aOijrz6vYDOAERMwo8YjsMhsUX30gycp3l48NFvhiK0q8RrcI_piINVQwY4sfKdsmv5qi459Q7GV-rljooWl1yRZcP-f/c00248syj3f.321004.ts.m3u8?ver=4")
@@ -39,7 +39,8 @@ if __name__ == "__main__":
     # main("http://v.yinyuetai.com/video/2796852", parsers_name=["YinYueTaiParser"])
     # main("http://www.mgtv.com/b/316045/4096972.html", types="collection")
     # main("http://www.mgtv.com/b/316045/4096972.html", parsers_name=["MgTVParser"])
-    # main("http://www.mgtv.com/b/316045/4096972.html", label="3@MgTVParser")
+    while True:
+        main("http://www.mgtv.com/b/316045/4096972.html", label="3@MgTVParser")
     # url_cache.timeout = 10
     # main("http://www.iqiyi.com/lib/m_201087714.html")
     # main("http://www.iqiyi.com/v_19rrcl8dck.html", types="list")

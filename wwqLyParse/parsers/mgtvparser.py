@@ -41,7 +41,7 @@ class MgTVParser(Parser):
         clit = "clit=%d" % int(time.time())
         did = str(uuid.uuid4())
         tk2 = "did={}|pno=1030|ver=5.5.1|{}".format(did, clit)
-        api_url = 'http://pcweb.api.mgtv.com/player/video?video_id={}&tk2={}'.format(vid, encode_tk2(tk2))
+        api_url = 'https://pcweb.api.mgtv.com/player/video?video_id={}&tk2={}'.format(vid, encode_tk2(tk2))
         api_data1 = get_url(api_url, allow_cache=False, cookies=self.cookies)
         api_data1 = json.loads(api_data1)
         logging.debug(api_data1)
@@ -133,7 +133,7 @@ class MgTVListParser(MgTVParser):
             api_data = self.get_api_data(input_text, only_api1=True)
             info = api_data['info']
             collection_id = info['collection_id']
-        url1 = 'http://pcweb.api.mgtv.com/variety/showlist?collection_id=' + collection_id
+        url1 = 'https://pcweb.api.mgtv.com/variety/showlist?collection_id=' + collection_id
         api_data1 = json.loads(get_url(url1))
         # print(api_data1)
         if api_data1['code'] != 200 and not api_data1['data']:
@@ -150,7 +150,7 @@ class MgTVListParser(MgTVParser):
                     info = {
                         "no": item['t2'] + ' ' + item['t1'],
                         "subtitle": item['t3'],
-                        "url": 'http://www.mgtv.com' + item['url']
+                        "url": 'https://www.mgtv.com' + item['url']
                     }
                     # print(info)
                     data["data"].append(info)

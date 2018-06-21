@@ -6,7 +6,7 @@ from __future__ import absolute_import, division, print_function, \
 
 import threading
 
-__all__ = ["KeyLockDict", "KeyLockWrapper"]
+__all__ = ["KeyLockDict", "KeyLockWrapper", "KeyLockFuck", "FUCK_KEY_LOCK"]
 
 
 class KeyLockDict(dict):
@@ -35,3 +35,14 @@ class KeyLockWrapper(object):
             if self._count == 0:
                 del self._dict[self._key]
         self._lock.__exit__(exc_type, exc_val, exc_tb)
+
+
+class KeyLockFuck(object):
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
+
+
+FUCK_KEY_LOCK = KeyLockFuck()

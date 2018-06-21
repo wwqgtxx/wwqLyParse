@@ -86,7 +86,7 @@ elif requests:
 
 
 def get_url(o_url, encoding='utf-8', headers=None, data=None, method=None, cookies=None, verify=True, allow_cache=True,
-            use_pool=True, pool=pool_get_url):
+            use_pool=True, pool=pool_get_url, force_flush_cache=False, callmethod=None):
     def _get_url_urllib(url_json, o_url, encoding, headers, data, method, callmethod, use_pool):
         try:
             # url 包含中文时 parse.quote_from_bytes(o_url.encode('utf-8'), ':/&%?=+')
@@ -182,12 +182,16 @@ def get_url(o_url, encoding='utf-8', headers=None, data=None, method=None, cooki
         except aiohttp.ClientError as e:
             logging.error(callmethod + 'request %s ClientError! Error message: %s' % (o_url, e))
 
-    callmethod = get_caller_info()
+    if callmethod is None:
+        callmethod = get_caller_info(1)
     url_json = {"o_url": o_url, "encoding": encoding, "headers": headers, "data": data, "method": method,
                 "cookies": cookies}
     url_json = json.dumps(url_json, sort_keys=True, ensure_ascii=False)
 
     def _do_get():
+        if force_flush_cache:
+            url_cache.pop(url_json, None)
+            logging.debug(callmethod + "force_flush_cache get:" + url_json)
         if allow_cache:
             if url_json in url_cache:
                 html_text = url_cache[url_json]

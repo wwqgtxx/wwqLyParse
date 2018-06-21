@@ -17,11 +17,6 @@ except Exception as e:
 
 __MODULE_CLASS_NAMES__ = ["PPTVParser"]
 
-if sys.version_info[0] == 3:
-    WR_ord = int
-else:
-    WR_ord = ord
-
 import binascii
 from xml.dom.minidom import parseString
 
@@ -37,20 +32,12 @@ def rshift(a, b):
 
 
 def le32_pack(b_str):
-    if sys.version_info[0] == 3:
-        result = 0
-        result |= b_str[0]
-        result |= (b_str[1] << 8)
-        result |= (b_str[2] << 16)
-        result |= (b_str[3] << 24)
-        return result
-    else:
-        result = 0
-        result |= ord(b_str[0])
-        result |= (ord(b_str[1]) << 8)
-        result |= (ord(b_str[2]) << 16)
-        result |= (ord(b_str[3]) << 24)
-        return result
+    result = 0
+    result |= b_str[0]
+    result |= (b_str[1] << 8)
+    result |= (b_str[2] << 16)
+    result |= (b_str[3] << 24)
+    return result
 
 
 def tea_core(data, key_seg):
@@ -96,7 +83,7 @@ def gen_key(t):
     t_s = hex(int(t))[2:].encode('utf8')
     input_data = zpad(t_s, 16)
     out = tea_core(input_data, key_seg)
-    return binascii.hexlify(out[:8]).decode('utf8') + ran_hex(16)
+    return out[:8].hex() + ran_hex(16)
 
 
 def unpack_le32(i32):
@@ -255,10 +242,18 @@ class PPTVParser(Parser):
         }
 
         html = get_url(input_text)
+        for _ in range(3):
+            if """document.write('<meta http-equiv="Refresh" Content="0; Url='+u+'">')""" in html:
+                logging.debug(html)
+                html = get_url(input_text, force_flush_cache=True)
+            else:
+                break
+        # logging.debug(html)
         vid = match1(html, 'webcfg\s*=\s*{"id":\s*(\d+)')
         xml = get_url(
             'http://web-play.pptv.com/webplay3-0-{}.xml?zone=8&version=4&username=&ppi=302c3333&type=ppbox.launcher&pageUrl=http%3A%2F%2Fv.pptv.com&o=0&referrer=&kk=&scver=1&appplt=flp&appid=pptv.flashplayer.vod&appver=3.4.3.3&nddp=1'.format(
                 vid), allow_cache=False)
+        # logging.debug(xml)
         dom = parseString(xml)
         m_title, m_items, m_streams, m_segs = parse_pptv_xml(dom)
         xml_streams = merge_meta(m_items, m_streams, m_segs)
@@ -289,4 +284,3 @@ class PPTVParser(Parser):
             })
 
         return info
-

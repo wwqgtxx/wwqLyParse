@@ -22,9 +22,9 @@ def get_main_parse():
     return functools.partial(get_main().parse, use_inside=True)
 
 
-def get_caller_info():
+def get_caller_info(call_deep=0):
     try:
-        fn, lno, func, sinfo = traceback.extract_stack()[-3]
+        fn, lno, func, sinfo = traceback.extract_stack()[-(2 + call_deep)]
     except ValueError:  # pragma: no cover
         fn, lno, func = "(unknown file)", 0, "(unknown function)"
     try:

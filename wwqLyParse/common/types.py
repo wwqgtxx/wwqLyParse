@@ -25,3 +25,16 @@ class Parser(object):
 
     def close_parser(self):
         return
+
+
+class UrlHandle(object):
+    filters = []
+
+    def url_handle(self, url):
+        pass
+
+    def get_filters(self):
+        return self.filters
+
+    def close_url_handle(self):
+        return

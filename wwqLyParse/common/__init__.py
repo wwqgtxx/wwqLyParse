@@ -9,12 +9,11 @@ from .http_cache import *
 from .import_class import *
 from .key_lock import *
 from .lru_cache import *
-from .parser import *
 from .process_label import *
 from .re import *
 from .select import *
 from .subprocess import *
-from .urlhandle import *
+from .types import *
 from .utils import *
 from .workerpool import *
 

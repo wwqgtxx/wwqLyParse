@@ -39,8 +39,7 @@ if __name__ == "__main__":
     # main("http://v.yinyuetai.com/video/2796852", parsers_name=["YinYueTaiParser"])
     # main("http://www.mgtv.com/b/316045/4096972.html", types="collection")
     # main("http://www.mgtv.com/b/316045/4096972.html", parsers_name=["MgTVParser"])
-    while True:
-        main("http://www.mgtv.com/b/316045/4096972.html", label="3@MgTVParser")
+    main("http://www.mgtv.com/b/316045/4096972.html", label="3@MgTVParser")
     # url_cache.timeout = 10
     # main("http://www.iqiyi.com/lib/m_201087714.html")
     # main("http://www.iqiyi.com/v_19rrcl8dck.html", types="list")

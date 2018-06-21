@@ -12,7 +12,7 @@ try:
 except Exception as e:
     from common import *
 
-__MODULE_CLASS_NAMES__ = ["BaiduLinkUrlHandle", "LetvUrlHandle", "MgtvUrlHandle", "IqiyiMUrlHandle"]
+__MODULE_CLASS_NAMES__ = ["BaiduLinkUrlHandle", "LetvUrlHandle", "HunantvUrlHandle", "MgtvUrlHandle", "IqiyiMUrlHandle"]
 
 
 class BaiduLinkUrlHandle(UrlHandle):
@@ -36,11 +36,20 @@ class LetvUrlHandle(UrlHandle):
         return url
 
 
-class MgtvUrlHandle(UrlHandle):
+class HunantvUrlHandle(UrlHandle):
     filters = ['^(http|https)://www.hunantv.com']
 
     def url_handle(self, input_text):
         url = input_text.replace("hunantv.com", "mgtv.com")
+        logging.debug('urlHandle:"' + input_text + '"-->"' + url + '"')
+        return url
+
+
+class MgtvUrlHandle(UrlHandle):
+    filters = ['^http://www.mgtv.com']
+
+    def url_handle(self, input_text):
+        url = input_text.replace("http://", "https://")
         logging.debug('urlHandle:"' + input_text + '"-->"' + url + '"')
         return url
 

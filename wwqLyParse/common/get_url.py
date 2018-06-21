@@ -206,7 +206,7 @@ class GetUrlService(object):
             callmethod = get_caller_info(1)
         url_json_dict = {"o_url": o_url, "encoding": encoding, "headers": headers, "data": data, "method": method,
                          "cookies": cookies, "verify": verify}
-        url_json = json.dumps(url_json_dict, sort_keys=True, ensure_ascii=False)
+        url_json = json.dumps(url_json_dict, sort_keys=False, ensure_ascii=False)
 
         with self._get_url_key_lock(url_json, allow_cache):
             if force_flush_cache:

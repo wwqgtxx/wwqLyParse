@@ -107,7 +107,9 @@ class MgTVParser(Parser):
         for lstream in api_data['stream']:
             if lstream['url'] and lstream['def'] == label:
                 for domain in api_data['stream_domain']:
-                    api_data2 = json.loads(get_url(domain + lstream['url'], allow_cache=False, cookies=self.cookies))
+                    api_data2_url = domain + lstream['url']
+                    api_data2_url = api_data2_url.replace("http://", "https://")
+                    api_data2 = json.loads(get_url(api_data2_url, allow_cache=False, cookies=self.cookies))
                     # print(api_data2)
                     url = api_data2['info']
                     data["urls"].append(url)

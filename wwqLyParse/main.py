@@ -104,16 +104,16 @@ CLOSE_TIMEOUT = 10
 RECV_TIMEOUT = 60
 CONN_LRU_TIMEOUT = 60 * 60  # 1 hour
 
-parser_class_map = import_by_name(module_names=get_all_filename_by_dir('./parsers'), prefix="parsers.",
+parser_class_map = import_by_module_name(module_names=get_all_filename_by_dir('./parsers'), prefix="parsers.",
                                   super_class=Parser)
-urlhandle_class_map = import_by_name(module_names=get_all_filename_by_dir('./urlhandles'), prefix="urlhandles.",
+urlhandle_class_map = import_by_module_name(module_names=get_all_filename_by_dir('./urlhandles'), prefix="urlhandles.",
                                      super_class=UrlHandle)
 
 
 def url_handle_parse(input_text, url_handles_name=None):
     start_time = time.time()
     if url_handles_name is not None:
-        _url_handle_class_map = import_by_name(class_names=url_handles_name, prefix="urlhandles.",
+        _url_handle_class_map = import_by_class_name(class_names=url_handles_name, prefix="urlhandles.",
                                                super_class=UrlHandle)
     else:
         _url_handle_class_map = urlhandle_class_map
@@ -191,7 +191,7 @@ def get_version():
 
 def parse(input_text, types=None, parsers_name=None, url_handles_name=None, use_inside=False, *k, **kk):
     if parsers_name is not None:
-        _parser_class_map = import_by_name(class_names=parsers_name, prefix="parsers.", super_class=Parser)
+        _parser_class_map = import_by_class_name(class_names=parsers_name, prefix="parsers.", super_class=Parser)
     else:
         _parser_class_map = parser_class_map
     parsers = new_objects(_parser_class_map)
@@ -281,7 +281,7 @@ def parse_url(input_text, label, min=None, max=None, url_handles_name=None, *k, 
     t_label = label.split("@")
     label = t_label[0]
     parser_name = t_label[1]
-    parser_class_map = import_by_name(class_names=[parser_name], prefix="parsers.", super_class=Parser)
+    parser_class_map = import_by_class_name(class_names=[parser_name], prefix="parsers.", super_class=Parser)
     parsers = new_objects(parser_class_map)
 
     input_text = parse_password(input_text, kk)

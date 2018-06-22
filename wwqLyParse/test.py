@@ -39,7 +39,7 @@ if __name__ == "__main__":
     # main("http://v.yinyuetai.com/video/3080638", parsers_name=["YinYueTaiParser"])
     # main("http://v.yinyuetai.com/video/2796852", parsers_name=["YinYueTaiParser"])
     # main("http://www.mgtv.com/b/316045/4096972.html", types="collection")
-    # main("http://www.mgtv.com/b/316045/4096972.html", parsers_name=["MgTVParser"])
+    main("http://www.mgtv.com/b/316045/4096972.html", parsers_name=["MgTVParser"])
     main("http://www.mgtv.com/b/316045/4096972.html", label="3@MgTVParser")
     # url_cache.timeout = 10
     # main("http://www.iqiyi.com/lib/m_201087714.html")

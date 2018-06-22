@@ -281,8 +281,8 @@ def parse_url(input_text, label, min=None, max=None, url_handles_name=None, *k, 
     t_label = label.split("@")
     label = t_label[0]
     parser_name = t_label[1]
-    parser_class_map = import_by_class_name(class_names=[parser_name], prefix="parsers.", super_class=Parser)
-    parsers = new_objects(parser_class_map)
+    _parser_class_map = import_by_class_name(class_names=[parser_name], prefix="parsers.", super_class=Parser)
+    parsers = new_objects(_parser_class_map)
 
     input_text = parse_password(input_text, kk)
 

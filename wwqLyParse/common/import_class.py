@@ -22,6 +22,7 @@ def get_all_filename_by_dir(dir_name, suffix=".py"):
 
 imported_class_map = {}
 imported_module_map = {}
+_place_hold = object()
 
 
 def import_by_class_name(class_names, prefix="", super_class=object, showinfo=True):
@@ -33,9 +34,10 @@ def import_by_class_name(class_names, prefix="", super_class=object, showinfo=Tr
             class_name = list_lib_name[-1]
             module_name = prefix
             module_name += "".join(list_lib_name[0:-1])
-            try:
+            lib_class = imported_module_map.get(full_name, _place_hold)
+            if lib_class is not _place_hold:
                 lib_class_map[class_name] = imported_class_map[full_name]
-            except KeyError:
+            else:
                 try:
                     lib_module = importlib.import_module(module_name)
                     lib_class = getattr(lib_module, class_name)
@@ -46,11 +48,11 @@ def import_by_class_name(class_names, prefix="", super_class=object, showinfo=Tr
                         lib_class_map[class_name] = lib_class
                         if showinfo:
                             logging.debug(
-                                "successful load " + str(lib_class) + " is a subclass of " + str(super_class))
+                                "successful load %s is a subclass of %s" % (lib_class, super_class))
                     else:
-                        logging.warning(str(lib_class) + " is not a subclass of " + str(super_class))
+                        logging.warning("%s is not a subclass of %s" % (lib_class, super_class))
                 except:
-                    logging.exception("load " + str(class_name) + " fail")
+                    logging.exception("load %s fail" % class_name)
         else:
             for k, v in imported_class_map.items():
                 if k.startswith(prefix) and class_name == k.split('.')[-1] and issubclass(v, super_class):
@@ -65,17 +67,17 @@ def import_by_module_name(module_names=None, prefix="", super_class=object, show
     for module_name in module_names:
         module_name = prefix + module_name
         imported_module_map_key = (module_name, super_class)
-        try:
-            for item in imported_module_map[imported_module_map_key]:
+        imported_module = imported_module_map.get(imported_module_map_key, _place_hold)
+        if imported_module is not _place_hold:
+            for item in imported_module:
                 lib_class_map[item["lib_name"]] = item["lib_class"]
-        except KeyError:
+        else:
             try:
-                place_hold = object()
                 lib_module = importlib.import_module(module_name)
                 imported_module_map[imported_module_map_key] = []
-                lib_module_class_names = getattr(lib_module, "__all__", place_hold)
+                lib_module_class_names = getattr(lib_module, "__all__", _place_hold)
                 no_waring = False
-                if lib_module_class_names is place_hold:
+                if lib_module_class_names is _place_hold:
                     lib_module_class_names = dir(lib_module)
                     logging.warning("module %s don't have '__all__' try to use dir() get classes!" % lib_module)
                     no_waring = True
@@ -98,10 +100,12 @@ def import_by_module_name(module_names=None, prefix="", super_class=object, show
                         else:
                             if not no_waring:
                                 logging.warning(str(lib_class) + " is not a subclass of " + str(super_class))
+                    except KeyError:
+                        logging.warning("%s not in %s" % (lib_module_class_name, lib_module))
                     except:
-                        logging.exception("load " + str(lib_module_class_name) + " fail")
+                        logging.exception("load %s fail" % lib_module_class_name)
             except:
-                logging.exception("load " + str(module_name) + " fail")
+                logging.exception("load %s fail" % module_name)
     return lib_class_map
 
 

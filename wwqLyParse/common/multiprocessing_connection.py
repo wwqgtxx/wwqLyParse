@@ -4,7 +4,7 @@
 import multiprocessing.connection
 import functools
 from typing import Dict, Tuple, List
-from .workerpool import ThreadPool, POOL_TYPE, common_threadpool
+from .workerpool import ThreadPool, POOL_TYPE, get_common_threadpool
 
 if POOL_TYPE == "geventpool":
     class Connection(object):
@@ -12,7 +12,7 @@ if POOL_TYPE == "geventpool":
                      _connection_threadpool: ThreadPool = None):
             self._connection = _connection
             if _connection_threadpool is None:
-                self._connection_threadpool = common_threadpool
+                self._connection_threadpool = get_common_threadpool()
                 self._need_close_connection_threadpool = True
             else:
                 self._connection_threadpool = _connection_threadpool
@@ -62,7 +62,7 @@ if POOL_TYPE == "geventpool":
             self._listener = multiprocessing.connection.Listener(address=address, family=family, backlog=backlog,
                                                                  authkey=authkey)
             if _listener_threadpool is None:
-                self._listener_threadpool = common_threadpool
+                self._listener_threadpool = get_common_threadpool()
                 self._listener_threadpool_need_closed = True
             else:
                 self._listener_threadpool = _listener_threadpool
@@ -88,11 +88,22 @@ if POOL_TYPE == "geventpool":
             self.close()
 
 
-    def wait(object_list, timeout=None, _threadpool: ThreadPool = common_threadpool) -> List[Connection]:
+    def Client(address, family=None, authkey=None, _threadpool: ThreadPool = None) -> Connection:
+        if _threadpool is None:
+            _threadpool = get_common_threadpool()
+        c = _threadpool.apply(multiprocessing.connection.Client, args=(address, family, authkey))
+        return Connection(c, _threadpool)
+
+
+    def wait(object_list, timeout=None, _threadpool: ThreadPool = None) -> List[Connection]:
+        if _threadpool is None:
+            _threadpool = get_common_threadpool()
         return _threadpool.apply(multiprocessing.connection.wait, args=(object_list, timeout))
 
 
-    def Pipe(duplex=True, _threadpool: ThreadPool = common_threadpool) -> Tuple[Connection, Connection]:
+    def Pipe(duplex=True, _threadpool: ThreadPool = None) -> Tuple[Connection, Connection]:
+        if _threadpool is None:
+            _threadpool = get_common_threadpool()
         c1, c2 = multiprocessing.connection.Pipe(duplex)
         return Connection(c1, _threadpool), Connection(c2, _threadpool)
 
@@ -104,6 +115,10 @@ else:
 
     Connection = multiprocessing.connection.Connection
     Listener = _Listener
+
+
+    def Client(address, family=None, authkey=None, _threadpool: ThreadPool = None) -> Connection:
+        return multiprocessing.connection.Client(address, family, authkey)
 
 
     def wait(object_list, timeout=None, _threadpool=None) -> List[Connection]:

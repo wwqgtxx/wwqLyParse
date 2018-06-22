@@ -70,4 +70,11 @@ class ThreadPool(_ThreadPool):
         return True
 
 
-common_threadpool = ThreadPool()
+_common_threadpool = None
+
+
+def get_common_threadpool():
+    global _common_threadpool
+    if _common_threadpool is None:
+        _common_threadpool = ThreadPool()
+    return _common_threadpool

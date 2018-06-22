@@ -43,6 +43,6 @@ def _lib_parse(byte_str: bytes):
 
 if POOL_TYPE == "geventpool":
     def lib_parse(byte_str: bytes):
-        return common_threadpool.apply(_lib_parse, args=(byte_str,))
+        return get_common_threadpool().apply(_lib_parse, args=(byte_str,))
 else:
     lib_parse = _lib_parse

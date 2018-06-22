@@ -22,6 +22,7 @@ if __name__ == "__main__":
     del os
 
 from main import *
+get_url_service.init()
 
 if __name__ == "__main__":
     # main(r"file:///E:\QQDownloads\11.m3u8")

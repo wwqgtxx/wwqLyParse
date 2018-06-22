@@ -58,16 +58,21 @@ class GetUrlService(object):
         self.common_cookie_jar = None
         self.common_client_timeout = None
         self.common_session = None
-        if aiohttp:
-            self.common_loop = self._get_async_loop()
-            from .aiohttp import TCPConnector
-            self.common_connector = TCPConnector(limit=URL_CACHE_POOL, loop=self.common_loop)
-            self.common_cookie_jar = aiohttp.CookieJar(loop=self.common_loop)
-            self.common_client_timeout = aiohttp.ClientTimeout(total=1 * 60)
-            logging.debug("init %s" % self.common_connector)
-            weakref.finalize(self, self.common_connector.close)
-        elif requests:
-            self.common_session = self._get_session()
+        self.inited = False
+
+    def init(self):
+        if not self.inited:
+            if aiohttp:
+                self.common_loop = self._get_async_loop()
+                from .aiohttp import TCPConnector
+                self.common_connector = TCPConnector(limit=URL_CACHE_POOL, loop=self.common_loop)
+                self.common_cookie_jar = aiohttp.CookieJar(loop=self.common_loop)
+                self.common_client_timeout = aiohttp.ClientTimeout(total=1 * 60)
+                logging.debug("init %s" % self.common_connector)
+                weakref.finalize(self, self.common_connector.close)
+            elif requests:
+                self.common_session = self._get_session()
+            self.inited = True
 
     def _get_async_loop(self):
         loop = asyncio.SelectorEventLoop(SelectSelector())
@@ -200,6 +205,7 @@ class GetUrlService(object):
 
     def get_url(self, o_url, encoding='utf-8', headers=None, data=None, method=None, cookies=None, verify=True,
                 allow_cache=True, use_pool=True, pool=None, force_flush_cache=False, callmethod=None):
+        self.init()
         if pool is None:
             pool = self.pool_get_url
         if callmethod is None:

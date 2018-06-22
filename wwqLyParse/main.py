@@ -34,11 +34,19 @@ import sys
 import os
 import logging
 
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s{%(name)s}%(filename)s[line:%(lineno)d]<%(funcName)s> pid:%(process)d %(threadName)s %(levelname)s : %(message)s',
-                    datefmt='%H:%M:%S', stream=sys.stdout)
+LEVEL = logging.DEBUG
+FORMAT = '%(asctime)s{%(name)s}%(filename)s[line:%(lineno)d]<%(funcName)s> pid:%(process)d %(threadName)s %(levelname)s : %(message)s'
+DATA_FMT = '%H:%M:%S'
+logging.basicConfig(level=LEVEL, format=FORMAT, datefmt=DATA_FMT, stream=sys.stdout)
+
+try:
+    from .common import *
+except Exception as e:
+    from common import *
 
 if __name__ == "__main__":
+    get_common_threadpool()
+    logging.root.addHandler(RemoteStreamHandler(ADDRESS_LOGGING, FORMAT, DATA_FMT))
     if not os.environ.get("NOT_LOGGING", None):
         if gevent:
             logging.info("gevent.monkey.patch_all()")
@@ -53,13 +61,7 @@ if __name__ == "__main__":
                 pass
         else:
             logging.info("use simple pool")
-
-try:
-    from .common import *
-except Exception as e:
-    from common import *
-
-if __name__ == "__main__":
+    get_url_service.init()
     if not os.environ.get("NOT_LOGGING", None):
         if gevent:
             try:
@@ -377,80 +379,10 @@ def _handle(data):
     return byte_str
 
 
-def handle(conn_lru_dict: LRUCacheType[multiprocessing_connection.Connection, bool],
-           conn: multiprocessing_connection.Connection, c_send: multiprocessing_connection.Connection):
-    try:
-        data = conn.recv_bytes()
-        if not data:
-            raise EOFError
-        logging.debug("parse conn %s" % conn)
-        # logging.debug(data)
-        result = _handle(data)
-        conn.send_bytes(result)
-        conn_lru_dict[conn] = True
-        c_send.send_bytes(b'ok')
-    except OSError:
-        logging.debug("conn %s was closed" % conn)
-        conn.close()
-    except EOFError:
-        logging.debug("conn %s was eof" % conn)
-        conn.close()
-    except BrokenPipeError:
-        logging.debug("conn %s was broken" % conn)
-        conn.close()
-
-
-def _process(conn_lru_dict: LRUCacheType[multiprocessing_connection.Connection, bool],
-             handle_pool: WorkerPool,
-             c_recv: multiprocessing_connection.Connection,
-             c_send: multiprocessing_connection.Connection,
-             wait=multiprocessing_connection.wait):
-    while True:
-        try:
-            for conn in wait(list(conn_lru_dict.keys()) + [c_recv]):
-                if conn == c_recv:
-                    c_recv.recv_bytes()
-                    continue
-                del conn_lru_dict[conn]
-                if not conn.closed:
-                    handle_pool.spawn(handle, conn_lru_dict, conn, c_send)
-                else:
-                    logging.debug("conn %s was closed" % conn)
-        except OSError as e:
-            if getattr(e, "winerror", 0) == 6:
-                continue
-            logging.exception("OSError")
-        except:
-            logging.exception("error")
-
-
-def _run(address):
-    with WorkerPool(thread_name_prefix="HandlePool") as handle_pool:
-        with multiprocessing_connection.Listener(address, authkey=get_uuid()) as listener:
-            c_recv, c_send = multiprocessing_connection.Pipe(False)
-
-            def after_delete_handle(t: Tuple[multiprocessing_connection.Connection, bool]):
-                k, v = t
-                logging.debug("close timeout conn %s" % k)
-                c_send.send_bytes(b'ok')
-                k.close()
-
-            conn_lru_dict = LRUCache(size=1024, timeout=CONN_LRU_TIMEOUT, after_delete_handle=after_delete_handle)
-            handle_pool.spawn(_process, conn_lru_dict, handle_pool, c_recv, c_send)
-            while True:
-                try:
-                    conn = listener.accept()
-                    logging.debug("get a new conn %s" % conn)
-                    conn_lru_dict[conn] = True
-                    c_send.send_bytes(b'ok')
-                except:
-                    logging.exception("error")
-
-
 def run(pipe):
     address = r'\\.\pipe\%s@%s' % (pipe, version['version'])
     logging.info("listen address:'%s'" % address)
-    _run(address)
+    ConnectionServer(address, _handle, get_uuid()).run()
 
 
 def arg_parser():

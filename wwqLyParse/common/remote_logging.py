@@ -3,6 +3,7 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 from .multiprocessing_connection import Client, Connection
 import logging
+import traceback
 import sys
 
 ADDRESS_LOGGING = r'\\.\pipe\%s-%s' % ("wwqLyParse", 'logging')
@@ -20,8 +21,17 @@ class RemoteStream(object):
                     self.conn = Client(address=self.address)
                 self.conn.send_bytes(str(data).encode("utf-8"))
                 return
-            except Exception as e:
-                # print(e)
+            except FileNotFoundError:
+                self.conn = None
+                return
+            except BrokenPipeError:
+                self.conn = None
+            except OSError:
+                self.conn = None
+            except EOFError:
+                self.conn = None
+            except Exception:
+                print(traceback.format_exc())
                 self.conn = None
 
     def close(self):

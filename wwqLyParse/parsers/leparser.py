@@ -20,7 +20,7 @@ if sys.version_info[0] == 3:
 else:
     WR_ord = ord
 
-__MODULE_CLASS_NAMES__ = ["LeParser"]
+__all__ = ["LeParser"]
 
 
 class LeParser(Parser):

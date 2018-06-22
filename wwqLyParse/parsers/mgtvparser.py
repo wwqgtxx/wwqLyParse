@@ -15,7 +15,7 @@ except Exception as e:
 
 JUDGE_VIP = True
 
-__MODULE_CLASS_NAMES__ = ["MgTVParser", "MgTVListParser"]
+__all__ = ["MgTVParser", "MgTVListParser"]
 
 
 def encode_tk2(string: str):

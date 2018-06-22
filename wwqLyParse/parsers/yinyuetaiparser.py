@@ -15,7 +15,7 @@ except Exception as e:
 
 JUDGE_VIP = True
 
-__MODULE_CLASS_NAMES__ = ["YinYueTaiParser", "YinYueTaiListParser"]
+__all__ = ["YinYueTaiParser", "YinYueTaiListParser"]
 
 
 class YinYueTaiParser(Parser):

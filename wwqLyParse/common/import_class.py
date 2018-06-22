@@ -61,7 +61,7 @@ def import_by_name(class_names=None, module_names=None, prefix="", super_class=o
             except:
                 try:
                     lib_module = importlib.import_module(prefix + lib_name)
-                    lib_module_class_names = getattr(lib_module, "__MODULE_CLASS_NAMES__",None)
+                    lib_module_class_names = getattr(lib_module, "__all__", None)
                     if not lib_module_class_names:
                         continue
                     imported_module_map[prefix + lib_name] = []

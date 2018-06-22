@@ -17,7 +17,7 @@ try:
 except Exception as e:
     from common import *
 
-__MODULE_CLASS_NAMES__ = ["QQListParser", "QQListParserX"]
+__all__ = ["QQListParser", "QQListParserX"]
 
 
 class QQListParser(Parser):

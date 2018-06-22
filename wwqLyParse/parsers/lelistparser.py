@@ -12,7 +12,7 @@ try:
 except Exception as e:
     from common import *
 
-__MODULE_CLASS_NAMES__ = ["LeListParser1", "LeListParser2"]
+__all__ = ["LeListParser1", "LeListParser2"]
 
 
 class LeListParser1(Parser):

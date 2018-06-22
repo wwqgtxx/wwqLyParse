@@ -15,7 +15,7 @@ try:
 except Exception as e:
     from common import *
 
-__MODULE_CLASS_NAMES__ = ["PPTVParser"]
+__all__ = ["PPTVParser"]
 
 import binascii
 from xml.dom.minidom import parseString

@@ -12,7 +12,7 @@ try:
 except Exception as e:
     from common import *
 
-__MODULE_CLASS_NAMES__ = ["YouKuListParser1", "YouKuListParser2", "YouKuListParser3", "YouKuListParser4"]
+__all__ = ["YouKuListParser1", "YouKuListParser2", "YouKuListParser3", "YouKuListParser4"]
 
 
 class YouKuListParser1(Parser):

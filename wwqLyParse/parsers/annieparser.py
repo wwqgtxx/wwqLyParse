@@ -10,7 +10,7 @@ try:
 except Exception as e:
     from common import *
 
-__MODULE_CLASS_NAMES__ = ["AnnieParser"]
+__all__ = ["AnnieParser"]
 
 
 class AnnieParser(Parser):

@@ -15,7 +15,7 @@ try:
 except Exception as e:
     from common import *
 
-__MODULE_CLASS_NAMES__ = ["IQiYiParser"]
+__all__ = ["IQiYiParser"]
 
 import json
 import time

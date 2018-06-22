@@ -10,7 +10,7 @@ try:
 except Exception as e:
     from common import *
 
-__MODULE_CLASS_NAMES__ = ["YKDLParser"]
+__all__ = ["YKDLParser"]
 try:
     try:
         from . import yougetparser
@@ -55,4 +55,4 @@ try:
 
 except:
     logging.exception("can't load yougetparser.py,it need to be super class")
-    __MODULE_CLASS_NAMES__ = []
+    __all__ = []

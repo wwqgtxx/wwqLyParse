@@ -15,7 +15,7 @@ try:
 except Exception as e:
     from common import *
 
-__MODULE_CLASS_NAMES__ = ["PPTVListParser"]
+__all__ = ["PPTVListParser"]
 
 
 class PPTVListParser(Parser):

@@ -12,15 +12,11 @@ except Exception as e:
 
 __all__ = ["YKDLParser"]
 try:
-    try:
-        from . import yougetparser
-    except Exception as e:
-        import yougetparser
+    from .yougetparser import YouGetParser
 
+    class YKDLParser(YouGetParser):
 
-    class YKDLParser(yougetparser.YouGetParser):
-
-        un_supports = yougetparser.YouGetParser.un_supports  # + ['www.iqiyi.com']
+        un_supports = YouGetParser.un_supports  # + ['www.iqiyi.com']
         bin = './ykdl/ykdl.py'
         name = "YouKuDownLoader解析"
 

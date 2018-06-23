@@ -76,14 +76,16 @@ def import_by_module_name(module_names=None, prefix="", super_class=object, show
                 lib_module = importlib.import_module(module_name)
                 imported_module_map[imported_module_map_key] = []
                 lib_module_class_names = getattr(lib_module, "__all__", _place_hold)
-                no_waring = False
+                from_dir = False
                 if lib_module_class_names is _place_hold:
                     lib_module_class_names = dir(lib_module)
                     logging.warning("module %s don't have '__all__' try to use dir() get classes!" % lib_module)
-                    no_waring = True
+                    from_dir = True
                 for lib_module_class_name in lib_module_class_names:
                     try:
                         lib_class = getattr(lib_module, lib_module_class_name)
+                        if from_dir and inspect.getmodule(lib_class) is not lib_module:
+                            continue
                         if inspect.isclass(lib_class) \
                                 and issubclass(lib_class, super_class) \
                                 and lib_class is not super_class:
@@ -98,7 +100,7 @@ def import_by_module_name(module_names=None, prefix="", super_class=object, show
                                 logging.debug(
                                     "successful load " + str(lib_class) + " is a subclass of " + str(super_class))
                         else:
-                            if not no_waring:
+                            if not from_dir:
                                 logging.warning(str(lib_class) + " is not a subclass of " + str(super_class))
                     except KeyError:
                         logging.warning("%s not in %s" % (lib_module_class_name, lib_module))

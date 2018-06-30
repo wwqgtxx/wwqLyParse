@@ -4,8 +4,13 @@
 import selectors
 from selectors import EVENT_READ, EVENT_WRITE, SelectorKey
 
+DefaultSelector = selectors.DefaultSelector
+
 try:
     import gevent.select
+except:
+    pass
+else:
     import math
     from .select import select
 
@@ -16,10 +21,12 @@ try:
             return r, w + x, []
 
 
+    DefaultSelector = GeventSelectSelector
     try:
         from .poll import *
-
-
+    except:
+        pass
+    else:
         class GeventPollSelector(selectors.SelectSelector):
             _selector_cls = poll
             _EVENT_READ = POLLIN
@@ -122,9 +129,5 @@ try:
 
 
         DefaultSelector = GeventPollSelector
-    except:
-        DefaultSelector = GeventSelectSelector
-except:
-    DefaultSelector = selectors.DefaultSelector
 
 __all__ = ["DefaultSelector"]

@@ -4,8 +4,9 @@
 
 try:
     import gevent.select
-
-
+except:
+    from select import select
+else:
     def select(rlist, wlist, xlist, timeout=None):
         rlist = tuple(rlist)
         wlist = tuple(wlist)
@@ -28,6 +29,3 @@ try:
 
         result = gevent.select.SelectResult()
         return result.select(rlist, wlist, timeout)
-
-except:
-    from select import select

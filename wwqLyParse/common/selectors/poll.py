@@ -3,7 +3,9 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 try:
     import gevent.select
-
+except:
+    from select import poll, POLLIN, POLLPRI, POLLOUT, POLLERR, POLLHUP, POLLNVAL
+else:
     POLLIN = 0x0001
     POLLPRI = 0x0002
     POLLOUT = 0x0004
@@ -126,6 +128,3 @@ try:
             """
             fileno = gevent.select.get_fileno(fd)
             del self.fds[fileno]
-
-except:
-    from select import poll

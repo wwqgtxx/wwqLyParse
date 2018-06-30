@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
 try:
-    import collections.abc
-    import math
     import gevent.select
 
     POLLIN = 0x0001

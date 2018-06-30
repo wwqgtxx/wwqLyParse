@@ -6,6 +6,7 @@ from selectors import EVENT_READ, EVENT_WRITE, SelectorKey
 
 try:
     import gevent.select
+    import math
     from .select import select
 
 

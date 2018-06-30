@@ -154,9 +154,9 @@ def lib_parse(byte_str: bytes):
 def make_python():
     global EMBED_PYTHON
     if is_64bit():
-        EMBED_PYTHON = "./lib/python-3.6.5-embed-amd64/wwqLyParse64.exe"
+        EMBED_PYTHON = "./lib/python-3.7.0-embed-amd64/wwqLyParse64.exe"
     else:
-        EMBED_PYTHON = "./lib/python-3.6.5-embed-win32/wwqLyParse32.exe"
+        EMBED_PYTHON = "./lib/python-3.7.0-embed-win32/wwqLyParse32.exe"
     logging.info("set EMBED_PYTHON = " + EMBED_PYTHON)
 
 

@@ -13,7 +13,7 @@ from .lru_cache import *
 from .process_label import *
 from .re import *
 from .remote_logging import *
-from .select import *
+from .selectors import *
 from .subprocess import *
 from .types import *
 from .utils import *

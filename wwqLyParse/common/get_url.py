@@ -26,7 +26,7 @@ except:
     pass
 
 from .workerpool import *
-from .select import SelectSelector
+from .selectors import DefaultSelector
 from .lru_cache import LRUCache
 from .key_lock import KeyLockDict, FUCK_KEY_LOCK
 from .utils import get_caller_info
@@ -75,7 +75,7 @@ class GetUrlService(object):
             self.inited = True
 
     def _get_async_loop(self):
-        loop = asyncio.SelectorEventLoop(SelectSelector())
+        loop = asyncio.SelectorEventLoop(DefaultSelector())
 
         def _run_forever():
             logging.debug("start loop %s", loop)

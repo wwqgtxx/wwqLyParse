@@ -1,7 +1,6 @@
 #!/usr/bin/env python3.5
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
-import selectors
 
 try:
     import gevent.select
@@ -30,16 +29,5 @@ try:
         result = gevent.select.SelectResult()
         return result.select(rlist, wlist, timeout)
 
-
-    class GeventSelectSelector(selectors.SelectSelector):
-        def _select(self, r, w, _, timeout=None):
-            r, w, x = select(r, w, w, timeout)
-            return r, w + x, []
-
-
-    SelectSelector = GeventSelectSelector
 except:
-    import select as _select
-
-    select = _select.select
-    SelectSelector = selectors.SelectSelector
+    from select import select

@@ -11,6 +11,7 @@ from queue import Queue, Empty
 import time
 from .concurrent_futures import ThreadPoolExecutor as _ThreadPoolExecutor
 from .concurrent_futures import wait as _wait
+from .concurrent_futures import _base
 from .concurrent_futures.thread import _shutdown, _threads_queues
 
 
@@ -18,7 +19,16 @@ class GreenletExit(Exception):
     pass
 
 
-def _worker(executor_reference, work_queue: Queue, timeout):
+def _worker(executor_reference, work_queue: Queue, initializer, initargs, timeout):
+    if initializer is not None:
+        try:
+            initializer(*initargs)
+        except BaseException:
+            _base.LOGGER.critical('Exception in initializer:', exc_info=True)
+            executor = executor_reference()
+            if executor is not None:
+                executor._initializer_failed()
+            return
     try:
         while True:
             try:
@@ -47,8 +57,10 @@ def _worker(executor_reference, work_queue: Queue, timeout):
 class ThreadPoolExecutor(_ThreadPoolExecutor):
     _counter = itertools.count().__next__
 
-    def __init__(self, max_workers=None, thread_name_prefix='', thread_dead_timeout=5 * 60):
-        super(ThreadPoolExecutor, self).__init__(max_workers, thread_name_prefix=thread_name_prefix)
+    def __init__(self, max_workers=None, thread_name_prefix='',
+                 initializer=None, initargs=(), thread_dead_timeout=5 * 60):
+        super(ThreadPoolExecutor, self).__init__(max_workers, thread_name_prefix=thread_name_prefix,
+                                                 initializer=initializer, initargs=initargs)
         self._max_workers = max_workers
         self._thread_name_prefix = (thread_name_prefix or
                                     ("ThreadPool-%d" % self._counter()))
@@ -77,7 +89,10 @@ class ThreadPoolExecutor(_ThreadPoolExecutor):
                                          self._thread_name_counter())
                 t = threading.Thread(name=thread_name, target=_worker,
                                      args=(weakref.ref(self, weakref_cb),
-                                           self._work_queue, self._thread_dead_timeout))
+                                           self._work_queue,
+                                           self._initializer,
+                                           self._initargs,
+                                           self._thread_dead_timeout))
                 t.daemon = True
                 t.start()
                 self._threads.add(t)

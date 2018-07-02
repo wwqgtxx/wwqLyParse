@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
 try:
-    import gevent.select
+    import gevent
 except:
     from select import poll, POLLIN, POLLPRI, POLLOUT, POLLERR, POLLHUP, POLLNVAL
 else:
@@ -13,22 +13,41 @@ else:
     POLLHUP = 0x0010
     POLLNVAL = 0x0020
 
+    _EV_READ = 1
+    _EV_WRITE = 2
+
+    _NONE = object()
+
+    from gevent.event import Event
+    from gevent import get_hub
+
+
+    def get_fileno(obj):
+        try:
+            fileno_f = obj.fileno
+        except AttributeError:
+            if not isinstance(obj, int):
+                raise TypeError('argument must be an int, or have a fileno() method: %r' % (obj,))
+            return obj
+        else:
+            return fileno_f()
+
 
     class PollResult(object):
         __slots__ = ('events', 'event')
 
         def __init__(self):
             self.events = set()
-            self.event = gevent.select.Event()
+            self.event = Event()
 
         def add_event(self, events, fd):
             if events < 0:
                 result_flags = POLLNVAL
             else:
                 result_flags = 0
-                if events & gevent.select._EV_READ:
+                if events & _EV_READ:
                     result_flags = POLLIN
-                if events & gevent.select._EV_WRITE:
+                if events & _EV_WRITE:
                     result_flags |= POLLOUT
 
             self.events.add((fd, result_flags))
@@ -50,21 +69,21 @@ else:
             # just drop the poll object when they're done, without calling
             # unregister(). dnspython does this.
             self.fds = {}
-            self.loop = gevent.select.get_hub().loop
+            self.loop = get_hub().loop
 
-        def register(self, fd, eventmask=gevent.select._NONE):
-            if eventmask is gevent.select._NONE:
-                flags = gevent.select._EV_READ | gevent.select._EV_WRITE
+        def register(self, fd, eventmask=_NONE):
+            if eventmask is _NONE:
+                flags = _EV_READ | _EV_WRITE
             else:
                 flags = 0
                 if eventmask & POLLIN:
-                    flags = gevent.select._EV_READ
+                    flags = _EV_READ
                 if eventmask & POLLOUT:
-                    flags |= gevent.select._EV_WRITE
+                    flags |= _EV_WRITE
                 # If they ask for POLLPRI, we can't support
                 # that. Should we raise an error?
 
-            fileno = gevent.select.get_fileno(fd)
+            fileno = get_fileno(fd)
             self.fds[fileno] = flags
 
         def modify(self, fd, eventmask):
@@ -86,7 +105,7 @@ else:
             io = self.loop.io
             MAXPRI = self.loop.MAXPRI
             try:
-                for fd, flags in gevent.select.iteritems(self.fds):
+                for fd, flags in self.fds.items():
                     watcher = io(fd, flags)
                     watchers.append(watcher)
                     watcher.priority = MAXPRI
@@ -126,5 +145,5 @@ else:
                Raise a `KeyError` if *fd* was not registered, like the standard
                library. Previously gevent did nothing.
             """
-            fileno = gevent.select.get_fileno(fd)
+            fileno = get_fileno(fd)
             del self.fds[fileno]

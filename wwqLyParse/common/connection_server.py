@@ -4,6 +4,7 @@
 from . import multiprocessing_connection
 from .lru_cache import *
 from .workerpool import *
+import itertools
 import logging
 from typing import Dict, Tuple, List
 
@@ -11,6 +12,8 @@ CONN_LRU_TIMEOUT = 60 * 60  # 1 hour
 
 
 class ConnectionServer(object):
+    _counter = itertools.count().__next__
+
     def __init__(self, address, handle, authkey=None, logger=logging.root):
         self.address = address
         self.handle = handle
@@ -67,7 +70,7 @@ class ConnectionServer(object):
                 logging.exception("error")
 
     def run(self):
-        with WorkerPool(thread_name_prefix="HandlePool") as handle_pool:
+        with WorkerPool(thread_name_prefix="HandlePool-%d" % self._counter()) as handle_pool:
             with multiprocessing_connection.Listener(self.address, authkey=self.authkey) as listener:
                 c_recv, c_send = multiprocessing_connection.Pipe(False)
 

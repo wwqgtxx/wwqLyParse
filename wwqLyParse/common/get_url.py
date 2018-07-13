@@ -139,6 +139,8 @@ class GetUrlService(object):
                 if encoding == "raw":
                     html_text = data
                 else:
+                    if not encoding:
+                        encoding = "utf-8"
                     html_text = data.decode(encoding, 'ignore')
             return html_text
         except socket.timeout:
@@ -167,7 +169,8 @@ class GetUrlService(object):
             if encoding == "raw":
                 html_text = resp.content
             else:
-                resp.encoding = encoding
+                if encoding is not None:
+                    resp.encoding = encoding
                 html_text = resp.text
             return html_text
         except requests.exceptions.RequestException as e:
@@ -223,8 +226,8 @@ class GetUrlService(object):
     def get_url(self, o_url, encoding=None, headers=None, data=None, method=None, cookies=None, verify=True,
                 allow_cache=True, use_pool=True, pool=None, force_flush_cache=False, callmethod=None):
         self.init()
-        if encoding is None:
-            encoding = 'utf-8'
+        # if encoding is None:
+        #     encoding = 'utf-8'
         if pool is None:
             pool = self.pool_get_url
         if callmethod is None:

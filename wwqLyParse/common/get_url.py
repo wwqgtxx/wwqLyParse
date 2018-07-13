@@ -97,7 +97,7 @@ class GetUrlService(object):
                               allow_cache=False)
         if encoding == 'raw':
             return result
-        if encoding == "response":
+        if encoding == "response" or encoding == "response_without_data":
             return json.dumps(result).encode("utf-8")
         return result.encode("utf-8")
 
@@ -149,6 +149,13 @@ class GetUrlService(object):
                         "url": str(response.geturl())
                     }
                     logging.debug(html_text)
+                elif encoding == "response_without_data":
+                    html_text = {
+                        "data": None,
+                        "headers": dict(headers),
+                        "url": str(response.geturl())
+                    }
+                    logging.debug(html_text)
                 elif encoding == "raw":
                     html_text = data
                 else:
@@ -189,6 +196,12 @@ class GetUrlService(object):
                     "headers": dict(resp.headers),
                     "url": str(resp.url)
                 }
+            elif encoding == "response_without_data":
+                html_text = {
+                    "data": None,
+                    "headers": dict(resp.headers),
+                    "url": str(resp.url)
+                }
             elif encoding == "raw":
                 html_text = resp.content
             else:
@@ -219,6 +232,12 @@ class GetUrlService(object):
                         if encoding == "response":
                             return {
                                 "data": base64.b64encode(await resp.read()).decode(),
+                                "headers": dict(resp.headers),
+                                "url": str(resp.url)
+                            }
+                        elif encoding == "response_without_data":
+                            return {
+                                "data": None,
                                 "headers": dict(resp.headers),
                                 "url": str(resp.url)
                             }

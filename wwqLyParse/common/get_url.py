@@ -7,6 +7,7 @@ import logging
 import functools
 import threading
 import weakref
+import uuid
 import asyncio
 import urllib.request, json, re, gzip, socket, urllib.error, http.client, urllib
 
@@ -29,6 +30,7 @@ from .workerpool import *
 from .selectors import DefaultSelector
 from .lru_cache import LRUCache
 from .key_lock import KeyLockDict, FUCK_KEY_LOCK
+from .connection_server import ConnectionServer
 from .utils import get_caller_info
 
 URL_CACHE_MAX = 10000
@@ -51,8 +53,9 @@ class GetUrlService(object):
     def __init__(self):
         self.url_cache = LRUCache(size=URL_CACHE_MAX, timeout=URL_CACHE_TIMEOUT)
         self.url_key_lock = KeyLockDict()
-        self.pool_get_url = WorkerPool(URL_CACHE_POOL, thread_name_prefix="GetUrlPool")
+        self.pool_get_url = WorkerPool(URL_CACHE_POOL + 1, thread_name_prefix="GetUrlPool")
         self.fake_headers = FAKE_HEADERS.copy()
+        self.address_get_url = r'\\.\pipe\%s-%s-%s' % ("wwqLyParse", 'get_url', uuid.uuid4().hex)
         self.common_loop = None
         self.common_connector = None
         self.common_cookie_jar = None
@@ -72,7 +75,21 @@ class GetUrlService(object):
                 weakref.finalize(self, self.common_connector.close)
             elif requests:
                 self.common_session = self._get_session()
+            address_get_url = self.address_get_url
+            logging.info("listen address:'%s'" % address_get_url)
+            cs = ConnectionServer(address_get_url, self._handle)
+            self.pool_get_url.spawn(cs.run)
             self.inited = True
+
+    def _handle(self, data):
+        args = json.loads(data.decode("utf-8"))
+        url, data, charset, headers = args["url"], args["data"], args["charset"], args["headers"]
+        if charset == 'ignore':
+            charset = 'raw'
+        result = self.get_url(o_url=url, encoding=charset, headers=headers, data=data, allow_cache=False)
+        if charset == 'raw':
+            return result
+        return result.encode("utf-8")
 
     def _get_async_loop(self):
         loop = asyncio.SelectorEventLoop(DefaultSelector())
@@ -203,9 +220,11 @@ class GetUrlService(object):
         except aiohttp.ClientError as e:
             logging.error(callmethod + 'request %s ClientError! Error message: %s' % (o_url, e))
 
-    def get_url(self, o_url, encoding='utf-8', headers=None, data=None, method=None, cookies=None, verify=True,
+    def get_url(self, o_url, encoding=None, headers=None, data=None, method=None, cookies=None, verify=True,
                 allow_cache=True, use_pool=True, pool=None, force_flush_cache=False, callmethod=None):
         self.init()
+        if encoding is None:
+            encoding = 'utf-8'
         if pool is None:
             pool = self.pool_get_url
         if callmethod is None:

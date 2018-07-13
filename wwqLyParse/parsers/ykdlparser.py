@@ -37,6 +37,7 @@ try:
             arg += ['-i']
             arg += ['--debug']
             arg += ['--json', url]
+            arg += ['--address_get_url',get_url_service.address_get_url]
             return arg
 
         def get_version(self):

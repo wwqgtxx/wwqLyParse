@@ -25,9 +25,12 @@ class ConnectionServer(object):
                 raise EOFError
             self.logger.debug("parse conn %s" % conn)
             # self.logger.debug(data)
-            result = self.handle(data)
-            if result is not None:
-                conn.send_bytes(result)
+            try:
+                result = self.handle(data)
+                if result is not None:
+                    conn.send_bytes(result)
+            except Exception:
+                self.logger.exception("handle error")
             conn_lru_dict[conn] = True
             c_send.send_bytes(b'ok')
         except OSError:

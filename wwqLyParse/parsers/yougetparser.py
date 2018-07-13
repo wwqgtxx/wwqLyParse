@@ -56,7 +56,9 @@ class YouGetParser(Parser):
         else:
             args = [py_bin, y_bin]
         args += arg
-        return run_subprocess(args, get_main().PARSE_TIMEOUT - 5, need_stderr)
+        env = os.environ.copy()
+        env["address_get_url"] = get_url_service.address_get_url
+        return run_subprocess(args, get_main().PARSE_TIMEOUT - 5, need_stderr, env=env)
 
     # parse you-get output for parse
     def _parse_parse(self, raw):

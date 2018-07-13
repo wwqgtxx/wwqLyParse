@@ -48,10 +48,10 @@ def try_parse_json(raw_text):
             raw_text = rest
 
 
-def run_subprocess(args, timeout=None, need_stderr=True):
+def run_subprocess(args, timeout=None, need_stderr=True, **kwargs):
     pipe = subprocess.PIPE
     logging.debug(args)
-    p = subprocess.Popen(args, stdout=pipe, stderr=pipe if need_stderr else None, shell=False)
+    p = subprocess.Popen(args, stdout=pipe, stderr=pipe if need_stderr else None, shell=False, **kwargs)
     try:
         stdout, stderr = p.communicate(timeout=timeout)
     except subprocess.TimeoutExpired:

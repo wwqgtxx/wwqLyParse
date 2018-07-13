@@ -8,6 +8,7 @@ import functools
 import threading
 import weakref
 import uuid
+import base64
 import asyncio
 import urllib.request, json, re, gzip, socket, urllib.error, http.client, urllib
 
@@ -65,6 +66,7 @@ class GetUrlService(object):
 
     def init(self):
         if not self.inited:
+            logging.getLogger("chardet").setLevel(logging.WARNING)
             if aiohttp:
                 self.common_loop = self._get_async_loop()
                 from .aiohttp import TCPConnector
@@ -83,12 +85,20 @@ class GetUrlService(object):
 
     def _handle(self, data):
         args = json.loads(data.decode("utf-8"))
-        url, data, charset, headers = args["url"], args["data"], args["charset"], args["headers"]
-        if charset == 'ignore':
-            charset = 'raw'
-        result = self.get_url(o_url=url, encoding=charset, headers=headers, data=data, allow_cache=False)
-        if charset == 'raw':
+        url = args.get("url")
+        data = args.get("data")
+        encoding = args.get("encoding", args.get("charset"))
+        headers = args.get("headers")
+        cookies = args.get("cookies")
+        method = args.get("method")
+        if encoding == 'ignore':
+            encoding = 'raw'
+        result = self.get_url(o_url=url, encoding=encoding, headers=headers, data=data, cookies=cookies, method=method,
+                              allow_cache=False)
+        if encoding == 'raw':
             return result
+        if encoding == "response":
+            return json.dumps(result).encode("utf-8")
         return result.encode("utf-8")
 
     def _get_async_loop(self):
@@ -127,20 +137,27 @@ class GetUrlService(object):
                                          method=method)
             with urllib.request.urlopen(req) as response:
                 headers = response.info()
-                cType = headers.get('Content-Type', '')
-                match = re.search('charset\s*=\s*(\w+)', cType)
-                if match:
-                    encoding = match.group(1)
                 blob = response.read()
                 if headers.get('Content-Encoding', '') == 'gzip':
                     data = gzip.decompress(blob)
                 else:
                     data = blob
-                if encoding == "raw":
+                if encoding == "response":
+                    html_text = {
+                        "data": base64.b64encode(data).decode(),
+                        "headers": dict(headers),
+                        "url": str(response.geturl())
+                    }
+                    logging.debug(html_text)
+                elif encoding == "raw":
                     html_text = data
                 else:
                     if not encoding:
-                        encoding = "utf-8"
+                        match = re.search('charset\s*=\s*(\w+)', headers.get('Content-Type', ''))
+                        if match:
+                            encoding = match.group(1)
+                        else:
+                            encoding = "utf-8"
                     html_text = data.decode(encoding, 'ignore')
             return html_text
         except socket.timeout:
@@ -166,7 +183,13 @@ class GetUrlService(object):
             resp = session.request(method=method if method else "GET", url=o_url,
                                    headers=headers if headers else self.fake_headers, data=data, cookies=cookies,
                                    verify=verify)
-            if encoding == "raw":
+            if encoding == "response":
+                html_text = {
+                    "data": base64.b64encode(resp.content).decode(),
+                    "headers": dict(resp.headers),
+                    "url": str(resp.url)
+                }
+            elif encoding == "raw":
                 html_text = resp.content
             else:
                 if encoding is not None:
@@ -193,7 +216,13 @@ class GetUrlService(object):
                                                headers=headers if headers else self.fake_headers, data=data,
                                                timeout=self.common_client_timeout,
                                                ssl=verify) as resp:
-                        if encoding == "raw":
+                        if encoding == "response":
+                            return {
+                                "data": base64.b64encode(await resp.read()).decode(),
+                                "headers": dict(resp.headers),
+                                "url": str(resp.url)
+                            }
+                        elif encoding == "raw":
                             return await resp.read()
                         else:
                             return await resp.text(encoding=encoding)

@@ -63,7 +63,7 @@ def getvps(tvid, vid):
 
 
 class IQiYiParser(Parser):
-    filters = ['http://www.iqiyi.com/']
+    filters = ['http(s?)://www.iqiyi.com/']
     un_supports = ['www.iqiyi.com/(lib/m|a_)']
     types = ["formats"]
 
@@ -109,14 +109,32 @@ class IQiYiParser(Parser):
             stream_type = {'id': stream_id, 'container': 'flv', 'video_profile': stream_id}
         return stream_type
 
-    def get_vps_data(self, url):
+    def get_vid_and_title(self, url):
         html = get_url(url)
-        tvid = r1(r'#curid=(.+)_', url) or \
-               r1(r'tvid=([^&]+)', url) or \
-               r1(r'data-player-tvid="([^"]+)"', html)
-        videoid = r1(r'#curid=.+_(.*)$', url) or \
-                  r1(r'vid=([^&]+)', url) or \
-                  r1(r'data-player-videoid="([^"]+)"', html)
+        video_info = match1(html, ":video-info='(.+?)'")
+        if video_info:
+            video_info = json.loads(video_info)
+            logging.debug(video_info)
+            tvid = str(video_info['tvId'])
+            videoid = str(video_info['vid'])
+            title = str(video_info['name'])
+        else:
+            tvid = match1(html,
+                          '#curid=(.+)_',
+                          'data-player-tvid="([^"]+)"',
+                          'tvid=([^&]+)',
+                          'tvId:([^,]+)'
+                          )
+            videoid = match1(html,
+                             '#curid=.+_(.*)$',
+                             'data-player-videoid="([^"]+)"',
+                             'vid=([^&]+)',
+                             'vid:"([^"]+)'
+                             )
+            title = match1(html, '<title>([^<]+)').split('-')[0]
+        return tvid, videoid, title
+
+    def get_vps_data(self, tvid, videoid):
         vps_data = getvps(tvid, videoid)
         assert vps_data['code'] == 'A00000', 'can\'t play this video!!'
 
@@ -137,9 +155,9 @@ class IQiYiParser(Parser):
         }
         url = input_text
         html = get_url(url)
-        title = match1(html, '<title>([^<]+)').split('-')[0]
+        tvid, videoid, title = self.get_vid_and_title(url)
         data["name"] = title
-        vps_data = self.get_vps_data(url)
+        vps_data = self.get_vps_data(tvid, videoid)
         url_prefix = vps_data['data']['vp']['du']
         stream = vps_data['data']['vp']['tkl'][0]
         vs_array = stream['vs']
@@ -185,7 +203,8 @@ class IQiYiParser(Parser):
             use_pool = False
         url = input_text
         data = []
-        vps_data = self.get_vps_data(url)
+        tvid, videoid, title = self.get_vid_and_title(url)
+        vps_data = self.get_vps_data(tvid, videoid)
         url_prefix = vps_data['data']['vp']['du']
         stream = vps_data['data']['vp']['tkl'][0]
         vs_array = stream['vs']

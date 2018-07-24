@@ -77,7 +77,7 @@ class LeParser(Parser):
         return stream_type
 
     def get_vid(self, url):
-        return match1(url, 'vplay/(\d+).html', '#record/(\d+)')[0]
+        return match1(url, 'vplay/(\d+).html', '#record/(\d+)')
 
     def get_first_json(self, vid):
         # normal process

@@ -228,7 +228,7 @@ class GetUrlService(object):
                     async with session.request(method=method if method else "GET", url=o_url,
                                                headers=headers if headers else self.fake_headers, data=data,
                                                timeout=self.common_client_timeout,
-                                               ssl=verify) as resp:
+                                               ssl=None if verify else False) as resp:
                         if encoding == "response":
                             return {
                                 "data": base64.b64encode(await resp.read()).decode(),
@@ -250,6 +250,10 @@ class GetUrlService(object):
                         raise
                     logging.warning(
                         callmethod + 'request %s TimeoutError! retry %d in %d.' % (o_url, i + 1, retry_num))
+                except aiohttp.ClientSSLError:
+                    logging.exception(
+                        callmethod + 'request %s ClientSSLError' % o_url)
+                    return
                 except aiohttp.ClientError:
                     if i == retry_num:
                         raise
@@ -270,6 +274,8 @@ class GetUrlService(object):
                 return await __get_url_aiohttp(_session)
         except aiohttp.ClientError as e:
             logging.error(callmethod + 'request %s ClientError! Error message: %s' % (o_url, e))
+        except:
+            logging.exception(callmethod + "get url " + url_json + "fail")
 
     def get_url(self, o_url, encoding=None, headers=None, data=None, method=None, cookies=None, verify=True,
                 allow_cache=True, use_pool=True, pool=None, force_flush_cache=False, callmethod=None):

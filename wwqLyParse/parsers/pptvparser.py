@@ -164,8 +164,8 @@ def parse_pptv_xml(dom):
 # mergs 3 meta_data
 def merge_meta(item_mlist, stream_mlist, segs_mlist):
     streams = {}
-    for i in range(len(segs_mlist)):
-        streams[str(i)] = {}
+    for i in segs_mlist:
+        streams[i[0]] = {}
 
     for item in item_mlist:
         stream = streams[item[0]]

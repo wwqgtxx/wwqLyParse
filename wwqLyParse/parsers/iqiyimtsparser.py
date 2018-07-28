@@ -96,13 +96,17 @@ class IQiYiMTsParser(Parser):
                           '#curid=(.+)_',
                           'data-player-tvid="([^"]+)"',
                           'tvid=([^&]+)',
-                          'tvId:([^,]+)'
+                          'tvId:([^,]+)',
+                          r'''param\['tvid'\]\s*=\s*"(.+?)"''',
+                          r'"tvid":\s*"(\d+)"'
                           )
             videoid = match1(html,
                              '#curid=.+_(.*)$',
                              'data-player-videoid="([^"]+)"',
                              'vid=([^&]+)',
-                             'vid:"([^"]+)'
+                             'vid:"([^"]+)',
+                             r'''param\['vid'\]\s*=\s*"(.+?)"''',
+                             r'"vid":\s*"(\w+)"'
                              )
             title = video_info['name']
         # self.vid = (tvid, videoid)

@@ -35,7 +35,7 @@ from .connection_server import ConnectionServer
 from .utils import get_caller_info
 
 URL_CACHE_MAX = 10000
-URL_CACHE_TIMEOUT = 6 * 60 * 60
+URL_CACHE_TIMEOUT = 1 * 60 * 60
 URL_CACHE_POOL = 50
 URL_RETRY_NUM = 3
 

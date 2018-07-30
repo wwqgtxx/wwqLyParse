@@ -90,7 +90,7 @@ class IQiYiMTsParser(Parser):
             logging.debug(video_info)
             tvid = str(video_info['tvId'])
             videoid = str(video_info['vid'])
-            title = match1(html, '<title>([^<]+)').split('-')[0]
+            title = video_info['name']
         else:
             tvid = match1(html,
                           '#curid=(.+)_',
@@ -108,7 +108,7 @@ class IQiYiMTsParser(Parser):
                              r'''param\['vid'\]\s*=\s*"(.+?)"''',
                              r'"vid":\s*"(\w+)"'
                              )
-            title = video_info['name']
+            title = match1(html, '<title>([^<]+)').split('-')[0]
         # self.vid = (tvid, videoid)
         info = self.getVMS(tvid, videoid)
         assert info['code'] == 'A00000', 'can\'t play this video'

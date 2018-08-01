@@ -13,6 +13,7 @@ if __name__ == "__main__":
         del monkey
         try:
             import queue
+
             queue.SimpleQueue = queue._PySimpleQueue
             del queue
         except Exception:
@@ -111,42 +112,49 @@ RECV_TIMEOUT = 60
 CONN_LRU_TIMEOUT = 60 * 60  # 1 hour
 
 parser_class_map = import_by_module_name(module_names=get_all_filename_by_dir('./parsers'), prefix="parsers.",
-                                  super_class=Parser)
+                                         super_class=Parser)
 urlhandle_class_map = import_by_module_name(module_names=get_all_filename_by_dir('./urlhandles'), prefix="urlhandles.",
-                                     super_class=UrlHandle)
+                                            super_class=UrlHandle)
 
 
 def url_handle_parse(input_text, url_handles_name=None):
     start_time = time.time()
     if url_handles_name is not None:
         _url_handle_class_map = import_by_class_name(class_names=url_handles_name, prefix="urlhandles.",
-                                               super_class=UrlHandle)
+                                                     super_class=UrlHandle)
     else:
         _url_handle_class_map = urlhandle_class_map
     url_handles = new_objects(_url_handle_class_map)
+    url_handles_dict = dict()
     for url_handle_obj in url_handles:
-        for filter_str in url_handle_obj.get_filters():
-            if re.match(filter_str, input_text):
-                try:
-                    logging.debug(url_handle_obj)
-                    result = url_handle_obj.url_handle(input_text)
-                    if (result is not None) and (result is not ""):
-                        input_text = result
-                    end_time = time.time()
-                    if (end_time - start_time) > PARSE_TIMEOUT / 2:
-                        break
-                except Exception as e:
-                    logging.exception(str(url_handle_obj))
-                    # print(e)
-                    # import traceback
-                    # traceback.print_exc()
-    if re.match(r'^(http|https)://', input_text):
+        url_handle_order = url_handle_obj.get_order()
         try:
-            get_url(input_text)
-        except GreenletExit:
-            return None
-        except Exception:
-            logging.exception("get_url for cache")
+            url_handle_list = url_handles_dict[url_handle_order]
+        except KeyError:
+            url_handle_list = list()
+            url_handles_dict[url_handle_order] = url_handle_list
+        url_handle_list.append(url_handle_obj)
+    sorted_url_handles_dict_keys = sorted(url_handles_dict.keys())
+    # logging.debug({k: url_handles_dict[k] for k in sorted_url_handles_dict_keys})
+    for sorted_url_handles_dict_key in sorted_url_handles_dict_keys:
+        url_handle_list = url_handles_dict[sorted_url_handles_dict_key]
+        for url_handle_obj in url_handle_list:
+            for filter_str in url_handle_obj.get_filters():
+                if re.match(filter_str, input_text):
+                    try:
+                        logging.debug(url_handle_obj)
+                        result = url_handle_obj.url_handle(input_text)
+                        if (result is not None) and (result is not "") and result != input_text:
+                            logging.debug('urlHandle:"' + input_text + '"-->"' + result + '"')
+                            input_text = result
+                        end_time = time.time()
+                        if (end_time - start_time) > PARSE_TIMEOUT / 2:
+                            break
+                    except Exception as e:
+                        logging.exception(str(url_handle_obj))
+                        # print(e)
+                        # import traceback
+                        # traceback.print_exc()
     end_time = time.time()
     if (end_time - start_time) >= PARSE_TIMEOUT:
         return None

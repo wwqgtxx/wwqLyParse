@@ -31,6 +31,5 @@ class PostfixUrlHandle(UrlHandle):
         while not q_results.empty():
             htmls.append(q_results.get())
         if str(htmls[0]).strip() == str(htmls[1]).strip():
-            logging.debug('urlHandle:"' + url + '"-->"' + result + '"')
             return result
         return url

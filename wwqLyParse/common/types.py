@@ -29,12 +29,16 @@ class Parser(object):
 
 class UrlHandle(object):
     filters = []
+    order = 100
 
     def url_handle(self, url):
         pass
 
     def get_filters(self):
         return self.filters
+
+    def get_order(self):
+        return self.order
 
     def close_url_handle(self):
         return

@@ -20,7 +20,7 @@ if sys.version_info[0] == 3:
 else:
     WR_ord = ord
 
-__all__ = ["LeParser"]
+__all__ = []  # ["LeParser"]
 
 
 class LeParser(Parser):
@@ -59,7 +59,7 @@ class LeParser(Parser):
 
     def calcTimeKey(self, t):
         ror = lambda val, r_bits: ((val & (2 ** 32 - 1)) >> r_bits % 32) | (
-            val << (32 - (r_bits % 32)) & (2 ** 32 - 1))
+                val << (32 - (r_bits % 32)) & (2 ** 32 - 1))
         magic = 185025305
         return ror(t, magic % 17) ^ magic
 

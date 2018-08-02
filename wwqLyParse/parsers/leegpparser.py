@@ -1,0 +1,97 @@
+#!/usr/bin/env python3.5
+# -*- coding: utf-8 -*-
+# author wwqgtxx <wwqgtxx@gmail.com>
+
+
+import urllib, io, os, sys, json, re, math, subprocess, time, binascii, math, logging, random, queue
+
+from uuid import uuid4
+from math import floor
+import hashlib
+import tempfile
+
+try:
+    from ..common import *
+except Exception as e:
+    from common import *
+
+__all__ = ["LeEGPParser"]
+
+
+class LeEGPParser(Parser):
+    filters = ['http://www.le.com/ptv/vplay/']
+    un_supports = []
+    types = ["formats"]
+
+    stream_types = [
+        {'id': '54', 'container': 'm3u8', 'video_profile': '(9)4K'},
+        {'id': '53', 'container': 'm3u8', 'video_profile': '(8)1080P高码'},
+        {'id': '52', 'container': 'm3u8', 'video_profile': '(7)1080P'},
+        {'id': '51', 'container': 'm3u8', 'video_profile': '(6)720P高码'},
+        {'id': '22', 'container': 'm3u8', 'video_profile': '(5)720P'},
+        {'id': '13', 'container': 'm3u8', 'video_profile': '(4)540P'},
+        {'id': '21', 'container': 'm3u8', 'video_profile': '(3)360P'},
+        {'id': '58', 'container': 'm3u8', 'video_profile': '(2)320P'},
+        {'id': '9', 'container': 'm3u8', 'video_profile': '(1)280P'},
+    ]
+
+    def get_vid(self, url):
+        return match1(url, 'vplay/(\d+).html', '#record/(\d+)')
+
+    def get_first_json(self, vid, q):
+        # normal process
+        url = 'http://tvepg.letv.com/apk/data/common/security/playurl/geturl/byvid.shtml?vid=%s&key=&vtype=%s' % (
+            vid, q)
+        r = get_url(url, allow_cache=False)
+        data = json.loads(r)
+        return data
+
+    def parse(self, input_text, *k, **kk):
+        info = {
+            "type": "formats",
+            "name": "",
+            "icon": "",
+            "provider": "乐视",
+            "caption": "WWQ乐视EPG视频解析",
+            # "warning" : "提示信息",
+            # "sorted" : 1,
+            "data": []
+        }
+
+        html = get_url(input_text)
+        info['name'] = match1(html, r'title:"(.+?)",')
+        vid = self.get_vid(input_text)
+        dj = dict()
+        # for q in range(100):  # ["52", "22", "13", "21"]:
+        for stream_type in self.stream_types:
+            q = stream_type["id"]
+            data = self.get_first_json(vid, q)
+            logging.debug(data)
+            if data["statusCode"] != 1001:
+                return None
+            if not data["data"]:
+                continue
+            infos = data["data"][0]["infos"][0]
+            try:
+                infos["encodeId"]
+            except KeyError:
+                continue
+            dj[q] = infos
+            info['data'].append({
+                "label": "%s-%s-%sx%s-%skbps" % (
+                    # q,
+                    stream_type['video_profile'],
+                    infos["vfmt"], infos["vwidth"], infos["vheight"], infos["vbr"]),
+                "code": q,
+                "ext": infos["gfmt"],
+                "size": byte2size(infos["gsize"]),
+                "type": "",
+                "download": [{
+                    "protocol": "m3u8",
+                    "urls": infos["mainUrl"],
+                    # "maxDown" : 1,
+                    "unfixIp": True
+                }]
+            })
+        debug(json.dumps(dj))
+        return info

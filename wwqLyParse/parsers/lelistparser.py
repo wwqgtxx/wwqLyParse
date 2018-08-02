@@ -21,11 +21,12 @@ class LeListParser1(Parser):
 
     def parse(self, input_text, *k, **kk):
         html = get_url(input_text)
-        html = PyQuery(html)
-        html2_url = html("a.more").attr("href")
-        result = get_main_parse()(input_text=html2_url, types="list")
-        if result:
-            return result
+        pid = match1(html, r'pid:\s*(\w+),')
+        if pid:
+            html2_url = "http://www.le.com/tv/%s.html" % pid
+            result = get_main_parse()(input_text=html2_url, types="list")
+            if result:
+                return result
 
 
 class LeListParser2(Parser):
@@ -35,9 +36,9 @@ class LeListParser2(Parser):
     def parse(self, input_text, *k, **kk):
         html2 = get_url(input_text)
         html2 = PyQuery(html2)
-        w120 = html2("div.gut > div.listTab > div.listPic > div.list > dl.w120 > dt > a")
-        total = len(w120)
-        title = html2("div.gut > div.listTab > div.listPic > div.tab:first-child > p.p1 > i").text()
+        show_cnt = html2("div#first_videolist div.show_cnt > div")
+        title = html2("div.top_tit > h2").text()
+        total = len(show_cnt)
         data = {
             "data": [],
             "more": False,
@@ -46,15 +47,18 @@ class LeListParser2(Parser):
             "type": "list",
             "caption": "乐视视频全集"
         }
-        for i in w120:
-            i = PyQuery(i)
-            url = i.attr("href")
-            title = i("a > img").attr("title")
+        for i in show_cnt:
+            col = PyQuery(i)
+            a = col("dt > a")
+            title = a.text()
+            url = a.attr("href")
+            subtitle = col("dd.d_cnt").text() or title
             info = {
                 "name": title,
                 "no": title,
-                "subtitle": title,
+                "subtitle": subtitle,
                 "url": url
             }
             data["data"].append(info)
+            logging.debug(col("dt > a"))
         return data

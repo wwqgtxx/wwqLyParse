@@ -3,6 +3,7 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 
 from .for_path import *
+from .base_types import *
 from .connection_server import *
 from .get_size import *
 from .get_url import *
@@ -15,7 +16,6 @@ from .re import *
 from .remote_logging import *
 from .selectors import *
 from .subprocess import *
-from .types import *
 from .utils import *
 from .workerpool import *
 

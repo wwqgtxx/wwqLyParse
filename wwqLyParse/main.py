@@ -139,22 +139,21 @@ def url_handle_parse(input_text, url_handles_name=None):
     for sorted_url_handles_dict_key in sorted_url_handles_dict_keys:
         url_handle_list = url_handles_dict[sorted_url_handles_dict_key]
         for url_handle_obj in url_handle_list:
-            for filter_str in url_handle_obj.get_filters():
-                if re.match(filter_str, input_text):
-                    try:
-                        logging.debug(url_handle_obj)
-                        result = url_handle_obj.url_handle(input_text)
-                        if (result is not None) and (result is not "") and result != input_text:
-                            logging.debug('urlHandle:"' + input_text + '"-->"' + result + '"')
-                            input_text = result
-                        end_time = time.time()
-                        if (end_time - start_time) > PARSE_TIMEOUT / 2:
-                            break
-                    except Exception as e:
-                        logging.exception(str(url_handle_obj))
-                        # print(e)
-                        # import traceback
-                        # traceback.print_exc()
+            if url_handle_obj.check_support(input_text):
+                try:
+                    logging.debug(url_handle_obj)
+                    result = url_handle_obj.url_handle(input_text)
+                    if (result is not None) and (result is not "") and result != input_text:
+                        logging.debug('urlHandle:"' + input_text + '"-->"' + result + '"')
+                        input_text = result
+                    end_time = time.time()
+                    if (end_time - start_time) > PARSE_TIMEOUT / 2:
+                        break
+                except Exception as e:
+                    logging.exception(str(url_handle_obj))
+                    # print(e)
+                    # import traceback
+                    # traceback.print_exc()
     end_time = time.time()
     if (end_time - start_time) >= PARSE_TIMEOUT:
         return None
@@ -246,16 +245,8 @@ def parse(input_text, types=None, parsers_name=None, url_handles_name=None, use_
     q_results = Queue()
     with WorkerPool() as pool:
         for parser in parsers:
-            for filter_str in parser.get_filters():
-                if (types is None) or (not parser.get_types()) or (is_in(types, parser.get_types(), strict=False)):
-                    if re.search(filter_str, input_text):
-                        support = True
-                        for un_support in parser.get_un_supports():
-                            if re.search(un_support, input_text):
-                                support = False
-                                break
-                        if support:
-                            pool.spawn(run, q_results, parser, input_text, *k, **kk)
+            if parser.check_support(input_text,types):
+                pool.spawn(run, q_results, parser, input_text, *k, **kk)
         pool.join(timeout=PARSE_TIMEOUT)
     while not q_results.empty():
         result = q_results.get()

@@ -60,5 +60,4 @@ class LeListParser2(Parser):
                 "url": url
             }
             data["data"].append(info)
-            logging.debug(col("dt > a"))
         return data

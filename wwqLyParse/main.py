@@ -202,14 +202,16 @@ def get_version():
     return version
 
 
-def parse(input_text, types=None, parsers_name=None, url_handles_name=None, use_inside=False, *k, **kk):
+def parse(input_text, types=None, parsers_name=None, url_handles_name=None,
+          _use_inside=False, _inside_pool=None, _inside_queue=None,
+          *k, **kk):
     if parsers_name is not None:
         _parser_class_map = import_by_class_name(class_names=parsers_name, prefix="parsers.", super_class=Parser)
     else:
         _parser_class_map = parser_class_map
     parsers = new_objects(_parser_class_map)
 
-    def run(queue, parser, input_text, *k, **kk):
+    def run(queue, parser, input_text, pool: WorkerPool, *k, **kk):
         try:
             logging.debug(parser)
             result = parser.parse(input_text, *k, **kk)
@@ -228,7 +230,8 @@ def parse(input_text, types=None, parsers_name=None, url_handles_name=None, use_
             elif type(result) == list:
                 queue.put(result)
             elif type(result) == ReCallMainParseFunc:
-                queue.put(parse(*result.k, use_inside=True, **result.kk))
+                wait_list = parse(*result.k, _use_inside=True, _inside_pool=pool, _inside_queue=queue, **result.kk)
+                pool.wait(wait_list)
         except GreenletExit:
             logging.warning("%s timeout exit" % parser)
         except Exception as e:
@@ -242,13 +245,19 @@ def parse(input_text, types=None, parsers_name=None, url_handles_name=None, use_
     input_text = url_handle_parse(input_text, url_handles_name)
     if not input_text:
         return None
+
     results = []
+    if _use_inside:
+        for parser in parsers:
+            if parser.check_support(input_text, types):
+                results.append(_inside_pool.spawn(run, _inside_queue, parser, input_text, _inside_pool, *k, **kk))
+        return results
     t_results = []
     q_results = Queue()
     with WorkerPool() as pool:
         for parser in parsers:
             if parser.check_support(input_text, types):
-                pool.spawn(run, q_results, parser, input_text, *k, **kk)
+                pool.spawn(run, q_results, parser, input_text, pool, *k, **kk)
         pool.join(timeout=PARSE_TIMEOUT)
     while not q_results.empty():
         result = q_results.get()
@@ -256,8 +265,6 @@ def parse(input_text, types=None, parsers_name=None, url_handles_name=None, use_
             t_results.append(result)
         if type(result) == list:
             t_results.extend(result)
-    if use_inside:
-        return t_results
     for t_result in t_results:
         data = t_result["result"]
         try:

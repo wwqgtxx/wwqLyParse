@@ -4,6 +4,7 @@
 try:
     from .geventpool import GreenletExit
     from .geventpool import Pool as _Pool
+    from .geventpool import _wait
     from .geventpool import ThreadPool as _ThreadPool
     from .geventpool import Queue
 
@@ -11,6 +12,7 @@ try:
 except:
     from .simplepool import GreenletExit
     from .simplepool import Pool as _Pool
+    from .simplepool import _wait
     from .simplepool import ThreadPool as _ThreadPool
     from queue import Queue
 
@@ -37,6 +39,10 @@ class WorkerPool(_Pool):
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.kill(block=False)
 
+    @staticmethod
+    def wait(wait_list, timeout=None):
+        return _wait(wait_list, timeout=timeout)
+
 
 def _apply(_func, _args, _kwds):
     if _args is None:
@@ -52,9 +58,9 @@ def _apply(_func, _args, _kwds):
     return result
 
 
-class ThreadPool(_ThreadPool):
+class RealThreadPool(_ThreadPool):
     def apply(self, func, args=None, kwds=None):
-        result = super(ThreadPool, self).apply(_apply, args=(func, args, kwds))
+        result = super(RealThreadPool, self).apply(_apply, args=(func, args, kwds))
         if result["type"] == "ok":
             return result["result"]
         else:
@@ -76,5 +82,5 @@ _common_threadpool = None
 def get_common_threadpool():
     global _common_threadpool
     if _common_threadpool is None:
-        _common_threadpool = ThreadPool()
+        _common_threadpool = RealThreadPool()
     return _common_threadpool

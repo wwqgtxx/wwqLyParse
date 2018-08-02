@@ -228,7 +228,6 @@ class IQiYiAListParser(Parser):
             return data
 
         # print("2"+input_text)
-
         html_text = get_url(input_text)
         html = PyQuery(html_text)
         title = html('h1.main_title > a').text()
@@ -361,7 +360,7 @@ class IQiYiVListParser(Parser):
             jss = html("script[type='text/javascript']")
             for item in jss:
                 text = PyQuery(item).text()
-                logging.debug(text)
+                # logging.debug(text)
                 if "Q.PageInfo.playPageData = {" in text or \
                         "Q.PageInfo.playPageInfo = Q.PageInfo.playPageInfo || {" in text:
                     split_text = text.replace("\r", ""). \

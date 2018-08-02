@@ -3,6 +3,7 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 
 from gevent import GreenletExit
+from gevent import wait as _wait
 from gevent.pool import Pool as _Pool
 from gevent.threadpool import ThreadPool as _ThreadPool
 from gevent.queue import Queue

@@ -51,10 +51,10 @@ if __name__ == "__main__":
     # main("http://www.mgtv.com/b/316045/4096972.html", label="3@MgTVParser")
     # url_cache.timeout = 10
     # main("http://www.iqiyi.com/lib/m_201087714.html")
-    main("http://www.iqiyi.com/v_19rrez6nc4.html", types="list")
+    # main("http://www.iqiyi.com/v_19rrez6nc4.html", types="list")
     # main("http://www.iqiyi.com/v_19rrcl8dck.html", types="list")
     # main("http://www.iqiyi.com/v_19rr8jbmeo.html", types="list")
-    # main("http://www.iqiyi.com/v_19rrl8pmn8.html")
+    main("http://www.iqiyi.com/v_19rrl8pmn8.html")
     # time.sleep(10)
     # main("http://www.iqiyi.com/v_19rrl8pmn8.html", types="list")
     # main("http://www.iqiyi.com/v_19rrl8pmn8.html", parsers_name=["IQiYiMTsParser"])

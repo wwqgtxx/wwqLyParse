@@ -51,6 +51,7 @@ if __name__ == "__main__":
     # main("http://www.mgtv.com/b/316045/4096972.html", label="3@MgTVParser")
     # url_cache.timeout = 10
     # main("http://www.iqiyi.com/lib/m_201087714.html")
+    main("http://www.iqiyi.com/v_19rrez6nc4.html", types="list")
     # main("http://www.iqiyi.com/v_19rrcl8dck.html", types="list")
     # main("http://www.iqiyi.com/v_19rr8jbmeo.html", types="list")
     # main("http://www.iqiyi.com/v_19rrl8pmn8.html")
@@ -71,7 +72,7 @@ if __name__ == "__main__":
     # main("http://www.bilibili.com/video/av3153352/", parsers_name=["YouGetParser"])
     # main("http://www.bilibili.com/video/av3153352/", label="hdflv@YouGetParser")
     # main("http://www.le.com/ptv/vplay/27416375.html", parsers_name=["YouGetParser"])
-    main("http://www.le.com/ptv/vplay/24185783.html", types="list")
+    # main("http://www.le.com/ptv/vplay/24185783.html", types="list")
     # main("http://www.le.com/ptv/vplay/27416375.html", parsers_name=["LeParser"])
     # main("http://www.le.com/ptv/vplay/27416375.html", label="1080p@LeParser")
     # main("http://www.le.com/ptv/vplay/27416375.html", parsers_name=["LeEGPParser"])

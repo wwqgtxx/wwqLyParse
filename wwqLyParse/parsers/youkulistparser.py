@@ -33,9 +33,7 @@ class YouKuListParser1(Parser):
                 return []
         new_url = "https:" + m[0]
         logging.debug(new_url)
-        result = get_main_parse()(input_text=new_url, types="list")
-        if result:
-            return result
+        return ReCallMainParseFunc(input_text=new_url, types="list")
 
 
 class YouKuListParser2(Parser):
@@ -49,9 +47,7 @@ class YouKuListParser2(Parser):
             return []
         new_url = "https:" + m[0]
         logging.debug(new_url)
-        result = get_main_parse()(input_text=new_url, types="collection")
-        if result:
-            return result
+        return ReCallMainParseFunc(input_text=new_url, types="list")
 
 
 class YouKuListParser3(Parser):
@@ -83,7 +79,8 @@ class YouKuListParser3(Parser):
         }
         last_num = 0
         while True:
-            new_url = "https://list.youku.com/show/episode?id=" + m[0] + "&stage=reload_" + str(last_num) + "&callback=a"
+            new_url = "https://list.youku.com/show/episode?id=" + m[0] + "&stage=reload_" + str(
+                last_num) + "&callback=a"
             json_data = get_url(new_url)[14:-2]
             info = json.loads(json_data)
             if info.get("error", None) == 0 and info.get("message", None) == "success":

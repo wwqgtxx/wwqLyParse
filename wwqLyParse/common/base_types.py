@@ -39,6 +39,12 @@ class Parser(object):
         return
 
 
+class ReCallMainParseFunc(object):
+    def __init__(self, *k, **kk):
+        self.k = k
+        self.kk = kk
+
+
 class UrlHandle(object):
     filters = []
     order = 100

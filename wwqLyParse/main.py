@@ -227,6 +227,8 @@ def parse(input_text, types=None, parsers_name=None, url_handles_name=None, use_
                     queue.put(q_result)
             elif type(result) == list:
                 queue.put(result)
+            elif type(result) == ReCallMainParseFunc:
+                queue.put(parse(*result.k, use_inside=True, **result.kk))
         except GreenletExit:
             logging.warning("%s timeout exit" % parser)
         except Exception as e:
@@ -245,7 +247,7 @@ def parse(input_text, types=None, parsers_name=None, url_handles_name=None, use_
     q_results = Queue()
     with WorkerPool() as pool:
         for parser in parsers:
-            if parser.check_support(input_text,types):
+            if parser.check_support(input_text, types):
                 pool.spawn(run, q_results, parser, input_text, *k, **kk)
         pool.join(timeout=PARSE_TIMEOUT)
     while not q_results.empty():

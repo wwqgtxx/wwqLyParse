@@ -85,6 +85,4 @@ class QQListParserX(Parser):
         if url:
             url = "https://v.qq.com" + str(url)
             logging.info("change %s to %s" % (input_text, url))
-            result = get_main_parse()(input_text=url, types="list")
-            if result:
-                return result
+            return ReCallMainParseFunc(input_text=url, types="list")

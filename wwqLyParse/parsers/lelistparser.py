@@ -24,9 +24,7 @@ class LeListParser1(Parser):
         pid = match1(html, r'pid:\s*(\w+),')
         if pid:
             html2_url = "http://www.le.com/tv/%s.html" % pid
-            result = get_main_parse()(input_text=html2_url, types="list")
-            if result:
-                return result
+            return ReCallMainParseFunc(input_text=html2_url, types="list")
 
 
 class LeListParser2(Parser):

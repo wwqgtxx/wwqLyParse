@@ -84,6 +84,14 @@ class GetUrlService(object):
                 weakref.finalize(self, self.common_connector.close)
             elif requests:
                 self.common_session = self._get_session()
+            else:
+                if self.http_proxy:
+                    proxy_handler = urllib.request.ProxyHandler({
+                        'http': self.http_proxy,
+                        'https': self.http_proxy
+                    })
+                    opener = urllib.request.build_opener(proxy_handler)
+                    urllib.request.install_opener(opener)
             self.inited = True
 
     def _get_async_loop(self):

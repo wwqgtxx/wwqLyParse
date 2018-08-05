@@ -1,3 +1,8 @@
+#!/usr/bin/env python3.5
+# -*- coding: utf-8 -*-
+# author wwqgtxx <wwqgtxx@gmail.com>
+# some code merge from GoAgent (￣▽￣)~*
+
 from .get_url import get_url
 from .for_path import get_real_path
 from .selectors import DefaultSelector

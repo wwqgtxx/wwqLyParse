@@ -33,11 +33,11 @@ class CertUtil(object):
 def is_clienthello(data):
     if len(data) < 20:
         return False
-    if data.startswith('\x16\x03'):
+    if data.startswith(b'\x16\x03'):
         # TLSv12/TLSv11/TLSv1/SSLv3
         length, = struct.unpack('>h', data[3:5])
         return len(data) == 5 + length
-    elif data[0] == '\x80' and data[2:4] == '\x01\x03':
+    elif data[0] == b'\x80' and data[2:4] == b'\x01\x03':
         # SSLv23
         return len(data) == 2 + ord(data[1])
     else:
@@ -45,7 +45,7 @@ def is_clienthello(data):
 
 
 def extract_sni_name(packet):
-    if packet.startswith('\x16\x03'):
+    if packet.startswith(b'\x16\x03'):
         stream = io.BytesIO(packet)
         stream.read(0x2b)
         session_id_length = ord(stream.read(1))
@@ -81,9 +81,9 @@ class ProxyHandler(http.server.BaseHTTPRequestHandler):
     def handle_one_request(self):
         if self.scheme == 'http':
             leadbyte = self.connection.recv(1, socket.MSG_PEEK)
-            if leadbyte in ('\x80', '\x16'):
+            if leadbyte in (b'\x80', b'\x16'):
                 server_name = ''
-                if leadbyte == '\x16':
+                if leadbyte == b'\x16':
                     for _ in range(2):
                         leaddata = self.connection.recv(1024, socket.MSG_PEEK)
                         if is_clienthello(leaddata):

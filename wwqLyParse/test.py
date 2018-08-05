@@ -3,6 +3,9 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 
 if __name__ == "__main__":
+    # import sys
+    #
+    # sys.modules["gevent"] = None
     try:
         from gevent import monkey
 
@@ -54,7 +57,7 @@ if __name__ == "__main__":
     # main("http://www.iqiyi.com/v_19rrez6nc4.html", types="list")
     # main("http://www.iqiyi.com/v_19rrcl8dck.html", types="list")
     # main("http://www.iqiyi.com/v_19rr8jbmeo.html", types="list")
-    main("http://www.iqiyi.com/v_19rrl8pmn8.html")
+    # main("http://www.iqiyi.com/v_19rrl8pmn8.html")
     # time.sleep(10)
     # main("http://www.iqiyi.com/v_19rrl8pmn8.html", types="list")
     # main("http://www.iqiyi.com/v_19rrl8pmn8.html", parsers_name=["IQiYiMTsParser"])
@@ -62,7 +65,7 @@ if __name__ == "__main__":
     # main("http://www.iqiyi.com/v_19rrl8pmn8.html", label="1080P-H264@IQiYiParser")
     # main("http://www.le.com/ptv/vplay/25047584.html", parsers_name=["YKDLParser"], types="formats")
     # main("http://www.le.com/ptv/vplay/25047584.html", label="0_TD_超清_0@YKDLParser")
-    # main("https://www.bilibili.com/video/av21877586", parsers_name=["AnnieParser"])
+    main("https://www.bilibili.com/video/av21877586", parsers_name=["AnnieParser"])
     # main("https://www.bilibili.com/video/av21877586", label="default@AnnieParser")
     # main("https://www.bilibili.com/video/av21877586", label="64@AnnieParser")
     # main("https://www.bilibili.com/video/av17246756/", parsers_name=["YKDLParser"])

@@ -4,6 +4,8 @@
 from . import _base
 
 DefaultSelector = _base.DefaultSelector
+EVENT_READ = _base.EVENT_READ
+EVENT_WRITE = _base.EVENT_WRITE
 
 try:
     import gevent.select
@@ -34,4 +36,4 @@ else:
 
         DefaultSelector = GeventPollSelector
 
-__all__ = ["DefaultSelector"]
+__all__ = ["DefaultSelector", "EVENT_READ", "EVENT_WRITE"]

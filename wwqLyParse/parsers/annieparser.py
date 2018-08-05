@@ -27,8 +27,14 @@ class AnnieParser(Parser):
             annie_bin = get_real_path('./annie/annie64.exe')
         else:
             annie_bin = get_real_path('./annie/annie32.exe')
-        args = [annie_bin] + arg
-        return run_subprocess(args, get_main().PARSE_TIMEOUT - 5, need_stderr)
+        with WorkerPool() as pool:
+            http_proxy_server = HttpProxyServer()
+            pool.spawn(http_proxy_server.serve_forever)
+            args = [annie_bin] + ['-x', "http://localhost:%s" % http_proxy_server.server_address[1]] + arg
+            try:
+                return run_subprocess(args, get_main().PARSE_TIMEOUT - 5, need_stderr)
+            finally:
+                http_proxy_server.shutdown()
 
     def _make_arg(self, url, _format=None, use_info=False, *k, **kk):
         # arg = self._make_proxy_arg()

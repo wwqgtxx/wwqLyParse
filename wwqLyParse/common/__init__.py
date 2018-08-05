@@ -8,6 +8,7 @@ from .connection_server import *
 from .get_size import *
 from .get_url import *
 from .http_cache import *
+from .http_proxy_server import *
 from .import_class import *
 from .key_lock import *
 from .lru_cache import *

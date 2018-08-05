@@ -98,6 +98,8 @@ class GetUrlService(object):
         if encoding == 'raw':
             return result
         if encoding == "response" or encoding == "response_without_data":
+            if result["data"]:
+                result["data"] = base64.b64encode(result["data"]).decode()
             return json.dumps(result).encode("utf-8")
         return result.encode("utf-8")
 
@@ -144,16 +146,18 @@ class GetUrlService(object):
                     data = blob
                 if encoding == "response":
                     html_text = {
-                        "data": base64.b64encode(data).decode(),
+                        "data": bytes(data),
                         "headers": dict(headers),
-                        "url": str(response.geturl())
+                        "url": str(response.geturl()),
+                        "status_code": response.getcode(),
                     }
                     logging.debug(html_text)
                 elif encoding == "response_without_data":
                     html_text = {
                         "data": None,
                         "headers": dict(headers),
-                        "url": str(response.geturl())
+                        "url": str(response.geturl()),
+                        "status_code": response.getcode(),
                     }
                     logging.debug(html_text)
                 elif encoding == "raw":
@@ -192,15 +196,17 @@ class GetUrlService(object):
                                    verify=verify)
             if encoding == "response":
                 html_text = {
-                    "data": base64.b64encode(resp.content).decode(),
+                    "data": bytes(resp.content),
                     "headers": dict(resp.headers),
-                    "url": str(resp.url)
+                    "url": str(resp.url),
+                    "status_code": resp.status_code,
                 }
             elif encoding == "response_without_data":
                 html_text = {
                     "data": None,
                     "headers": dict(resp.headers),
-                    "url": str(resp.url)
+                    "url": str(resp.url),
+                    "status_code": resp.status_code,
                 }
             elif encoding == "raw":
                 html_text = resp.content
@@ -231,15 +237,17 @@ class GetUrlService(object):
                                                ssl=None if verify else False) as resp:
                         if encoding == "response":
                             return {
-                                "data": base64.b64encode(await resp.read()).decode(),
+                                "data": bytes(await resp.read()),
                                 "headers": dict(resp.headers),
-                                "url": str(resp.url)
+                                "url": str(resp.url),
+                                "status_code": resp.status,
                             }
                         elif encoding == "response_without_data":
                             return {
                                 "data": None,
                                 "headers": dict(resp.headers),
-                                "url": str(resp.url)
+                                "url": str(resp.url),
+                                "status_code": resp.status,
                             }
                         elif encoding == "raw":
                             return await resp.read()

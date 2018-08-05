@@ -263,7 +263,7 @@ streams:             # Available quality and codecs
                 e_text += '[[stderr]] \n' + stderr
             e_text += '\n [[stdout]] \n' + stdout
             if err:
-                e_text += '\n ERROR info \n' + print_exception(err)
+                e_text += '\n ERROR info \n' + format_exception(err)
             return {
                 'error': e_text,
             }

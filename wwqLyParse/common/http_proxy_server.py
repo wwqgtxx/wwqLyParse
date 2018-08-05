@@ -7,6 +7,7 @@ from .get_url import get_url
 from .for_path import get_real_path
 from .selectors import DefaultSelector
 from .workerpool import WorkerPool
+from .utils import format_exception
 import sys
 
 import errno
@@ -205,12 +206,12 @@ class ProxyHandler(http.server.BaseHTTPRequestHandler):
             # logging.debug(headers)
         except Exception as e:
             status = 502
-            headers = {'Content-Type': 'text/html'}
-            content = repr(e)
+            headers = {'Content-Type': 'text/plain'}
+            content = format_exception(e).encode()
             return self.do_mock(status, headers, content)
 
         self.close_connection = not headers.get('Content-Length')
-        self.send_response(status)
+        self.send_response_only(status)
         for key, value in headers.items():
             if key == 'Transfer-Encoding':
                 continue

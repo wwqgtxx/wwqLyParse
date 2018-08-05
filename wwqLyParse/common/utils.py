@@ -31,7 +31,7 @@ def get_caller_info(call_deep=0):
     return callmethod
 
 
-def print_exception(e):
+def format_exception(e):
     line = traceback.format_exception(Exception, e, e.__traceback__)
     text = ''.join(line)
     return text

@@ -1,6 +1,7 @@
 from .get_url import get_url
 from .for_path import get_real_path
 from .selectors import DefaultSelector
+from .workerpool import WorkerPool
 import sys
 
 import errno
@@ -243,10 +244,11 @@ class HttpProxyServer(socketserver.ThreadingTCPServer):
     """Local Proxy Server"""
     allow_reuse_address = False
     daemon_threads = True
+    common_worker_pool = WorkerPool()
 
     def __init__(self, host="localhost", port=0):
         super().__init__((host, port), ProxyHandler)
-        self.sp = socket.socketpair()
+        self.is_start = False
 
     def close_request(self, request):
         try:
@@ -271,15 +273,35 @@ class HttpProxyServer(socketserver.ThreadingTCPServer):
             del exc_info, error
             socketserver.ThreadingTCPServer.handle_error(self, *args)
 
-    def serve_forever(self, poll_interval=None):
+    def serve_forever(self, poll_interval=0.5):
         logging.info("listen address:'http://%s:%s'" % self.server_address)
         super().serve_forever(poll_interval=poll_interval)
 
-    def shutdown(self):
+    def _shutdown(self):
         logging.info("begin shutdown listen address:'http://%s:%s'" % self.server_address)
         self.socket.close()
         super().shutdown()
         logging.info("finish shutdown listen address:'http://%s:%s'" % self.server_address)
+
+    @property
+    def port(self):
+        return self.server_address[1]
+
+    def start(self):
+        self.is_start = True
+        self.common_worker_pool.spawn(self.serve_forever)
+
+    def shutdown(self):
+        if self.is_start:
+            self.is_start = False
+            self.common_worker_pool.spawn(self._shutdown)
+
+    def __enter__(self):
+        self.start()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.shutdown()
 
 
 __all__ = ["HttpProxyServer"]

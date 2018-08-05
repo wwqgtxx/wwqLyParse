@@ -47,6 +47,9 @@ class YouGetParser(Parser):
             py_bin = py_bin.replace("wwqLyParse32.exe", "wwqLyParse32-youget.exe")
         return py_bin
 
+    def _get_proxy_args(self, port):
+        return ["--http-proxy", "localhost:%s" % port]
+
     # run you-get
     def _run(self, arg, need_stderr=False):
         y_bin = get_real_path(self.bin)
@@ -55,10 +58,10 @@ class YouGetParser(Parser):
             args = [py_bin, '--normal', y_bin]
         else:
             args = [py_bin, y_bin]
-        args += arg
-        env = os.environ.copy()
-        env["address_get_url"] = get_url_service.address_get_url
-        return run_subprocess(args, get_main().PARSE_TIMEOUT - 5, need_stderr, env=env)
+        with HttpProxyServer() as hps:
+            args += self._get_proxy_args(hps.port)
+            args += arg
+            return run_subprocess(args, get_main().PARSE_TIMEOUT - 5, need_stderr)
 
     # parse you-get output for parse
     def _parse_parse(self, raw):

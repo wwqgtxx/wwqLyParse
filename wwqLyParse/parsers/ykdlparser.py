@@ -28,6 +28,9 @@ try:
                 py_bin = py_bin.replace("wwqLyParse32.exe", "wwqLyParse32-ykdl.exe")
             return py_bin
 
+        def _get_proxy_args(self, port):
+            return ["--proxy", "http://localhost:%s" % port]
+
         # make arg
         def _make_arg(self, url, _format=None, use_info=False, *k, **kk):
             arg = []

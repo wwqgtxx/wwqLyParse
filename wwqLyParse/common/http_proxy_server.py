@@ -256,6 +256,7 @@ class HttpProxyServer(socketserver.TCPServer):
         super().__init__((host, port), ProxyHandler)
         self.is_start = False
         self._threads = []
+        self._serve_thread = None
 
     def process_request_thread(self, request, client_address):
         try:
@@ -313,7 +314,11 @@ class HttpProxyServer(socketserver.TCPServer):
 
     def start(self):
         self.is_start = True
-        self.common_worker_pool.spawn(self.serve_forever)
+        self._serve_thread = self.common_worker_pool.spawn(self.serve_forever)
+
+    def join(self, timeout=None):
+        if self.is_start:
+            self.common_worker_pool.wait([self._serve_thread], timeout=timeout)
 
     def shutdown(self):
         if self.is_start:

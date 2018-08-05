@@ -37,4 +37,4 @@ get_url_service.init()
 
 if __name__ == "__main__":
     with HttpProxyServer(port=1082) as hps:
-        hps.common_worker_pool.join()
+        hps.join()

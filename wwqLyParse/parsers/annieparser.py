@@ -22,14 +22,19 @@ class AnnieParser(Parser):
                    r'^(http|https)://\d+\.\d+\.\d+\.\d+']
     name = "Annie解析"
 
-    def _run(self, arg, need_stderr=False):
+    def _run(self, arg, need_stderr=False, use_hps=True):
         if sysconfig.get_platform() == "win-amd64":
             annie_bin = get_real_path('./annie/annie64.exe')
         else:
             annie_bin = get_real_path('./annie/annie32.exe')
-        with HttpProxyServer() as hps:
+        if use_hps:
+            with HttpProxyServer() as hps:
+                args = [annie_bin]
+                args += ['-x', "http://localhost:%s" % hps.port]
+                args += arg
+                return run_subprocess(args, get_main().PARSE_TIMEOUT - 5, need_stderr)
+        else:
             args = [annie_bin]
-            args += ['-x', "http://localhost:%s" % hps.port]
             args += arg
             return run_subprocess(args, get_main().PARSE_TIMEOUT - 5, need_stderr)
 
@@ -257,7 +262,7 @@ Streams:   # All available quality
 
     def get_version(self):
         try:
-            stdout, stderr = self._run(['-v'], False)
+            stdout, stderr = self._run(['-v'], need_stderr=False, use_hps=False)
             return stdout.split(',')[0]
         except Exception as e:
             logging.exception("get version error")

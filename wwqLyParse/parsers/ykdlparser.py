@@ -44,7 +44,7 @@ try:
 
         def get_version(self):
             try:
-                stdout, stderr = self._run(['-h'], True)
+                stdout, stderr = self._run(['-h'], need_stderr=True, use_hps=False)
                 if "Errno" in stderr:
                     return ""
                 return stdout.split('(')[1].split(')')[0]

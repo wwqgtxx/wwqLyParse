@@ -51,15 +51,19 @@ class YouGetParser(Parser):
         return ["--http-proxy", "localhost:%s" % port]
 
     # run you-get
-    def _run(self, arg, need_stderr=False):
+    def _run(self, arg, need_stderr=False, use_hps=True):
         y_bin = get_real_path(self.bin)
         py_bin = self._get_py_bin()
         if "PyRun.exe" in py_bin:
             args = [py_bin, '--normal', y_bin]
         else:
             args = [py_bin, y_bin]
-        with HttpProxyServer() as hps:
-            args += self._get_proxy_args(hps.port)
+        if use_hps:
+            with HttpProxyServer() as hps:
+                args += self._get_proxy_args(hps.port)
+                args += arg
+                return run_subprocess(args, get_main().PARSE_TIMEOUT - 5, need_stderr)
+        else:
             args += arg
             return run_subprocess(args, get_main().PARSE_TIMEOUT - 5, need_stderr)
 
@@ -321,7 +325,7 @@ streams:             # Available quality and codecs
 
     def get_version(self):
         try:
-            stdout, stderr = self._run(['--version'], True)
+            stdout, stderr = self._run(['--version'], need_stderr=True, use_hps=False)
             if "Errno" in stderr:
                 return ""
             return stderr.split(',')[0]

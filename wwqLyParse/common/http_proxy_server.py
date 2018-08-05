@@ -240,15 +240,33 @@ class ProxyHandler(http.server.BaseHTTPRequestHandler):
             return self.do_url_fetch()
 
 
-class HttpProxyServer(socketserver.ThreadingTCPServer):
+class HttpProxyServer(socketserver.TCPServer):
     """Local Proxy Server"""
     allow_reuse_address = False
     daemon_threads = True
-    common_worker_pool = WorkerPool()
+    common_worker_pool = WorkerPool(thread_name_prefix="HPSPool")
 
     def __init__(self, host="localhost", port=0):
         super().__init__((host, port), ProxyHandler)
         self.is_start = False
+        self._threads = []
+
+    def process_request_thread(self, request, client_address):
+        try:
+            self.finish_request(request, client_address)
+        except Exception:
+            self.handle_error(request, client_address)
+        finally:
+            self.shutdown_request(request)
+
+    def process_request(self, request, client_address):
+        self._threads.append(self.common_worker_pool.spawn(self.process_request_thread, request, client_address))
+
+    def server_close(self):
+        super().server_close()
+        threads = self._threads
+        self._threads = []
+        self.common_worker_pool.wait(threads)
 
     def close_request(self, request):
         try:

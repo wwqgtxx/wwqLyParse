@@ -54,7 +54,7 @@ class GetUrlService(object):
     def __init__(self):
         self.url_cache = LRUCache(size=URL_CACHE_MAX, timeout=URL_CACHE_TIMEOUT)
         self.url_key_lock = KeyLockDict()
-        self.pool_get_url = WorkerPool(URL_CACHE_POOL + 1, thread_name_prefix="GetUrlPool")
+        self.pool_get_url = WorkerPool(URL_CACHE_POOL, thread_name_prefix="GetUrlPool")
         self.fake_headers = FAKE_HEADERS.copy()
         self.ssl_verify = True
         self.http_proxy = None
@@ -223,7 +223,7 @@ class GetUrlService(object):
                                                headers=headers if headers else self.fake_headers, data=data,
                                                timeout=self.common_client_timeout,
                                                ssl=None if verify else False,
-                                               proxy=self.http_proxy) as resp:
+                                               proxy=self.http_proxy or None) as resp:
                         if encoding == "response":
                             return {
                                 "data": bytes(await resp.read()),

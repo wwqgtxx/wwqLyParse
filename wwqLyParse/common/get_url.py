@@ -3,11 +3,13 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 
 import sys
+import warnings
 import logging
 import functools
 import threading
 import weakref
 import asyncio
+import configparser
 import urllib.request, json, re, gzip, socket, urllib.error, http.client, urllib
 
 requests = None
@@ -26,6 +28,7 @@ except:
     pass
 
 from .workerpool import *
+from .for_path import get_real_path
 from .selectors import DefaultSelector
 from .lru_cache import LRUCache
 from .key_lock import KeyLockDict, FUCK_KEY_LOCK
@@ -53,6 +56,8 @@ class GetUrlService(object):
         self.url_key_lock = KeyLockDict()
         self.pool_get_url = WorkerPool(URL_CACHE_POOL + 1, thread_name_prefix="GetUrlPool")
         self.fake_headers = FAKE_HEADERS.copy()
+        self.ssl_verify = True
+        self.http_proxy = None
         self.common_loop = None
         self.common_connector = None
         self.common_cookie_jar = None
@@ -62,7 +67,13 @@ class GetUrlService(object):
 
     def init(self):
         if not self.inited:
+            warnings.filterwarnings("ignore", module="urllib3")
             logging.getLogger("chardet").setLevel(logging.WARNING)
+            configparser.RawConfigParser.OPTCRE = re.compile(r'(?P<option>[^=\s][^=]*)\s*(?P<vi>[=])\s*(?P<value>.*)$')
+            config = configparser.ConfigParser()
+            config.read(get_real_path("./config.ini"))
+            self.http_proxy = config.get("get_url", "http_proxy", fallback=None)
+            self.ssl_verify = config.getboolean("get_url", "ssl_verify", fallback=True)
             if aiohttp:
                 self.common_loop = self._get_async_loop()
                 from .aiohttp import TCPConnector
@@ -95,6 +106,11 @@ class GetUrlService(object):
         session.mount('https://',
                       requests.adapters.HTTPAdapter(pool_connections=size, pool_maxsize=size,
                                                     max_retries=retry))
+        if self.http_proxy:
+            session.proxies = {
+                "http": self.http_proxy,
+                "https": self.http_proxy,
+            }
         return session
 
     def _get_url_key_lock(self, url_json, allow_cache):
@@ -206,7 +222,8 @@ class GetUrlService(object):
                     async with session.request(method=method if method else "GET", url=o_url,
                                                headers=headers if headers else self.fake_headers, data=data,
                                                timeout=self.common_client_timeout,
-                                               ssl=None if verify else False) as resp:
+                                               ssl=None if verify else False,
+                                               proxy=self.http_proxy) as resp:
                         if encoding == "response":
                             return {
                                 "data": bytes(await resp.read()),
@@ -257,13 +274,15 @@ class GetUrlService(object):
         except:
             logging.exception(callmethod + "get url " + url_json + "fail")
 
-    def get_url(self, o_url, encoding=None, headers=None, data=None, method=None, cookies=None, verify=True,
+    def get_url(self, o_url, encoding=None, headers=None, data=None, method=None, cookies=None, verify=None,
                 allow_cache=True, use_pool=True, pool=None, force_flush_cache=False, callmethod=None):
         self.init()
         # if encoding is None:
         #     encoding = 'utf-8'
         if pool is None:
             pool = self.pool_get_url
+        if verify is None:
+            verify = self.ssl_verify
         if callmethod is None:
             callmethod = get_caller_info(1)
         url_json_dict = {"o_url": o_url, "encoding": encoding, "headers": headers, "data": data, "method": method,

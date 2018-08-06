@@ -30,6 +30,7 @@ except:
 from .workerpool import *
 from .for_path import get_real_path
 from .selectors import DefaultSelector
+from .thread_pool_executor import ThreadPoolExecutor
 from .lru_cache import LRUCache
 from .key_lock import KeyLockDict, FUCK_KEY_LOCK
 from .utils import get_caller_info
@@ -96,6 +97,7 @@ class GetUrlService(object):
 
     def _get_async_loop(self):
         loop = asyncio.SelectorEventLoop(DefaultSelector())
+        loop.set_default_executor(ThreadPoolExecutor())
 
         def _run_forever():
             logging.debug("start loop %s", loop)

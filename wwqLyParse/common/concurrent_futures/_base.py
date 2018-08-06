@@ -632,3 +632,20 @@ class BrokenExecutor(RuntimeError):
     """
     Raised when a executor has become non-functional after a severe failure.
     """
+
+
+def _patch():
+    try:
+        import concurrent.futures
+
+        global CancelledError, TimeoutError, Future, Executor, BrokenExecutor
+        CancelledError = type('CancelledError', (CancelledError, concurrent.futures.CancelledError), {})
+        TimeoutError = type('TimeoutError', (TimeoutError, concurrent.futures.TimeoutError), {})
+        Future = type('Future', (Future, concurrent.futures.Future), {})
+        Executor = type('Executor', (Executor, concurrent.futures.Executor), {})
+        BrokenExecutor = type('BrokenExecutor', (BrokenExecutor, concurrent.futures.BrokenExecutor), {})
+    except:
+        pass
+
+
+_patch()

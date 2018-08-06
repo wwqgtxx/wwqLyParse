@@ -76,11 +76,11 @@ class RealThreadPool(_ThreadPool):
         return True
 
 
-_common_threadpool = None
+_common_real_thread_pool = None
 
 
-def get_common_threadpool():
-    global _common_threadpool
-    if _common_threadpool is None:
-        _common_threadpool = RealThreadPool()
-    return _common_threadpool
+def get_common_real_thread_pool():
+    global _common_real_thread_pool
+    if _common_real_thread_pool is None:
+        _common_real_thread_pool = RealThreadPool()
+    return _common_real_thread_pool

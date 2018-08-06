@@ -20,7 +20,7 @@ class GreenletExit(Exception):
 class Pool(object):
     def __init__(self, size=None, thread_name_prefix=''):
         self.pool_size = size
-        self.ex = ThreadPoolExecutor(size, thread_name_prefix=thread_name_prefix)
+        self.ex = ThreadPoolExecutor(size, thread_name_prefix=thread_name_prefix, class_name="ThreadPool")
         self.pool_threads = []
 
     def _remove_from_pool_threads(self, future):

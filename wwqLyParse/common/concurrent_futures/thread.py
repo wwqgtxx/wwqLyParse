@@ -5,6 +5,7 @@
 import sys
 import atexit
 import queue
+import collections
 import functools
 import itertools
 import weakref
@@ -96,12 +97,13 @@ class BrokenThreadPool(concurrent.futures.BrokenExecutor):
 
 
 class ThreadPoolExecutor(concurrent.futures.Executor):
-    _counter = itertools.count().__next__
+    _counter_dict = collections.defaultdict(lambda: itertools.count().__next__)
 
     def __init__(self, max_workers=None, thread_name_prefix='',
-                 initializer=None, initargs=(), thread_dead_timeout=5 * 60):
+                 initializer=None, initargs=(), thread_dead_timeout=5 * 60, class_name=None):
         if initializer is not None and not callable(initializer):
             raise TypeError("initializer must be a callable")
+        self._class_name = class_name or self.__class__.__name__
         self._max_workers = max_workers
         if sys.version_info[0:2] < (3, 7):
             self._work_queue = queue.Queue()
@@ -112,7 +114,7 @@ class ThreadPoolExecutor(concurrent.futures.Executor):
         self._shutdown = False
         self._shutdown_lock = threading.Lock()
         self._thread_name_prefix = (thread_name_prefix or
-                                    ("ThreadPoolExecutor-%d" % self._counter()))
+                                    ("%s-%d" % (self._class_name, self._counter_dict[self._class_name]())))
         self._initializer = initializer
         self._initargs = initargs
         self._thread_dead_timeout = thread_dead_timeout

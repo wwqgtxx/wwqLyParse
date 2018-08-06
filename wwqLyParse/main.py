@@ -52,7 +52,7 @@ except Exception as e:
     from common import *
 
 if __name__ == "__main__":
-    get_common_threadpool()
+    get_common_real_thread_pool()
     logging.root.addHandler(RemoteStreamHandler(ADDRESS_LOGGING, FORMAT, DATA_FMT))
     if not os.environ.get("NOT_LOGGING", None):
         if gevent:

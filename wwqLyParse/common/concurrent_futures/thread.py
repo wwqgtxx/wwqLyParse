@@ -1,31 +1,20 @@
-# Copyright 2009 Brian Quinlan. All Rights Reserved.
-# Licensed to PSF under a Contributor Agreement.
+#!/usr/bin/env python3.5
+# -*- coding: utf-8 -*-
+# author wwqgtxx <wwqgtxx@gmail.com>
 
-"""Implements ThreadPoolExecutor."""
-
-__author__ = 'Brian Quinlan (brian@sweetapp.com)'
-
+import sys
 import atexit
-from . import _base
-import itertools
 import queue
-import threading
+import functools
+import itertools
 import weakref
-import os
+import threading
+import logging
+from queue import Queue, Empty
+import time
+import concurrent.futures
 
-# Workers are created as daemon threads. This is done to allow the interpreter
-# to exit when there are still idle threads in a ThreadPoolExecutor's thread
-# pool (i.e. shutdown() was not called). However, allowing workers to die with
-# the interpreter has two undesirable properties:
-#   - The workers would still be running during interpreter shutdown,
-#     meaning that they would fail in unpredictable ways.
-#   - The workers could be killed while evaluating a work item, which could
-#     be bad if the callable being evaluated has external side-effects e.g.
-#     writing to a file.
-#
-# To work around this problem, an exit handler is installed which tells the
-# workers to exit when their work queues are empty and then waits until the
-# threads finish.
+LOGGER = logging.getLogger("concurrent.futures")
 
 _threads_queues = weakref.WeakKeyDictionary()
 _shutdown = False
@@ -65,19 +54,22 @@ class _WorkItem(object):
             self.future.set_result(result)
 
 
-def _worker(executor_reference, work_queue, initializer, initargs):
+def _worker(executor_reference, work_queue: Queue, initializer, initargs, timeout):
     if initializer is not None:
         try:
             initializer(*initargs)
         except BaseException:
-            _base.LOGGER.critical('Exception in initializer:', exc_info=True)
+            LOGGER.critical('Exception in initializer:', exc_info=True)
             executor = executor_reference()
             if executor is not None:
                 executor._initializer_failed()
             return
     try:
         while True:
-            work_item = work_queue.get(block=True)
+            try:
+                work_item = work_queue.get(block=True, timeout=timeout)
+            except Empty:
+                return
             if work_item is not None:
                 work_item.run()
                 # Delete references to object. See issue16284
@@ -89,51 +81,28 @@ def _worker(executor_reference, work_queue, initializer, initargs):
             #   - The executor that owns the worker has been collected OR
             #   - The executor that owns the worker has been shutdown.
             if _shutdown or executor is None or executor._shutdown:
-                # Flag the executor as shutting down as early as possible if it
-                # is not gc-ed yet.
-                if executor is not None:
-                    executor._shutdown = True
                 # Notice other workers
                 work_queue.put(None)
                 return
             del executor
     except BaseException:
-        _base.LOGGER.critical('Exception in worker', exc_info=True)
+        pass
 
 
-class BrokenThreadPool(_base.BrokenExecutor):
+class BrokenThreadPool(concurrent.futures.BrokenExecutor):
     """
     Raised when a worker thread in a ThreadPoolExecutor failed initializing.
     """
 
 
-class ThreadPoolExecutor(_base.Executor):
-    # Used to assign unique thread names when thread_name_prefix is not supplied.
+class ThreadPoolExecutor(concurrent.futures.Executor):
     _counter = itertools.count().__next__
 
     def __init__(self, max_workers=None, thread_name_prefix='',
-                 initializer=None, initargs=()):
-        """Initializes a new ThreadPoolExecutor instance.
-
-        Args:
-            max_workers: The maximum number of threads that can be used to
-                execute the given calls.
-            thread_name_prefix: An optional name prefix to give our threads.
-            initializer: An callable used to initialize worker threads.
-            initargs: A tuple of arguments to pass to the initializer.
-        """
-        if max_workers is None:
-            # Use this number because ThreadPoolExecutor is often
-            # used to overlap I/O instead of CPU work.
-            max_workers = (os.cpu_count() or 1) * 5
-        if max_workers <= 0:
-            raise ValueError("max_workers must be greater than 0")
-
+                 initializer=None, initargs=(), thread_dead_timeout=5 * 60):
         if initializer is not None and not callable(initializer):
             raise TypeError("initializer must be a callable")
-
         self._max_workers = max_workers
-        import sys
         if sys.version_info[0:2] < (3, 7):
             self._work_queue = queue.Queue()
         else:
@@ -146,6 +115,8 @@ class ThreadPoolExecutor(_base.Executor):
                                     ("ThreadPoolExecutor-%d" % self._counter()))
         self._initializer = initializer
         self._initargs = initargs
+        self._thread_dead_timeout = thread_dead_timeout
+        self._thread_name_counter = itertools.count().__next__
 
     def submit(self, fn, *args, **kwargs):
         with self._shutdown_lock:
@@ -158,36 +129,45 @@ class ThreadPoolExecutor(_base.Executor):
                 raise RuntimeError('cannot schedule new futures after'
                                    'interpreter shutdown')
 
-            f = _base.Future()
+            f = concurrent.futures.Future()
             w = _WorkItem(f, fn, args, kwargs)
 
             self._work_queue.put(w)
             self._adjust_thread_count()
             return f
 
-    submit.__doc__ = _base.Executor.submit.__doc__
+    submit.__doc__ = concurrent.futures.Executor.submit.__doc__
 
     def _adjust_thread_count(self):
-        # When the executor gets lost, the weakref callback will wake up
-        # the worker threads.
-        def weakref_cb(_, q=self._work_queue):
-            q.put(None)
+        time.sleep(0.01)
+        if self._work_queue.qsize():
+            # When the executor gets lost, the weakref callback will wake up
+            # the worker threads.
+            def weakref_cb(_, q=self._work_queue):
+                q.put(None)
 
-        # TODO(bquinlan): Should avoid creating new threads if there are more
-        # idle threads than items in the work queue.
-        num_threads = len(self._threads)
-        if num_threads < self._max_workers:
-            thread_name = '%s_%d' % (self._thread_name_prefix or self,
-                                     num_threads)
-            t = threading.Thread(name=thread_name, target=_worker,
-                                 args=(weakref.ref(self, weakref_cb),
-                                       self._work_queue,
-                                       self._initializer,
-                                       self._initargs))
-            t.daemon = True
-            t.start()
-            self._threads.add(t)
-            _threads_queues[t] = self._work_queue
+            dead_list = list()
+            for t in self._threads:
+                if not t.is_alive():
+                    dead_list.append(t)
+            for t in dead_list:
+                self._threads.remove(t)
+            del dead_list
+
+            num_threads = len(self._threads)
+            if not self._max_workers or num_threads < self._max_workers:
+                thread_name = '%s_%d' % (self._thread_name_prefix or self,
+                                         self._thread_name_counter())
+                t = threading.Thread(name=thread_name, target=_worker,
+                                     args=(weakref.ref(self, weakref_cb),
+                                           self._work_queue,
+                                           self._initializer,
+                                           self._initargs,
+                                           self._thread_dead_timeout))
+                t.daemon = True
+                t.start()
+                self._threads.add(t)
+                _threads_queues[t] = self._work_queue
 
     def _initializer_failed(self):
         with self._shutdown_lock:
@@ -210,4 +190,7 @@ class ThreadPoolExecutor(_base.Executor):
             for t in self._threads:
                 t.join()
 
-    shutdown.__doc__ = _base.Executor.shutdown.__doc__
+    shutdown.__doc__ = concurrent.futures.Executor.shutdown.__doc__
+
+
+__all__ = ["ThreadPoolExecutor"]

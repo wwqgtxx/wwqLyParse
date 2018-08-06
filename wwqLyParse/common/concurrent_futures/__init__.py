@@ -1,11 +1,8 @@
-# Copyright 2009 Brian Quinlan. All Rights Reserved.
-# Licensed to PSF under a Contributor Agreement.
+#!/usr/bin/env python3.5
+# -*- coding: utf-8 -*-
+# author wwqgtxx <wwqgtxx@gmail.com>
 
-"""Execute computations asynchronously using threads or processes."""
-
-__author__ = 'Brian Quinlan (brian@sweetapp.com)'
-
-from ._base import (FIRST_COMPLETED,
+from concurrent.futures import (FIRST_COMPLETED,
                     FIRST_EXCEPTION,
                     ALL_COMPLETED,
                     CancelledError,

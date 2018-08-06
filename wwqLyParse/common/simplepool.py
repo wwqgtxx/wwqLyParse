@@ -9,7 +9,7 @@ import threading
 import logging
 from queue import Queue, Empty
 import time
-from .thread_pool_executor import ThreadPoolExecutor
+from .concurrent_futures import ThreadPoolExecutor
 from .concurrent_futures import wait as _wait
 
 

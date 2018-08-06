@@ -17,8 +17,8 @@ from .re import *
 from .remote_logging import *
 from .selectors import *
 from .subprocess import *
-from .thread_pool_executor import *
 from .utils import *
 from .workerpool import *
 
+from . import concurrent_futures
 from . import multiprocessing_connection

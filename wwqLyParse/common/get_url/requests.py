@@ -17,6 +17,7 @@ class RequestsGetUrlImpl(GetUrlImplBase):
         logging.getLogger("chardet").setLevel(logging.WARNING)
         self.common_http_adapter = self._get_http_adapter()
         self.common_session = self._get_session()
+        self.common_timeout = (GET_URL_CONNECT_TIMEOUT, GET_URL_RECV_TIMEOUT)
 
     def _get_http_adapter(self, size=GET_URL_PARALLEL_LIMIT, retry=GET_URL_RETRY_NUM):
         return requests.adapters.HTTPAdapter(pool_connections=size,
@@ -47,7 +48,8 @@ class RequestsGetUrlImpl(GetUrlImplBase):
             with session.request(method=method if method else "GET", url=o_url,
                                  headers=headers if headers else self.service.fake_headers, data=data,
                                  cookies=cookies,
-                                 verify=verify) as resp:
+                                 verify=verify,
+                                 timeout=self.common_timeout) as resp:
                 if encoding == "response":
                     html_text = {
                         "data": bytes(resp.content),

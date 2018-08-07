@@ -32,7 +32,8 @@ class AioHttpGetUrlImpl(GetUrlImplBase):
         self.common_loop = self._get_async_loop()
         self.common_connector = TCPConnector(limit=GET_URL_PARALLEL_LIMIT, loop=self.common_loop)
         self.common_cookie_jar = aiohttp.CookieJar(loop=self.common_loop)
-        self.common_client_timeout = aiohttp.ClientTimeout(total=1 * 60)
+        self.common_client_timeout = aiohttp.ClientTimeout(sock_connect=GET_URL_CONNECT_TIMEOUT,
+                                                           sock_read=GET_URL_RECV_TIMEOUT)
         logging.debug("init %s" % self.common_connector)
         weakref.finalize(self, self.common_connector.close)
 

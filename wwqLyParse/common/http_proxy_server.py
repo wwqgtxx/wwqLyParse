@@ -3,7 +3,7 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 # some code merge from GoAgent (￣▽￣)~*
 
-from .get_url import get_url
+from .get_url import get_url, EMPTY_COOKIES
 from .for_path import get_real_path
 from .selectors import DefaultSelector
 from .workerpool import WorkerPool
@@ -198,7 +198,8 @@ class ProxyHandler(http.server.BaseHTTPRequestHandler):
         body = self.body
 
         try:
-            resp = get_url(url, encoding="response", method=method, headers=headers, data=body, allow_cache=False)
+            resp = get_url(url, encoding="response", method=method, headers=headers, data=body, cookies=EMPTY_COOKIES,
+                           allow_cache=False)
             status = resp["status_code"]
             data = resp["data"]
             headers = resp["headers"]
@@ -213,11 +214,11 @@ class ProxyHandler(http.server.BaseHTTPRequestHandler):
         self.close_connection = not headers.get('Content-Length')
         self.send_response_only(status)
         for key, value in headers.items():
-            if key == 'Transfer-Encoding':
+            if key.lower() == 'Transfer-Encoding'.lower():
                 continue
-            elif key == 'Content-Length':
+            elif key.lower() == 'Content-Length'.lower():
                 continue
-            elif key == 'Content-Encoding':
+            elif key.lower() == 'Content-Encoding'.lower():
                 continue
             self.send_header(key, value)
         self.send_header('Content-Length', len(data))

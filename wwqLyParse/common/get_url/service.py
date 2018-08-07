@@ -18,7 +18,7 @@ class GetUrlService(object):
     def __init__(self):
         self.url_cache = LRUCache(size=URL_CACHE_MAX, timeout=URL_CACHE_TIMEOUT)
         self.url_key_lock = KeyLockDict()
-        self.pool_get_url = WorkerPool(URL_CACHE_POOL, thread_name_prefix="GetUrlPool")
+        self.pool_get_url = WorkerPool(GET_URL_PARALLEL_LIMIT, thread_name_prefix="GetUrlPool")
         self.fake_headers = FAKE_HEADERS.copy()
         self.ssl_verify = True
         self.http_proxy = None
@@ -104,4 +104,4 @@ class GetUrlService(object):
 get_url_service = GetUrlService()
 get_url = get_url_service.get_url
 
-__all__ = ["GetUrlService", "get_url_service", "get_url"]
+__all__ = ["GetUrlService", "get_url_service", "get_url", "EMPTY_COOKIES"]

@@ -82,7 +82,7 @@ class UrlLibGetUrlImpl(GetUrlImplBase):
         return None
 
     def get_url(self, url_json, url_json_dict, callmethod, pool=None):
-        retry_num = URL_RETRY_NUM
+        retry_num = GET_URL_RETRY_NUM
         fn = functools.partial(self._get_url_urllib, url_json=url_json, callmethod=callmethod,
                                use_pool=pool is not None,
                                **url_json_dict)

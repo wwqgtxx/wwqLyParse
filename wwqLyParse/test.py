@@ -88,6 +88,7 @@ if __name__ == "__main__":
     # main("http://v.youku.com/v_show/id_XMjQ4MTc0ODMyOA==.html?spm=a2h1n.8251845.0.0", parsers_name=["AnnieParser"])
     # main("http://v.youku.com/v_show/id_XMjQ4MTc0ODMyOA==.html?spm=a2h1n.8251845.0.0", label="default@AnnieParser")
     main("http://v.youku.com/v_show/id_XMzc2NDM4MDI5Mg==.html?spm=a2hzp.8253869.0.0", parsers_name=["YouGetParser"])
+    main("http://v.youku.com/v_show/id_XMzc2NDM4MDI5Mg==.html?spm=a2hzp.8253869.0.0", parsers_name=["YouGetParser"])
     # main("http://v.youku.com/v_show/id_XMjQ4MTc0ODMyOA==.html?spm=a2h1n.8251845.0.0", parsers_name=["YKDLParser"])
     # main("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474", label="BD@YKDLParser")
     # main("http://v.youku.com/v_show/id_XMzg1ODY1MTIw.html||123", parsers_name=["YouGetParser"])

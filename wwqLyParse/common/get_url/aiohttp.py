@@ -30,7 +30,7 @@ class AioHttpGetUrlImpl(GetUrlImplBase):
         super().__init__(service)
         logging.getLogger("chardet").setLevel(logging.WARNING)
         self.common_loop = self._get_async_loop()
-        self.common_connector = TCPConnector(limit=URL_CACHE_POOL, loop=self.common_loop)
+        self.common_connector = TCPConnector(limit=GET_URL_PARALLEL_LIMIT, loop=self.common_loop)
         self.common_cookie_jar = aiohttp.CookieJar(loop=self.common_loop)
         self.common_client_timeout = aiohttp.ClientTimeout(total=1 * 60)
         logging.debug("init %s" % self.common_connector)
@@ -99,6 +99,8 @@ class AioHttpGetUrlImpl(GetUrlImplBase):
             cookie_jar = self.common_cookie_jar
         if cookies is not None:
             cookie_jar = None
+        if cookies is EMPTY_COOKIES:
+            cookies = {}
         try:
             async with aiohttp.ClientSession(connector=connector, connector_owner=False,
                                              cookies=cookies, cookie_jar=cookie_jar) as _session:
@@ -109,7 +111,7 @@ class AioHttpGetUrlImpl(GetUrlImplBase):
             logging.exception(callmethod + "get url " + url_json + "fail")
 
     def get_url(self, url_json, url_json_dict, callmethod, pool=None):
-        retry_num = URL_RETRY_NUM
+        retry_num = GET_URL_RETRY_NUM
         future = asyncio.run_coroutine_threadsafe(
             self._get_url_aiohttp(url_json=url_json, callmethod=callmethod, retry_num=retry_num,
                                   **url_json_dict), loop=self.common_loop)

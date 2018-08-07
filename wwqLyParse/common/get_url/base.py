@@ -4,8 +4,8 @@
 
 URL_CACHE_MAX = 10000
 URL_CACHE_TIMEOUT = 1 * 60 * 60
-URL_CACHE_POOL = 50
-URL_RETRY_NUM = 3
+GET_URL_PARALLEL_LIMIT = 50
+GET_URL_RETRY_NUM = 3
 
 FAKE_HEADERS = {
     'Connection': 'keep-alive',
@@ -15,6 +15,8 @@ FAKE_HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) ' +
                   'Chrome/53.0.2785.104 Safari/537.36 Core/1.53.2669.400 QQBrowser/9.6.10990.400'
 }
+
+EMPTY_COOKIES = "!!!EMPTY_COOKIES!!!"
 
 
 class GetUrlImplBase(object):

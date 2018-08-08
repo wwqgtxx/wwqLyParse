@@ -21,9 +21,38 @@ FAKE_HEADERS = {
 EMPTY_COOKIES = "!!!EMPTY_COOKIES!!!"
 
 
-class GetUrlImplBase(object):
+class GetUrlImpl(object):
     def __init__(self, service):
         self.service = service
 
     def get_url(self, url_json, url_json_dict, callmethod, pool=None):
         raise NotImplementedError
+
+
+class GetUrlStreamReader(object):
+    def read(self, size=4096):
+        try:
+            return self._read(size)
+        except Exception as e:
+            raise GetUrlStreamReadError() from e
+
+    def _read(self, size):
+        raise NotImplementedError
+
+    def __enter__(self):
+        raise NotImplementedError
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        raise NotImplementedError
+
+
+class GetUrlStreamReadError(ConnectionError):
+    pass
+
+
+class GetUrlResponse(object):
+    def __init__(self, headers=None, url=None, status_code=None, content=None):
+        self.headers = headers
+        self.url = url
+        self.status_code = status_code
+        self.content = content

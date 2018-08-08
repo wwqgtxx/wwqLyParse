@@ -3,7 +3,7 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 # some code merge from GoAgent (￣▽￣)~*
 
-from .get_url import get_url, EMPTY_COOKIES
+from .get_url import *
 from .for_path import get_real_path
 from .selectors import DefaultSelector
 from .workerpool import WorkerPool
@@ -198,11 +198,16 @@ class ProxyHandler(http.server.BaseHTTPRequestHandler):
         body = self.body
 
         try:
-            resp = get_url(url, encoding="response", method=method, headers=headers, data=body, cookies=EMPTY_COOKIES,
-                           allow_cache=False)
-            status = resp["status_code"]
-            data = resp["data"]
-            headers = resp["headers"]
+            resp: GetUrlResponse = get_url(url,
+                                           method=method,
+                                           headers=headers,
+                                           data=body,
+                                           cookies=EMPTY_COOKIES,
+                                           stream=True,
+                                           allow_cache=False)
+            status = resp.status_code
+            content = resp.content
+            headers = resp.headers
             # logging.debug(data)
             # logging.debug(headers)
         except Exception as e:
@@ -213,24 +218,33 @@ class ProxyHandler(http.server.BaseHTTPRequestHandler):
 
         self.close_connection = not headers.get('Content-Length')
         self.send_response_only(status)
+        if isinstance(content, GetUrlStreamReader):
+            pop_headers = []
+        else:
+            pop_headers = ['Transfer-Encoding'.lower(), 'Content-Length'.lower(), 'Content-Encoding'.lower()]
+            self.send_header('Content-Length', len(content))
         for key, value in headers.items():
-            if key.lower() == 'Transfer-Encoding'.lower():
-                continue
-            elif key.lower() == 'Content-Length'.lower():
-                continue
-            elif key.lower() == 'Content-Encoding'.lower():
+            if key.lower() in pop_headers:
                 continue
             self.send_header(key, value)
-        self.send_header('Content-Length', len(data))
         self.end_headers()
 
-        if data:
-            try:
-                self.wfile.write(data)
-                del data
-            except NetWorkIOError as e:
-                if e.args[0] in (errno.ECONNABORTED, errno.EPIPE) or 'bad write retry' in repr(e):
-                    return
+        try:
+            if isinstance(content, GetUrlStreamReader):
+                with content:
+                    while True:
+                        data = content.read()
+                        if not data:
+                            break
+                        self.wfile.write(data)
+            elif content:
+                self.wfile.write(content)
+                del content
+        except GetUrlStreamReadError:
+            return
+        except NetWorkIOError as e:
+            if e.args[0] in (errno.ECONNABORTED, errno.EPIPE) or 'bad write retry' in repr(e):
+                return
 
     def __getattr__(self, item):
         if str(item).startswith("do_"):

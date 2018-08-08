@@ -13,7 +13,22 @@ import urllib.request
 import urllib.error
 
 
-class UrlLibGetUrlImpl(GetUrlImplBase):
+class UrlLibGetUrlStreamReader(GetUrlStreamReader):
+    def __init__(self, resp: http.client.HTTPResponse):
+        self.resp = resp
+
+    def _read(self, size):
+        return self.resp.read(size)
+
+    def __enter__(self):
+        self.resp.__enter__()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.resp.__exit__(exc_type, exc_val, exc_tb)
+
+
+class UrlLibGetUrlImpl(GetUrlImpl):
     def __init__(self, service):
         super().__init__(service)
         if self.service.http_proxy:
@@ -24,46 +39,37 @@ class UrlLibGetUrlImpl(GetUrlImplBase):
             opener = urllib.request.build_opener(proxy_handler)
             urllib.request.install_opener(opener)
 
-    def _get_url_urllib(self, url_json, o_url, encoding, headers, data, method, callmethod, verify, cookies, use_pool):
+    def _get_url_urllib(self, url_json, o_url, encoding, headers, data, method, callmethod, verify, cookies, use_pool,
+                        stream):
         try:
             # url 包含中文时 parse.quote_from_bytes(o_url.encode('utf-8'), ':/&%?=+')
             logging.debug("get %s", o_url)
             req = urllib.request.Request(o_url, headers=headers if headers else self.service.fake_headers, data=data,
                                          method=method)
-            with urllib.request.urlopen(req) as response:
-                headers = response.info()
-                blob = response.read()
-                if headers.get('Content-Encoding', '') == 'gzip':
-                    data = gzip.decompress(blob)
-                else:
-                    data = blob
-                if encoding == "response":
-                    html_text = {
-                        "data": bytes(data),
-                        "headers": dict(headers),
-                        "url": str(response.geturl()),
-                        "status_code": response.getcode(),
-                    }
-                    logging.debug(html_text)
-                elif encoding == "response_without_data":
-                    html_text = {
-                        "data": None,
-                        "headers": dict(headers),
-                        "url": str(response.geturl()),
-                        "status_code": response.getcode(),
-                    }
-                    logging.debug(html_text)
-                elif encoding == "raw":
-                    html_text = data
-                else:
-                    if not encoding:
-                        match = re.search('charset\s*=\s*(\w+)', headers.get('Content-Type', ''))
-                        if match:
-                            encoding = match.group(1)
-                        else:
-                            encoding = "utf-8"
-                    html_text = data.decode(encoding, 'ignore')
-            return html_text
+            resp = urllib.request.urlopen(req)
+            result = GetUrlResponse(headers=dict(resp.info()),
+                                    url=str(resp.geturl()),
+                                    status_code=resp.getcode())
+            if stream:
+                result.content = UrlLibGetUrlStreamReader(resp)
+            else:
+                with resp as response:
+                    blob = response.read()
+                    if resp.info().get('Content-Encoding', '') == 'gzip':
+                        data = gzip.decompress(blob)
+                    else:
+                        data = blob
+                    if encoding == "raw":
+                        result.content = data
+                    else:
+                        if not encoding:
+                            match = re.search('charset\s*=\s*(\w+)', resp.info().get('Content-Type', ''))
+                            if match:
+                                encoding = match.group(1)
+                            else:
+                                encoding = "utf-8"
+                        result.content = data.decode(encoding, 'ignore')
+            return result
         except socket.timeout:
             logging.warning(callmethod + 'request attempt timeout')
         except urllib.error.URLError:

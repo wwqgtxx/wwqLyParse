@@ -6,11 +6,28 @@ from ..workerpool import *
 import warnings
 import logging
 import functools
+import urllib3
 import requests
 import requests.adapters
 
 
-class RequestsGetUrlImpl(GetUrlImplBase):
+class RequestsGetUrlStreamReader(GetUrlStreamReader):
+    def __init__(self, resp: requests.Response):
+        self.resp = resp
+        self.raw: urllib3.HTTPResponse = self.resp.raw
+
+    def _read(self, size):
+        return self.raw.read(size)
+
+    def __enter__(self):
+        self.resp.__enter__()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.resp.__exit__(exc_type, exc_val, exc_tb)
+
+
+class RequestsGetUrlImpl(GetUrlImpl):
     def __init__(self, service):
         super().__init__(service)
         warnings.filterwarnings("ignore", module="urllib3")
@@ -38,39 +55,33 @@ class RequestsGetUrlImpl(GetUrlImplBase):
         return session
 
     def _get_url_requests(self, url_json, o_url, encoding, headers, data, method, callmethod, verify, cookies,
-                          use_pool):
+                          use_pool, stream):
         try:
             if cookies is EMPTY_COOKIES:
                 cookies = {}
                 session = self._get_session()
             else:
                 session = self.common_session
-            with session.request(method=method if method else "GET", url=o_url,
-                                 headers=headers if headers else self.service.fake_headers, data=data,
-                                 cookies=cookies,
-                                 verify=verify,
-                                 timeout=self.common_timeout) as resp:
-                if encoding == "response":
-                    html_text = {
-                        "data": bytes(resp.content),
-                        "headers": dict(resp.headers),
-                        "url": str(resp.url),
-                        "status_code": resp.status_code,
-                    }
-                elif encoding == "response_without_data":
-                    html_text = {
-                        "data": None,
-                        "headers": dict(resp.headers),
-                        "url": str(resp.url),
-                        "status_code": resp.status_code,
-                    }
-                elif encoding == "raw":
-                    html_text = resp.content
-                else:
-                    if encoding is not None:
-                        resp.encoding = encoding
-                    html_text = resp.text
-                return html_text
+            resp = session.request(method=method if method else "GET", url=o_url,
+                                   headers=headers if headers else self.service.fake_headers, data=data,
+                                   cookies=cookies,
+                                   verify=verify,
+                                   stream=True,
+                                   timeout=self.common_timeout)
+            result = GetUrlResponse(headers=dict(resp.headers),
+                                    url=str(resp.url),
+                                    status_code=resp.status_code)
+            if stream:
+                result.content = RequestsGetUrlStreamReader(resp)
+            else:
+                with resp as resp:
+                    if encoding == "raw":
+                        result.content = resp.content
+                    else:
+                        if encoding is not None:
+                            resp.encoding = encoding
+                        result.content = resp.text
+            return result
         except requests.exceptions.RequestException as e:
             logging.warning(callmethod + 'requests error %s' % e)
         except GreenletExit as e:

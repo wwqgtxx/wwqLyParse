@@ -221,7 +221,8 @@ class ProxyHandler(http.server.BaseHTTPRequestHandler):
         if isinstance(content, GetUrlStreamReader):
             pop_headers = []
         else:
-            pop_headers = ['Transfer-Encoding'.lower(), 'Content-Length'.lower(), 'Content-Encoding'.lower()]
+            pop_headers = ['Transfer-Encoding', 'Content-Length', 'Content-Encoding']
+            pop_headers = [k.lower() for k in pop_headers]
             self.send_header('Content-Length', len(content))
         for key, value in headers.items():
             if key.lower() in pop_headers:

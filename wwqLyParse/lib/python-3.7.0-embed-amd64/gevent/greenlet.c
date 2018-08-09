@@ -12,7 +12,7 @@
             "src\\gevent\\_ident.py"
         ],
         "include_dirs": [
-            "X:\\Python36\\Include",
+            "d:\\python37\\Include",
             "deps"
         ],
         "name": "gevent._greenlet",

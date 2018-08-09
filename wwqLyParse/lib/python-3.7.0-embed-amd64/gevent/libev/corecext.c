@@ -38,8 +38,8 @@
             ]
         ],
         "depends": [
-            "X:\\Python36\\lib\\site-packages\\gevent\\libev\\libev.h",
-            "X:\\Python36\\lib\\site-packages\\gevent\\libev\\libev_vfd.h",
+            "d:\\python37\\lib\\site-packages\\gevent\\libev\\libev.h",
+            "d:\\python37\\lib\\site-packages\\gevent\\libev\\libev_vfd.h",
             "deps/libev\\ev++.h",
             "deps/libev\\ev.c",
             "deps/libev\\ev.h",
@@ -79,8 +79,8 @@
         ],
         "include_dirs": [
             "src/gevent/libev",
-            "X:\\Python36\\lib\\site-packages\\gevent\\libev",
-            "D:\\Build\\gevent\\gevent-1.3.4\\deps\\libev"
+            "d:\\python37\\lib\\site-packages\\gevent\\libev",
+            "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pip-install-ykzp54p7\\gevent\\deps\\libev"
         ],
         "libraries": [
             "ws2_32"

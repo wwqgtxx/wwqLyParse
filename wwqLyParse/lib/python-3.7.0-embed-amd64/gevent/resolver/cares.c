@@ -5,79 +5,96 @@
     "distutils": {
         "define_macros": [
             [
-                "HAVE_CONFIG_H", 
-                ""
-            ], 
+                "FD_SETSIZE",
+                "1024"
+            ],
             [
-                "CARES_EMBED", 
+                "_WIN32",
+                "1"
+            ],
+            [
+                "CARES_STATICLIB",
+                ""
+            ],
+            [
+                "CARES_EMBED",
                 "1"
             ]
-        ], 
+        ],
         "depends": [
-            "/private/tmp/gevent/python2.7/gevent/deps/c-ares/ares.h", 
-            "src/gevent/resolver/cares_ntop.h", 
-            "src/gevent/resolver/cares_pton.h", 
-            "src/gevent/resolver/dnshelper.c"
-        ], 
+            "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pip-install-ykzp54p7\\gevent\\deps\\c-ares\\ares.h",
+            "d:\\python37\\lib\\site-packages\\gevent\\resolver\\cares_pton.h",
+            "src/gevent/resolver/dnshelper.c",
+            "src/gevent/resolver\\cares_ntop.h",
+            "src/gevent/resolver\\cares_pton.h",
+            "src\\gevent\\resolver\\cares_ntop.h",
+            "src\\gevent\\resolver\\cares_pton.h",
+            "src\\gevent\\resolver\\dnshelper.c"
+        ],
         "include_dirs": [
-            "src/gevent/resolver", 
-            "/private/tmp/gevent/python2.7/gevent/deps/c-ares"
-        ], 
-        "name": "gevent.resolver.cares", 
+            "src/gevent/resolver",
+            "d:\\python37\\lib\\site-packages\\gevent\\resolver",
+            "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pip-install-ykzp54p7\\gevent\\deps\\c-ares"
+        ],
+        "libraries": [
+            "ws2_32",
+            "advapi32"
+        ],
+        "name": "gevent.resolver.cares",
         "sources": [
-            "src/gevent/resolver/cares.pyx", 
-            "deps/c-ares/ares__close_sockets.c", 
-            "deps/c-ares/ares__get_hostent.c", 
-            "deps/c-ares/ares__read_line.c", 
-            "deps/c-ares/ares__timeval.c", 
-            "deps/c-ares/ares_android.c", 
-            "deps/c-ares/ares_cancel.c", 
-            "deps/c-ares/ares_create_query.c", 
-            "deps/c-ares/ares_data.c", 
-            "deps/c-ares/ares_destroy.c", 
-            "deps/c-ares/ares_expand_name.c", 
-            "deps/c-ares/ares_expand_string.c", 
-            "deps/c-ares/ares_fds.c", 
-            "deps/c-ares/ares_free_hostent.c", 
-            "deps/c-ares/ares_free_string.c", 
-            "deps/c-ares/ares_getenv.c", 
-            "deps/c-ares/ares_gethostbyaddr.c", 
-            "deps/c-ares/ares_gethostbyname.c", 
-            "deps/c-ares/ares_getnameinfo.c", 
-            "deps/c-ares/ares_getopt.c", 
-            "deps/c-ares/ares_getsock.c", 
-            "deps/c-ares/ares_init.c", 
-            "deps/c-ares/ares_library_init.c", 
-            "deps/c-ares/ares_llist.c", 
-            "deps/c-ares/ares_mkquery.c", 
-            "deps/c-ares/ares_nowarn.c", 
-            "deps/c-ares/ares_options.c", 
-            "deps/c-ares/ares_parse_a_reply.c", 
-            "deps/c-ares/ares_parse_aaaa_reply.c", 
-            "deps/c-ares/ares_parse_mx_reply.c", 
-            "deps/c-ares/ares_parse_naptr_reply.c", 
-            "deps/c-ares/ares_parse_ns_reply.c", 
-            "deps/c-ares/ares_parse_ptr_reply.c", 
-            "deps/c-ares/ares_parse_soa_reply.c", 
-            "deps/c-ares/ares_parse_srv_reply.c", 
-            "deps/c-ares/ares_parse_txt_reply.c", 
-            "deps/c-ares/ares_platform.c", 
-            "deps/c-ares/ares_process.c", 
-            "deps/c-ares/ares_query.c", 
-            "deps/c-ares/ares_search.c", 
-            "deps/c-ares/ares_send.c", 
-            "deps/c-ares/ares_strcasecmp.c", 
-            "deps/c-ares/ares_strdup.c", 
-            "deps/c-ares/ares_strerror.c", 
-            "deps/c-ares/ares_timeout.c", 
-            "deps/c-ares/ares_version.c", 
-            "deps/c-ares/ares_writev.c", 
-            "deps/c-ares/bitncmp.c", 
-            "deps/c-ares/inet_net_pton.c", 
-            "deps/c-ares/inet_ntop.c", 
-            "deps/c-ares/windows_port.c"
+            "src/gevent/resolver/cares.pyx",
+            "deps/c-ares\\ares__close_sockets.c",
+            "deps/c-ares\\ares__get_hostent.c",
+            "deps/c-ares\\ares__read_line.c",
+            "deps/c-ares\\ares__timeval.c",
+            "deps/c-ares\\ares_android.c",
+            "deps/c-ares\\ares_cancel.c",
+            "deps/c-ares\\ares_create_query.c",
+            "deps/c-ares\\ares_data.c",
+            "deps/c-ares\\ares_destroy.c",
+            "deps/c-ares\\ares_expand_name.c",
+            "deps/c-ares\\ares_expand_string.c",
+            "deps/c-ares\\ares_fds.c",
+            "deps/c-ares\\ares_free_hostent.c",
+            "deps/c-ares\\ares_free_string.c",
+            "deps/c-ares\\ares_getenv.c",
+            "deps/c-ares\\ares_gethostbyaddr.c",
+            "deps/c-ares\\ares_gethostbyname.c",
+            "deps/c-ares\\ares_getnameinfo.c",
+            "deps/c-ares\\ares_getopt.c",
+            "deps/c-ares\\ares_getsock.c",
+            "deps/c-ares\\ares_init.c",
+            "deps/c-ares\\ares_library_init.c",
+            "deps/c-ares\\ares_llist.c",
+            "deps/c-ares\\ares_mkquery.c",
+            "deps/c-ares\\ares_nowarn.c",
+            "deps/c-ares\\ares_options.c",
+            "deps/c-ares\\ares_parse_a_reply.c",
+            "deps/c-ares\\ares_parse_aaaa_reply.c",
+            "deps/c-ares\\ares_parse_mx_reply.c",
+            "deps/c-ares\\ares_parse_naptr_reply.c",
+            "deps/c-ares\\ares_parse_ns_reply.c",
+            "deps/c-ares\\ares_parse_ptr_reply.c",
+            "deps/c-ares\\ares_parse_soa_reply.c",
+            "deps/c-ares\\ares_parse_srv_reply.c",
+            "deps/c-ares\\ares_parse_txt_reply.c",
+            "deps/c-ares\\ares_platform.c",
+            "deps/c-ares\\ares_process.c",
+            "deps/c-ares\\ares_query.c",
+            "deps/c-ares\\ares_search.c",
+            "deps/c-ares\\ares_send.c",
+            "deps/c-ares\\ares_strcasecmp.c",
+            "deps/c-ares\\ares_strdup.c",
+            "deps/c-ares\\ares_strerror.c",
+            "deps/c-ares\\ares_timeout.c",
+            "deps/c-ares\\ares_version.c",
+            "deps/c-ares\\ares_writev.c",
+            "deps/c-ares\\bitncmp.c",
+            "deps/c-ares\\inet_net_pton.c",
+            "deps/c-ares\\inet_ntop.c",
+            "deps/c-ares\\windows_port.c"
         ]
-    }, 
+    },
     "module_name": "gevent.resolver.cares"
 }
 END: Cython Metadata */
@@ -852,7 +869,7 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "src/gevent/resolver/cares.pyx",
+  "src\\gevent\\resolver\\cares.pyx",
   "type.pxd",
 };
 
@@ -1580,7 +1597,7 @@ static const char __pyx_k_Invalid_value_for_port_r[] = "Invalid value for port: 
 static const char __pyx_k_ARES_EADDRGETNETWORKPARAMS[] = "ARES_EADDRGETNETWORKPARAMS";
 static const char __pyx_k_Bad_value_for_ai_flags_0x_x[] = "Bad value for ai_flags: 0x%x";
 static const char __pyx_k_ares_host_result___getnewargs[] = "ares_host_result.__getnewargs__";
-static const char __pyx_k_src_gevent_resolver_cares_pyx[] = "src/gevent/resolver/cares.pyx";
+static const char __pyx_k_src_gevent_resolver_cares_pyx[] = "src\\gevent\\resolver\\cares.pyx";
 static const char __pyx_k_s_at_0x_x__timer_r__watchers_s[] = "<%s at 0x%x _timer=%r _watchers[%s]>";
 static const char __pyx_k_this_ares_channel_has_been_destr[] = "this ares channel has been destroyed";
 static PyObject *__pyx_n_s_ARES_EADDRGETNETWORKPARAMS;

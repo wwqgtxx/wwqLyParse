@@ -8,7 +8,7 @@
             "src\\gevent\\_queue.pxd"
         ],
         "include_dirs": [
-            "X:\\Python36\\Include",
+            "d:\\python37\\Include",
             "deps"
         ],
         "name": "gevent._queue",
@@ -919,7 +919,7 @@ struct __pyx_opt_args_6gevent_6_queue_7Channel_get {
   PyObject *timeout;
 };
 
-/* "src/gevent/queue.py":420
+/* "src/gevent/queue.py":425
  *         self.putters = None # Will never be used.
  * 
  *     def put(self, item, block=True, timeout=None):             # <<<<<<<<<<<<<<
@@ -1233,7 +1233,7 @@ struct __pyx_vtabstruct_6gevent_6_event_AsyncResult {
 static struct __pyx_vtabstruct_6gevent_6_event_AsyncResult *__pyx_vtabptr_6gevent_6_event_AsyncResult;
 
 
-/* "src/gevent/queue.py":70
+/* "src/gevent/queue.py":75
  * locals()['Waiter'] = gevent._waiter.Waiter
  * 
  * class ItemWaiter(Waiter): # pylint:disable=undefined-variable             # <<<<<<<<<<<<<<
@@ -1247,7 +1247,7 @@ struct __pyx_vtabstruct_6gevent_6_queue_ItemWaiter {
 static struct __pyx_vtabstruct_6gevent_6_queue_ItemWaiter *__pyx_vtabptr_6gevent_6_queue_ItemWaiter;
 
 
-/* "src/gevent/queue.py":88
+/* "src/gevent/queue.py":93
  *         return self.switch(self)
  * 
  * class Queue(object):             # <<<<<<<<<<<<<<
@@ -1274,7 +1274,7 @@ struct __pyx_vtabstruct_6gevent_6_queue_Queue {
 static struct __pyx_vtabstruct_6gevent_6_queue_Queue *__pyx_vtabptr_6gevent_6_queue_Queue;
 
 
-/* "src/gevent/queue.py":408
+/* "src/gevent/queue.py":413
  * 
  * 
  * class UnboundQueue(Queue):             # <<<<<<<<<<<<<<
@@ -1288,7 +1288,7 @@ struct __pyx_vtabstruct_6gevent_6_queue_UnboundQueue {
 static struct __pyx_vtabstruct_6gevent_6_queue_UnboundQueue *__pyx_vtabptr_6gevent_6_queue_UnboundQueue;
 
 
-/* "src/gevent/queue.py":426
+/* "src/gevent/queue.py":431
  * 
  * 
  * class PriorityQueue(Queue):             # <<<<<<<<<<<<<<
@@ -1302,7 +1302,7 @@ struct __pyx_vtabstruct_6gevent_6_queue_PriorityQueue {
 static struct __pyx_vtabstruct_6gevent_6_queue_PriorityQueue *__pyx_vtabptr_6gevent_6_queue_PriorityQueue;
 
 
-/* "src/gevent/queue.py":451
+/* "src/gevent/queue.py":456
  * 
  * 
  * class LifoQueue(Queue):             # <<<<<<<<<<<<<<
@@ -1316,7 +1316,7 @@ struct __pyx_vtabstruct_6gevent_6_queue_LifoQueue {
 static struct __pyx_vtabstruct_6gevent_6_queue_LifoQueue *__pyx_vtabptr_6gevent_6_queue_LifoQueue;
 
 
-/* "src/gevent/queue.py":469
+/* "src/gevent/queue.py":474
  * 
  * 
  * class JoinableQueue(Queue):             # <<<<<<<<<<<<<<
@@ -1330,7 +1330,7 @@ struct __pyx_vtabstruct_6gevent_6_queue_JoinableQueue {
 static struct __pyx_vtabstruct_6gevent_6_queue_JoinableQueue *__pyx_vtabptr_6gevent_6_queue_JoinableQueue;
 
 
-/* "src/gevent/queue.py":555
+/* "src/gevent/queue.py":560
  * 
  * 
  * class Channel(object):             # <<<<<<<<<<<<<<
@@ -2115,6 +2115,7 @@ static const char __pyx_k_Channel_empty[] = "Channel.empty";
 static const char __pyx_k_Channel_qsize[] = "Channel.qsize";
 static const char __pyx_k_JoinableQueue[] = "JoinableQueue";
 static const char __pyx_k_PriorityQueue[] = "PriorityQueue";
+static const char __pyx_k_PySimpleQueue[] = "_PySimpleQueue";
 static const char __pyx_k_Queue__format[] = "Queue._format";
 static const char __pyx_k_Queue__unlock[] = "Queue._unlock";
 static const char __pyx_k_StopIteration[] = "StopIteration";
@@ -2198,6 +2199,7 @@ static PyObject *__pyx_n_s_PriorityQueue;
 static PyObject *__pyx_n_s_PriorityQueue__create_queue;
 static PyObject *__pyx_n_s_PriorityQueue__get;
 static PyObject *__pyx_n_s_PriorityQueue__put;
+static PyObject *__pyx_n_s_PySimpleQueue;
 static PyObject *__pyx_n_s_Queue;
 static PyObject *__pyx_kp_s_Queue_0_now_equivalent_to_Queue;
 static PyObject *__pyx_n_s_Queue__create_queue;
@@ -2506,8 +2508,8 @@ static PyObject *__pyx_codeobj__86;
 static PyObject *__pyx_codeobj__88;
 /* Late includes */
 
-/* "src/gevent/queue.py":59
- * 
+/* "src/gevent/queue.py":64
+ * # pylint:disable=assignment-from-no-return
  * 
  * def _safe_remove(deq, item):             # <<<<<<<<<<<<<<
  *     # For when the item may have been removed by
@@ -2527,7 +2529,7 @@ static PyObject *__pyx_f_6gevent_6_queue__safe_remove(PyObject *__pyx_v_deq, PyO
   int __pyx_t_8;
   __Pyx_RefNannySetupContext("_safe_remove", 0);
 
-  /* "src/gevent/queue.py":62
+  /* "src/gevent/queue.py":67
  *     # For when the item may have been removed by
  *     # Queue._unlock
  *     try:             # <<<<<<<<<<<<<<
@@ -2543,14 +2545,14 @@ static PyObject *__pyx_f_6gevent_6_queue__safe_remove(PyObject *__pyx_v_deq, PyO
     __Pyx_XGOTREF(__pyx_t_3);
     /*try:*/ {
 
-      /* "src/gevent/queue.py":63
+      /* "src/gevent/queue.py":68
  *     # Queue._unlock
  *     try:
  *         deq.remove(item)             # <<<<<<<<<<<<<<
  *     except ValueError:
  *         pass
  */
-      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_deq, __pyx_n_s_remove); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 63, __pyx_L3_error)
+      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_deq, __pyx_n_s_remove); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 68, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_5);
       __pyx_t_6 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
@@ -2563,13 +2565,13 @@ static PyObject *__pyx_f_6gevent_6_queue__safe_remove(PyObject *__pyx_v_deq, PyO
         }
       }
       if (!__pyx_t_6) {
-        __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_v_item); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 63, __pyx_L3_error)
+        __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_v_item); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 68, __pyx_L3_error)
         __Pyx_GOTREF(__pyx_t_4);
       } else {
         #if CYTHON_FAST_PYCALL
         if (PyFunction_Check(__pyx_t_5)) {
           PyObject *__pyx_temp[2] = {__pyx_t_6, __pyx_v_item};
-          __pyx_t_4 = __Pyx_PyFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 63, __pyx_L3_error)
+          __pyx_t_4 = __Pyx_PyFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 68, __pyx_L3_error)
           __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
           __Pyx_GOTREF(__pyx_t_4);
         } else
@@ -2577,19 +2579,19 @@ static PyObject *__pyx_f_6gevent_6_queue__safe_remove(PyObject *__pyx_v_deq, PyO
         #if CYTHON_FAST_PYCCALL
         if (__Pyx_PyFastCFunction_Check(__pyx_t_5)) {
           PyObject *__pyx_temp[2] = {__pyx_t_6, __pyx_v_item};
-          __pyx_t_4 = __Pyx_PyCFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 63, __pyx_L3_error)
+          __pyx_t_4 = __Pyx_PyCFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 68, __pyx_L3_error)
           __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
           __Pyx_GOTREF(__pyx_t_4);
         } else
         #endif
         {
-          __pyx_t_7 = PyTuple_New(1+1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 63, __pyx_L3_error)
+          __pyx_t_7 = PyTuple_New(1+1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 68, __pyx_L3_error)
           __Pyx_GOTREF(__pyx_t_7);
           __Pyx_GIVEREF(__pyx_t_6); PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_6); __pyx_t_6 = NULL;
           __Pyx_INCREF(__pyx_v_item);
           __Pyx_GIVEREF(__pyx_v_item);
           PyTuple_SET_ITEM(__pyx_t_7, 0+1, __pyx_v_item);
-          __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_7, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 63, __pyx_L3_error)
+          __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_7, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 68, __pyx_L3_error)
           __Pyx_GOTREF(__pyx_t_4);
           __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
         }
@@ -2597,7 +2599,7 @@ static PyObject *__pyx_f_6gevent_6_queue__safe_remove(PyObject *__pyx_v_deq, PyO
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-      /* "src/gevent/queue.py":62
+      /* "src/gevent/queue.py":67
  *     # For when the item may have been removed by
  *     # Queue._unlock
  *     try:             # <<<<<<<<<<<<<<
@@ -2615,7 +2617,7 @@ static PyObject *__pyx_f_6gevent_6_queue__safe_remove(PyObject *__pyx_v_deq, PyO
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "src/gevent/queue.py":64
+    /* "src/gevent/queue.py":69
  *     try:
  *         deq.remove(item)
  *     except ValueError:             # <<<<<<<<<<<<<<
@@ -2630,7 +2632,7 @@ static PyObject *__pyx_f_6gevent_6_queue__safe_remove(PyObject *__pyx_v_deq, PyO
     goto __pyx_L5_except_error;
     __pyx_L5_except_error:;
 
-    /* "src/gevent/queue.py":62
+    /* "src/gevent/queue.py":67
  *     # For when the item may have been removed by
  *     # Queue._unlock
  *     try:             # <<<<<<<<<<<<<<
@@ -2650,8 +2652,8 @@ static PyObject *__pyx_f_6gevent_6_queue__safe_remove(PyObject *__pyx_v_deq, PyO
     __pyx_L8_try_end:;
   }
 
-  /* "src/gevent/queue.py":59
- * 
+  /* "src/gevent/queue.py":64
+ * # pylint:disable=assignment-from-no-return
  * 
  * def _safe_remove(deq, item):             # <<<<<<<<<<<<<<
  *     # For when the item may have been removed by
@@ -2674,7 +2676,7 @@ static PyObject *__pyx_f_6gevent_6_queue__safe_remove(PyObject *__pyx_v_deq, PyO
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":77
+/* "src/gevent/queue.py":82
  *     )
  * 
  *     def __init__(self, item, queue):             # <<<<<<<<<<<<<<
@@ -2713,11 +2715,11 @@ static int __pyx_pw_6gevent_6_queue_10ItemWaiter_1__init__(PyObject *__pyx_v_sel
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_queue)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__init__", 1, 2, 2, 1); __PYX_ERR(0, 77, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__init__", 1, 2, 2, 1); __PYX_ERR(0, 82, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 77, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 82, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -2730,7 +2732,7 @@ static int __pyx_pw_6gevent_6_queue_10ItemWaiter_1__init__(PyObject *__pyx_v_sel
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__init__", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 77, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__init__", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 82, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gevent._queue.ItemWaiter.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -2752,14 +2754,14 @@ static int __pyx_pf_6gevent_6_queue_10ItemWaiter___init__(struct __pyx_obj_6geve
   PyObject *__pyx_t_4 = NULL;
   __Pyx_RefNannySetupContext("__init__", 0);
 
-  /* "src/gevent/queue.py":78
+  /* "src/gevent/queue.py":83
  * 
  *     def __init__(self, item, queue):
  *         Waiter.__init__(self) # pylint:disable=undefined-variable             # <<<<<<<<<<<<<<
  *         self.item = item
  *         self.queue = queue
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_ptype_6gevent_8__waiter_Waiter), __pyx_n_s_init); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 78, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_ptype_6gevent_8__waiter_Waiter), __pyx_n_s_init); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 83, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -2772,13 +2774,13 @@ static int __pyx_pf_6gevent_6_queue_10ItemWaiter___init__(struct __pyx_obj_6geve
     }
   }
   if (!__pyx_t_3) {
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, ((PyObject *)__pyx_v_self)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 78, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, ((PyObject *)__pyx_v_self)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 83, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   } else {
     #if CYTHON_FAST_PYCALL
     if (PyFunction_Check(__pyx_t_2)) {
       PyObject *__pyx_temp[2] = {__pyx_t_3, ((PyObject *)__pyx_v_self)};
-      __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 78, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 83, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_GOTREF(__pyx_t_1);
     } else
@@ -2786,19 +2788,19 @@ static int __pyx_pf_6gevent_6_queue_10ItemWaiter___init__(struct __pyx_obj_6geve
     #if CYTHON_FAST_PYCCALL
     if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
       PyObject *__pyx_temp[2] = {__pyx_t_3, ((PyObject *)__pyx_v_self)};
-      __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 78, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 83, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_GOTREF(__pyx_t_1);
     } else
     #endif
     {
-      __pyx_t_4 = PyTuple_New(1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 78, __pyx_L1_error)
+      __pyx_t_4 = PyTuple_New(1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 83, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_3); __pyx_t_3 = NULL;
       __Pyx_INCREF(((PyObject *)__pyx_v_self));
       __Pyx_GIVEREF(((PyObject *)__pyx_v_self));
       PyTuple_SET_ITEM(__pyx_t_4, 0+1, ((PyObject *)__pyx_v_self));
-      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_4, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 78, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_4, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 83, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     }
@@ -2806,7 +2808,7 @@ static int __pyx_pf_6gevent_6_queue_10ItemWaiter___init__(struct __pyx_obj_6geve
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/gevent/queue.py":79
+  /* "src/gevent/queue.py":84
  *     def __init__(self, item, queue):
  *         Waiter.__init__(self) # pylint:disable=undefined-variable
  *         self.item = item             # <<<<<<<<<<<<<<
@@ -2819,7 +2821,7 @@ static int __pyx_pf_6gevent_6_queue_10ItemWaiter___init__(struct __pyx_obj_6geve
   __Pyx_DECREF(__pyx_v_self->item);
   __pyx_v_self->item = __pyx_v_item;
 
-  /* "src/gevent/queue.py":80
+  /* "src/gevent/queue.py":85
  *         Waiter.__init__(self) # pylint:disable=undefined-variable
  *         self.item = item
  *         self.queue = queue             # <<<<<<<<<<<<<<
@@ -2832,7 +2834,7 @@ static int __pyx_pf_6gevent_6_queue_10ItemWaiter___init__(struct __pyx_obj_6geve
   __Pyx_DECREF(__pyx_v_self->queue);
   __pyx_v_self->queue = __pyx_v_queue;
 
-  /* "src/gevent/queue.py":77
+  /* "src/gevent/queue.py":82
  *     )
  * 
  *     def __init__(self, item, queue):             # <<<<<<<<<<<<<<
@@ -2855,7 +2857,7 @@ static int __pyx_pf_6gevent_6_queue_10ItemWaiter___init__(struct __pyx_obj_6geve
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":82
+/* "src/gevent/queue.py":87
  *         self.queue = queue
  * 
  *     def put_and_switch(self):             # <<<<<<<<<<<<<<
@@ -2887,14 +2889,14 @@ static PyObject *__pyx_pf_6gevent_6_queue_10ItemWaiter_2put_and_switch(struct __
   PyObject *__pyx_t_4 = NULL;
   __Pyx_RefNannySetupContext("put_and_switch", 0);
 
-  /* "src/gevent/queue.py":83
+  /* "src/gevent/queue.py":88
  * 
  *     def put_and_switch(self):
  *         self.queue._put(self.item)             # <<<<<<<<<<<<<<
  *         self.queue = None
  *         self.item = None
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->queue, __pyx_n_s_put); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 83, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->queue, __pyx_n_s_put); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 88, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -2907,13 +2909,13 @@ static PyObject *__pyx_pf_6gevent_6_queue_10ItemWaiter_2put_and_switch(struct __
     }
   }
   if (!__pyx_t_3) {
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_self->item); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 83, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_self->item); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 88, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   } else {
     #if CYTHON_FAST_PYCALL
     if (PyFunction_Check(__pyx_t_2)) {
       PyObject *__pyx_temp[2] = {__pyx_t_3, __pyx_v_self->item};
-      __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 83, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 88, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_GOTREF(__pyx_t_1);
     } else
@@ -2921,19 +2923,19 @@ static PyObject *__pyx_pf_6gevent_6_queue_10ItemWaiter_2put_and_switch(struct __
     #if CYTHON_FAST_PYCCALL
     if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
       PyObject *__pyx_temp[2] = {__pyx_t_3, __pyx_v_self->item};
-      __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 83, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 88, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_GOTREF(__pyx_t_1);
     } else
     #endif
     {
-      __pyx_t_4 = PyTuple_New(1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 83, __pyx_L1_error)
+      __pyx_t_4 = PyTuple_New(1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 88, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_3); __pyx_t_3 = NULL;
       __Pyx_INCREF(__pyx_v_self->item);
       __Pyx_GIVEREF(__pyx_v_self->item);
       PyTuple_SET_ITEM(__pyx_t_4, 0+1, __pyx_v_self->item);
-      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_4, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 83, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_4, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 88, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     }
@@ -2941,7 +2943,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_10ItemWaiter_2put_and_switch(struct __
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/gevent/queue.py":84
+  /* "src/gevent/queue.py":89
  *     def put_and_switch(self):
  *         self.queue._put(self.item)
  *         self.queue = None             # <<<<<<<<<<<<<<
@@ -2954,7 +2956,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_10ItemWaiter_2put_and_switch(struct __
   __Pyx_DECREF(__pyx_v_self->queue);
   __pyx_v_self->queue = Py_None;
 
-  /* "src/gevent/queue.py":85
+  /* "src/gevent/queue.py":90
  *         self.queue._put(self.item)
  *         self.queue = None
  *         self.item = None             # <<<<<<<<<<<<<<
@@ -2967,7 +2969,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_10ItemWaiter_2put_and_switch(struct __
   __Pyx_DECREF(__pyx_v_self->item);
   __pyx_v_self->item = Py_None;
 
-  /* "src/gevent/queue.py":86
+  /* "src/gevent/queue.py":91
  *         self.queue = None
  *         self.item = None
  *         return self.switch(self)             # <<<<<<<<<<<<<<
@@ -2975,7 +2977,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_10ItemWaiter_2put_and_switch(struct __
  * class Queue(object):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_switch); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 86, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_switch); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 91, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_4 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -2988,13 +2990,13 @@ static PyObject *__pyx_pf_6gevent_6_queue_10ItemWaiter_2put_and_switch(struct __
     }
   }
   if (!__pyx_t_4) {
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, ((PyObject *)__pyx_v_self)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 86, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, ((PyObject *)__pyx_v_self)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 91, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   } else {
     #if CYTHON_FAST_PYCALL
     if (PyFunction_Check(__pyx_t_2)) {
       PyObject *__pyx_temp[2] = {__pyx_t_4, ((PyObject *)__pyx_v_self)};
-      __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 86, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 91, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_GOTREF(__pyx_t_1);
     } else
@@ -3002,19 +3004,19 @@ static PyObject *__pyx_pf_6gevent_6_queue_10ItemWaiter_2put_and_switch(struct __
     #if CYTHON_FAST_PYCCALL
     if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
       PyObject *__pyx_temp[2] = {__pyx_t_4, ((PyObject *)__pyx_v_self)};
-      __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 86, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 91, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_GOTREF(__pyx_t_1);
     } else
     #endif
     {
-      __pyx_t_3 = PyTuple_New(1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 86, __pyx_L1_error)
+      __pyx_t_3 = PyTuple_New(1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 91, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_4); __pyx_t_4 = NULL;
       __Pyx_INCREF(((PyObject *)__pyx_v_self));
       __Pyx_GIVEREF(((PyObject *)__pyx_v_self));
       PyTuple_SET_ITEM(__pyx_t_3, 0+1, ((PyObject *)__pyx_v_self));
-      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 86, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 91, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     }
@@ -3024,7 +3026,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_10ItemWaiter_2put_and_switch(struct __
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":82
+  /* "src/gevent/queue.py":87
  *         self.queue = queue
  * 
  *     def put_and_switch(self):             # <<<<<<<<<<<<<<
@@ -3120,7 +3122,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_10ItemWaiter_5queue___get__(struct __p
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":119
+/* "src/gevent/queue.py":124
  *     )
  * 
  *     def __init__(self, maxsize=None, items=(), _warn_depth=2):             # <<<<<<<<<<<<<<
@@ -3177,7 +3179,7 @@ static int __pyx_pw_6gevent_6_queue_5Queue_1__init__(PyObject *__pyx_v_self, PyO
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 119, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 124, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -3197,7 +3199,7 @@ static int __pyx_pw_6gevent_6_queue_5Queue_1__init__(PyObject *__pyx_v_self, PyO
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__init__", 0, 0, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 119, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__init__", 0, 0, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 124, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gevent._queue.Queue.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -3226,7 +3228,7 @@ static int __pyx_pf_6gevent_6_queue_5Queue___init__(struct __pyx_obj_6gevent_6_q
   __Pyx_RefNannySetupContext("__init__", 0);
   __Pyx_INCREF(__pyx_v_maxsize);
 
-  /* "src/gevent/queue.py":120
+  /* "src/gevent/queue.py":125
  * 
  *     def __init__(self, maxsize=None, items=(), _warn_depth=2):
  *         if maxsize is not None and maxsize <= 0:             # <<<<<<<<<<<<<<
@@ -3240,73 +3242,73 @@ static int __pyx_pf_6gevent_6_queue_5Queue___init__(struct __pyx_obj_6gevent_6_q
     __pyx_t_1 = __pyx_t_3;
     goto __pyx_L4_bool_binop_done;
   }
-  __pyx_t_4 = PyObject_RichCompare(__pyx_v_maxsize, __pyx_int_0, Py_LE); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 120, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 120, __pyx_L1_error)
+  __pyx_t_4 = PyObject_RichCompare(__pyx_v_maxsize, __pyx_int_0, Py_LE); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 125, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 125, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_1 = __pyx_t_3;
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "src/gevent/queue.py":121
+    /* "src/gevent/queue.py":126
  *     def __init__(self, maxsize=None, items=(), _warn_depth=2):
  *         if maxsize is not None and maxsize <= 0:
  *             if maxsize == 0:             # <<<<<<<<<<<<<<
  *                 import warnings
  *                 warnings.warn(
  */
-    __pyx_t_4 = __Pyx_PyInt_EqObjC(__pyx_v_maxsize, __pyx_int_0, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 121, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyInt_EqObjC(__pyx_v_maxsize, __pyx_int_0, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 126, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 121, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 126, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     if (__pyx_t_1) {
 
-      /* "src/gevent/queue.py":122
+      /* "src/gevent/queue.py":127
  *         if maxsize is not None and maxsize <= 0:
  *             if maxsize == 0:
  *                 import warnings             # <<<<<<<<<<<<<<
  *                 warnings.warn(
  *                     'Queue(0) now equivalent to Queue(None); if you want a channel, use Channel',
  */
-      __pyx_t_4 = __Pyx_Import(__pyx_n_s_warnings, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 122, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_Import(__pyx_n_s_warnings, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 127, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __pyx_v_warnings = __pyx_t_4;
       __pyx_t_4 = 0;
 
-      /* "src/gevent/queue.py":123
+      /* "src/gevent/queue.py":128
  *             if maxsize == 0:
  *                 import warnings
  *                 warnings.warn(             # <<<<<<<<<<<<<<
  *                     'Queue(0) now equivalent to Queue(None); if you want a channel, use Channel',
  *                     DeprecationWarning,
  */
-      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_warnings, __pyx_n_s_warn); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 123, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_warnings, __pyx_n_s_warn); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 128, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
 
-      /* "src/gevent/queue.py":126
+      /* "src/gevent/queue.py":131
  *                     'Queue(0) now equivalent to Queue(None); if you want a channel, use Channel',
  *                     DeprecationWarning,
  *                     stacklevel=_warn_depth)             # <<<<<<<<<<<<<<
  *             maxsize = None
  * 
  */
-      __pyx_t_5 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 126, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 131, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
-      if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_stacklevel, __pyx_v__warn_depth) < 0) __PYX_ERR(0, 126, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_stacklevel, __pyx_v__warn_depth) < 0) __PYX_ERR(0, 131, __pyx_L1_error)
 
-      /* "src/gevent/queue.py":123
+      /* "src/gevent/queue.py":128
  *             if maxsize == 0:
  *                 import warnings
  *                 warnings.warn(             # <<<<<<<<<<<<<<
  *                     'Queue(0) now equivalent to Queue(None); if you want a channel, use Channel',
  *                     DeprecationWarning,
  */
-      __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_tuple_, __pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 123, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_tuple_, __pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 128, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-      /* "src/gevent/queue.py":121
+      /* "src/gevent/queue.py":126
  *     def __init__(self, maxsize=None, items=(), _warn_depth=2):
  *         if maxsize is not None and maxsize <= 0:
  *             if maxsize == 0:             # <<<<<<<<<<<<<<
@@ -3315,7 +3317,7 @@ static int __pyx_pf_6gevent_6_queue_5Queue___init__(struct __pyx_obj_6gevent_6_q
  */
     }
 
-    /* "src/gevent/queue.py":127
+    /* "src/gevent/queue.py":132
  *                     DeprecationWarning,
  *                     stacklevel=_warn_depth)
  *             maxsize = None             # <<<<<<<<<<<<<<
@@ -3325,7 +3327,7 @@ static int __pyx_pf_6gevent_6_queue_5Queue___init__(struct __pyx_obj_6gevent_6_q
     __Pyx_INCREF(Py_None);
     __Pyx_DECREF_SET(__pyx_v_maxsize, Py_None);
 
-    /* "src/gevent/queue.py":120
+    /* "src/gevent/queue.py":125
  * 
  *     def __init__(self, maxsize=None, items=(), _warn_depth=2):
  *         if maxsize is not None and maxsize <= 0:             # <<<<<<<<<<<<<<
@@ -3334,7 +3336,7 @@ static int __pyx_pf_6gevent_6_queue_5Queue___init__(struct __pyx_obj_6gevent_6_q
  */
   }
 
-  /* "src/gevent/queue.py":129
+  /* "src/gevent/queue.py":134
  *             maxsize = None
  * 
  *         self._maxsize = maxsize if maxsize is not None else -1             # <<<<<<<<<<<<<<
@@ -3343,23 +3345,23 @@ static int __pyx_pf_6gevent_6_queue_5Queue___init__(struct __pyx_obj_6gevent_6_q
  */
   __pyx_t_1 = (__pyx_v_maxsize != Py_None);
   if ((__pyx_t_1 != 0)) {
-    __pyx_t_8 = __Pyx_PyIndex_AsSsize_t(__pyx_v_maxsize); if (unlikely((__pyx_t_8 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 129, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyIndex_AsSsize_t(__pyx_v_maxsize); if (unlikely((__pyx_t_8 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 134, __pyx_L1_error)
     __pyx_t_7 = __pyx_t_8;
   } else {
     __pyx_t_7 = -1L;
   }
   __pyx_v_self->_maxsize = __pyx_t_7;
 
-  /* "src/gevent/queue.py":142
+  /* "src/gevent/queue.py":147
  *         # many waiters that removing an arbitrary element is a
  *         # bottleneck, though.
  *         self.getters = collections.deque()             # <<<<<<<<<<<<<<
  *         self.putters = collections.deque()
  *         self.hub = get_hub()
  */
-  __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_collections); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 142, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_collections); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 147, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_deque); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 142, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_deque); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 147, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_5 = NULL;
@@ -3373,10 +3375,10 @@ static int __pyx_pf_6gevent_6_queue_5Queue___init__(struct __pyx_obj_6gevent_6_q
     }
   }
   if (__pyx_t_5) {
-    __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 142, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 147, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   } else {
-    __pyx_t_6 = __Pyx_PyObject_CallNoArg(__pyx_t_4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 142, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_CallNoArg(__pyx_t_4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 147, __pyx_L1_error)
   }
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -3386,16 +3388,16 @@ static int __pyx_pf_6gevent_6_queue_5Queue___init__(struct __pyx_obj_6gevent_6_q
   __pyx_v_self->getters = __pyx_t_6;
   __pyx_t_6 = 0;
 
-  /* "src/gevent/queue.py":143
+  /* "src/gevent/queue.py":148
  *         # bottleneck, though.
  *         self.getters = collections.deque()
  *         self.putters = collections.deque()             # <<<<<<<<<<<<<<
  *         self.hub = get_hub()
  *         self._event_unlock = None
  */
-  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_collections); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 143, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_collections); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 148, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_deque); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 143, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_deque); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 148, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_4 = NULL;
@@ -3409,10 +3411,10 @@ static int __pyx_pf_6gevent_6_queue_5Queue___init__(struct __pyx_obj_6gevent_6_q
     }
   }
   if (__pyx_t_4) {
-    __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 143, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 148, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   } else {
-    __pyx_t_6 = __Pyx_PyObject_CallNoArg(__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 143, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_CallNoArg(__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 148, __pyx_L1_error)
   }
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
@@ -3422,14 +3424,14 @@ static int __pyx_pf_6gevent_6_queue_5Queue___init__(struct __pyx_obj_6gevent_6_q
   __pyx_v_self->putters = __pyx_t_6;
   __pyx_t_6 = 0;
 
-  /* "src/gevent/queue.py":144
+  /* "src/gevent/queue.py":149
  *         self.getters = collections.deque()
  *         self.putters = collections.deque()
  *         self.hub = get_hub()             # <<<<<<<<<<<<<<
  *         self._event_unlock = None
  *         self.queue = self._create_queue(items)
  */
-  __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_get_hub); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 144, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_get_hub); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 149, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __pyx_t_4 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_5))) {
@@ -3442,10 +3444,10 @@ static int __pyx_pf_6gevent_6_queue_5Queue___init__(struct __pyx_obj_6gevent_6_q
     }
   }
   if (__pyx_t_4) {
-    __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 144, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 149, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   } else {
-    __pyx_t_6 = __Pyx_PyObject_CallNoArg(__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 144, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_CallNoArg(__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 149, __pyx_L1_error)
   }
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
@@ -3455,7 +3457,7 @@ static int __pyx_pf_6gevent_6_queue_5Queue___init__(struct __pyx_obj_6gevent_6_q
   __pyx_v_self->hub = __pyx_t_6;
   __pyx_t_6 = 0;
 
-  /* "src/gevent/queue.py":145
+  /* "src/gevent/queue.py":150
  *         self.putters = collections.deque()
  *         self.hub = get_hub()
  *         self._event_unlock = None             # <<<<<<<<<<<<<<
@@ -3468,14 +3470,14 @@ static int __pyx_pf_6gevent_6_queue_5Queue___init__(struct __pyx_obj_6gevent_6_q
   __Pyx_DECREF(__pyx_v_self->_event_unlock);
   __pyx_v_self->_event_unlock = Py_None;
 
-  /* "src/gevent/queue.py":146
+  /* "src/gevent/queue.py":151
  *         self.hub = get_hub()
  *         self._event_unlock = None
  *         self.queue = self._create_queue(items)             # <<<<<<<<<<<<<<
  * 
  *     @property
  */
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_create_queue); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 146, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_create_queue); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 151, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __pyx_t_4 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
@@ -3488,13 +3490,13 @@ static int __pyx_pf_6gevent_6_queue_5Queue___init__(struct __pyx_obj_6gevent_6_q
     }
   }
   if (!__pyx_t_4) {
-    __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_v_items); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 146, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_v_items); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 151, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
   } else {
     #if CYTHON_FAST_PYCALL
     if (PyFunction_Check(__pyx_t_5)) {
       PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_v_items};
-      __pyx_t_6 = __Pyx_PyFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 146, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 151, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_GOTREF(__pyx_t_6);
     } else
@@ -3502,19 +3504,19 @@ static int __pyx_pf_6gevent_6_queue_5Queue___init__(struct __pyx_obj_6gevent_6_q
     #if CYTHON_FAST_PYCCALL
     if (__Pyx_PyFastCFunction_Check(__pyx_t_5)) {
       PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_v_items};
-      __pyx_t_6 = __Pyx_PyCFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 146, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyCFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 151, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_GOTREF(__pyx_t_6);
     } else
     #endif
     {
-      __pyx_t_9 = PyTuple_New(1+1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 146, __pyx_L1_error)
+      __pyx_t_9 = PyTuple_New(1+1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 151, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_9, 0, __pyx_t_4); __pyx_t_4 = NULL;
       __Pyx_INCREF(__pyx_v_items);
       __Pyx_GIVEREF(__pyx_v_items);
       PyTuple_SET_ITEM(__pyx_t_9, 0+1, __pyx_v_items);
-      __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_9, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 146, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_9, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 151, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
     }
@@ -3526,7 +3528,7 @@ static int __pyx_pf_6gevent_6_queue_5Queue___init__(struct __pyx_obj_6gevent_6_q
   __pyx_v_self->queue = __pyx_t_6;
   __pyx_t_6 = 0;
 
-  /* "src/gevent/queue.py":119
+  /* "src/gevent/queue.py":124
  *     )
  * 
  *     def __init__(self, maxsize=None, items=(), _warn_depth=2):             # <<<<<<<<<<<<<<
@@ -3551,7 +3553,7 @@ static int __pyx_pf_6gevent_6_queue_5Queue___init__(struct __pyx_obj_6gevent_6_q
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":149
+/* "src/gevent/queue.py":154
  * 
  *     @property
  *     def maxsize(self):             # <<<<<<<<<<<<<<
@@ -3579,7 +3581,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_7maxsize___get__(struct __pyx_o
   PyObject *__pyx_t_2 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "src/gevent/queue.py":150
+  /* "src/gevent/queue.py":155
  *     @property
  *     def maxsize(self):
  *         return self._maxsize if self._maxsize > 0 else None             # <<<<<<<<<<<<<<
@@ -3588,7 +3590,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_7maxsize___get__(struct __pyx_o
  */
   __Pyx_XDECREF(__pyx_r);
   if (((__pyx_v_self->_maxsize > 0) != 0)) {
-    __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_self->_maxsize); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 150, __pyx_L1_error)
+    __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_self->_maxsize); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 155, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_1 = __pyx_t_2;
     __pyx_t_2 = 0;
@@ -3600,7 +3602,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_7maxsize___get__(struct __pyx_o
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":149
+  /* "src/gevent/queue.py":154
  * 
  *     @property
  *     def maxsize(self):             # <<<<<<<<<<<<<<
@@ -3620,7 +3622,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_7maxsize___get__(struct __pyx_o
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":153
+/* "src/gevent/queue.py":158
  * 
  *     @maxsize.setter
  *     def maxsize(self, nv):             # <<<<<<<<<<<<<<
@@ -3651,7 +3653,7 @@ static int __pyx_pf_6gevent_6_queue_5Queue_7maxsize_2__set__(struct __pyx_obj_6g
   Py_ssize_t __pyx_t_5;
   __Pyx_RefNannySetupContext("__set__", 0);
 
-  /* "src/gevent/queue.py":155
+  /* "src/gevent/queue.py":160
  *     def maxsize(self, nv):
  *         # QQQ make maxsize into a property with setter that schedules unlock if necessary
  *         if nv is None or nv <= 0:             # <<<<<<<<<<<<<<
@@ -3665,14 +3667,14 @@ static int __pyx_pf_6gevent_6_queue_5Queue_7maxsize_2__set__(struct __pyx_obj_6g
     __pyx_t_1 = __pyx_t_3;
     goto __pyx_L4_bool_binop_done;
   }
-  __pyx_t_4 = PyObject_RichCompare(__pyx_v_nv, __pyx_int_0, Py_LE); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 155, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 155, __pyx_L1_error)
+  __pyx_t_4 = PyObject_RichCompare(__pyx_v_nv, __pyx_int_0, Py_LE); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 160, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 160, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_1 = __pyx_t_3;
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "src/gevent/queue.py":156
+    /* "src/gevent/queue.py":161
  *         # QQQ make maxsize into a property with setter that schedules unlock if necessary
  *         if nv is None or nv <= 0:
  *             self._maxsize = -1             # <<<<<<<<<<<<<<
@@ -3681,7 +3683,7 @@ static int __pyx_pf_6gevent_6_queue_5Queue_7maxsize_2__set__(struct __pyx_obj_6g
  */
     __pyx_v_self->_maxsize = -1L;
 
-    /* "src/gevent/queue.py":155
+    /* "src/gevent/queue.py":160
  *     def maxsize(self, nv):
  *         # QQQ make maxsize into a property with setter that schedules unlock if necessary
  *         if nv is None or nv <= 0:             # <<<<<<<<<<<<<<
@@ -3691,7 +3693,7 @@ static int __pyx_pf_6gevent_6_queue_5Queue_7maxsize_2__set__(struct __pyx_obj_6g
     goto __pyx_L3;
   }
 
-  /* "src/gevent/queue.py":158
+  /* "src/gevent/queue.py":163
  *             self._maxsize = -1
  *         else:
  *             self._maxsize = nv             # <<<<<<<<<<<<<<
@@ -3699,12 +3701,12 @@ static int __pyx_pf_6gevent_6_queue_5Queue_7maxsize_2__set__(struct __pyx_obj_6g
  *     def copy(self):
  */
   /*else*/ {
-    __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_v_nv); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 158, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_v_nv); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 163, __pyx_L1_error)
     __pyx_v_self->_maxsize = __pyx_t_5;
   }
   __pyx_L3:;
 
-  /* "src/gevent/queue.py":153
+  /* "src/gevent/queue.py":158
  * 
  *     @maxsize.setter
  *     def maxsize(self, nv):             # <<<<<<<<<<<<<<
@@ -3724,7 +3726,7 @@ static int __pyx_pf_6gevent_6_queue_5Queue_7maxsize_2__set__(struct __pyx_obj_6g
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":160
+/* "src/gevent/queue.py":165
  *             self._maxsize = nv
  * 
  *     def copy(self):             # <<<<<<<<<<<<<<
@@ -3758,7 +3760,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_2copy(struct __pyx_obj_6gevent_
   PyObject *__pyx_t_6 = NULL;
   __Pyx_RefNannySetupContext("copy", 0);
 
-  /* "src/gevent/queue.py":161
+  /* "src/gevent/queue.py":166
  * 
  *     def copy(self):
  *         return type(self)(self.maxsize, self.queue)             # <<<<<<<<<<<<<<
@@ -3766,7 +3768,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_2copy(struct __pyx_obj_6gevent_
  *     def _create_queue(self, items=()):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_maxsize); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 161, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_maxsize); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 166, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
   __pyx_t_3 = ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))); __pyx_t_4 = NULL;
@@ -3784,7 +3786,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_2copy(struct __pyx_obj_6gevent_
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_3)) {
     PyObject *__pyx_temp[3] = {__pyx_t_4, __pyx_t_2, __pyx_v_self->queue};
-    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 161, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 166, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -3793,14 +3795,14 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_2copy(struct __pyx_obj_6gevent_
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_3)) {
     PyObject *__pyx_temp[3] = {__pyx_t_4, __pyx_t_2, __pyx_v_self->queue};
-    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 161, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 166, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   } else
   #endif
   {
-    __pyx_t_6 = PyTuple_New(2+__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 161, __pyx_L1_error)
+    __pyx_t_6 = PyTuple_New(2+__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 166, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     if (__pyx_t_4) {
       __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_4); __pyx_t_4 = NULL;
@@ -3811,7 +3813,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_2copy(struct __pyx_obj_6gevent_
     __Pyx_GIVEREF(__pyx_v_self->queue);
     PyTuple_SET_ITEM(__pyx_t_6, 1+__pyx_t_5, __pyx_v_self->queue);
     __pyx_t_2 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 161, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 166, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   }
@@ -3820,7 +3822,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_2copy(struct __pyx_obj_6gevent_
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":160
+  /* "src/gevent/queue.py":165
  *             self._maxsize = nv
  * 
  *     def copy(self):             # <<<<<<<<<<<<<<
@@ -3843,7 +3845,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_2copy(struct __pyx_obj_6gevent_
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":163
+/* "src/gevent/queue.py":168
  *         return type(self)(self.maxsize, self.queue)
  * 
  *     def _create_queue(self, items=()):             # <<<<<<<<<<<<<<
@@ -3882,7 +3884,7 @@ static PyObject *__pyx_pw_6gevent_6_queue_5Queue_5_create_queue(PyObject *__pyx_
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_create_queue") < 0)) __PYX_ERR(0, 163, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_create_queue") < 0)) __PYX_ERR(0, 168, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -3896,7 +3898,7 @@ static PyObject *__pyx_pw_6gevent_6_queue_5Queue_5_create_queue(PyObject *__pyx_
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("_create_queue", 0, 0, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 163, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("_create_queue", 0, 0, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 168, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gevent._queue.Queue._create_queue", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -3918,7 +3920,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_4_create_queue(CYTHON_UNUSED st
   PyObject *__pyx_t_4 = NULL;
   __Pyx_RefNannySetupContext("_create_queue", 0);
 
-  /* "src/gevent/queue.py":164
+  /* "src/gevent/queue.py":169
  * 
  *     def _create_queue(self, items=()):
  *         return collections.deque(items)             # <<<<<<<<<<<<<<
@@ -3926,9 +3928,9 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_4_create_queue(CYTHON_UNUSED st
  *     def _get(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_collections); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 164, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_collections); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 169, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_deque); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 164, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_deque); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 169, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_2 = NULL;
@@ -3942,13 +3944,13 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_4_create_queue(CYTHON_UNUSED st
     }
   }
   if (!__pyx_t_2) {
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_items); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 164, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_items); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 169, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   } else {
     #if CYTHON_FAST_PYCALL
     if (PyFunction_Check(__pyx_t_3)) {
       PyObject *__pyx_temp[2] = {__pyx_t_2, __pyx_v_items};
-      __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 164, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 169, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_GOTREF(__pyx_t_1);
     } else
@@ -3956,19 +3958,19 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_4_create_queue(CYTHON_UNUSED st
     #if CYTHON_FAST_PYCCALL
     if (__Pyx_PyFastCFunction_Check(__pyx_t_3)) {
       PyObject *__pyx_temp[2] = {__pyx_t_2, __pyx_v_items};
-      __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 164, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 169, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_GOTREF(__pyx_t_1);
     } else
     #endif
     {
-      __pyx_t_4 = PyTuple_New(1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 164, __pyx_L1_error)
+      __pyx_t_4 = PyTuple_New(1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 169, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_GIVEREF(__pyx_t_2); PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_2); __pyx_t_2 = NULL;
       __Pyx_INCREF(__pyx_v_items);
       __Pyx_GIVEREF(__pyx_v_items);
       PyTuple_SET_ITEM(__pyx_t_4, 0+1, __pyx_v_items);
-      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_4, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 164, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_4, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 169, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     }
@@ -3978,7 +3980,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_4_create_queue(CYTHON_UNUSED st
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":163
+  /* "src/gevent/queue.py":168
  *         return type(self)(self.maxsize, self.queue)
  * 
  *     def _create_queue(self, items=()):             # <<<<<<<<<<<<<<
@@ -4000,7 +4002,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_4_create_queue(CYTHON_UNUSED st
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":166
+/* "src/gevent/queue.py":171
  *         return collections.deque(items)
  * 
  *     def _get(self):             # <<<<<<<<<<<<<<
@@ -4021,7 +4023,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue__get(struct __pyx_obj_6gevent_6_
   if (unlikely(__pyx_skip_dispatch)) ;
   /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_get); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 166, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_get); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 171, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)__pyx_pw_6gevent_6_queue_5Queue_7_get)) {
       __Pyx_XDECREF(__pyx_r);
@@ -4037,10 +4039,10 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue__get(struct __pyx_obj_6gevent_6_
         }
       }
       if (__pyx_t_4) {
-        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 166, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 171, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       } else {
-        __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 166, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 171, __pyx_L1_error)
       }
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -4052,7 +4054,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue__get(struct __pyx_obj_6gevent_6_
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
 
-  /* "src/gevent/queue.py":167
+  /* "src/gevent/queue.py":172
  * 
  *     def _get(self):
  *         return self.queue.popleft()             # <<<<<<<<<<<<<<
@@ -4060,7 +4062,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue__get(struct __pyx_obj_6gevent_6_
  *     def _peek(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->queue, __pyx_n_s_popleft); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 167, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->queue, __pyx_n_s_popleft); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 172, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -4073,10 +4075,10 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue__get(struct __pyx_obj_6gevent_6_
     }
   }
   if (__pyx_t_3) {
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 167, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 172, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   } else {
-    __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 167, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 172, __pyx_L1_error)
   }
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -4084,7 +4086,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue__get(struct __pyx_obj_6gevent_6_
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":166
+  /* "src/gevent/queue.py":171
  *         return collections.deque(items)
  * 
  *     def _get(self):             # <<<<<<<<<<<<<<
@@ -4127,7 +4129,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_6_get(struct __pyx_obj_6gevent_
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("_get", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_6gevent_6_queue_5Queue__get(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 166, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_6gevent_6_queue_5Queue__get(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 171, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -4144,7 +4146,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_6_get(struct __pyx_obj_6gevent_
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":169
+/* "src/gevent/queue.py":174
  *         return self.queue.popleft()
  * 
  *     def _peek(self):             # <<<<<<<<<<<<<<
@@ -4165,7 +4167,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue__peek(struct __pyx_obj_6gevent_6
   if (unlikely(__pyx_skip_dispatch)) ;
   /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_peek); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 169, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_peek); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 174, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)__pyx_pw_6gevent_6_queue_5Queue_9_peek)) {
       __Pyx_XDECREF(__pyx_r);
@@ -4181,10 +4183,10 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue__peek(struct __pyx_obj_6gevent_6
         }
       }
       if (__pyx_t_4) {
-        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 169, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 174, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       } else {
-        __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 169, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 174, __pyx_L1_error)
       }
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -4196,7 +4198,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue__peek(struct __pyx_obj_6gevent_6
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
 
-  /* "src/gevent/queue.py":170
+  /* "src/gevent/queue.py":175
  * 
  *     def _peek(self):
  *         return self.queue[0]             # <<<<<<<<<<<<<<
@@ -4204,13 +4206,13 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue__peek(struct __pyx_obj_6gevent_6
  *     def _put(self, item):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_self->queue, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 170, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_self->queue, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 175, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":169
+  /* "src/gevent/queue.py":174
  *         return self.queue.popleft()
  * 
  *     def _peek(self):             # <<<<<<<<<<<<<<
@@ -4253,7 +4255,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_8_peek(struct __pyx_obj_6gevent
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("_peek", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_6gevent_6_queue_5Queue__peek(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 169, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_6gevent_6_queue_5Queue__peek(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 174, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -4270,7 +4272,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_8_peek(struct __pyx_obj_6gevent
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":172
+/* "src/gevent/queue.py":177
  *         return self.queue[0]
  * 
  *     def _put(self, item):             # <<<<<<<<<<<<<<
@@ -4293,7 +4295,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue__put(struct __pyx_obj_6gevent_6_
   if (unlikely(__pyx_skip_dispatch)) ;
   /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_put); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 172, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_put); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 177, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)__pyx_pw_6gevent_6_queue_5Queue_11_put)) {
       __Pyx_XDECREF(__pyx_r);
@@ -4309,13 +4311,13 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue__put(struct __pyx_obj_6gevent_6_
         }
       }
       if (!__pyx_t_4) {
-        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_item); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 172, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_item); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 177, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
       } else {
         #if CYTHON_FAST_PYCALL
         if (PyFunction_Check(__pyx_t_3)) {
           PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_v_item};
-          __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 172, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 177, __pyx_L1_error)
           __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_GOTREF(__pyx_t_2);
         } else
@@ -4323,19 +4325,19 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue__put(struct __pyx_obj_6gevent_6_
         #if CYTHON_FAST_PYCCALL
         if (__Pyx_PyFastCFunction_Check(__pyx_t_3)) {
           PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_v_item};
-          __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 172, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 177, __pyx_L1_error)
           __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_GOTREF(__pyx_t_2);
         } else
         #endif
         {
-          __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 172, __pyx_L1_error)
+          __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 177, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_5);
           __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_4); __pyx_t_4 = NULL;
           __Pyx_INCREF(__pyx_v_item);
           __Pyx_GIVEREF(__pyx_v_item);
           PyTuple_SET_ITEM(__pyx_t_5, 0+1, __pyx_v_item);
-          __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_5, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 172, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_5, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 177, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
         }
@@ -4349,16 +4351,16 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue__put(struct __pyx_obj_6gevent_6_
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
 
-  /* "src/gevent/queue.py":173
+  /* "src/gevent/queue.py":178
  * 
  *     def _put(self, item):
  *         self.queue.append(item)             # <<<<<<<<<<<<<<
  * 
  *     def __repr__(self):
  */
-  __pyx_t_6 = __Pyx_PyObject_Append(__pyx_v_self->queue, __pyx_v_item); if (unlikely(__pyx_t_6 == ((int)-1))) __PYX_ERR(0, 173, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_Append(__pyx_v_self->queue, __pyx_v_item); if (unlikely(__pyx_t_6 == ((int)-1))) __PYX_ERR(0, 178, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":172
+  /* "src/gevent/queue.py":177
  *         return self.queue[0]
  * 
  *     def _put(self, item):             # <<<<<<<<<<<<<<
@@ -4404,7 +4406,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_10_put(struct __pyx_obj_6gevent
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("_put", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_6gevent_6_queue_5Queue__put(__pyx_v_self, __pyx_v_item, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 172, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_6gevent_6_queue_5Queue__put(__pyx_v_self, __pyx_v_item, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 177, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -4421,7 +4423,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_10_put(struct __pyx_obj_6gevent
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":175
+/* "src/gevent/queue.py":180
  *         self.queue.append(item)
  * 
  *     def __repr__(self):             # <<<<<<<<<<<<<<
@@ -4452,7 +4454,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_12__repr__(struct __pyx_obj_6ge
   PyObject *__pyx_t_5 = NULL;
   __Pyx_RefNannySetupContext("__repr__", 0);
 
-  /* "src/gevent/queue.py":176
+  /* "src/gevent/queue.py":181
  * 
  *     def __repr__(self):
  *         return '<%s at %s%s>' % (type(self).__name__, hex(id(self)), self._format())             # <<<<<<<<<<<<<<
@@ -4460,14 +4462,14 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_12__repr__(struct __pyx_obj_6ge
  *     def __str__(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))), __pyx_n_s_name); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 176, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))), __pyx_n_s_name); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 181, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_id, ((PyObject *)__pyx_v_self)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 176, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_id, ((PyObject *)__pyx_v_self)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 181, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_builtin_hex, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 176, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_builtin_hex, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 181, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_format); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 176, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_format); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 181, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_5 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
@@ -4480,14 +4482,14 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_12__repr__(struct __pyx_obj_6ge
     }
   }
   if (__pyx_t_5) {
-    __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 176, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 181, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   } else {
-    __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 176, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 181, __pyx_L1_error)
   }
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 176, __pyx_L1_error)
+  __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 181, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_1);
@@ -4498,14 +4500,14 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_12__repr__(struct __pyx_obj_6ge
   __pyx_t_1 = 0;
   __pyx_t_3 = 0;
   __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyString_Format(__pyx_kp_s_s_at_s_s, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 176, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyString_Format(__pyx_kp_s_s_at_s_s, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 181, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":175
+  /* "src/gevent/queue.py":180
  *         self.queue.append(item)
  * 
  *     def __repr__(self):             # <<<<<<<<<<<<<<
@@ -4528,7 +4530,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_12__repr__(struct __pyx_obj_6ge
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":178
+/* "src/gevent/queue.py":183
  *         return '<%s at %s%s>' % (type(self).__name__, hex(id(self)), self._format())
  * 
  *     def __str__(self):             # <<<<<<<<<<<<<<
@@ -4558,7 +4560,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_14__str__(struct __pyx_obj_6gev
   PyObject *__pyx_t_4 = NULL;
   __Pyx_RefNannySetupContext("__str__", 0);
 
-  /* "src/gevent/queue.py":179
+  /* "src/gevent/queue.py":184
  * 
  *     def __str__(self):
  *         return '<%s%s>' % (type(self).__name__, self._format())             # <<<<<<<<<<<<<<
@@ -4566,9 +4568,9 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_14__str__(struct __pyx_obj_6gev
  *     def _format(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))), __pyx_n_s_name); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 179, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))), __pyx_n_s_name); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 184, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_format); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 179, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_format); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 184, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_4 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
@@ -4581,14 +4583,14 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_14__str__(struct __pyx_obj_6gev
     }
   }
   if (__pyx_t_4) {
-    __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 179, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 184, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   } else {
-    __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 179, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 184, __pyx_L1_error)
   }
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 179, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 184, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1);
@@ -4596,14 +4598,14 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_14__str__(struct __pyx_obj_6gev
   PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_2);
   __pyx_t_1 = 0;
   __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyString_Format(__pyx_kp_s_s_s, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 179, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyString_Format(__pyx_kp_s_s_s, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 184, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":178
+  /* "src/gevent/queue.py":183
  *         return '<%s at %s%s>' % (type(self).__name__, hex(id(self)), self._format())
  * 
  *     def __str__(self):             # <<<<<<<<<<<<<<
@@ -4625,7 +4627,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_14__str__(struct __pyx_obj_6gev
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":181
+/* "src/gevent/queue.py":186
  *         return '<%s%s>' % (type(self).__name__, self._format())
  * 
  *     def _format(self):             # <<<<<<<<<<<<<<
@@ -4660,53 +4662,53 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_16_format(struct __pyx_obj_6gev
   Py_ssize_t __pyx_t_6;
   __Pyx_RefNannySetupContext("_format", 0);
 
-  /* "src/gevent/queue.py":182
+  /* "src/gevent/queue.py":187
  * 
  *     def _format(self):
  *         result = []             # <<<<<<<<<<<<<<
  *         if self.maxsize is not None:
  *             result.append('maxsize=%r' % (self.maxsize, ))
  */
-  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 182, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 187, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_result = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/gevent/queue.py":183
+  /* "src/gevent/queue.py":188
  *     def _format(self):
  *         result = []
  *         if self.maxsize is not None:             # <<<<<<<<<<<<<<
  *             result.append('maxsize=%r' % (self.maxsize, ))
  *         if getattr(self, 'queue', None):
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_maxsize); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 183, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_maxsize); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 188, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_2 = (__pyx_t_1 != Py_None);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_t_3 = (__pyx_t_2 != 0);
   if (__pyx_t_3) {
 
-    /* "src/gevent/queue.py":184
+    /* "src/gevent/queue.py":189
  *         result = []
  *         if self.maxsize is not None:
  *             result.append('maxsize=%r' % (self.maxsize, ))             # <<<<<<<<<<<<<<
  *         if getattr(self, 'queue', None):
  *             result.append('queue=%r' % (self.queue, ))
  */
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_maxsize); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 184, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_maxsize); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 189, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 184, __pyx_L1_error)
+    __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 189, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_GIVEREF(__pyx_t_1);
     PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_1);
     __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyString_Format(__pyx_kp_s_maxsize_r, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 184, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyString_Format(__pyx_kp_s_maxsize_r, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 189, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_5 = __Pyx_PyList_Append(__pyx_v_result, __pyx_t_1); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 184, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyList_Append(__pyx_v_result, __pyx_t_1); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 189, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "src/gevent/queue.py":183
+    /* "src/gevent/queue.py":188
  *     def _format(self):
  *         result = []
  *         if self.maxsize is not None:             # <<<<<<<<<<<<<<
@@ -4715,38 +4717,38 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_16_format(struct __pyx_obj_6gev
  */
   }
 
-  /* "src/gevent/queue.py":185
+  /* "src/gevent/queue.py":190
  *         if self.maxsize is not None:
  *             result.append('maxsize=%r' % (self.maxsize, ))
  *         if getattr(self, 'queue', None):             # <<<<<<<<<<<<<<
  *             result.append('queue=%r' % (self.queue, ))
  *         if self.getters:
  */
-  __pyx_t_1 = __Pyx_GetAttr3(((PyObject *)__pyx_v_self), __pyx_n_s_queue, Py_None); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 185, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetAttr3(((PyObject *)__pyx_v_self), __pyx_n_s_queue, Py_None); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 190, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 185, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 190, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   if (__pyx_t_3) {
 
-    /* "src/gevent/queue.py":186
+    /* "src/gevent/queue.py":191
  *             result.append('maxsize=%r' % (self.maxsize, ))
  *         if getattr(self, 'queue', None):
  *             result.append('queue=%r' % (self.queue, ))             # <<<<<<<<<<<<<<
  *         if self.getters:
  *             result.append('getters[%s]' % len(self.getters))
  */
-    __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 186, __pyx_L1_error)
+    __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 191, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_INCREF(__pyx_v_self->queue);
     __Pyx_GIVEREF(__pyx_v_self->queue);
     PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_v_self->queue);
-    __pyx_t_4 = __Pyx_PyString_Format(__pyx_kp_s_queue_r, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 186, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyString_Format(__pyx_kp_s_queue_r, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 191, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_5 = __Pyx_PyList_Append(__pyx_v_result, __pyx_t_4); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 186, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyList_Append(__pyx_v_result, __pyx_t_4); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 191, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "src/gevent/queue.py":185
+    /* "src/gevent/queue.py":190
  *         if self.maxsize is not None:
  *             result.append('maxsize=%r' % (self.maxsize, ))
  *         if getattr(self, 'queue', None):             # <<<<<<<<<<<<<<
@@ -4755,17 +4757,17 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_16_format(struct __pyx_obj_6gev
  */
   }
 
-  /* "src/gevent/queue.py":187
+  /* "src/gevent/queue.py":192
  *         if getattr(self, 'queue', None):
  *             result.append('queue=%r' % (self.queue, ))
  *         if self.getters:             # <<<<<<<<<<<<<<
  *             result.append('getters[%s]' % len(self.getters))
  *         if self.putters:
  */
-  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_v_self->getters); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 187, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_v_self->getters); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 192, __pyx_L1_error)
   if (__pyx_t_3) {
 
-    /* "src/gevent/queue.py":188
+    /* "src/gevent/queue.py":193
  *             result.append('queue=%r' % (self.queue, ))
  *         if self.getters:
  *             result.append('getters[%s]' % len(self.getters))             # <<<<<<<<<<<<<<
@@ -4774,17 +4776,17 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_16_format(struct __pyx_obj_6gev
  */
     __pyx_t_4 = __pyx_v_self->getters;
     __Pyx_INCREF(__pyx_t_4);
-    __pyx_t_6 = PyObject_Length(__pyx_t_4); if (unlikely(__pyx_t_6 == ((Py_ssize_t)-1))) __PYX_ERR(0, 188, __pyx_L1_error)
+    __pyx_t_6 = PyObject_Length(__pyx_t_4); if (unlikely(__pyx_t_6 == ((Py_ssize_t)-1))) __PYX_ERR(0, 193, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = PyInt_FromSsize_t(__pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 188, __pyx_L1_error)
+    __pyx_t_4 = PyInt_FromSsize_t(__pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 193, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_1 = __Pyx_PyString_Format(__pyx_kp_s_getters_s, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 188, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyString_Format(__pyx_kp_s_getters_s, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 193, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_5 = __Pyx_PyList_Append(__pyx_v_result, __pyx_t_1); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 188, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyList_Append(__pyx_v_result, __pyx_t_1); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 193, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "src/gevent/queue.py":187
+    /* "src/gevent/queue.py":192
  *         if getattr(self, 'queue', None):
  *             result.append('queue=%r' % (self.queue, ))
  *         if self.getters:             # <<<<<<<<<<<<<<
@@ -4793,17 +4795,17 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_16_format(struct __pyx_obj_6gev
  */
   }
 
-  /* "src/gevent/queue.py":189
+  /* "src/gevent/queue.py":194
  *         if self.getters:
  *             result.append('getters[%s]' % len(self.getters))
  *         if self.putters:             # <<<<<<<<<<<<<<
  *             result.append('putters[%s]' % len(self.putters))
  *         if result:
  */
-  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_v_self->putters); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 189, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_v_self->putters); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 194, __pyx_L1_error)
   if (__pyx_t_3) {
 
-    /* "src/gevent/queue.py":190
+    /* "src/gevent/queue.py":195
  *             result.append('getters[%s]' % len(self.getters))
  *         if self.putters:
  *             result.append('putters[%s]' % len(self.putters))             # <<<<<<<<<<<<<<
@@ -4812,17 +4814,17 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_16_format(struct __pyx_obj_6gev
  */
     __pyx_t_1 = __pyx_v_self->putters;
     __Pyx_INCREF(__pyx_t_1);
-    __pyx_t_6 = PyObject_Length(__pyx_t_1); if (unlikely(__pyx_t_6 == ((Py_ssize_t)-1))) __PYX_ERR(0, 190, __pyx_L1_error)
+    __pyx_t_6 = PyObject_Length(__pyx_t_1); if (unlikely(__pyx_t_6 == ((Py_ssize_t)-1))) __PYX_ERR(0, 195, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = PyInt_FromSsize_t(__pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 190, __pyx_L1_error)
+    __pyx_t_1 = PyInt_FromSsize_t(__pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 195, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_4 = __Pyx_PyString_Format(__pyx_kp_s_putters_s, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 190, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyString_Format(__pyx_kp_s_putters_s, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 195, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_5 = __Pyx_PyList_Append(__pyx_v_result, __pyx_t_4); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 190, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyList_Append(__pyx_v_result, __pyx_t_4); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 195, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "src/gevent/queue.py":189
+    /* "src/gevent/queue.py":194
  *         if self.getters:
  *             result.append('getters[%s]' % len(self.getters))
  *         if self.putters:             # <<<<<<<<<<<<<<
@@ -4831,7 +4833,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_16_format(struct __pyx_obj_6gev
  */
   }
 
-  /* "src/gevent/queue.py":191
+  /* "src/gevent/queue.py":196
  *         if self.putters:
  *             result.append('putters[%s]' % len(self.putters))
  *         if result:             # <<<<<<<<<<<<<<
@@ -4841,7 +4843,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_16_format(struct __pyx_obj_6gev
   __pyx_t_3 = (PyList_GET_SIZE(__pyx_v_result) != 0);
   if (__pyx_t_3) {
 
-    /* "src/gevent/queue.py":192
+    /* "src/gevent/queue.py":197
  *             result.append('putters[%s]' % len(self.putters))
  *         if result:
  *             return ' ' + ' '.join(result)             # <<<<<<<<<<<<<<
@@ -4849,16 +4851,16 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_16_format(struct __pyx_obj_6gev
  * 
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_4 = __Pyx_PyString_Join(__pyx_kp_s__2, __pyx_v_result); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 192, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyString_Join(__pyx_kp_s__2, __pyx_v_result); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 197, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_1 = PyNumber_Add(__pyx_kp_s__2, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 192, __pyx_L1_error)
+    __pyx_t_1 = PyNumber_Add(__pyx_kp_s__2, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 197, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_r = __pyx_t_1;
     __pyx_t_1 = 0;
     goto __pyx_L0;
 
-    /* "src/gevent/queue.py":191
+    /* "src/gevent/queue.py":196
  *         if self.putters:
  *             result.append('putters[%s]' % len(self.putters))
  *         if result:             # <<<<<<<<<<<<<<
@@ -4867,7 +4869,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_16_format(struct __pyx_obj_6gev
  */
   }
 
-  /* "src/gevent/queue.py":193
+  /* "src/gevent/queue.py":198
  *         if result:
  *             return ' ' + ' '.join(result)
  *         return ''             # <<<<<<<<<<<<<<
@@ -4879,7 +4881,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_16_format(struct __pyx_obj_6gev
   __pyx_r = __pyx_kp_s__3;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":181
+  /* "src/gevent/queue.py":186
  *         return '<%s%s>' % (type(self).__name__, self._format())
  * 
  *     def _format(self):             # <<<<<<<<<<<<<<
@@ -4900,7 +4902,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_16_format(struct __pyx_obj_6gev
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":195
+/* "src/gevent/queue.py":200
  *         return ''
  * 
  *     def qsize(self):             # <<<<<<<<<<<<<<
@@ -4922,7 +4924,7 @@ static Py_ssize_t __pyx_f_6gevent_6_queue_5Queue_qsize(struct __pyx_obj_6gevent_
   if (unlikely(__pyx_skip_dispatch)) ;
   /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_qsize); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 195, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_qsize); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 200, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)__pyx_pw_6gevent_6_queue_5Queue_19qsize)) {
       __Pyx_INCREF(__pyx_t_1);
@@ -4937,14 +4939,14 @@ static Py_ssize_t __pyx_f_6gevent_6_queue_5Queue_qsize(struct __pyx_obj_6gevent_
         }
       }
       if (__pyx_t_4) {
-        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 195, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 200, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       } else {
-        __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 195, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 200, __pyx_L1_error)
       }
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_2); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 195, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyIndex_AsSsize_t(__pyx_t_2); if (unlikely((__pyx_t_5 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 200, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __pyx_r = __pyx_t_5;
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -4953,7 +4955,7 @@ static Py_ssize_t __pyx_f_6gevent_6_queue_5Queue_qsize(struct __pyx_obj_6gevent_
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
 
-  /* "src/gevent/queue.py":197
+  /* "src/gevent/queue.py":202
  *     def qsize(self):
  *         """Return the size of the queue."""
  *         return len(self.queue)             # <<<<<<<<<<<<<<
@@ -4962,12 +4964,12 @@ static Py_ssize_t __pyx_f_6gevent_6_queue_5Queue_qsize(struct __pyx_obj_6gevent_
  */
   __pyx_t_1 = __pyx_v_self->queue;
   __Pyx_INCREF(__pyx_t_1);
-  __pyx_t_5 = PyObject_Length(__pyx_t_1); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(0, 197, __pyx_L1_error)
+  __pyx_t_5 = PyObject_Length(__pyx_t_1); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(0, 202, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_r = __pyx_t_5;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":195
+  /* "src/gevent/queue.py":200
  *         return ''
  * 
  *     def qsize(self):             # <<<<<<<<<<<<<<
@@ -5009,7 +5011,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_18qsize(struct __pyx_obj_6geven
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("qsize", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyInt_FromSsize_t(__pyx_f_6gevent_6_queue_5Queue_qsize(__pyx_v_self, 1)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 195, __pyx_L1_error)
+  __pyx_t_1 = PyInt_FromSsize_t(__pyx_f_6gevent_6_queue_5Queue_qsize(__pyx_v_self, 1)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 200, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -5026,7 +5028,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_18qsize(struct __pyx_obj_6geven
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":199
+/* "src/gevent/queue.py":204
  *         return len(self.queue)
  * 
  *     def __len__(self):             # <<<<<<<<<<<<<<
@@ -5056,7 +5058,7 @@ static Py_ssize_t __pyx_pf_6gevent_6_queue_5Queue_20__len__(struct __pyx_obj_6ge
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__len__", 0);
 
-  /* "src/gevent/queue.py":208
+  /* "src/gevent/queue.py":213
  *         """
  * 
  *         return self.qsize()             # <<<<<<<<<<<<<<
@@ -5066,7 +5068,7 @@ static Py_ssize_t __pyx_pf_6gevent_6_queue_5Queue_20__len__(struct __pyx_obj_6ge
   __pyx_r = ((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->qsize(__pyx_v_self, 0);
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":199
+  /* "src/gevent/queue.py":204
  *         return len(self.queue)
  * 
  *     def __len__(self):             # <<<<<<<<<<<<<<
@@ -5080,7 +5082,7 @@ static Py_ssize_t __pyx_pf_6gevent_6_queue_5Queue_20__len__(struct __pyx_obj_6ge
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":210
+/* "src/gevent/queue.py":215
  *         return self.qsize()
  * 
  *     def __bool__(self):             # <<<<<<<<<<<<<<
@@ -5106,7 +5108,7 @@ static int __pyx_pf_6gevent_6_queue_5Queue_22__bool__(CYTHON_UNUSED struct __pyx
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__bool__", 0);
 
-  /* "src/gevent/queue.py":219
+  /* "src/gevent/queue.py":224
  *            to return True for backwards compatibility.
  *         """
  *         return True             # <<<<<<<<<<<<<<
@@ -5116,7 +5118,7 @@ static int __pyx_pf_6gevent_6_queue_5Queue_22__bool__(CYTHON_UNUSED struct __pyx
   __pyx_r = 1;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":210
+  /* "src/gevent/queue.py":215
  *         return self.qsize()
  * 
  *     def __bool__(self):             # <<<<<<<<<<<<<<
@@ -5130,7 +5132,7 @@ static int __pyx_pf_6gevent_6_queue_5Queue_22__bool__(CYTHON_UNUSED struct __pyx
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":221
+/* "src/gevent/queue.py":226
  *         return True
  * 
  *     def __nonzero__(self):             # <<<<<<<<<<<<<<
@@ -5156,7 +5158,7 @@ static int __pyx_pf_6gevent_6_queue_5Queue_24__nonzero__(CYTHON_UNUSED struct __
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__nonzero__", 0);
 
-  /* "src/gevent/queue.py":225
+  /* "src/gevent/queue.py":230
  *         # For Cython; __bool__ becomes a special method that we can't
  *         # get by name.
  *         return True             # <<<<<<<<<<<<<<
@@ -5166,7 +5168,7 @@ static int __pyx_pf_6gevent_6_queue_5Queue_24__nonzero__(CYTHON_UNUSED struct __
   __pyx_r = 1;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":221
+  /* "src/gevent/queue.py":226
  *         return True
  * 
  *     def __nonzero__(self):             # <<<<<<<<<<<<<<
@@ -5180,7 +5182,7 @@ static int __pyx_pf_6gevent_6_queue_5Queue_24__nonzero__(CYTHON_UNUSED struct __
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":227
+/* "src/gevent/queue.py":232
  *         return True
  * 
  *     def empty(self):             # <<<<<<<<<<<<<<
@@ -5202,7 +5204,7 @@ static int __pyx_f_6gevent_6_queue_5Queue_empty(struct __pyx_obj_6gevent_6_queue
   if (unlikely(__pyx_skip_dispatch)) ;
   /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_empty); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 227, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_empty); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 232, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)__pyx_pw_6gevent_6_queue_5Queue_27empty)) {
       __Pyx_INCREF(__pyx_t_1);
@@ -5217,14 +5219,14 @@ static int __pyx_f_6gevent_6_queue_5Queue_empty(struct __pyx_obj_6gevent_6_queue
         }
       }
       if (__pyx_t_4) {
-        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 227, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 232, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       } else {
-        __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 227, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 232, __pyx_L1_error)
       }
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 227, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 232, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __pyx_r = __pyx_t_5;
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -5233,7 +5235,7 @@ static int __pyx_f_6gevent_6_queue_5Queue_empty(struct __pyx_obj_6gevent_6_queue
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
 
-  /* "src/gevent/queue.py":229
+  /* "src/gevent/queue.py":234
  *     def empty(self):
  *         """Return ``True`` if the queue is empty, ``False`` otherwise."""
  *         return not self.qsize()             # <<<<<<<<<<<<<<
@@ -5243,7 +5245,7 @@ static int __pyx_f_6gevent_6_queue_5Queue_empty(struct __pyx_obj_6gevent_6_queue
   __pyx_r = (!(((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->qsize(__pyx_v_self, 0) != 0));
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":227
+  /* "src/gevent/queue.py":232
  *         return True
  * 
  *     def empty(self):             # <<<<<<<<<<<<<<
@@ -5285,7 +5287,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_26empty(struct __pyx_obj_6geven
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("empty", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyBool_FromLong(__pyx_f_6gevent_6_queue_5Queue_empty(__pyx_v_self, 1)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 227, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyBool_FromLong(__pyx_f_6gevent_6_queue_5Queue_empty(__pyx_v_self, 1)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 232, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -5302,7 +5304,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_26empty(struct __pyx_obj_6geven
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":231
+/* "src/gevent/queue.py":236
  *         return not self.qsize()
  * 
  *     def full(self):             # <<<<<<<<<<<<<<
@@ -5325,7 +5327,7 @@ static int __pyx_f_6gevent_6_queue_5Queue_full(struct __pyx_obj_6gevent_6_queue_
   if (unlikely(__pyx_skip_dispatch)) ;
   /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_full); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 231, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_full); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 236, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)__pyx_pw_6gevent_6_queue_5Queue_29full)) {
       __Pyx_INCREF(__pyx_t_1);
@@ -5340,14 +5342,14 @@ static int __pyx_f_6gevent_6_queue_5Queue_full(struct __pyx_obj_6gevent_6_queue_
         }
       }
       if (__pyx_t_4) {
-        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 231, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 236, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       } else {
-        __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 231, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 236, __pyx_L1_error)
       }
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 231, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 236, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __pyx_r = __pyx_t_5;
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -5356,7 +5358,7 @@ static int __pyx_f_6gevent_6_queue_5Queue_full(struct __pyx_obj_6gevent_6_queue_
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
 
-  /* "src/gevent/queue.py":236
+  /* "src/gevent/queue.py":241
  *         ``Queue(None)`` is never full.
  *         """
  *         return self._maxsize > 0 and self.qsize() >= self._maxsize             # <<<<<<<<<<<<<<
@@ -5375,7 +5377,7 @@ static int __pyx_f_6gevent_6_queue_5Queue_full(struct __pyx_obj_6gevent_6_queue_
   __pyx_r = __pyx_t_5;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":231
+  /* "src/gevent/queue.py":236
  *         return not self.qsize()
  * 
  *     def full(self):             # <<<<<<<<<<<<<<
@@ -5417,7 +5419,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_28full(struct __pyx_obj_6gevent
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("full", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyBool_FromLong(__pyx_f_6gevent_6_queue_5Queue_full(__pyx_v_self, 1)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 231, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyBool_FromLong(__pyx_f_6gevent_6_queue_5Queue_full(__pyx_v_self, 1)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 236, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -5434,7 +5436,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_28full(struct __pyx_obj_6gevent
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":238
+/* "src/gevent/queue.py":243
  *         return self._maxsize > 0 and self.qsize() >= self._maxsize
  * 
  *     def put(self, item, block=True, timeout=None):             # <<<<<<<<<<<<<<
@@ -5482,7 +5484,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
   if (unlikely(__pyx_skip_dispatch)) ;
   /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_put_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 238, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_put_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 243, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)__pyx_pw_6gevent_6_queue_5Queue_31put)) {
       __Pyx_XDECREF(__pyx_r);
@@ -5502,7 +5504,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
       #if CYTHON_FAST_PYCALL
       if (PyFunction_Check(__pyx_t_3)) {
         PyObject *__pyx_temp[4] = {__pyx_t_4, __pyx_v_item, __pyx_v_block, __pyx_v_timeout};
-        __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 3+__pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 238, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 3+__pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 243, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
         __Pyx_GOTREF(__pyx_t_2);
       } else
@@ -5510,13 +5512,13 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
       #if CYTHON_FAST_PYCCALL
       if (__Pyx_PyFastCFunction_Check(__pyx_t_3)) {
         PyObject *__pyx_temp[4] = {__pyx_t_4, __pyx_v_item, __pyx_v_block, __pyx_v_timeout};
-        __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 3+__pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 238, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 3+__pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 243, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
         __Pyx_GOTREF(__pyx_t_2);
       } else
       #endif
       {
-        __pyx_t_6 = PyTuple_New(3+__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 238, __pyx_L1_error)
+        __pyx_t_6 = PyTuple_New(3+__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 243, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
         if (__pyx_t_4) {
           __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_4); __pyx_t_4 = NULL;
@@ -5530,7 +5532,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
         __Pyx_INCREF(__pyx_v_timeout);
         __Pyx_GIVEREF(__pyx_v_timeout);
         PyTuple_SET_ITEM(__pyx_t_6, 2+__pyx_t_5, __pyx_v_timeout);
-        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_6, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 238, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_6, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 243, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       }
@@ -5543,7 +5545,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
 
-  /* "src/gevent/queue.py":249
+  /* "src/gevent/queue.py":254
  *         is ignored in that case).
  *         """
  *         if self._maxsize == -1 or self.qsize() < self._maxsize:             # <<<<<<<<<<<<<<
@@ -5561,39 +5563,39 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_7) {
 
-    /* "src/gevent/queue.py":251
+    /* "src/gevent/queue.py":256
  *         if self._maxsize == -1 or self.qsize() < self._maxsize:
  *             # there's a free slot, put an item right away
  *             self._put(item)             # <<<<<<<<<<<<<<
  *             if self.getters:
  *                 self._schedule_unlock()
  */
-    __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->_put(__pyx_v_self, __pyx_v_item, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 251, __pyx_L1_error)
+    __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->_put(__pyx_v_self, __pyx_v_item, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 256, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "src/gevent/queue.py":252
+    /* "src/gevent/queue.py":257
  *             # there's a free slot, put an item right away
  *             self._put(item)
  *             if self.getters:             # <<<<<<<<<<<<<<
  *                 self._schedule_unlock()
  *         elif self.hub is getcurrent():
  */
-    __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_v_self->getters); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 252, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_v_self->getters); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 257, __pyx_L1_error)
     if (__pyx_t_7) {
 
-      /* "src/gevent/queue.py":253
+      /* "src/gevent/queue.py":258
  *             self._put(item)
  *             if self.getters:
  *                 self._schedule_unlock()             # <<<<<<<<<<<<<<
  *         elif self.hub is getcurrent():
  *             # We're in the mainloop, so we cannot wait; we can switch to other greenlets though.
  */
-      __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->_schedule_unlock(__pyx_v_self); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 253, __pyx_L1_error)
+      __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->_schedule_unlock(__pyx_v_self); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 258, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "src/gevent/queue.py":252
+      /* "src/gevent/queue.py":257
  *             # there's a free slot, put an item right away
  *             self._put(item)
  *             if self.getters:             # <<<<<<<<<<<<<<
@@ -5602,7 +5604,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
  */
     }
 
-    /* "src/gevent/queue.py":249
+    /* "src/gevent/queue.py":254
  *         is ignored in that case).
  *         """
  *         if self._maxsize == -1 or self.qsize() < self._maxsize:             # <<<<<<<<<<<<<<
@@ -5612,14 +5614,14 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
     goto __pyx_L3;
   }
 
-  /* "src/gevent/queue.py":254
+  /* "src/gevent/queue.py":259
  *             if self.getters:
  *                 self._schedule_unlock()
  *         elif self.hub is getcurrent():             # <<<<<<<<<<<<<<
  *             # We're in the mainloop, so we cannot wait; we can switch to other greenlets though.
  *             # Check if possible to get a free slot in the queue.
  */
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_getcurrent); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 254, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_getcurrent); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 259, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -5632,10 +5634,10 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
     }
   }
   if (__pyx_t_3) {
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 254, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 259, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   } else {
-    __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 254, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 259, __pyx_L1_error)
   }
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -5644,7 +5646,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
   __pyx_t_8 = (__pyx_t_7 != 0);
   if (__pyx_t_8) {
 
-    /* "src/gevent/queue.py":257
+    /* "src/gevent/queue.py":262
  *             # We're in the mainloop, so we cannot wait; we can switch to other greenlets though.
  *             # Check if possible to get a free slot in the queue.
  *             while self.getters and self.qsize() and self.qsize() >= self._maxsize:             # <<<<<<<<<<<<<<
@@ -5652,7 +5654,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
  *                 getter.switch(getter)
  */
     while (1) {
-      __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_v_self->getters); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 257, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_v_self->getters); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 262, __pyx_L1_error)
       if (__pyx_t_7) {
       } else {
         __pyx_t_8 = __pyx_t_7;
@@ -5669,14 +5671,14 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
       __pyx_L9_bool_binop_done:;
       if (!__pyx_t_8) break;
 
-      /* "src/gevent/queue.py":258
+      /* "src/gevent/queue.py":263
  *             # Check if possible to get a free slot in the queue.
  *             while self.getters and self.qsize() and self.qsize() >= self._maxsize:
  *                 getter = self.getters.popleft()             # <<<<<<<<<<<<<<
  *                 getter.switch(getter)
  *             if self.qsize() < self._maxsize:
  */
-      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->getters, __pyx_n_s_popleft); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 258, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->getters, __pyx_n_s_popleft); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 263, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __pyx_t_3 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -5689,24 +5691,24 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
         }
       }
       if (__pyx_t_3) {
-        __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 258, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 263, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       } else {
-        __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 258, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 263, __pyx_L1_error)
       }
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_XDECREF_SET(__pyx_v_getter, __pyx_t_1);
       __pyx_t_1 = 0;
 
-      /* "src/gevent/queue.py":259
+      /* "src/gevent/queue.py":264
  *             while self.getters and self.qsize() and self.qsize() >= self._maxsize:
  *                 getter = self.getters.popleft()
  *                 getter.switch(getter)             # <<<<<<<<<<<<<<
  *             if self.qsize() < self._maxsize:
  *                 self._put(item)
  */
-      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_getter, __pyx_n_s_switch); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 259, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_getter, __pyx_n_s_switch); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 264, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __pyx_t_3 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -5719,13 +5721,13 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
         }
       }
       if (!__pyx_t_3) {
-        __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_getter); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 259, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_getter); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 264, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
       } else {
         #if CYTHON_FAST_PYCALL
         if (PyFunction_Check(__pyx_t_2)) {
           PyObject *__pyx_temp[2] = {__pyx_t_3, __pyx_v_getter};
-          __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 259, __pyx_L1_error)
+          __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 264, __pyx_L1_error)
           __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
           __Pyx_GOTREF(__pyx_t_1);
         } else
@@ -5733,19 +5735,19 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
         #if CYTHON_FAST_PYCCALL
         if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
           PyObject *__pyx_temp[2] = {__pyx_t_3, __pyx_v_getter};
-          __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 259, __pyx_L1_error)
+          __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 264, __pyx_L1_error)
           __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
           __Pyx_GOTREF(__pyx_t_1);
         } else
         #endif
         {
-          __pyx_t_6 = PyTuple_New(1+1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 259, __pyx_L1_error)
+          __pyx_t_6 = PyTuple_New(1+1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 264, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
           __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_3); __pyx_t_3 = NULL;
           __Pyx_INCREF(__pyx_v_getter);
           __Pyx_GIVEREF(__pyx_v_getter);
           PyTuple_SET_ITEM(__pyx_t_6, 0+1, __pyx_v_getter);
-          __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 259, __pyx_L1_error)
+          __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 264, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_1);
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         }
@@ -5754,7 +5756,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     }
 
-    /* "src/gevent/queue.py":260
+    /* "src/gevent/queue.py":265
  *                 getter = self.getters.popleft()
  *                 getter.switch(getter)
  *             if self.qsize() < self._maxsize:             # <<<<<<<<<<<<<<
@@ -5764,18 +5766,18 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
     __pyx_t_8 = ((((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->qsize(__pyx_v_self, 0) < __pyx_v_self->_maxsize) != 0);
     if (__pyx_t_8) {
 
-      /* "src/gevent/queue.py":261
+      /* "src/gevent/queue.py":266
  *                 getter.switch(getter)
  *             if self.qsize() < self._maxsize:
  *                 self._put(item)             # <<<<<<<<<<<<<<
  *                 return
  *             raise Full
  */
-      __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->_put(__pyx_v_self, __pyx_v_item, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 261, __pyx_L1_error)
+      __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->_put(__pyx_v_self, __pyx_v_item, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 266, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "src/gevent/queue.py":262
+      /* "src/gevent/queue.py":267
  *             if self.qsize() < self._maxsize:
  *                 self._put(item)
  *                 return             # <<<<<<<<<<<<<<
@@ -5786,7 +5788,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
       __pyx_r = Py_None; __Pyx_INCREF(Py_None);
       goto __pyx_L0;
 
-      /* "src/gevent/queue.py":260
+      /* "src/gevent/queue.py":265
  *                 getter = self.getters.popleft()
  *                 getter.switch(getter)
  *             if self.qsize() < self._maxsize:             # <<<<<<<<<<<<<<
@@ -5795,20 +5797,20 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
  */
     }
 
-    /* "src/gevent/queue.py":263
+    /* "src/gevent/queue.py":268
  *                 self._put(item)
  *                 return
  *             raise Full             # <<<<<<<<<<<<<<
  *         elif block:
  *             waiter = ItemWaiter(item, self)
  */
-    __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_Full); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 263, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_Full); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 268, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_Raise(__pyx_t_1, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __PYX_ERR(0, 263, __pyx_L1_error)
+    __PYX_ERR(0, 268, __pyx_L1_error)
 
-    /* "src/gevent/queue.py":254
+    /* "src/gevent/queue.py":259
  *             if self.getters:
  *                 self._schedule_unlock()
  *         elif self.hub is getcurrent():             # <<<<<<<<<<<<<<
@@ -5817,24 +5819,24 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
  */
   }
 
-  /* "src/gevent/queue.py":264
+  /* "src/gevent/queue.py":269
  *                 return
  *             raise Full
  *         elif block:             # <<<<<<<<<<<<<<
  *             waiter = ItemWaiter(item, self)
  *             self.putters.append(waiter)
  */
-  __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_v_block); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 264, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_v_block); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 269, __pyx_L1_error)
   if (likely(__pyx_t_8)) {
 
-    /* "src/gevent/queue.py":265
+    /* "src/gevent/queue.py":270
  *             raise Full
  *         elif block:
  *             waiter = ItemWaiter(item, self)             # <<<<<<<<<<<<<<
  *             self.putters.append(waiter)
  *             timeout = Timeout._start_new_or_dummy(timeout, Full)
  */
-    __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 265, __pyx_L1_error)
+    __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 270, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_INCREF(__pyx_v_item);
     __Pyx_GIVEREF(__pyx_v_item);
@@ -5842,34 +5844,34 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
     __Pyx_INCREF(((PyObject *)__pyx_v_self));
     __Pyx_GIVEREF(((PyObject *)__pyx_v_self));
     PyTuple_SET_ITEM(__pyx_t_1, 1, ((PyObject *)__pyx_v_self));
-    __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_6gevent_6_queue_ItemWaiter), __pyx_t_1, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 265, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_6gevent_6_queue_ItemWaiter), __pyx_t_1, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 270, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_v_waiter = ((struct __pyx_obj_6gevent_6_queue_ItemWaiter *)__pyx_t_2);
     __pyx_t_2 = 0;
 
-    /* "src/gevent/queue.py":266
+    /* "src/gevent/queue.py":271
  *         elif block:
  *             waiter = ItemWaiter(item, self)
  *             self.putters.append(waiter)             # <<<<<<<<<<<<<<
  *             timeout = Timeout._start_new_or_dummy(timeout, Full)
  *             try:
  */
-    __pyx_t_9 = __Pyx_PyObject_Append(__pyx_v_self->putters, ((PyObject *)__pyx_v_waiter)); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(0, 266, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyObject_Append(__pyx_v_self->putters, ((PyObject *)__pyx_v_waiter)); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(0, 271, __pyx_L1_error)
 
-    /* "src/gevent/queue.py":267
+    /* "src/gevent/queue.py":272
  *             waiter = ItemWaiter(item, self)
  *             self.putters.append(waiter)
  *             timeout = Timeout._start_new_or_dummy(timeout, Full)             # <<<<<<<<<<<<<<
  *             try:
  *                 if self.getters:
  */
-    __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_Timeout); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 267, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_Timeout); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 272, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_start_new_or_dummy); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 267, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_start_new_or_dummy); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 272, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_Full); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 267, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_Full); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 272, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_3 = NULL;
     __pyx_t_5 = 0;
@@ -5886,7 +5888,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
     #if CYTHON_FAST_PYCALL
     if (PyFunction_Check(__pyx_t_6)) {
       PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_v_timeout, __pyx_t_1};
-      __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_6, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 267, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_6, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 272, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -5895,14 +5897,14 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
     #if CYTHON_FAST_PYCCALL
     if (__Pyx_PyFastCFunction_Check(__pyx_t_6)) {
       PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_v_timeout, __pyx_t_1};
-      __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_6, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 267, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_6, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 272, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     } else
     #endif
     {
-      __pyx_t_4 = PyTuple_New(2+__pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 267, __pyx_L1_error)
+      __pyx_t_4 = PyTuple_New(2+__pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 272, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       if (__pyx_t_3) {
         __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_3); __pyx_t_3 = NULL;
@@ -5913,7 +5915,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
       __Pyx_GIVEREF(__pyx_t_1);
       PyTuple_SET_ITEM(__pyx_t_4, 1+__pyx_t_5, __pyx_t_1);
       __pyx_t_1 = 0;
-      __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_4, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 267, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_4, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 272, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     }
@@ -5921,7 +5923,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
     __Pyx_DECREF_SET(__pyx_v_timeout, __pyx_t_2);
     __pyx_t_2 = 0;
 
-    /* "src/gevent/queue.py":268
+    /* "src/gevent/queue.py":273
  *             self.putters.append(waiter)
  *             timeout = Timeout._start_new_or_dummy(timeout, Full)
  *             try:             # <<<<<<<<<<<<<<
@@ -5930,28 +5932,28 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
  */
     /*try:*/ {
 
-      /* "src/gevent/queue.py":269
+      /* "src/gevent/queue.py":274
  *             timeout = Timeout._start_new_or_dummy(timeout, Full)
  *             try:
  *                 if self.getters:             # <<<<<<<<<<<<<<
  *                     self._schedule_unlock()
  *                 result = waiter.get()
  */
-      __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_v_self->getters); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 269, __pyx_L14_error)
+      __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_v_self->getters); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 274, __pyx_L14_error)
       if (__pyx_t_8) {
 
-        /* "src/gevent/queue.py":270
+        /* "src/gevent/queue.py":275
  *             try:
  *                 if self.getters:
  *                     self._schedule_unlock()             # <<<<<<<<<<<<<<
  *                 result = waiter.get()
  *                 if result is not waiter:
  */
-        __pyx_t_2 = ((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->_schedule_unlock(__pyx_v_self); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 270, __pyx_L14_error)
+        __pyx_t_2 = ((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->_schedule_unlock(__pyx_v_self); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 275, __pyx_L14_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-        /* "src/gevent/queue.py":269
+        /* "src/gevent/queue.py":274
  *             timeout = Timeout._start_new_or_dummy(timeout, Full)
  *             try:
  *                 if self.getters:             # <<<<<<<<<<<<<<
@@ -5960,19 +5962,19 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
  */
       }
 
-      /* "src/gevent/queue.py":271
+      /* "src/gevent/queue.py":276
  *                 if self.getters:
  *                     self._schedule_unlock()
  *                 result = waiter.get()             # <<<<<<<<<<<<<<
  *                 if result is not waiter:
  *                     raise InvalidSwitchError("Invalid switch into Queue.put: %r" % (result, ))
  */
-      __pyx_t_2 = ((struct __pyx_vtabstruct_6gevent_6_queue_ItemWaiter *)__pyx_v_waiter->__pyx_base.__pyx_vtab)->__pyx_base.get(((struct __pyx_obj_6gevent_8__waiter_Waiter *)__pyx_v_waiter), 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 271, __pyx_L14_error)
+      __pyx_t_2 = ((struct __pyx_vtabstruct_6gevent_6_queue_ItemWaiter *)__pyx_v_waiter->__pyx_base.__pyx_vtab)->__pyx_base.get(((struct __pyx_obj_6gevent_8__waiter_Waiter *)__pyx_v_waiter), 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 276, __pyx_L14_error)
       __Pyx_GOTREF(__pyx_t_2);
       __pyx_v_result = __pyx_t_2;
       __pyx_t_2 = 0;
 
-      /* "src/gevent/queue.py":272
+      /* "src/gevent/queue.py":277
  *                     self._schedule_unlock()
  *                 result = waiter.get()
  *                 if result is not waiter:             # <<<<<<<<<<<<<<
@@ -5983,21 +5985,21 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
       __pyx_t_7 = (__pyx_t_8 != 0);
       if (unlikely(__pyx_t_7)) {
 
-        /* "src/gevent/queue.py":273
+        /* "src/gevent/queue.py":278
  *                 result = waiter.get()
  *                 if result is not waiter:
  *                     raise InvalidSwitchError("Invalid switch into Queue.put: %r" % (result, ))             # <<<<<<<<<<<<<<
  *             finally:
  *                 timeout.cancel()
  */
-        __pyx_t_6 = __Pyx_GetModuleGlobalName(__pyx_n_s_InvalidSwitchError); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 273, __pyx_L14_error)
+        __pyx_t_6 = __Pyx_GetModuleGlobalName(__pyx_n_s_InvalidSwitchError); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 278, __pyx_L14_error)
         __Pyx_GOTREF(__pyx_t_6);
-        __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 273, __pyx_L14_error)
+        __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 278, __pyx_L14_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_INCREF(__pyx_v_result);
         __Pyx_GIVEREF(__pyx_v_result);
         PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_v_result);
-        __pyx_t_1 = __Pyx_PyString_Format(__pyx_kp_s_Invalid_switch_into_Queue_put_r, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 273, __pyx_L14_error)
+        __pyx_t_1 = __Pyx_PyString_Format(__pyx_kp_s_Invalid_switch_into_Queue_put_r, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 278, __pyx_L14_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
         __pyx_t_4 = NULL;
@@ -6011,14 +6013,14 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
           }
         }
         if (!__pyx_t_4) {
-          __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 273, __pyx_L14_error)
+          __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 278, __pyx_L14_error)
           __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
           __Pyx_GOTREF(__pyx_t_2);
         } else {
           #if CYTHON_FAST_PYCALL
           if (PyFunction_Check(__pyx_t_6)) {
             PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_t_1};
-            __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_6, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 273, __pyx_L14_error)
+            __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_6, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 278, __pyx_L14_error)
             __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
             __Pyx_GOTREF(__pyx_t_2);
             __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -6027,20 +6029,20 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
           #if CYTHON_FAST_PYCCALL
           if (__Pyx_PyFastCFunction_Check(__pyx_t_6)) {
             PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_t_1};
-            __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_6, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 273, __pyx_L14_error)
+            __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_6, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 278, __pyx_L14_error)
             __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
             __Pyx_GOTREF(__pyx_t_2);
             __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
           } else
           #endif
           {
-            __pyx_t_3 = PyTuple_New(1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 273, __pyx_L14_error)
+            __pyx_t_3 = PyTuple_New(1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 278, __pyx_L14_error)
             __Pyx_GOTREF(__pyx_t_3);
             __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_4); __pyx_t_4 = NULL;
             __Pyx_GIVEREF(__pyx_t_1);
             PyTuple_SET_ITEM(__pyx_t_3, 0+1, __pyx_t_1);
             __pyx_t_1 = 0;
-            __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_3, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 273, __pyx_L14_error)
+            __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_3, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 278, __pyx_L14_error)
             __Pyx_GOTREF(__pyx_t_2);
             __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
           }
@@ -6048,9 +6050,9 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_Raise(__pyx_t_2, 0, 0, 0);
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-        __PYX_ERR(0, 273, __pyx_L14_error)
+        __PYX_ERR(0, 278, __pyx_L14_error)
 
-        /* "src/gevent/queue.py":272
+        /* "src/gevent/queue.py":277
  *                     self._schedule_unlock()
  *                 result = waiter.get()
  *                 if result is not waiter:             # <<<<<<<<<<<<<<
@@ -6060,7 +6062,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
       }
     }
 
-    /* "src/gevent/queue.py":275
+    /* "src/gevent/queue.py":280
  *                     raise InvalidSwitchError("Invalid switch into Queue.put: %r" % (result, ))
  *             finally:
  *                 timeout.cancel()             # <<<<<<<<<<<<<<
@@ -6069,7 +6071,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
  */
     /*finally:*/ {
       /*normal exit:*/{
-        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_timeout, __pyx_n_s_cancel); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 275, __pyx_L1_error)
+        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_timeout, __pyx_n_s_cancel); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 280, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
         __pyx_t_3 = NULL;
         if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_6))) {
@@ -6082,16 +6084,16 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
           }
         }
         if (__pyx_t_3) {
-          __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 275, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 280, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
         } else {
-          __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 275, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 280, __pyx_L1_error)
         }
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-        /* "src/gevent/queue.py":276
+        /* "src/gevent/queue.py":281
  *             finally:
  *                 timeout.cancel()
  *                 _safe_remove(self.putters, waiter)             # <<<<<<<<<<<<<<
@@ -6100,7 +6102,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
  */
         __pyx_t_2 = __pyx_v_self->putters;
         __Pyx_INCREF(__pyx_t_2);
-        __pyx_t_6 = __pyx_f_6gevent_6_queue__safe_remove(__pyx_t_2, ((PyObject *)__pyx_v_waiter)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 276, __pyx_L1_error)
+        __pyx_t_6 = __pyx_f_6gevent_6_queue__safe_remove(__pyx_t_2, ((PyObject *)__pyx_v_waiter)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 281, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
@@ -6127,14 +6129,14 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
         __pyx_t_5 = __pyx_lineno; __pyx_t_10 = __pyx_clineno; __pyx_t_11 = __pyx_filename;
         {
 
-          /* "src/gevent/queue.py":275
+          /* "src/gevent/queue.py":280
  *                     raise InvalidSwitchError("Invalid switch into Queue.put: %r" % (result, ))
  *             finally:
  *                 timeout.cancel()             # <<<<<<<<<<<<<<
  *                 _safe_remove(self.putters, waiter)
  *         else:
  */
-          __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_timeout, __pyx_n_s_cancel); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 275, __pyx_L19_error)
+          __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_timeout, __pyx_n_s_cancel); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 280, __pyx_L19_error)
           __Pyx_GOTREF(__pyx_t_2);
           __pyx_t_3 = NULL;
           if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -6147,16 +6149,16 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
             }
           }
           if (__pyx_t_3) {
-            __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 275, __pyx_L19_error)
+            __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 280, __pyx_L19_error)
             __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
           } else {
-            __pyx_t_6 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 275, __pyx_L19_error)
+            __pyx_t_6 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 280, __pyx_L19_error)
           }
           __Pyx_GOTREF(__pyx_t_6);
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-          /* "src/gevent/queue.py":276
+          /* "src/gevent/queue.py":281
  *             finally:
  *                 timeout.cancel()
  *                 _safe_remove(self.putters, waiter)             # <<<<<<<<<<<<<<
@@ -6165,7 +6167,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
  */
           __pyx_t_6 = __pyx_v_self->putters;
           __Pyx_INCREF(__pyx_t_6);
-          __pyx_t_2 = __pyx_f_6gevent_6_queue__safe_remove(__pyx_t_6, ((PyObject *)__pyx_v_waiter)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 276, __pyx_L19_error)
+          __pyx_t_2 = __pyx_f_6gevent_6_queue__safe_remove(__pyx_t_6, ((PyObject *)__pyx_v_waiter)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 281, __pyx_L19_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -6199,7 +6201,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
       __pyx_L15:;
     }
 
-    /* "src/gevent/queue.py":264
+    /* "src/gevent/queue.py":269
  *                 return
  *             raise Full
  *         elif block:             # <<<<<<<<<<<<<<
@@ -6209,7 +6211,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
     goto __pyx_L3;
   }
 
-  /* "src/gevent/queue.py":278
+  /* "src/gevent/queue.py":283
  *                 _safe_remove(self.putters, waiter)
  *         else:
  *             raise Full             # <<<<<<<<<<<<<<
@@ -6217,15 +6219,15 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put(struct __pyx_obj_6gevent_6_q
  *     def put_nowait(self, item):
  */
   /*else*/ {
-    __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_Full); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 278, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_Full); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 283, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_ERR(0, 278, __pyx_L1_error)
+    __PYX_ERR(0, 283, __pyx_L1_error)
   }
   __pyx_L3:;
 
-  /* "src/gevent/queue.py":238
+  /* "src/gevent/queue.py":243
  *         return self._maxsize > 0 and self.qsize() >= self._maxsize
  * 
  *     def put(self, item, block=True, timeout=None):             # <<<<<<<<<<<<<<
@@ -6302,7 +6304,7 @@ static PyObject *__pyx_pw_6gevent_6_queue_5Queue_31put(PyObject *__pyx_v_self, P
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "put") < 0)) __PYX_ERR(0, 238, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "put") < 0)) __PYX_ERR(0, 243, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -6321,7 +6323,7 @@ static PyObject *__pyx_pw_6gevent_6_queue_5Queue_31put(PyObject *__pyx_v_self, P
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("put", 0, 1, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 238, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("put", 0, 1, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 243, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gevent._queue.Queue.put", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -6344,7 +6346,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_30put(struct __pyx_obj_6gevent_
   __pyx_t_2.__pyx_n = 2;
   __pyx_t_2.block = __pyx_v_block;
   __pyx_t_2.timeout = __pyx_v_timeout;
-  __pyx_t_1 = __pyx_vtabptr_6gevent_6_queue_Queue->put(__pyx_v_self, __pyx_v_item, 1, &__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 238, __pyx_L1_error)
+  __pyx_t_1 = __pyx_vtabptr_6gevent_6_queue_Queue->put(__pyx_v_self, __pyx_v_item, 1, &__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 243, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -6361,7 +6363,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_30put(struct __pyx_obj_6gevent_
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":280
+/* "src/gevent/queue.py":285
  *             raise Full
  * 
  *     def put_nowait(self, item):             # <<<<<<<<<<<<<<
@@ -6384,7 +6386,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put_nowait(struct __pyx_obj_6gev
   if (unlikely(__pyx_skip_dispatch)) ;
   /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_put_nowait); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 280, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_put_nowait); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 285, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)__pyx_pw_6gevent_6_queue_5Queue_33put_nowait)) {
       __Pyx_XDECREF(__pyx_r);
@@ -6400,13 +6402,13 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put_nowait(struct __pyx_obj_6gev
         }
       }
       if (!__pyx_t_4) {
-        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_item); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 280, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_item); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 285, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
       } else {
         #if CYTHON_FAST_PYCALL
         if (PyFunction_Check(__pyx_t_3)) {
           PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_v_item};
-          __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 280, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 285, __pyx_L1_error)
           __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_GOTREF(__pyx_t_2);
         } else
@@ -6414,19 +6416,19 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put_nowait(struct __pyx_obj_6gev
         #if CYTHON_FAST_PYCCALL
         if (__Pyx_PyFastCFunction_Check(__pyx_t_3)) {
           PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_v_item};
-          __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 280, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 285, __pyx_L1_error)
           __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_GOTREF(__pyx_t_2);
         } else
         #endif
         {
-          __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 280, __pyx_L1_error)
+          __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 285, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_5);
           __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_4); __pyx_t_4 = NULL;
           __Pyx_INCREF(__pyx_v_item);
           __Pyx_GIVEREF(__pyx_v_item);
           PyTuple_SET_ITEM(__pyx_t_5, 0+1, __pyx_v_item);
-          __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_5, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 280, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_5, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 285, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
         }
@@ -6440,7 +6442,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put_nowait(struct __pyx_obj_6gev
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
 
-  /* "src/gevent/queue.py":286
+  /* "src/gevent/queue.py":291
  *         Otherwise raise the :class:`Full` exception.
  *         """
  *         self.put(item, False)             # <<<<<<<<<<<<<<
@@ -6449,11 +6451,11 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_put_nowait(struct __pyx_obj_6gev
  */
   __pyx_t_6.__pyx_n = 1;
   __pyx_t_6.block = Py_False;
-  __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->put(__pyx_v_self, __pyx_v_item, 0, &__pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 286, __pyx_L1_error)
+  __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->put(__pyx_v_self, __pyx_v_item, 0, &__pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 291, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/gevent/queue.py":280
+  /* "src/gevent/queue.py":285
  *             raise Full
  * 
  *     def put_nowait(self, item):             # <<<<<<<<<<<<<<
@@ -6499,7 +6501,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_32put_nowait(struct __pyx_obj_6
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("put_nowait", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_6gevent_6_queue_5Queue_put_nowait(__pyx_v_self, __pyx_v_item, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 280, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_6gevent_6_queue_5Queue_put_nowait(__pyx_v_self, __pyx_v_item, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 285, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -6516,7 +6518,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_32put_nowait(struct __pyx_obj_6
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":288
+/* "src/gevent/queue.py":293
  *         self.put(item, False)
  * 
  *     def __get_or_peek(self, method, block, timeout):             # <<<<<<<<<<<<<<
@@ -6549,14 +6551,14 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue___get_or_peek(struct __pyx_obj_6
   __Pyx_RefNannySetupContext("__get_or_peek", 0);
   __Pyx_INCREF(__pyx_v_timeout);
 
-  /* "src/gevent/queue.py":294
+  /* "src/gevent/queue.py":299
  *         # to see if there are items in the queue.
  * 
  *         if self.hub is getcurrent():             # <<<<<<<<<<<<<<
  *             # special case to make get_nowait() or peek_nowait() runnable in the mainloop greenlet
  *             # there are no items in the queue; try to fix the situation by unlocking putters
  */
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_getcurrent); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 294, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_getcurrent); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 299, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -6569,10 +6571,10 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue___get_or_peek(struct __pyx_obj_6
     }
   }
   if (__pyx_t_3) {
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 294, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 299, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   } else {
-    __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 294, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 299, __pyx_L1_error)
   }
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -6581,7 +6583,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue___get_or_peek(struct __pyx_obj_6
   __pyx_t_5 = (__pyx_t_4 != 0);
   if (__pyx_t_5) {
 
-    /* "src/gevent/queue.py":297
+    /* "src/gevent/queue.py":302
  *             # special case to make get_nowait() or peek_nowait() runnable in the mainloop greenlet
  *             # there are no items in the queue; try to fix the situation by unlocking putters
  *             while self.putters:             # <<<<<<<<<<<<<<
@@ -6589,17 +6591,17 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue___get_or_peek(struct __pyx_obj_6
  *                 # is almost certainly correct.
  */
     while (1) {
-      __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_v_self->putters); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 297, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_v_self->putters); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 302, __pyx_L1_error)
       if (!__pyx_t_5) break;
 
-      /* "src/gevent/queue.py":300
+      /* "src/gevent/queue.py":305
  *                 # Note: get() used popleft(), peek used pop(); popleft
  *                 # is almost certainly correct.
  *                 self.putters.popleft().put_and_switch()             # <<<<<<<<<<<<<<
  *                 if self.qsize():
  *                     return method()
  */
-      __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->putters, __pyx_n_s_popleft); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 300, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->putters, __pyx_n_s_popleft); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 305, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __pyx_t_6 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
@@ -6612,14 +6614,14 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue___get_or_peek(struct __pyx_obj_6
         }
       }
       if (__pyx_t_6) {
-        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 300, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 305, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       } else {
-        __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 300, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 305, __pyx_L1_error)
       }
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_put_and_switch); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 300, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_put_and_switch); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 305, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __pyx_t_2 = NULL;
@@ -6633,16 +6635,16 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue___get_or_peek(struct __pyx_obj_6
         }
       }
       if (__pyx_t_2) {
-        __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 300, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 305, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       } else {
-        __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 300, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 305, __pyx_L1_error)
       }
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "src/gevent/queue.py":301
+      /* "src/gevent/queue.py":306
  *                 # is almost certainly correct.
  *                 self.putters.popleft().put_and_switch()
  *                 if self.qsize():             # <<<<<<<<<<<<<<
@@ -6652,7 +6654,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue___get_or_peek(struct __pyx_obj_6
       __pyx_t_5 = (((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->qsize(__pyx_v_self, 0) != 0);
       if (__pyx_t_5) {
 
-        /* "src/gevent/queue.py":302
+        /* "src/gevent/queue.py":307
  *                 self.putters.popleft().put_and_switch()
  *                 if self.qsize():
  *                     return method()             # <<<<<<<<<<<<<<
@@ -6672,10 +6674,10 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue___get_or_peek(struct __pyx_obj_6
           }
         }
         if (__pyx_t_2) {
-          __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 302, __pyx_L1_error)
+          __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 307, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         } else {
-          __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 302, __pyx_L1_error)
+          __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 307, __pyx_L1_error)
         }
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -6683,7 +6685,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue___get_or_peek(struct __pyx_obj_6
         __pyx_t_1 = 0;
         goto __pyx_L0;
 
-        /* "src/gevent/queue.py":301
+        /* "src/gevent/queue.py":306
  *                 # is almost certainly correct.
  *                 self.putters.popleft().put_and_switch()
  *                 if self.qsize():             # <<<<<<<<<<<<<<
@@ -6693,63 +6695,12 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue___get_or_peek(struct __pyx_obj_6
       }
     }
 
-    /* "src/gevent/queue.py":303
+    /* "src/gevent/queue.py":308
  *                 if self.qsize():
  *                     return method()
  *             raise Empty()             # <<<<<<<<<<<<<<
  * 
  *         if not block:
- */
-    __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_Empty); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 303, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_2 = NULL;
-    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
-      __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
-      if (likely(__pyx_t_2)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-        __Pyx_INCREF(__pyx_t_2);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_3, function);
-      }
-    }
-    if (__pyx_t_2) {
-      __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 303, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    } else {
-      __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 303, __pyx_L1_error)
-    }
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __Pyx_Raise(__pyx_t_1, 0, 0, 0);
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __PYX_ERR(0, 303, __pyx_L1_error)
-
-    /* "src/gevent/queue.py":294
- *         # to see if there are items in the queue.
- * 
- *         if self.hub is getcurrent():             # <<<<<<<<<<<<<<
- *             # special case to make get_nowait() or peek_nowait() runnable in the mainloop greenlet
- *             # there are no items in the queue; try to fix the situation by unlocking putters
- */
-  }
-
-  /* "src/gevent/queue.py":305
- *             raise Empty()
- * 
- *         if not block:             # <<<<<<<<<<<<<<
- *             # We can't block, we're not the hub, and we have nothing
- *             # to return. No choice...
- */
-  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_v_block); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 305, __pyx_L1_error)
-  __pyx_t_4 = ((!__pyx_t_5) != 0);
-  if (unlikely(__pyx_t_4)) {
-
-    /* "src/gevent/queue.py":308
- *             # We can't block, we're not the hub, and we have nothing
- *             # to return. No choice...
- *             raise Empty()             # <<<<<<<<<<<<<<
- * 
- *         waiter = Waiter() # pylint:disable=undefined-variable
  */
     __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_Empty); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 308, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
@@ -6775,7 +6726,58 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue___get_or_peek(struct __pyx_obj_6
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __PYX_ERR(0, 308, __pyx_L1_error)
 
-    /* "src/gevent/queue.py":305
+    /* "src/gevent/queue.py":299
+ *         # to see if there are items in the queue.
+ * 
+ *         if self.hub is getcurrent():             # <<<<<<<<<<<<<<
+ *             # special case to make get_nowait() or peek_nowait() runnable in the mainloop greenlet
+ *             # there are no items in the queue; try to fix the situation by unlocking putters
+ */
+  }
+
+  /* "src/gevent/queue.py":310
+ *             raise Empty()
+ * 
+ *         if not block:             # <<<<<<<<<<<<<<
+ *             # We can't block, we're not the hub, and we have nothing
+ *             # to return. No choice...
+ */
+  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_v_block); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 310, __pyx_L1_error)
+  __pyx_t_4 = ((!__pyx_t_5) != 0);
+  if (unlikely(__pyx_t_4)) {
+
+    /* "src/gevent/queue.py":313
+ *             # We can't block, we're not the hub, and we have nothing
+ *             # to return. No choice...
+ *             raise Empty()             # <<<<<<<<<<<<<<
+ * 
+ *         waiter = Waiter() # pylint:disable=undefined-variable
+ */
+    __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_Empty); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 313, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_2 = NULL;
+    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
+      __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
+      if (likely(__pyx_t_2)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+        __Pyx_INCREF(__pyx_t_2);
+        __Pyx_INCREF(function);
+        __Pyx_DECREF_SET(__pyx_t_3, function);
+      }
+    }
+    if (__pyx_t_2) {
+      __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 313, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    } else {
+      __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 313, __pyx_L1_error)
+    }
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_Raise(__pyx_t_1, 0, 0, 0);
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __PYX_ERR(0, 313, __pyx_L1_error)
+
+    /* "src/gevent/queue.py":310
  *             raise Empty()
  * 
  *         if not block:             # <<<<<<<<<<<<<<
@@ -6784,31 +6786,31 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue___get_or_peek(struct __pyx_obj_6
  */
   }
 
-  /* "src/gevent/queue.py":310
+  /* "src/gevent/queue.py":315
  *             raise Empty()
  * 
  *         waiter = Waiter() # pylint:disable=undefined-variable             # <<<<<<<<<<<<<<
  *         timeout = Timeout._start_new_or_dummy(timeout, Empty)
  *         try:
  */
-  __pyx_t_1 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_6gevent_8__waiter_Waiter)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 310, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_6gevent_8__waiter_Waiter)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 315, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_waiter = ((struct __pyx_obj_6gevent_8__waiter_Waiter *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/gevent/queue.py":311
+  /* "src/gevent/queue.py":316
  * 
  *         waiter = Waiter() # pylint:disable=undefined-variable
  *         timeout = Timeout._start_new_or_dummy(timeout, Empty)             # <<<<<<<<<<<<<<
  *         try:
  *             self.getters.append(waiter)
  */
-  __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_Timeout); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 311, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_Timeout); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 316, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_start_new_or_dummy); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 311, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_start_new_or_dummy); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 316, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_Empty); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 311, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_Empty); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 316, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_6 = NULL;
   __pyx_t_7 = 0;
@@ -6825,7 +6827,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue___get_or_peek(struct __pyx_obj_6
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_6, __pyx_v_timeout, __pyx_t_3};
-    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_7, 2+__pyx_t_7); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 311, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_7, 2+__pyx_t_7); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 316, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -6834,14 +6836,14 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue___get_or_peek(struct __pyx_obj_6
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_6, __pyx_v_timeout, __pyx_t_3};
-    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_7, 2+__pyx_t_7); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 311, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_7, 2+__pyx_t_7); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 316, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   } else
   #endif
   {
-    __pyx_t_8 = PyTuple_New(2+__pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 311, __pyx_L1_error)
+    __pyx_t_8 = PyTuple_New(2+__pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 316, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
     if (__pyx_t_6) {
       __Pyx_GIVEREF(__pyx_t_6); PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_6); __pyx_t_6 = NULL;
@@ -6852,7 +6854,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue___get_or_peek(struct __pyx_obj_6
     __Pyx_GIVEREF(__pyx_t_3);
     PyTuple_SET_ITEM(__pyx_t_8, 1+__pyx_t_7, __pyx_t_3);
     __pyx_t_3 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_8, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 311, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_8, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 316, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
   }
@@ -6860,7 +6862,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue___get_or_peek(struct __pyx_obj_6
   __Pyx_DECREF_SET(__pyx_v_timeout, __pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/gevent/queue.py":312
+  /* "src/gevent/queue.py":317
  *         waiter = Waiter() # pylint:disable=undefined-variable
  *         timeout = Timeout._start_new_or_dummy(timeout, Empty)
  *         try:             # <<<<<<<<<<<<<<
@@ -6869,37 +6871,37 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue___get_or_peek(struct __pyx_obj_6
  */
   /*try:*/ {
 
-    /* "src/gevent/queue.py":313
+    /* "src/gevent/queue.py":318
  *         timeout = Timeout._start_new_or_dummy(timeout, Empty)
  *         try:
  *             self.getters.append(waiter)             # <<<<<<<<<<<<<<
  *             if self.putters:
  *                 self._schedule_unlock()
  */
-    __pyx_t_9 = __Pyx_PyObject_Append(__pyx_v_self->getters, ((PyObject *)__pyx_v_waiter)); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(0, 313, __pyx_L9_error)
+    __pyx_t_9 = __Pyx_PyObject_Append(__pyx_v_self->getters, ((PyObject *)__pyx_v_waiter)); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(0, 318, __pyx_L9_error)
 
-    /* "src/gevent/queue.py":314
+    /* "src/gevent/queue.py":319
  *         try:
  *             self.getters.append(waiter)
  *             if self.putters:             # <<<<<<<<<<<<<<
  *                 self._schedule_unlock()
  *             result = waiter.get()
  */
-    __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_v_self->putters); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 314, __pyx_L9_error)
+    __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_v_self->putters); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 319, __pyx_L9_error)
     if (__pyx_t_4) {
 
-      /* "src/gevent/queue.py":315
+      /* "src/gevent/queue.py":320
  *             self.getters.append(waiter)
  *             if self.putters:
  *                 self._schedule_unlock()             # <<<<<<<<<<<<<<
  *             result = waiter.get()
  *             if result is not waiter:
  */
-      __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->_schedule_unlock(__pyx_v_self); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 315, __pyx_L9_error)
+      __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->_schedule_unlock(__pyx_v_self); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 320, __pyx_L9_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "src/gevent/queue.py":314
+      /* "src/gevent/queue.py":319
  *         try:
  *             self.getters.append(waiter)
  *             if self.putters:             # <<<<<<<<<<<<<<
@@ -6908,19 +6910,19 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue___get_or_peek(struct __pyx_obj_6
  */
     }
 
-    /* "src/gevent/queue.py":316
+    /* "src/gevent/queue.py":321
  *             if self.putters:
  *                 self._schedule_unlock()
  *             result = waiter.get()             # <<<<<<<<<<<<<<
  *             if result is not waiter:
  *                 raise InvalidSwitchError('Invalid switch into Queue.get: %r' % (result, ))
  */
-    __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_8__waiter_Waiter *)__pyx_v_waiter->__pyx_vtab)->get(__pyx_v_waiter, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 316, __pyx_L9_error)
+    __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_8__waiter_Waiter *)__pyx_v_waiter->__pyx_vtab)->get(__pyx_v_waiter, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 321, __pyx_L9_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_v_result = __pyx_t_1;
     __pyx_t_1 = 0;
 
-    /* "src/gevent/queue.py":317
+    /* "src/gevent/queue.py":322
  *                 self._schedule_unlock()
  *             result = waiter.get()
  *             if result is not waiter:             # <<<<<<<<<<<<<<
@@ -6931,21 +6933,21 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue___get_or_peek(struct __pyx_obj_6
     __pyx_t_5 = (__pyx_t_4 != 0);
     if (unlikely(__pyx_t_5)) {
 
-      /* "src/gevent/queue.py":318
+      /* "src/gevent/queue.py":323
  *             result = waiter.get()
  *             if result is not waiter:
  *                 raise InvalidSwitchError('Invalid switch into Queue.get: %r' % (result, ))             # <<<<<<<<<<<<<<
  *             return method()
  *         finally:
  */
-      __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_InvalidSwitchError); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 318, __pyx_L9_error)
+      __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_InvalidSwitchError); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 323, __pyx_L9_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_8 = PyTuple_New(1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 318, __pyx_L9_error)
+      __pyx_t_8 = PyTuple_New(1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 323, __pyx_L9_error)
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_INCREF(__pyx_v_result);
       __Pyx_GIVEREF(__pyx_v_result);
       PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_v_result);
-      __pyx_t_3 = __Pyx_PyString_Format(__pyx_kp_s_Invalid_switch_into_Queue_get_r, __pyx_t_8); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 318, __pyx_L9_error)
+      __pyx_t_3 = __Pyx_PyString_Format(__pyx_kp_s_Invalid_switch_into_Queue_get_r, __pyx_t_8); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 323, __pyx_L9_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
       __pyx_t_8 = NULL;
@@ -6959,14 +6961,14 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue___get_or_peek(struct __pyx_obj_6
         }
       }
       if (!__pyx_t_8) {
-        __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 318, __pyx_L9_error)
+        __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 323, __pyx_L9_error)
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
         __Pyx_GOTREF(__pyx_t_1);
       } else {
         #if CYTHON_FAST_PYCALL
         if (PyFunction_Check(__pyx_t_2)) {
           PyObject *__pyx_temp[2] = {__pyx_t_8, __pyx_t_3};
-          __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 318, __pyx_L9_error)
+          __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 323, __pyx_L9_error)
           __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
           __Pyx_GOTREF(__pyx_t_1);
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -6975,20 +6977,20 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue___get_or_peek(struct __pyx_obj_6
         #if CYTHON_FAST_PYCCALL
         if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
           PyObject *__pyx_temp[2] = {__pyx_t_8, __pyx_t_3};
-          __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 318, __pyx_L9_error)
+          __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 323, __pyx_L9_error)
           __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
           __Pyx_GOTREF(__pyx_t_1);
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
         } else
         #endif
         {
-          __pyx_t_6 = PyTuple_New(1+1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 318, __pyx_L9_error)
+          __pyx_t_6 = PyTuple_New(1+1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 323, __pyx_L9_error)
           __Pyx_GOTREF(__pyx_t_6);
           __Pyx_GIVEREF(__pyx_t_8); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_8); __pyx_t_8 = NULL;
           __Pyx_GIVEREF(__pyx_t_3);
           PyTuple_SET_ITEM(__pyx_t_6, 0+1, __pyx_t_3);
           __pyx_t_3 = 0;
-          __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 318, __pyx_L9_error)
+          __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 323, __pyx_L9_error)
           __Pyx_GOTREF(__pyx_t_1);
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         }
@@ -6996,9 +6998,9 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue___get_or_peek(struct __pyx_obj_6
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_Raise(__pyx_t_1, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __PYX_ERR(0, 318, __pyx_L9_error)
+      __PYX_ERR(0, 323, __pyx_L9_error)
 
-      /* "src/gevent/queue.py":317
+      /* "src/gevent/queue.py":322
  *                 self._schedule_unlock()
  *             result = waiter.get()
  *             if result is not waiter:             # <<<<<<<<<<<<<<
@@ -7007,7 +7009,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue___get_or_peek(struct __pyx_obj_6
  */
     }
 
-    /* "src/gevent/queue.py":319
+    /* "src/gevent/queue.py":324
  *             if result is not waiter:
  *                 raise InvalidSwitchError('Invalid switch into Queue.get: %r' % (result, ))
  *             return method()             # <<<<<<<<<<<<<<
@@ -7027,10 +7029,10 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue___get_or_peek(struct __pyx_obj_6
       }
     }
     if (__pyx_t_6) {
-      __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 319, __pyx_L9_error)
+      __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 324, __pyx_L9_error)
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     } else {
-      __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 319, __pyx_L9_error)
+      __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 324, __pyx_L9_error)
     }
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -7039,7 +7041,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue___get_or_peek(struct __pyx_obj_6
     goto __pyx_L8_return;
   }
 
-  /* "src/gevent/queue.py":321
+  /* "src/gevent/queue.py":326
  *             return method()
  *         finally:
  *             timeout.cancel()             # <<<<<<<<<<<<<<
@@ -7067,7 +7069,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue___get_or_peek(struct __pyx_obj_6
       __Pyx_XGOTREF(__pyx_t_17);
       __pyx_t_7 = __pyx_lineno; __pyx_t_10 = __pyx_clineno; __pyx_t_11 = __pyx_filename;
       {
-        __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_timeout, __pyx_n_s_cancel); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 321, __pyx_L14_error)
+        __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_timeout, __pyx_n_s_cancel); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 326, __pyx_L14_error)
         __Pyx_GOTREF(__pyx_t_2);
         __pyx_t_6 = NULL;
         if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -7080,16 +7082,16 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue___get_or_peek(struct __pyx_obj_6
           }
         }
         if (__pyx_t_6) {
-          __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 321, __pyx_L14_error)
+          __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 326, __pyx_L14_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         } else {
-          __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 321, __pyx_L14_error)
+          __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 326, __pyx_L14_error)
         }
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-        /* "src/gevent/queue.py":322
+        /* "src/gevent/queue.py":327
  *         finally:
  *             timeout.cancel()
  *             _safe_remove(self.getters, waiter)             # <<<<<<<<<<<<<<
@@ -7098,7 +7100,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue___get_or_peek(struct __pyx_obj_6
  */
         __pyx_t_1 = __pyx_v_self->getters;
         __Pyx_INCREF(__pyx_t_1);
-        __pyx_t_2 = __pyx_f_6gevent_6_queue__safe_remove(__pyx_t_1, ((PyObject *)__pyx_v_waiter)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 322, __pyx_L14_error)
+        __pyx_t_2 = __pyx_f_6gevent_6_queue__safe_remove(__pyx_t_1, ((PyObject *)__pyx_v_waiter)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 327, __pyx_L14_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -7133,14 +7135,14 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue___get_or_peek(struct __pyx_obj_6
       __pyx_t_17 = __pyx_r;
       __pyx_r = 0;
 
-      /* "src/gevent/queue.py":321
+      /* "src/gevent/queue.py":326
  *             return method()
  *         finally:
  *             timeout.cancel()             # <<<<<<<<<<<<<<
  *             _safe_remove(self.getters, waiter)
  * 
  */
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_timeout, __pyx_n_s_cancel); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 321, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_timeout, __pyx_n_s_cancel); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 326, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __pyx_t_6 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_1))) {
@@ -7153,16 +7155,16 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue___get_or_peek(struct __pyx_obj_6
         }
       }
       if (__pyx_t_6) {
-        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 321, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 326, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       } else {
-        __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 321, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 326, __pyx_L1_error)
       }
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-      /* "src/gevent/queue.py":322
+      /* "src/gevent/queue.py":327
  *         finally:
  *             timeout.cancel()
  *             _safe_remove(self.getters, waiter)             # <<<<<<<<<<<<<<
@@ -7171,7 +7173,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue___get_or_peek(struct __pyx_obj_6
  */
       __pyx_t_2 = __pyx_v_self->getters;
       __Pyx_INCREF(__pyx_t_2);
-      __pyx_t_1 = __pyx_f_6gevent_6_queue__safe_remove(__pyx_t_2, ((PyObject *)__pyx_v_waiter)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 322, __pyx_L1_error)
+      __pyx_t_1 = __pyx_f_6gevent_6_queue__safe_remove(__pyx_t_2, ((PyObject *)__pyx_v_waiter)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 327, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -7181,7 +7183,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue___get_or_peek(struct __pyx_obj_6
     }
   }
 
-  /* "src/gevent/queue.py":288
+  /* "src/gevent/queue.py":293
  *         self.put(item, False)
  * 
  *     def __get_or_peek(self, method, block, timeout):             # <<<<<<<<<<<<<<
@@ -7207,7 +7209,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue___get_or_peek(struct __pyx_obj_6
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":324
+/* "src/gevent/queue.py":329
  *             _safe_remove(self.getters, waiter)
  * 
  *     def get(self, block=True, timeout=None):             # <<<<<<<<<<<<<<
@@ -7241,7 +7243,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_get(struct __pyx_obj_6gevent_6_q
   if (unlikely(__pyx_skip_dispatch)) ;
   /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_get_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 324, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_get_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 329, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)__pyx_pw_6gevent_6_queue_5Queue_35get)) {
       __Pyx_XDECREF(__pyx_r);
@@ -7261,7 +7263,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_get(struct __pyx_obj_6gevent_6_q
       #if CYTHON_FAST_PYCALL
       if (PyFunction_Check(__pyx_t_3)) {
         PyObject *__pyx_temp[3] = {__pyx_t_4, __pyx_v_block, __pyx_v_timeout};
-        __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 324, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 329, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
         __Pyx_GOTREF(__pyx_t_2);
       } else
@@ -7269,13 +7271,13 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_get(struct __pyx_obj_6gevent_6_q
       #if CYTHON_FAST_PYCCALL
       if (__Pyx_PyFastCFunction_Check(__pyx_t_3)) {
         PyObject *__pyx_temp[3] = {__pyx_t_4, __pyx_v_block, __pyx_v_timeout};
-        __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 324, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 329, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
         __Pyx_GOTREF(__pyx_t_2);
       } else
       #endif
       {
-        __pyx_t_6 = PyTuple_New(2+__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 324, __pyx_L1_error)
+        __pyx_t_6 = PyTuple_New(2+__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 329, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
         if (__pyx_t_4) {
           __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_4); __pyx_t_4 = NULL;
@@ -7286,7 +7288,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_get(struct __pyx_obj_6gevent_6_q
         __Pyx_INCREF(__pyx_v_timeout);
         __Pyx_GIVEREF(__pyx_v_timeout);
         PyTuple_SET_ITEM(__pyx_t_6, 1+__pyx_t_5, __pyx_v_timeout);
-        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_6, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 324, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_6, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 329, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       }
@@ -7299,7 +7301,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_get(struct __pyx_obj_6gevent_6_q
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
 
-  /* "src/gevent/queue.py":334
+  /* "src/gevent/queue.py":339
  *         (*timeout* is ignored in that case).
  *         """
  *         if self.qsize():             # <<<<<<<<<<<<<<
@@ -7309,28 +7311,28 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_get(struct __pyx_obj_6gevent_6_q
   __pyx_t_7 = (((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->qsize(__pyx_v_self, 0) != 0);
   if (__pyx_t_7) {
 
-    /* "src/gevent/queue.py":335
+    /* "src/gevent/queue.py":340
  *         """
  *         if self.qsize():
  *             if self.putters:             # <<<<<<<<<<<<<<
  *                 self._schedule_unlock()
  *             return self._get()
  */
-    __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_v_self->putters); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 335, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_v_self->putters); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 340, __pyx_L1_error)
     if (__pyx_t_7) {
 
-      /* "src/gevent/queue.py":336
+      /* "src/gevent/queue.py":341
  *         if self.qsize():
  *             if self.putters:
  *                 self._schedule_unlock()             # <<<<<<<<<<<<<<
  *             return self._get()
  * 
  */
-      __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->_schedule_unlock(__pyx_v_self); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 336, __pyx_L1_error)
+      __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->_schedule_unlock(__pyx_v_self); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 341, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "src/gevent/queue.py":335
+      /* "src/gevent/queue.py":340
  *         """
  *         if self.qsize():
  *             if self.putters:             # <<<<<<<<<<<<<<
@@ -7339,7 +7341,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_get(struct __pyx_obj_6gevent_6_q
  */
     }
 
-    /* "src/gevent/queue.py":337
+    /* "src/gevent/queue.py":342
  *             if self.putters:
  *                 self._schedule_unlock()
  *             return self._get()             # <<<<<<<<<<<<<<
@@ -7347,13 +7349,13 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_get(struct __pyx_obj_6gevent_6_q
  *         return self.__get_or_peek(self._get, block, timeout)
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->_get(__pyx_v_self, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 337, __pyx_L1_error)
+    __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->_get(__pyx_v_self, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 342, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_r = __pyx_t_1;
     __pyx_t_1 = 0;
     goto __pyx_L0;
 
-    /* "src/gevent/queue.py":334
+    /* "src/gevent/queue.py":339
  *         (*timeout* is ignored in that case).
  *         """
  *         if self.qsize():             # <<<<<<<<<<<<<<
@@ -7362,7 +7364,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_get(struct __pyx_obj_6gevent_6_q
  */
   }
 
-  /* "src/gevent/queue.py":339
+  /* "src/gevent/queue.py":344
  *             return self._get()
  * 
  *         return self.__get_or_peek(self._get, block, timeout)             # <<<<<<<<<<<<<<
@@ -7370,16 +7372,16 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_get(struct __pyx_obj_6gevent_6_q
  *     def get_nowait(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_get); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 339, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_get); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 344, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = ((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->__pyx___get_or_peek(__pyx_v_self, __pyx_t_1, __pyx_v_block, __pyx_v_timeout); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 339, __pyx_L1_error)
+  __pyx_t_2 = ((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->__pyx___get_or_peek(__pyx_v_self, __pyx_t_1, __pyx_v_block, __pyx_v_timeout); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 344, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":324
+  /* "src/gevent/queue.py":329
  *             _safe_remove(self.getters, waiter)
  * 
  *     def get(self, block=True, timeout=None):             # <<<<<<<<<<<<<<
@@ -7443,7 +7445,7 @@ static PyObject *__pyx_pw_6gevent_6_queue_5Queue_35get(PyObject *__pyx_v_self, P
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "get") < 0)) __PYX_ERR(0, 324, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "get") < 0)) __PYX_ERR(0, 329, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -7460,7 +7462,7 @@ static PyObject *__pyx_pw_6gevent_6_queue_5Queue_35get(PyObject *__pyx_v_self, P
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("get", 0, 0, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 324, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("get", 0, 0, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 329, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gevent._queue.Queue.get", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -7483,7 +7485,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_34get(struct __pyx_obj_6gevent_
   __pyx_t_2.__pyx_n = 2;
   __pyx_t_2.block = __pyx_v_block;
   __pyx_t_2.timeout = __pyx_v_timeout;
-  __pyx_t_1 = __pyx_vtabptr_6gevent_6_queue_Queue->get(__pyx_v_self, 1, &__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 324, __pyx_L1_error)
+  __pyx_t_1 = __pyx_vtabptr_6gevent_6_queue_Queue->get(__pyx_v_self, 1, &__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 329, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -7500,7 +7502,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_34get(struct __pyx_obj_6gevent_
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":341
+/* "src/gevent/queue.py":346
  *         return self.__get_or_peek(self._get, block, timeout)
  * 
  *     def get_nowait(self):             # <<<<<<<<<<<<<<
@@ -7522,7 +7524,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_get_nowait(struct __pyx_obj_6gev
   if (unlikely(__pyx_skip_dispatch)) ;
   /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_get_nowait); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 341, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_get_nowait); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 346, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)__pyx_pw_6gevent_6_queue_5Queue_37get_nowait)) {
       __Pyx_XDECREF(__pyx_r);
@@ -7538,10 +7540,10 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_get_nowait(struct __pyx_obj_6gev
         }
       }
       if (__pyx_t_4) {
-        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 341, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 346, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       } else {
-        __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 341, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 346, __pyx_L1_error)
       }
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -7553,7 +7555,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_get_nowait(struct __pyx_obj_6gev
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
 
-  /* "src/gevent/queue.py":347
+  /* "src/gevent/queue.py":352
  *         raise the :class:`Empty` exception.
  *         """
  *         return self.get(False)             # <<<<<<<<<<<<<<
@@ -7563,13 +7565,13 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_get_nowait(struct __pyx_obj_6gev
   __Pyx_XDECREF(__pyx_r);
   __pyx_t_5.__pyx_n = 1;
   __pyx_t_5.block = Py_False;
-  __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->get(__pyx_v_self, 0, &__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 347, __pyx_L1_error)
+  __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->get(__pyx_v_self, 0, &__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 352, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":341
+  /* "src/gevent/queue.py":346
  *         return self.__get_or_peek(self._get, block, timeout)
  * 
  *     def get_nowait(self):             # <<<<<<<<<<<<<<
@@ -7612,7 +7614,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_36get_nowait(struct __pyx_obj_6
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("get_nowait", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_6gevent_6_queue_5Queue_get_nowait(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 341, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_6gevent_6_queue_5Queue_get_nowait(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 346, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -7629,7 +7631,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_36get_nowait(struct __pyx_obj_6
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":349
+/* "src/gevent/queue.py":354
  *         return self.get(False)
  * 
  *     def peek(self, block=True, timeout=None):             # <<<<<<<<<<<<<<
@@ -7663,7 +7665,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_peek(struct __pyx_obj_6gevent_6_
   if (unlikely(__pyx_skip_dispatch)) ;
   /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_peek_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 349, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_peek_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 354, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)__pyx_pw_6gevent_6_queue_5Queue_39peek)) {
       __Pyx_XDECREF(__pyx_r);
@@ -7683,7 +7685,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_peek(struct __pyx_obj_6gevent_6_
       #if CYTHON_FAST_PYCALL
       if (PyFunction_Check(__pyx_t_3)) {
         PyObject *__pyx_temp[3] = {__pyx_t_4, __pyx_v_block, __pyx_v_timeout};
-        __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 349, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 354, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
         __Pyx_GOTREF(__pyx_t_2);
       } else
@@ -7691,13 +7693,13 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_peek(struct __pyx_obj_6gevent_6_
       #if CYTHON_FAST_PYCCALL
       if (__Pyx_PyFastCFunction_Check(__pyx_t_3)) {
         PyObject *__pyx_temp[3] = {__pyx_t_4, __pyx_v_block, __pyx_v_timeout};
-        __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 349, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 354, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
         __Pyx_GOTREF(__pyx_t_2);
       } else
       #endif
       {
-        __pyx_t_6 = PyTuple_New(2+__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 349, __pyx_L1_error)
+        __pyx_t_6 = PyTuple_New(2+__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 354, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
         if (__pyx_t_4) {
           __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_4); __pyx_t_4 = NULL;
@@ -7708,7 +7710,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_peek(struct __pyx_obj_6gevent_6_
         __Pyx_INCREF(__pyx_v_timeout);
         __Pyx_GIVEREF(__pyx_v_timeout);
         PyTuple_SET_ITEM(__pyx_t_6, 1+__pyx_t_5, __pyx_v_timeout);
-        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_6, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 349, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_6, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 354, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       }
@@ -7721,7 +7723,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_peek(struct __pyx_obj_6gevent_6_
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
 
-  /* "src/gevent/queue.py":359
+  /* "src/gevent/queue.py":364
  *         (*timeout* is ignored in that case).
  *         """
  *         if self.qsize():             # <<<<<<<<<<<<<<
@@ -7731,7 +7733,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_peek(struct __pyx_obj_6gevent_6_
   __pyx_t_7 = (((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->qsize(__pyx_v_self, 0) != 0);
   if (__pyx_t_7) {
 
-    /* "src/gevent/queue.py":361
+    /* "src/gevent/queue.py":366
  *         if self.qsize():
  *             # XXX: Why doesn't this schedule an unlock like get() does?
  *             return self._peek()             # <<<<<<<<<<<<<<
@@ -7739,13 +7741,13 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_peek(struct __pyx_obj_6gevent_6_
  *         return self.__get_or_peek(self._peek, block, timeout)
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->_peek(__pyx_v_self, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 361, __pyx_L1_error)
+    __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->_peek(__pyx_v_self, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 366, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_r = __pyx_t_1;
     __pyx_t_1 = 0;
     goto __pyx_L0;
 
-    /* "src/gevent/queue.py":359
+    /* "src/gevent/queue.py":364
  *         (*timeout* is ignored in that case).
  *         """
  *         if self.qsize():             # <<<<<<<<<<<<<<
@@ -7754,7 +7756,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_peek(struct __pyx_obj_6gevent_6_
  */
   }
 
-  /* "src/gevent/queue.py":363
+  /* "src/gevent/queue.py":368
  *             return self._peek()
  * 
  *         return self.__get_or_peek(self._peek, block, timeout)             # <<<<<<<<<<<<<<
@@ -7762,16 +7764,16 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_peek(struct __pyx_obj_6gevent_6_
  *     def peek_nowait(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_peek); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 363, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_peek); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 368, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = ((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->__pyx___get_or_peek(__pyx_v_self, __pyx_t_1, __pyx_v_block, __pyx_v_timeout); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 363, __pyx_L1_error)
+  __pyx_t_2 = ((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->__pyx___get_or_peek(__pyx_v_self, __pyx_t_1, __pyx_v_block, __pyx_v_timeout); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 368, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":349
+  /* "src/gevent/queue.py":354
  *         return self.get(False)
  * 
  *     def peek(self, block=True, timeout=None):             # <<<<<<<<<<<<<<
@@ -7835,7 +7837,7 @@ static PyObject *__pyx_pw_6gevent_6_queue_5Queue_39peek(PyObject *__pyx_v_self, 
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "peek") < 0)) __PYX_ERR(0, 349, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "peek") < 0)) __PYX_ERR(0, 354, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -7852,7 +7854,7 @@ static PyObject *__pyx_pw_6gevent_6_queue_5Queue_39peek(PyObject *__pyx_v_self, 
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("peek", 0, 0, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 349, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("peek", 0, 0, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 354, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gevent._queue.Queue.peek", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -7875,7 +7877,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_38peek(struct __pyx_obj_6gevent
   __pyx_t_2.__pyx_n = 2;
   __pyx_t_2.block = __pyx_v_block;
   __pyx_t_2.timeout = __pyx_v_timeout;
-  __pyx_t_1 = __pyx_vtabptr_6gevent_6_queue_Queue->peek(__pyx_v_self, 1, &__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 349, __pyx_L1_error)
+  __pyx_t_1 = __pyx_vtabptr_6gevent_6_queue_Queue->peek(__pyx_v_self, 1, &__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 354, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -7892,7 +7894,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_38peek(struct __pyx_obj_6gevent
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":365
+/* "src/gevent/queue.py":370
  *         return self.__get_or_peek(self._peek, block, timeout)
  * 
  *     def peek_nowait(self):             # <<<<<<<<<<<<<<
@@ -7914,7 +7916,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_peek_nowait(struct __pyx_obj_6ge
   if (unlikely(__pyx_skip_dispatch)) ;
   /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_peek_nowait); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 365, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_peek_nowait); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 370, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)__pyx_pw_6gevent_6_queue_5Queue_41peek_nowait)) {
       __Pyx_XDECREF(__pyx_r);
@@ -7930,10 +7932,10 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_peek_nowait(struct __pyx_obj_6ge
         }
       }
       if (__pyx_t_4) {
-        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 365, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 370, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       } else {
-        __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 365, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 370, __pyx_L1_error)
       }
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -7945,7 +7947,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_peek_nowait(struct __pyx_obj_6ge
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
 
-  /* "src/gevent/queue.py":371
+  /* "src/gevent/queue.py":376
  *         raise the :class:`Empty` exception.
  *         """
  *         return self.peek(False)             # <<<<<<<<<<<<<<
@@ -7955,13 +7957,13 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue_peek_nowait(struct __pyx_obj_6ge
   __Pyx_XDECREF(__pyx_r);
   __pyx_t_5.__pyx_n = 1;
   __pyx_t_5.block = Py_False;
-  __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->peek(__pyx_v_self, 0, &__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 371, __pyx_L1_error)
+  __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->peek(__pyx_v_self, 0, &__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 376, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":365
+  /* "src/gevent/queue.py":370
  *         return self.__get_or_peek(self._peek, block, timeout)
  * 
  *     def peek_nowait(self):             # <<<<<<<<<<<<<<
@@ -8004,7 +8006,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_40peek_nowait(struct __pyx_obj_
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("peek_nowait", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_6gevent_6_queue_5Queue_peek_nowait(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 365, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_6gevent_6_queue_5Queue_peek_nowait(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 370, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -8021,7 +8023,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_40peek_nowait(struct __pyx_obj_
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":373
+/* "src/gevent/queue.py":378
  *         return self.peek(False)
  * 
  *     def _unlock(self):             # <<<<<<<<<<<<<<
@@ -8064,7 +8066,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_42_unlock(struct __pyx_obj_6gev
   PyObject *__pyx_t_12 = NULL;
   __Pyx_RefNannySetupContext("_unlock", 0);
 
-  /* "src/gevent/queue.py":374
+  /* "src/gevent/queue.py":379
  * 
  *     def _unlock(self):
  *         while True:             # <<<<<<<<<<<<<<
@@ -8073,7 +8075,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_42_unlock(struct __pyx_obj_6gev
  */
   while (1) {
 
-    /* "src/gevent/queue.py":375
+    /* "src/gevent/queue.py":380
  *     def _unlock(self):
  *         while True:
  *             repeat = False             # <<<<<<<<<<<<<<
@@ -8082,14 +8084,14 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_42_unlock(struct __pyx_obj_6gev
  */
     __pyx_v_repeat = 0;
 
-    /* "src/gevent/queue.py":376
+    /* "src/gevent/queue.py":381
  *         while True:
  *             repeat = False
  *             if self.putters and (self._maxsize == -1 or self.qsize() < self._maxsize):             # <<<<<<<<<<<<<<
  *                 repeat = True
  *                 try:
  */
-    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_self->putters); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 376, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_self->putters); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 381, __pyx_L1_error)
     if (__pyx_t_2) {
     } else {
       __pyx_t_1 = __pyx_t_2;
@@ -8106,7 +8108,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_42_unlock(struct __pyx_obj_6gev
     __pyx_L6_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "src/gevent/queue.py":377
+      /* "src/gevent/queue.py":382
  *             repeat = False
  *             if self.putters and (self._maxsize == -1 or self.qsize() < self._maxsize):
  *                 repeat = True             # <<<<<<<<<<<<<<
@@ -8115,7 +8117,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_42_unlock(struct __pyx_obj_6gev
  */
       __pyx_v_repeat = 1;
 
-      /* "src/gevent/queue.py":378
+      /* "src/gevent/queue.py":383
  *             if self.putters and (self._maxsize == -1 or self.qsize() < self._maxsize):
  *                 repeat = True
  *                 try:             # <<<<<<<<<<<<<<
@@ -8131,14 +8133,14 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_42_unlock(struct __pyx_obj_6gev
         __Pyx_XGOTREF(__pyx_t_5);
         /*try:*/ {
 
-          /* "src/gevent/queue.py":379
+          /* "src/gevent/queue.py":384
  *                 repeat = True
  *                 try:
  *                     putter = self.putters.popleft()             # <<<<<<<<<<<<<<
  *                     self._put(putter.item)
  *                 except: # pylint:disable=bare-except
  */
-          __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->putters, __pyx_n_s_popleft); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 379, __pyx_L9_error)
+          __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->putters, __pyx_n_s_popleft); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 384, __pyx_L9_error)
           __Pyx_GOTREF(__pyx_t_7);
           __pyx_t_8 = NULL;
           if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_7))) {
@@ -8151,31 +8153,31 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_42_unlock(struct __pyx_obj_6gev
             }
           }
           if (__pyx_t_8) {
-            __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_t_8); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 379, __pyx_L9_error)
+            __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_t_8); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 384, __pyx_L9_error)
             __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
           } else {
-            __pyx_t_6 = __Pyx_PyObject_CallNoArg(__pyx_t_7); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 379, __pyx_L9_error)
+            __pyx_t_6 = __Pyx_PyObject_CallNoArg(__pyx_t_7); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 384, __pyx_L9_error)
           }
           __Pyx_GOTREF(__pyx_t_6);
           __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
           __Pyx_XDECREF_SET(__pyx_v_putter, __pyx_t_6);
           __pyx_t_6 = 0;
 
-          /* "src/gevent/queue.py":380
+          /* "src/gevent/queue.py":385
  *                 try:
  *                     putter = self.putters.popleft()
  *                     self._put(putter.item)             # <<<<<<<<<<<<<<
  *                 except: # pylint:disable=bare-except
  *                     putter.throw(*sys.exc_info())
  */
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_putter, __pyx_n_s_item); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 380, __pyx_L9_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_putter, __pyx_n_s_item); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 385, __pyx_L9_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_7 = ((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->_put(__pyx_v_self, __pyx_t_6, 0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 380, __pyx_L9_error)
+          __pyx_t_7 = ((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->_put(__pyx_v_self, __pyx_t_6, 0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 385, __pyx_L9_error)
           __Pyx_GOTREF(__pyx_t_7);
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-          /* "src/gevent/queue.py":378
+          /* "src/gevent/queue.py":383
  *             if self.putters and (self._maxsize == -1 or self.qsize() < self._maxsize):
  *                 repeat = True
  *                 try:             # <<<<<<<<<<<<<<
@@ -8184,7 +8186,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_42_unlock(struct __pyx_obj_6gev
  */
         }
 
-        /* "src/gevent/queue.py":384
+        /* "src/gevent/queue.py":389
  *                     putter.throw(*sys.exc_info())
  *                 else:
  *                     putter.switch(putter)             # <<<<<<<<<<<<<<
@@ -8192,7 +8194,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_42_unlock(struct __pyx_obj_6gev
  *                 repeat = True
  */
         /*else:*/ {
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_putter, __pyx_n_s_switch); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 384, __pyx_L11_except_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_putter, __pyx_n_s_switch); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 389, __pyx_L11_except_error)
           __Pyx_GOTREF(__pyx_t_6);
           __pyx_t_8 = NULL;
           if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_6))) {
@@ -8205,13 +8207,13 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_42_unlock(struct __pyx_obj_6gev
             }
           }
           if (!__pyx_t_8) {
-            __pyx_t_7 = __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_v_putter); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 384, __pyx_L11_except_error)
+            __pyx_t_7 = __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_v_putter); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 389, __pyx_L11_except_error)
             __Pyx_GOTREF(__pyx_t_7);
           } else {
             #if CYTHON_FAST_PYCALL
             if (PyFunction_Check(__pyx_t_6)) {
               PyObject *__pyx_temp[2] = {__pyx_t_8, __pyx_v_putter};
-              __pyx_t_7 = __Pyx_PyFunction_FastCall(__pyx_t_6, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 384, __pyx_L11_except_error)
+              __pyx_t_7 = __Pyx_PyFunction_FastCall(__pyx_t_6, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 389, __pyx_L11_except_error)
               __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
               __Pyx_GOTREF(__pyx_t_7);
             } else
@@ -8219,19 +8221,19 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_42_unlock(struct __pyx_obj_6gev
             #if CYTHON_FAST_PYCCALL
             if (__Pyx_PyFastCFunction_Check(__pyx_t_6)) {
               PyObject *__pyx_temp[2] = {__pyx_t_8, __pyx_v_putter};
-              __pyx_t_7 = __Pyx_PyCFunction_FastCall(__pyx_t_6, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 384, __pyx_L11_except_error)
+              __pyx_t_7 = __Pyx_PyCFunction_FastCall(__pyx_t_6, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 389, __pyx_L11_except_error)
               __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
               __Pyx_GOTREF(__pyx_t_7);
             } else
             #endif
             {
-              __pyx_t_9 = PyTuple_New(1+1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 384, __pyx_L11_except_error)
+              __pyx_t_9 = PyTuple_New(1+1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 389, __pyx_L11_except_error)
               __Pyx_GOTREF(__pyx_t_9);
               __Pyx_GIVEREF(__pyx_t_8); PyTuple_SET_ITEM(__pyx_t_9, 0, __pyx_t_8); __pyx_t_8 = NULL;
               __Pyx_INCREF(__pyx_v_putter);
               __Pyx_GIVEREF(__pyx_v_putter);
               PyTuple_SET_ITEM(__pyx_t_9, 0+1, __pyx_v_putter);
-              __pyx_t_7 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_9, NULL); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 384, __pyx_L11_except_error)
+              __pyx_t_7 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_9, NULL); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 389, __pyx_L11_except_error)
               __Pyx_GOTREF(__pyx_t_7);
               __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
             }
@@ -8248,7 +8250,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_42_unlock(struct __pyx_obj_6gev
         __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-        /* "src/gevent/queue.py":381
+        /* "src/gevent/queue.py":386
  *                     putter = self.putters.popleft()
  *                     self._put(putter.item)
  *                 except: # pylint:disable=bare-except             # <<<<<<<<<<<<<<
@@ -8257,24 +8259,24 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_42_unlock(struct __pyx_obj_6gev
  */
         /*except:*/ {
           __Pyx_AddTraceback("gevent._queue.Queue._unlock", __pyx_clineno, __pyx_lineno, __pyx_filename);
-          if (__Pyx_GetException(&__pyx_t_7, &__pyx_t_6, &__pyx_t_9) < 0) __PYX_ERR(0, 381, __pyx_L11_except_error)
+          if (__Pyx_GetException(&__pyx_t_7, &__pyx_t_6, &__pyx_t_9) < 0) __PYX_ERR(0, 386, __pyx_L11_except_error)
           __Pyx_GOTREF(__pyx_t_7);
           __Pyx_GOTREF(__pyx_t_6);
           __Pyx_GOTREF(__pyx_t_9);
 
-          /* "src/gevent/queue.py":382
+          /* "src/gevent/queue.py":387
  *                     self._put(putter.item)
  *                 except: # pylint:disable=bare-except
  *                     putter.throw(*sys.exc_info())             # <<<<<<<<<<<<<<
  *                 else:
  *                     putter.switch(putter)
  */
-          if (unlikely(!__pyx_v_putter)) { __Pyx_RaiseUnboundLocalError("putter"); __PYX_ERR(0, 382, __pyx_L11_except_error) }
-          __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_putter, __pyx_n_s_throw); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 382, __pyx_L11_except_error)
+          if (unlikely(!__pyx_v_putter)) { __Pyx_RaiseUnboundLocalError("putter"); __PYX_ERR(0, 387, __pyx_L11_except_error) }
+          __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_putter, __pyx_n_s_throw); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 387, __pyx_L11_except_error)
           __Pyx_GOTREF(__pyx_t_8);
-          __pyx_t_11 = __Pyx_GetModuleGlobalName(__pyx_n_s_sys); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 382, __pyx_L11_except_error)
+          __pyx_t_11 = __Pyx_GetModuleGlobalName(__pyx_n_s_sys); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 387, __pyx_L11_except_error)
           __Pyx_GOTREF(__pyx_t_11);
-          __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_n_s_exc_info); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 382, __pyx_L11_except_error)
+          __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_n_s_exc_info); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 387, __pyx_L11_except_error)
           __Pyx_GOTREF(__pyx_t_12);
           __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
           __pyx_t_11 = NULL;
@@ -8288,17 +8290,17 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_42_unlock(struct __pyx_obj_6gev
             }
           }
           if (__pyx_t_11) {
-            __pyx_t_10 = __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_t_11); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 382, __pyx_L11_except_error)
+            __pyx_t_10 = __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_t_11); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 387, __pyx_L11_except_error)
             __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
           } else {
-            __pyx_t_10 = __Pyx_PyObject_CallNoArg(__pyx_t_12); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 382, __pyx_L11_except_error)
+            __pyx_t_10 = __Pyx_PyObject_CallNoArg(__pyx_t_12); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 387, __pyx_L11_except_error)
           }
           __Pyx_GOTREF(__pyx_t_10);
           __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-          __pyx_t_12 = __Pyx_PySequence_Tuple(__pyx_t_10); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 382, __pyx_L11_except_error)
+          __pyx_t_12 = __Pyx_PySequence_Tuple(__pyx_t_10); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 387, __pyx_L11_except_error)
           __Pyx_GOTREF(__pyx_t_12);
           __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-          __pyx_t_10 = __Pyx_PyObject_Call(__pyx_t_8, __pyx_t_12, NULL); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 382, __pyx_L11_except_error)
+          __pyx_t_10 = __Pyx_PyObject_Call(__pyx_t_8, __pyx_t_12, NULL); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 387, __pyx_L11_except_error)
           __Pyx_GOTREF(__pyx_t_10);
           __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
           __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
@@ -8310,7 +8312,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_42_unlock(struct __pyx_obj_6gev
         }
         __pyx_L11_except_error:;
 
-        /* "src/gevent/queue.py":378
+        /* "src/gevent/queue.py":383
  *             if self.putters and (self._maxsize == -1 or self.qsize() < self._maxsize):
  *                 repeat = True
  *                 try:             # <<<<<<<<<<<<<<
@@ -8330,7 +8332,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_42_unlock(struct __pyx_obj_6gev
         __pyx_L16_try_end:;
       }
 
-      /* "src/gevent/queue.py":376
+      /* "src/gevent/queue.py":381
  *         while True:
  *             repeat = False
  *             if self.putters and (self._maxsize == -1 or self.qsize() < self._maxsize):             # <<<<<<<<<<<<<<
@@ -8339,14 +8341,14 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_42_unlock(struct __pyx_obj_6gev
  */
     }
 
-    /* "src/gevent/queue.py":385
+    /* "src/gevent/queue.py":390
  *                 else:
  *                     putter.switch(putter)
  *             if self.getters and self.qsize():             # <<<<<<<<<<<<<<
  *                 repeat = True
  *                 getter = self.getters.popleft()
  */
-    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_self->getters); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 385, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_self->getters); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 390, __pyx_L1_error)
     if (__pyx_t_2) {
     } else {
       __pyx_t_1 = __pyx_t_2;
@@ -8357,7 +8359,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_42_unlock(struct __pyx_obj_6gev
     __pyx_L20_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "src/gevent/queue.py":386
+      /* "src/gevent/queue.py":391
  *                     putter.switch(putter)
  *             if self.getters and self.qsize():
  *                 repeat = True             # <<<<<<<<<<<<<<
@@ -8366,14 +8368,14 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_42_unlock(struct __pyx_obj_6gev
  */
       __pyx_v_repeat = 1;
 
-      /* "src/gevent/queue.py":387
+      /* "src/gevent/queue.py":392
  *             if self.getters and self.qsize():
  *                 repeat = True
  *                 getter = self.getters.popleft()             # <<<<<<<<<<<<<<
  *                 getter.switch(getter)
  *             if not repeat:
  */
-      __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->getters, __pyx_n_s_popleft); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 387, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->getters, __pyx_n_s_popleft); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 392, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __pyx_t_7 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_6))) {
@@ -8386,24 +8388,24 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_42_unlock(struct __pyx_obj_6gev
         }
       }
       if (__pyx_t_7) {
-        __pyx_t_9 = __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_7); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 387, __pyx_L1_error)
+        __pyx_t_9 = __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_7); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 392, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       } else {
-        __pyx_t_9 = __Pyx_PyObject_CallNoArg(__pyx_t_6); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 387, __pyx_L1_error)
+        __pyx_t_9 = __Pyx_PyObject_CallNoArg(__pyx_t_6); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 392, __pyx_L1_error)
       }
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __Pyx_XDECREF_SET(__pyx_v_getter, __pyx_t_9);
       __pyx_t_9 = 0;
 
-      /* "src/gevent/queue.py":388
+      /* "src/gevent/queue.py":393
  *                 repeat = True
  *                 getter = self.getters.popleft()
  *                 getter.switch(getter)             # <<<<<<<<<<<<<<
  *             if not repeat:
  *                 return
  */
-      __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_getter, __pyx_n_s_switch); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 388, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_getter, __pyx_n_s_switch); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 393, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __pyx_t_7 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_6))) {
@@ -8416,13 +8418,13 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_42_unlock(struct __pyx_obj_6gev
         }
       }
       if (!__pyx_t_7) {
-        __pyx_t_9 = __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_v_getter); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 388, __pyx_L1_error)
+        __pyx_t_9 = __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_v_getter); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 393, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_9);
       } else {
         #if CYTHON_FAST_PYCALL
         if (PyFunction_Check(__pyx_t_6)) {
           PyObject *__pyx_temp[2] = {__pyx_t_7, __pyx_v_getter};
-          __pyx_t_9 = __Pyx_PyFunction_FastCall(__pyx_t_6, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 388, __pyx_L1_error)
+          __pyx_t_9 = __Pyx_PyFunction_FastCall(__pyx_t_6, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 393, __pyx_L1_error)
           __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
           __Pyx_GOTREF(__pyx_t_9);
         } else
@@ -8430,19 +8432,19 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_42_unlock(struct __pyx_obj_6gev
         #if CYTHON_FAST_PYCCALL
         if (__Pyx_PyFastCFunction_Check(__pyx_t_6)) {
           PyObject *__pyx_temp[2] = {__pyx_t_7, __pyx_v_getter};
-          __pyx_t_9 = __Pyx_PyCFunction_FastCall(__pyx_t_6, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 388, __pyx_L1_error)
+          __pyx_t_9 = __Pyx_PyCFunction_FastCall(__pyx_t_6, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 393, __pyx_L1_error)
           __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
           __Pyx_GOTREF(__pyx_t_9);
         } else
         #endif
         {
-          __pyx_t_10 = PyTuple_New(1+1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 388, __pyx_L1_error)
+          __pyx_t_10 = PyTuple_New(1+1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 393, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_10);
           __Pyx_GIVEREF(__pyx_t_7); PyTuple_SET_ITEM(__pyx_t_10, 0, __pyx_t_7); __pyx_t_7 = NULL;
           __Pyx_INCREF(__pyx_v_getter);
           __Pyx_GIVEREF(__pyx_v_getter);
           PyTuple_SET_ITEM(__pyx_t_10, 0+1, __pyx_v_getter);
-          __pyx_t_9 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_10, NULL); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 388, __pyx_L1_error)
+          __pyx_t_9 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_10, NULL); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 393, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_9);
           __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
         }
@@ -8450,7 +8452,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_42_unlock(struct __pyx_obj_6gev
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-      /* "src/gevent/queue.py":385
+      /* "src/gevent/queue.py":390
  *                 else:
  *                     putter.switch(putter)
  *             if self.getters and self.qsize():             # <<<<<<<<<<<<<<
@@ -8459,7 +8461,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_42_unlock(struct __pyx_obj_6gev
  */
     }
 
-    /* "src/gevent/queue.py":389
+    /* "src/gevent/queue.py":394
  *                 getter = self.getters.popleft()
  *                 getter.switch(getter)
  *             if not repeat:             # <<<<<<<<<<<<<<
@@ -8469,7 +8471,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_42_unlock(struct __pyx_obj_6gev
     __pyx_t_1 = ((!(__pyx_v_repeat != 0)) != 0);
     if (__pyx_t_1) {
 
-      /* "src/gevent/queue.py":390
+      /* "src/gevent/queue.py":395
  *                 getter.switch(getter)
  *             if not repeat:
  *                 return             # <<<<<<<<<<<<<<
@@ -8480,7 +8482,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_42_unlock(struct __pyx_obj_6gev
       __pyx_r = Py_None; __Pyx_INCREF(Py_None);
       goto __pyx_L0;
 
-      /* "src/gevent/queue.py":389
+      /* "src/gevent/queue.py":394
  *                 getter = self.getters.popleft()
  *                 getter.switch(getter)
  *             if not repeat:             # <<<<<<<<<<<<<<
@@ -8490,7 +8492,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_42_unlock(struct __pyx_obj_6gev
     }
   }
 
-  /* "src/gevent/queue.py":373
+  /* "src/gevent/queue.py":378
  *         return self.peek(False)
  * 
  *     def _unlock(self):             # <<<<<<<<<<<<<<
@@ -8519,7 +8521,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_42_unlock(struct __pyx_obj_6gev
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":392
+/* "src/gevent/queue.py":397
  *                 return
  * 
  *     def _schedule_unlock(self):             # <<<<<<<<<<<<<<
@@ -8539,30 +8541,30 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue__schedule_unlock(struct __pyx_ob
   PyObject *__pyx_t_7 = NULL;
   __Pyx_RefNannySetupContext("_schedule_unlock", 0);
 
-  /* "src/gevent/queue.py":393
+  /* "src/gevent/queue.py":398
  * 
  *     def _schedule_unlock(self):
  *         if not self._event_unlock:             # <<<<<<<<<<<<<<
  *             self._event_unlock = self.hub.loop.run_callback(self._unlock)
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_self->_event_unlock); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 393, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_self->_event_unlock); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 398, __pyx_L1_error)
   __pyx_t_2 = ((!__pyx_t_1) != 0);
   if (__pyx_t_2) {
 
-    /* "src/gevent/queue.py":394
+    /* "src/gevent/queue.py":399
  *     def _schedule_unlock(self):
  *         if not self._event_unlock:
  *             self._event_unlock = self.hub.loop.run_callback(self._unlock)             # <<<<<<<<<<<<<<
  * 
  *     def __iter__(self):
  */
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->hub, __pyx_n_s_loop); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 394, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->hub, __pyx_n_s_loop); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 399, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_run_callback); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 394, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_run_callback); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 399, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_unlock); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 394, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_unlock); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 399, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_6 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
@@ -8575,14 +8577,14 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue__schedule_unlock(struct __pyx_ob
       }
     }
     if (!__pyx_t_6) {
-      __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 394, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 399, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_GOTREF(__pyx_t_3);
     } else {
       #if CYTHON_FAST_PYCALL
       if (PyFunction_Check(__pyx_t_5)) {
         PyObject *__pyx_temp[2] = {__pyx_t_6, __pyx_t_4};
-        __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 394, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 399, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -8591,20 +8593,20 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue__schedule_unlock(struct __pyx_ob
       #if CYTHON_FAST_PYCCALL
       if (__Pyx_PyFastCFunction_Check(__pyx_t_5)) {
         PyObject *__pyx_temp[2] = {__pyx_t_6, __pyx_t_4};
-        __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 394, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 399, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       } else
       #endif
       {
-        __pyx_t_7 = PyTuple_New(1+1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 394, __pyx_L1_error)
+        __pyx_t_7 = PyTuple_New(1+1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 399, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_7);
         __Pyx_GIVEREF(__pyx_t_6); PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_6); __pyx_t_6 = NULL;
         __Pyx_GIVEREF(__pyx_t_4);
         PyTuple_SET_ITEM(__pyx_t_7, 0+1, __pyx_t_4);
         __pyx_t_4 = 0;
-        __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_7, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 394, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_7, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 399, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       }
@@ -8616,7 +8618,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue__schedule_unlock(struct __pyx_ob
     __pyx_v_self->_event_unlock = __pyx_t_3;
     __pyx_t_3 = 0;
 
-    /* "src/gevent/queue.py":393
+    /* "src/gevent/queue.py":398
  * 
  *     def _schedule_unlock(self):
  *         if not self._event_unlock:             # <<<<<<<<<<<<<<
@@ -8625,7 +8627,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue__schedule_unlock(struct __pyx_ob
  */
   }
 
-  /* "src/gevent/queue.py":392
+  /* "src/gevent/queue.py":397
  *                 return
  * 
  *     def _schedule_unlock(self):             # <<<<<<<<<<<<<<
@@ -8650,7 +8652,7 @@ static PyObject *__pyx_f_6gevent_6_queue_5Queue__schedule_unlock(struct __pyx_ob
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":396
+/* "src/gevent/queue.py":401
  *             self._event_unlock = self.hub.loop.run_callback(self._unlock)
  * 
  *     def __iter__(self):             # <<<<<<<<<<<<<<
@@ -8676,7 +8678,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_44__iter__(struct __pyx_obj_6ge
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__iter__", 0);
 
-  /* "src/gevent/queue.py":397
+  /* "src/gevent/queue.py":402
  * 
  *     def __iter__(self):
  *         return self             # <<<<<<<<<<<<<<
@@ -8688,7 +8690,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_44__iter__(struct __pyx_obj_6ge
   __pyx_r = ((PyObject *)__pyx_v_self);
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":396
+  /* "src/gevent/queue.py":401
  *             self._event_unlock = self.hub.loop.run_callback(self._unlock)
  * 
  *     def __iter__(self):             # <<<<<<<<<<<<<<
@@ -8703,7 +8705,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_44__iter__(struct __pyx_obj_6ge
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":399
+/* "src/gevent/queue.py":404
  *         return self
  * 
  *     def __next__(self):             # <<<<<<<<<<<<<<
@@ -8733,19 +8735,19 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_46__next__(struct __pyx_obj_6ge
   int __pyx_t_3;
   __Pyx_RefNannySetupContext("__next__", 0);
 
-  /* "src/gevent/queue.py":400
+  /* "src/gevent/queue.py":405
  * 
  *     def __next__(self):
  *         result = self.get()             # <<<<<<<<<<<<<<
  *         if result is StopIteration:
  *             raise result
  */
-  __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->get(__pyx_v_self, 0, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 400, __pyx_L1_error)
+  __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_6_queue_Queue *)__pyx_v_self->__pyx_vtab)->get(__pyx_v_self, 0, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 405, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_result = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "src/gevent/queue.py":401
+  /* "src/gevent/queue.py":406
  *     def __next__(self):
  *         result = self.get()
  *         if result is StopIteration:             # <<<<<<<<<<<<<<
@@ -8756,7 +8758,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_46__next__(struct __pyx_obj_6ge
   __pyx_t_3 = (__pyx_t_2 != 0);
   if (unlikely(__pyx_t_3)) {
 
-    /* "src/gevent/queue.py":402
+    /* "src/gevent/queue.py":407
  *         result = self.get()
  *         if result is StopIteration:
  *             raise result             # <<<<<<<<<<<<<<
@@ -8764,9 +8766,9 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_46__next__(struct __pyx_obj_6ge
  * 
  */
     __Pyx_Raise(__pyx_v_result, 0, 0, 0);
-    __PYX_ERR(0, 402, __pyx_L1_error)
+    __PYX_ERR(0, 407, __pyx_L1_error)
 
-    /* "src/gevent/queue.py":401
+    /* "src/gevent/queue.py":406
  *     def __next__(self):
  *         result = self.get()
  *         if result is StopIteration:             # <<<<<<<<<<<<<<
@@ -8775,7 +8777,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_46__next__(struct __pyx_obj_6ge
  */
   }
 
-  /* "src/gevent/queue.py":403
+  /* "src/gevent/queue.py":408
  *         if result is StopIteration:
  *             raise result
  *         return result             # <<<<<<<<<<<<<<
@@ -8787,7 +8789,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_46__next__(struct __pyx_obj_6ge
   __pyx_r = __pyx_v_result;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":399
+  /* "src/gevent/queue.py":404
  *         return self
  * 
  *     def __next__(self):             # <<<<<<<<<<<<<<
@@ -8881,7 +8883,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_5Queue_5queue___get__(struct __pyx_obj
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":414
+/* "src/gevent/queue.py":419
  *     __slots__ = ()
  * 
  *     def __init__(self, maxsize=None, items=()):             # <<<<<<<<<<<<<<
@@ -8928,7 +8930,7 @@ static int __pyx_pw_6gevent_6_queue_12UnboundQueue_1__init__(PyObject *__pyx_v_s
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 414, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 419, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -8945,7 +8947,7 @@ static int __pyx_pw_6gevent_6_queue_12UnboundQueue_1__init__(PyObject *__pyx_v_s
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__init__", 0, 0, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 414, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__init__", 0, 0, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 419, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gevent._queue.UnboundQueue.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -8970,7 +8972,7 @@ static int __pyx_pf_6gevent_6_queue_12UnboundQueue___init__(struct __pyx_obj_6ge
   PyObject *__pyx_t_7 = NULL;
   __Pyx_RefNannySetupContext("__init__", 0);
 
-  /* "src/gevent/queue.py":415
+  /* "src/gevent/queue.py":420
  * 
  *     def __init__(self, maxsize=None, items=()):
  *         if maxsize is not None:             # <<<<<<<<<<<<<<
@@ -8981,20 +8983,20 @@ static int __pyx_pf_6gevent_6_queue_12UnboundQueue___init__(struct __pyx_obj_6ge
   __pyx_t_2 = (__pyx_t_1 != 0);
   if (unlikely(__pyx_t_2)) {
 
-    /* "src/gevent/queue.py":416
+    /* "src/gevent/queue.py":421
  *     def __init__(self, maxsize=None, items=()):
  *         if maxsize is not None:
  *             raise ValueError("UnboundQueue has no maxsize")             # <<<<<<<<<<<<<<
  *         Queue.__init__(self, maxsize, items)
  *         self.putters = None # Will never be used.
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__4, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 416, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__4, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 421, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __PYX_ERR(0, 416, __pyx_L1_error)
+    __PYX_ERR(0, 421, __pyx_L1_error)
 
-    /* "src/gevent/queue.py":415
+    /* "src/gevent/queue.py":420
  * 
  *     def __init__(self, maxsize=None, items=()):
  *         if maxsize is not None:             # <<<<<<<<<<<<<<
@@ -9003,14 +9005,14 @@ static int __pyx_pf_6gevent_6_queue_12UnboundQueue___init__(struct __pyx_obj_6ge
  */
   }
 
-  /* "src/gevent/queue.py":417
+  /* "src/gevent/queue.py":422
  *         if maxsize is not None:
  *             raise ValueError("UnboundQueue has no maxsize")
  *         Queue.__init__(self, maxsize, items)             # <<<<<<<<<<<<<<
  *         self.putters = None # Will never be used.
  * 
  */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_ptype_6gevent_6_queue_Queue), __pyx_n_s_init); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 417, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_ptype_6gevent_6_queue_Queue), __pyx_n_s_init); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 422, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_5 = NULL;
   __pyx_t_6 = 0;
@@ -9027,7 +9029,7 @@ static int __pyx_pf_6gevent_6_queue_12UnboundQueue___init__(struct __pyx_obj_6ge
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_4)) {
     PyObject *__pyx_temp[4] = {__pyx_t_5, ((PyObject *)__pyx_v_self), __pyx_v_maxsize, __pyx_v_items};
-    __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_6, 3+__pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 417, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_6, 3+__pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 422, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_GOTREF(__pyx_t_3);
   } else
@@ -9035,13 +9037,13 @@ static int __pyx_pf_6gevent_6_queue_12UnboundQueue___init__(struct __pyx_obj_6ge
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_4)) {
     PyObject *__pyx_temp[4] = {__pyx_t_5, ((PyObject *)__pyx_v_self), __pyx_v_maxsize, __pyx_v_items};
-    __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_6, 3+__pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 417, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_6, 3+__pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 422, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_GOTREF(__pyx_t_3);
   } else
   #endif
   {
-    __pyx_t_7 = PyTuple_New(3+__pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 417, __pyx_L1_error)
+    __pyx_t_7 = PyTuple_New(3+__pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 422, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     if (__pyx_t_5) {
       __Pyx_GIVEREF(__pyx_t_5); PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_5); __pyx_t_5 = NULL;
@@ -9055,14 +9057,14 @@ static int __pyx_pf_6gevent_6_queue_12UnboundQueue___init__(struct __pyx_obj_6ge
     __Pyx_INCREF(__pyx_v_items);
     __Pyx_GIVEREF(__pyx_v_items);
     PyTuple_SET_ITEM(__pyx_t_7, 2+__pyx_t_6, __pyx_v_items);
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_7, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 417, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_7, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 422, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   }
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "src/gevent/queue.py":418
+  /* "src/gevent/queue.py":423
  *             raise ValueError("UnboundQueue has no maxsize")
  *         Queue.__init__(self, maxsize, items)
  *         self.putters = None # Will never be used.             # <<<<<<<<<<<<<<
@@ -9075,7 +9077,7 @@ static int __pyx_pf_6gevent_6_queue_12UnboundQueue___init__(struct __pyx_obj_6ge
   __Pyx_DECREF(__pyx_v_self->__pyx_base.putters);
   __pyx_v_self->__pyx_base.putters = Py_None;
 
-  /* "src/gevent/queue.py":414
+  /* "src/gevent/queue.py":419
  *     __slots__ = ()
  * 
  *     def __init__(self, maxsize=None, items=()):             # <<<<<<<<<<<<<<
@@ -9098,7 +9100,7 @@ static int __pyx_pf_6gevent_6_queue_12UnboundQueue___init__(struct __pyx_obj_6ge
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":420
+/* "src/gevent/queue.py":425
  *         self.putters = None # Will never be used.
  * 
  *     def put(self, item, block=True, timeout=None):             # <<<<<<<<<<<<<<
@@ -9116,39 +9118,39 @@ static PyObject *__pyx_f_6gevent_6_queue_12UnboundQueue_put(struct __pyx_obj_6ge
   if (__pyx_optional_args) {
   }
 
-  /* "src/gevent/queue.py":421
+  /* "src/gevent/queue.py":426
  * 
  *     def put(self, item, block=True, timeout=None):
  *         self._put(item)             # <<<<<<<<<<<<<<
  *         if self.getters:
  *             self._schedule_unlock()
  */
-  __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_6_queue_UnboundQueue *)__pyx_v_self->__pyx_base.__pyx_vtab)->__pyx_base._put(((struct __pyx_obj_6gevent_6_queue_Queue *)__pyx_v_self), __pyx_v_item, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 421, __pyx_L1_error)
+  __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_6_queue_UnboundQueue *)__pyx_v_self->__pyx_base.__pyx_vtab)->__pyx_base._put(((struct __pyx_obj_6gevent_6_queue_Queue *)__pyx_v_self), __pyx_v_item, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 426, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/gevent/queue.py":422
+  /* "src/gevent/queue.py":427
  *     def put(self, item, block=True, timeout=None):
  *         self._put(item)
  *         if self.getters:             # <<<<<<<<<<<<<<
  *             self._schedule_unlock()
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_self->__pyx_base.getters); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 422, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_self->__pyx_base.getters); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 427, __pyx_L1_error)
   if (__pyx_t_2) {
 
-    /* "src/gevent/queue.py":423
+    /* "src/gevent/queue.py":428
  *         self._put(item)
  *         if self.getters:
  *             self._schedule_unlock()             # <<<<<<<<<<<<<<
  * 
  * 
  */
-    __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_6_queue_UnboundQueue *)__pyx_v_self->__pyx_base.__pyx_vtab)->__pyx_base._schedule_unlock(((struct __pyx_obj_6gevent_6_queue_Queue *)__pyx_v_self)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 423, __pyx_L1_error)
+    __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_6_queue_UnboundQueue *)__pyx_v_self->__pyx_base.__pyx_vtab)->__pyx_base._schedule_unlock(((struct __pyx_obj_6gevent_6_queue_Queue *)__pyx_v_self)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 428, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "src/gevent/queue.py":422
+    /* "src/gevent/queue.py":427
  *     def put(self, item, block=True, timeout=None):
  *         self._put(item)
  *         if self.getters:             # <<<<<<<<<<<<<<
@@ -9157,7 +9159,7 @@ static PyObject *__pyx_f_6gevent_6_queue_12UnboundQueue_put(struct __pyx_obj_6ge
  */
   }
 
-  /* "src/gevent/queue.py":420
+  /* "src/gevent/queue.py":425
  *         self.putters = None # Will never be used.
  * 
  *     def put(self, item, block=True, timeout=None):             # <<<<<<<<<<<<<<
@@ -9226,7 +9228,7 @@ static PyObject *__pyx_pw_6gevent_6_queue_12UnboundQueue_3put(PyObject *__pyx_v_
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "put") < 0)) __PYX_ERR(0, 420, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "put") < 0)) __PYX_ERR(0, 425, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -9245,7 +9247,7 @@ static PyObject *__pyx_pw_6gevent_6_queue_12UnboundQueue_3put(PyObject *__pyx_v_
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("put", 0, 1, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 420, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("put", 0, 1, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 425, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gevent._queue.UnboundQueue.put", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -9268,7 +9270,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_12UnboundQueue_2put(struct __pyx_obj_6
   __pyx_t_2.__pyx_n = 2;
   __pyx_t_2.block = __pyx_v_block;
   __pyx_t_2.timeout = __pyx_v_timeout;
-  __pyx_t_1 = __pyx_vtabptr_6gevent_6_queue_UnboundQueue->__pyx_base.put(((struct __pyx_obj_6gevent_6_queue_Queue *)__pyx_v_self), __pyx_v_item, 1, &__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 420, __pyx_L1_error)
+  __pyx_t_1 = __pyx_vtabptr_6gevent_6_queue_UnboundQueue->__pyx_base.put(((struct __pyx_obj_6gevent_6_queue_Queue *)__pyx_v_self), __pyx_v_item, 1, &__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 425, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -9285,7 +9287,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_12UnboundQueue_2put(struct __pyx_obj_6
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":439
+/* "src/gevent/queue.py":444
  *     __slots__ = ()
  * 
  *     def _create_queue(self, items=()):             # <<<<<<<<<<<<<<
@@ -9324,7 +9326,7 @@ static PyObject *__pyx_pw_6gevent_6_queue_13PriorityQueue_1_create_queue(PyObjec
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_create_queue") < 0)) __PYX_ERR(0, 439, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_create_queue") < 0)) __PYX_ERR(0, 444, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -9338,7 +9340,7 @@ static PyObject *__pyx_pw_6gevent_6_queue_13PriorityQueue_1_create_queue(PyObjec
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("_create_queue", 0, 0, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 439, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("_create_queue", 0, 0, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 444, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gevent._queue.PriorityQueue._create_queue", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -9361,19 +9363,19 @@ static PyObject *__pyx_pf_6gevent_6_queue_13PriorityQueue__create_queue(CYTHON_U
   PyObject *__pyx_t_4 = NULL;
   __Pyx_RefNannySetupContext("_create_queue", 0);
 
-  /* "src/gevent/queue.py":440
+  /* "src/gevent/queue.py":445
  * 
  *     def _create_queue(self, items=()):
  *         q = list(items)             # <<<<<<<<<<<<<<
  *         _heapify(q)
  *         return q
  */
-  __pyx_t_1 = PySequence_List(__pyx_v_items); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 440, __pyx_L1_error)
+  __pyx_t_1 = PySequence_List(__pyx_v_items); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 445, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_q = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/gevent/queue.py":441
+  /* "src/gevent/queue.py":446
  *     def _create_queue(self, items=()):
  *         q = list(items)
  *         _heapify(q)             # <<<<<<<<<<<<<<
@@ -9392,13 +9394,13 @@ static PyObject *__pyx_pf_6gevent_6_queue_13PriorityQueue__create_queue(CYTHON_U
     }
   }
   if (!__pyx_t_3) {
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_q); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 441, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_q); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 446, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   } else {
     #if CYTHON_FAST_PYCALL
     if (PyFunction_Check(__pyx_t_2)) {
       PyObject *__pyx_temp[2] = {__pyx_t_3, __pyx_v_q};
-      __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 441, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 446, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_GOTREF(__pyx_t_1);
     } else
@@ -9406,19 +9408,19 @@ static PyObject *__pyx_pf_6gevent_6_queue_13PriorityQueue__create_queue(CYTHON_U
     #if CYTHON_FAST_PYCCALL
     if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
       PyObject *__pyx_temp[2] = {__pyx_t_3, __pyx_v_q};
-      __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 441, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 446, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_GOTREF(__pyx_t_1);
     } else
     #endif
     {
-      __pyx_t_4 = PyTuple_New(1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 441, __pyx_L1_error)
+      __pyx_t_4 = PyTuple_New(1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 446, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_3); __pyx_t_3 = NULL;
       __Pyx_INCREF(__pyx_v_q);
       __Pyx_GIVEREF(__pyx_v_q);
       PyTuple_SET_ITEM(__pyx_t_4, 0+1, __pyx_v_q);
-      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_4, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 441, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_4, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 446, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     }
@@ -9426,7 +9428,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_13PriorityQueue__create_queue(CYTHON_U
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/gevent/queue.py":442
+  /* "src/gevent/queue.py":447
  *         q = list(items)
  *         _heapify(q)
  *         return q             # <<<<<<<<<<<<<<
@@ -9438,7 +9440,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_13PriorityQueue__create_queue(CYTHON_U
   __pyx_r = __pyx_v_q;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":439
+  /* "src/gevent/queue.py":444
  *     __slots__ = ()
  * 
  *     def _create_queue(self, items=()):             # <<<<<<<<<<<<<<
@@ -9461,7 +9463,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_13PriorityQueue__create_queue(CYTHON_U
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":444
+/* "src/gevent/queue.py":449
  *         return q
  * 
  *     def _put(self, item):             # <<<<<<<<<<<<<<
@@ -9484,7 +9486,7 @@ static PyObject *__pyx_f_6gevent_6_queue_13PriorityQueue__put(struct __pyx_obj_6
   if (unlikely(__pyx_skip_dispatch)) ;
   /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_put); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 444, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_put); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 449, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)__pyx_pw_6gevent_6_queue_13PriorityQueue_3_put)) {
       __Pyx_XDECREF(__pyx_r);
@@ -9500,13 +9502,13 @@ static PyObject *__pyx_f_6gevent_6_queue_13PriorityQueue__put(struct __pyx_obj_6
         }
       }
       if (!__pyx_t_4) {
-        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_item); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 444, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_item); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 449, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
       } else {
         #if CYTHON_FAST_PYCALL
         if (PyFunction_Check(__pyx_t_3)) {
           PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_v_item};
-          __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 444, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 449, __pyx_L1_error)
           __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_GOTREF(__pyx_t_2);
         } else
@@ -9514,19 +9516,19 @@ static PyObject *__pyx_f_6gevent_6_queue_13PriorityQueue__put(struct __pyx_obj_6
         #if CYTHON_FAST_PYCCALL
         if (__Pyx_PyFastCFunction_Check(__pyx_t_3)) {
           PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_v_item};
-          __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 444, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 449, __pyx_L1_error)
           __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_GOTREF(__pyx_t_2);
         } else
         #endif
         {
-          __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 444, __pyx_L1_error)
+          __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 449, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_5);
           __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_4); __pyx_t_4 = NULL;
           __Pyx_INCREF(__pyx_v_item);
           __Pyx_GIVEREF(__pyx_v_item);
           PyTuple_SET_ITEM(__pyx_t_5, 0+1, __pyx_v_item);
-          __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_5, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 444, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_5, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 449, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
         }
@@ -9540,7 +9542,7 @@ static PyObject *__pyx_f_6gevent_6_queue_13PriorityQueue__put(struct __pyx_obj_6
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
 
-  /* "src/gevent/queue.py":445
+  /* "src/gevent/queue.py":450
  * 
  *     def _put(self, item):
  *         _heappush(self.queue, item)             # <<<<<<<<<<<<<<
@@ -9563,7 +9565,7 @@ static PyObject *__pyx_f_6gevent_6_queue_13PriorityQueue__put(struct __pyx_obj_6
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_v_self->__pyx_base.queue, __pyx_v_item};
-    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_6, 2+__pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 445, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_6, 2+__pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 450, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_GOTREF(__pyx_t_1);
   } else
@@ -9571,13 +9573,13 @@ static PyObject *__pyx_f_6gevent_6_queue_13PriorityQueue__put(struct __pyx_obj_6
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_v_self->__pyx_base.queue, __pyx_v_item};
-    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_6, 2+__pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 445, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_6, 2+__pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 450, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_GOTREF(__pyx_t_1);
   } else
   #endif
   {
-    __pyx_t_5 = PyTuple_New(2+__pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 445, __pyx_L1_error)
+    __pyx_t_5 = PyTuple_New(2+__pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 450, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     if (__pyx_t_3) {
       __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_3); __pyx_t_3 = NULL;
@@ -9588,14 +9590,14 @@ static PyObject *__pyx_f_6gevent_6_queue_13PriorityQueue__put(struct __pyx_obj_6
     __Pyx_INCREF(__pyx_v_item);
     __Pyx_GIVEREF(__pyx_v_item);
     PyTuple_SET_ITEM(__pyx_t_5, 1+__pyx_t_6, __pyx_v_item);
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 445, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 450, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/gevent/queue.py":444
+  /* "src/gevent/queue.py":449
  *         return q
  * 
  *     def _put(self, item):             # <<<<<<<<<<<<<<
@@ -9641,7 +9643,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_13PriorityQueue_2_put(struct __pyx_obj
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("_put", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_6gevent_6_queue_13PriorityQueue__put(__pyx_v_self, __pyx_v_item, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 444, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_6gevent_6_queue_13PriorityQueue__put(__pyx_v_self, __pyx_v_item, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 449, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -9658,7 +9660,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_13PriorityQueue_2_put(struct __pyx_obj
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":447
+/* "src/gevent/queue.py":452
  *         _heappush(self.queue, item)
  * 
  *     def _get(self):             # <<<<<<<<<<<<<<
@@ -9679,7 +9681,7 @@ static PyObject *__pyx_f_6gevent_6_queue_13PriorityQueue__get(struct __pyx_obj_6
   if (unlikely(__pyx_skip_dispatch)) ;
   /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_get); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 447, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_get); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 452, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)__pyx_pw_6gevent_6_queue_13PriorityQueue_5_get)) {
       __Pyx_XDECREF(__pyx_r);
@@ -9695,10 +9697,10 @@ static PyObject *__pyx_f_6gevent_6_queue_13PriorityQueue__get(struct __pyx_obj_6
         }
       }
       if (__pyx_t_4) {
-        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 447, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 452, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       } else {
-        __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 447, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 452, __pyx_L1_error)
       }
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -9710,7 +9712,7 @@ static PyObject *__pyx_f_6gevent_6_queue_13PriorityQueue__get(struct __pyx_obj_6
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
 
-  /* "src/gevent/queue.py":448
+  /* "src/gevent/queue.py":453
  * 
  *     def _get(self):
  *         return _heappop(self.queue)             # <<<<<<<<<<<<<<
@@ -9730,13 +9732,13 @@ static PyObject *__pyx_f_6gevent_6_queue_13PriorityQueue__get(struct __pyx_obj_6
     }
   }
   if (!__pyx_t_3) {
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_self->__pyx_base.queue); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 448, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_self->__pyx_base.queue); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 453, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   } else {
     #if CYTHON_FAST_PYCALL
     if (PyFunction_Check(__pyx_t_2)) {
       PyObject *__pyx_temp[2] = {__pyx_t_3, __pyx_v_self->__pyx_base.queue};
-      __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 448, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 453, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_GOTREF(__pyx_t_1);
     } else
@@ -9744,19 +9746,19 @@ static PyObject *__pyx_f_6gevent_6_queue_13PriorityQueue__get(struct __pyx_obj_6
     #if CYTHON_FAST_PYCCALL
     if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
       PyObject *__pyx_temp[2] = {__pyx_t_3, __pyx_v_self->__pyx_base.queue};
-      __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 448, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 453, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_GOTREF(__pyx_t_1);
     } else
     #endif
     {
-      __pyx_t_4 = PyTuple_New(1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 448, __pyx_L1_error)
+      __pyx_t_4 = PyTuple_New(1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 453, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_3); __pyx_t_3 = NULL;
       __Pyx_INCREF(__pyx_v_self->__pyx_base.queue);
       __Pyx_GIVEREF(__pyx_v_self->__pyx_base.queue);
       PyTuple_SET_ITEM(__pyx_t_4, 0+1, __pyx_v_self->__pyx_base.queue);
-      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_4, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 448, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_4, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 453, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     }
@@ -9766,7 +9768,7 @@ static PyObject *__pyx_f_6gevent_6_queue_13PriorityQueue__get(struct __pyx_obj_6
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":447
+  /* "src/gevent/queue.py":452
  *         _heappush(self.queue, item)
  * 
  *     def _get(self):             # <<<<<<<<<<<<<<
@@ -9809,7 +9811,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_13PriorityQueue_4_get(struct __pyx_obj
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("_get", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_6gevent_6_queue_13PriorityQueue__get(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 447, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_6gevent_6_queue_13PriorityQueue__get(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 452, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -9826,7 +9828,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_13PriorityQueue_4_get(struct __pyx_obj
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":456
+/* "src/gevent/queue.py":461
  *     __slots__ = ()
  * 
  *     def _create_queue(self, items=()):             # <<<<<<<<<<<<<<
@@ -9865,7 +9867,7 @@ static PyObject *__pyx_pw_6gevent_6_queue_9LifoQueue_1_create_queue(PyObject *__
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_create_queue") < 0)) __PYX_ERR(0, 456, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_create_queue") < 0)) __PYX_ERR(0, 461, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -9879,7 +9881,7 @@ static PyObject *__pyx_pw_6gevent_6_queue_9LifoQueue_1_create_queue(PyObject *__
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("_create_queue", 0, 0, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 456, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("_create_queue", 0, 0, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 461, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gevent._queue.LifoQueue._create_queue", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -9898,7 +9900,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_9LifoQueue__create_queue(CYTHON_UNUSED
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("_create_queue", 0);
 
-  /* "src/gevent/queue.py":457
+  /* "src/gevent/queue.py":462
  * 
  *     def _create_queue(self, items=()):
  *         return list(items)             # <<<<<<<<<<<<<<
@@ -9906,13 +9908,13 @@ static PyObject *__pyx_pf_6gevent_6_queue_9LifoQueue__create_queue(CYTHON_UNUSED
  *     def _put(self, item):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PySequence_List(__pyx_v_items); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 457, __pyx_L1_error)
+  __pyx_t_1 = PySequence_List(__pyx_v_items); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 462, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":456
+  /* "src/gevent/queue.py":461
  *     __slots__ = ()
  * 
  *     def _create_queue(self, items=()):             # <<<<<<<<<<<<<<
@@ -9931,7 +9933,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_9LifoQueue__create_queue(CYTHON_UNUSED
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":459
+/* "src/gevent/queue.py":464
  *         return list(items)
  * 
  *     def _put(self, item):             # <<<<<<<<<<<<<<
@@ -9954,7 +9956,7 @@ static PyObject *__pyx_f_6gevent_6_queue_9LifoQueue__put(struct __pyx_obj_6geven
   if (unlikely(__pyx_skip_dispatch)) ;
   /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_put); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 459, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_put); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 464, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)__pyx_pw_6gevent_6_queue_9LifoQueue_3_put)) {
       __Pyx_XDECREF(__pyx_r);
@@ -9970,13 +9972,13 @@ static PyObject *__pyx_f_6gevent_6_queue_9LifoQueue__put(struct __pyx_obj_6geven
         }
       }
       if (!__pyx_t_4) {
-        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_item); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 459, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_item); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 464, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
       } else {
         #if CYTHON_FAST_PYCALL
         if (PyFunction_Check(__pyx_t_3)) {
           PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_v_item};
-          __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 459, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 464, __pyx_L1_error)
           __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_GOTREF(__pyx_t_2);
         } else
@@ -9984,19 +9986,19 @@ static PyObject *__pyx_f_6gevent_6_queue_9LifoQueue__put(struct __pyx_obj_6geven
         #if CYTHON_FAST_PYCCALL
         if (__Pyx_PyFastCFunction_Check(__pyx_t_3)) {
           PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_v_item};
-          __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 459, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 464, __pyx_L1_error)
           __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_GOTREF(__pyx_t_2);
         } else
         #endif
         {
-          __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 459, __pyx_L1_error)
+          __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 464, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_5);
           __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_4); __pyx_t_4 = NULL;
           __Pyx_INCREF(__pyx_v_item);
           __Pyx_GIVEREF(__pyx_v_item);
           PyTuple_SET_ITEM(__pyx_t_5, 0+1, __pyx_v_item);
-          __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_5, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 459, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_5, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 464, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
         }
@@ -10010,16 +10012,16 @@ static PyObject *__pyx_f_6gevent_6_queue_9LifoQueue__put(struct __pyx_obj_6geven
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
 
-  /* "src/gevent/queue.py":460
+  /* "src/gevent/queue.py":465
  * 
  *     def _put(self, item):
  *         self.queue.append(item)             # <<<<<<<<<<<<<<
  * 
  *     def _get(self):
  */
-  __pyx_t_6 = __Pyx_PyObject_Append(__pyx_v_self->__pyx_base.queue, __pyx_v_item); if (unlikely(__pyx_t_6 == ((int)-1))) __PYX_ERR(0, 460, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_Append(__pyx_v_self->__pyx_base.queue, __pyx_v_item); if (unlikely(__pyx_t_6 == ((int)-1))) __PYX_ERR(0, 465, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":459
+  /* "src/gevent/queue.py":464
  *         return list(items)
  * 
  *     def _put(self, item):             # <<<<<<<<<<<<<<
@@ -10065,7 +10067,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_9LifoQueue_2_put(struct __pyx_obj_6gev
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("_put", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_6gevent_6_queue_9LifoQueue__put(__pyx_v_self, __pyx_v_item, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 459, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_6gevent_6_queue_9LifoQueue__put(__pyx_v_self, __pyx_v_item, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 464, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -10082,7 +10084,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_9LifoQueue_2_put(struct __pyx_obj_6gev
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":462
+/* "src/gevent/queue.py":467
  *         self.queue.append(item)
  * 
  *     def _get(self):             # <<<<<<<<<<<<<<
@@ -10103,7 +10105,7 @@ static PyObject *__pyx_f_6gevent_6_queue_9LifoQueue__get(struct __pyx_obj_6geven
   if (unlikely(__pyx_skip_dispatch)) ;
   /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_get); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 462, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_get); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 467, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)__pyx_pw_6gevent_6_queue_9LifoQueue_5_get)) {
       __Pyx_XDECREF(__pyx_r);
@@ -10119,10 +10121,10 @@ static PyObject *__pyx_f_6gevent_6_queue_9LifoQueue__get(struct __pyx_obj_6geven
         }
       }
       if (__pyx_t_4) {
-        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 462, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 467, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       } else {
-        __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 462, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 467, __pyx_L1_error)
       }
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -10134,7 +10136,7 @@ static PyObject *__pyx_f_6gevent_6_queue_9LifoQueue__get(struct __pyx_obj_6geven
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
 
-  /* "src/gevent/queue.py":463
+  /* "src/gevent/queue.py":468
  * 
  *     def _get(self):
  *         return self.queue.pop()             # <<<<<<<<<<<<<<
@@ -10142,13 +10144,13 @@ static PyObject *__pyx_f_6gevent_6_queue_9LifoQueue__get(struct __pyx_obj_6geven
  *     def _peek(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyObject_Pop(__pyx_v_self->__pyx_base.queue); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 463, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Pop(__pyx_v_self->__pyx_base.queue); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 468, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":462
+  /* "src/gevent/queue.py":467
  *         self.queue.append(item)
  * 
  *     def _get(self):             # <<<<<<<<<<<<<<
@@ -10191,7 +10193,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_9LifoQueue_4_get(struct __pyx_obj_6gev
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("_get", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_6gevent_6_queue_9LifoQueue__get(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 462, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_6gevent_6_queue_9LifoQueue__get(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 467, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -10208,7 +10210,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_9LifoQueue_4_get(struct __pyx_obj_6gev
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":465
+/* "src/gevent/queue.py":470
  *         return self.queue.pop()
  * 
  *     def _peek(self):             # <<<<<<<<<<<<<<
@@ -10229,7 +10231,7 @@ static PyObject *__pyx_f_6gevent_6_queue_9LifoQueue__peek(struct __pyx_obj_6geve
   if (unlikely(__pyx_skip_dispatch)) ;
   /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_peek); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 465, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_peek); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 470, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)__pyx_pw_6gevent_6_queue_9LifoQueue_7_peek)) {
       __Pyx_XDECREF(__pyx_r);
@@ -10245,10 +10247,10 @@ static PyObject *__pyx_f_6gevent_6_queue_9LifoQueue__peek(struct __pyx_obj_6geve
         }
       }
       if (__pyx_t_4) {
-        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 465, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 470, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       } else {
-        __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 465, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 470, __pyx_L1_error)
       }
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -10260,7 +10262,7 @@ static PyObject *__pyx_f_6gevent_6_queue_9LifoQueue__peek(struct __pyx_obj_6geve
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
 
-  /* "src/gevent/queue.py":466
+  /* "src/gevent/queue.py":471
  * 
  *     def _peek(self):
  *         return self.queue[-1]             # <<<<<<<<<<<<<<
@@ -10268,13 +10270,13 @@ static PyObject *__pyx_f_6gevent_6_queue_9LifoQueue__peek(struct __pyx_obj_6geve
  * 
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_self->__pyx_base.queue, -1L, long, 1, __Pyx_PyInt_From_long, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 466, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_self->__pyx_base.queue, -1L, long, 1, __Pyx_PyInt_From_long, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 471, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":465
+  /* "src/gevent/queue.py":470
  *         return self.queue.pop()
  * 
  *     def _peek(self):             # <<<<<<<<<<<<<<
@@ -10317,7 +10319,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_9LifoQueue_6_peek(struct __pyx_obj_6ge
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("_peek", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_6gevent_6_queue_9LifoQueue__peek(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 465, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_6gevent_6_queue_9LifoQueue__peek(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 470, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -10334,7 +10336,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_9LifoQueue_6_peek(struct __pyx_obj_6ge
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":480
+/* "src/gevent/queue.py":485
  *     )
  * 
  *     def __init__(self, maxsize=None, items=(), unfinished_tasks=None):             # <<<<<<<<<<<<<<
@@ -10395,7 +10397,7 @@ static int __pyx_pw_6gevent_6_queue_13JoinableQueue_1__init__(PyObject *__pyx_v_
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 480, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 485, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -10415,7 +10417,7 @@ static int __pyx_pw_6gevent_6_queue_13JoinableQueue_1__init__(PyObject *__pyx_v_
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__init__", 0, 0, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 480, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__init__", 0, 0, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 485, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gevent._queue.JoinableQueue.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -10441,16 +10443,16 @@ static int __pyx_pf_6gevent_6_queue_13JoinableQueue___init__(struct __pyx_obj_6g
   Py_ssize_t __pyx_t_7;
   __Pyx_RefNannySetupContext("__init__", 0);
 
-  /* "src/gevent/queue.py":488
+  /* "src/gevent/queue.py":493
  * 
  *         """
  *         Queue.__init__(self, maxsize, items, _warn_depth=3)             # <<<<<<<<<<<<<<
  * 
  *         from gevent.event import Event
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_ptype_6gevent_6_queue_Queue), __pyx_n_s_init); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 488, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_ptype_6gevent_6_queue_Queue), __pyx_n_s_init); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 493, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyTuple_New(3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 488, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 493, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(((PyObject *)__pyx_v_self));
   __Pyx_GIVEREF(((PyObject *)__pyx_v_self));
@@ -10461,39 +10463,39 @@ static int __pyx_pf_6gevent_6_queue_13JoinableQueue___init__(struct __pyx_obj_6g
   __Pyx_INCREF(__pyx_v_items);
   __Pyx_GIVEREF(__pyx_v_items);
   PyTuple_SET_ITEM(__pyx_t_2, 2, __pyx_v_items);
-  __pyx_t_3 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 488, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 493, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_warn_depth, __pyx_int_3) < 0) __PYX_ERR(0, 488, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 488, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_warn_depth, __pyx_int_3) < 0) __PYX_ERR(0, 493, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 493, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "src/gevent/queue.py":490
+  /* "src/gevent/queue.py":495
  *         Queue.__init__(self, maxsize, items, _warn_depth=3)
  * 
  *         from gevent.event import Event             # <<<<<<<<<<<<<<
  *         self._cond = Event()
  *         self._cond.set()
  */
-  __pyx_t_4 = PyList_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 490, __pyx_L1_error)
+  __pyx_t_4 = PyList_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 495, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_INCREF(__pyx_n_s_Event);
   __Pyx_GIVEREF(__pyx_n_s_Event);
   PyList_SET_ITEM(__pyx_t_4, 0, __pyx_n_s_Event);
-  __pyx_t_3 = __Pyx_Import(__pyx_n_s_gevent_event, __pyx_t_4, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 490, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_Import(__pyx_n_s_gevent_event, __pyx_t_4, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 495, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_ImportFrom(__pyx_t_3, __pyx_n_s_Event); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 490, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_ImportFrom(__pyx_t_3, __pyx_n_s_Event); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 495, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_INCREF(__pyx_t_4);
   __pyx_v_Event = __pyx_t_4;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "src/gevent/queue.py":491
+  /* "src/gevent/queue.py":496
  * 
  *         from gevent.event import Event
  *         self._cond = Event()             # <<<<<<<<<<<<<<
@@ -10512,28 +10514,28 @@ static int __pyx_pf_6gevent_6_queue_13JoinableQueue___init__(struct __pyx_obj_6g
     }
   }
   if (__pyx_t_2) {
-    __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 491, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 496, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   } else {
-    __pyx_t_3 = __Pyx_PyObject_CallNoArg(__pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 491, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_CallNoArg(__pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 496, __pyx_L1_error)
   }
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (!(likely(((__pyx_t_3) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_3, __pyx_ptype_6gevent_6_event_Event))))) __PYX_ERR(0, 491, __pyx_L1_error)
+  if (!(likely(((__pyx_t_3) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_3, __pyx_ptype_6gevent_6_event_Event))))) __PYX_ERR(0, 496, __pyx_L1_error)
   __Pyx_GIVEREF(__pyx_t_3);
   __Pyx_GOTREF(__pyx_v_self->_cond);
   __Pyx_DECREF(((PyObject *)__pyx_v_self->_cond));
   __pyx_v_self->_cond = ((struct __pyx_obj_6gevent_6_event_Event *)__pyx_t_3);
   __pyx_t_3 = 0;
 
-  /* "src/gevent/queue.py":492
+  /* "src/gevent/queue.py":497
  *         from gevent.event import Event
  *         self._cond = Event()
  *         self._cond.set()             # <<<<<<<<<<<<<<
  * 
  *         if unfinished_tasks:
  */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self->_cond), __pyx_n_s_set); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 492, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self->_cond), __pyx_n_s_set); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 497, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_2 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
@@ -10546,36 +10548,36 @@ static int __pyx_pf_6gevent_6_queue_13JoinableQueue___init__(struct __pyx_obj_6g
     }
   }
   if (__pyx_t_2) {
-    __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 492, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 497, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   } else {
-    __pyx_t_3 = __Pyx_PyObject_CallNoArg(__pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 492, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_CallNoArg(__pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 497, __pyx_L1_error)
   }
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "src/gevent/queue.py":494
+  /* "src/gevent/queue.py":499
  *         self._cond.set()
  * 
  *         if unfinished_tasks:             # <<<<<<<<<<<<<<
  *             self.unfinished_tasks = unfinished_tasks
  *         elif items:
  */
-  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_v_unfinished_tasks); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 494, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_v_unfinished_tasks); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 499, __pyx_L1_error)
   if (__pyx_t_5) {
 
-    /* "src/gevent/queue.py":495
+    /* "src/gevent/queue.py":500
  * 
  *         if unfinished_tasks:
  *             self.unfinished_tasks = unfinished_tasks             # <<<<<<<<<<<<<<
  *         elif items:
  *             self.unfinished_tasks = len(items)
  */
-    __pyx_t_6 = __Pyx_PyInt_As_int(__pyx_v_unfinished_tasks); if (unlikely((__pyx_t_6 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 495, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyInt_As_int(__pyx_v_unfinished_tasks); if (unlikely((__pyx_t_6 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 500, __pyx_L1_error)
     __pyx_v_self->unfinished_tasks = __pyx_t_6;
 
-    /* "src/gevent/queue.py":494
+    /* "src/gevent/queue.py":499
  *         self._cond.set()
  * 
  *         if unfinished_tasks:             # <<<<<<<<<<<<<<
@@ -10585,27 +10587,27 @@ static int __pyx_pf_6gevent_6_queue_13JoinableQueue___init__(struct __pyx_obj_6g
     goto __pyx_L3;
   }
 
-  /* "src/gevent/queue.py":496
+  /* "src/gevent/queue.py":501
  *         if unfinished_tasks:
  *             self.unfinished_tasks = unfinished_tasks
  *         elif items:             # <<<<<<<<<<<<<<
  *             self.unfinished_tasks = len(items)
  *         else:
  */
-  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_v_items); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 496, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_v_items); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 501, __pyx_L1_error)
   if (__pyx_t_5) {
 
-    /* "src/gevent/queue.py":497
+    /* "src/gevent/queue.py":502
  *             self.unfinished_tasks = unfinished_tasks
  *         elif items:
  *             self.unfinished_tasks = len(items)             # <<<<<<<<<<<<<<
  *         else:
  *             self.unfinished_tasks = 0
  */
-    __pyx_t_7 = PyObject_Length(__pyx_v_items); if (unlikely(__pyx_t_7 == ((Py_ssize_t)-1))) __PYX_ERR(0, 497, __pyx_L1_error)
+    __pyx_t_7 = PyObject_Length(__pyx_v_items); if (unlikely(__pyx_t_7 == ((Py_ssize_t)-1))) __PYX_ERR(0, 502, __pyx_L1_error)
     __pyx_v_self->unfinished_tasks = __pyx_t_7;
 
-    /* "src/gevent/queue.py":496
+    /* "src/gevent/queue.py":501
  *         if unfinished_tasks:
  *             self.unfinished_tasks = unfinished_tasks
  *         elif items:             # <<<<<<<<<<<<<<
@@ -10615,7 +10617,7 @@ static int __pyx_pf_6gevent_6_queue_13JoinableQueue___init__(struct __pyx_obj_6g
     goto __pyx_L3;
   }
 
-  /* "src/gevent/queue.py":499
+  /* "src/gevent/queue.py":504
  *             self.unfinished_tasks = len(items)
  *         else:
  *             self.unfinished_tasks = 0             # <<<<<<<<<<<<<<
@@ -10627,7 +10629,7 @@ static int __pyx_pf_6gevent_6_queue_13JoinableQueue___init__(struct __pyx_obj_6g
   }
   __pyx_L3:;
 
-  /* "src/gevent/queue.py":501
+  /* "src/gevent/queue.py":506
  *             self.unfinished_tasks = 0
  * 
  *         if self.unfinished_tasks:             # <<<<<<<<<<<<<<
@@ -10637,14 +10639,14 @@ static int __pyx_pf_6gevent_6_queue_13JoinableQueue___init__(struct __pyx_obj_6g
   __pyx_t_5 = (__pyx_v_self->unfinished_tasks != 0);
   if (__pyx_t_5) {
 
-    /* "src/gevent/queue.py":502
+    /* "src/gevent/queue.py":507
  * 
  *         if self.unfinished_tasks:
  *             self._cond.clear()             # <<<<<<<<<<<<<<
  * 
  *     def copy(self):
  */
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self->_cond), __pyx_n_s_clear); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 502, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self->_cond), __pyx_n_s_clear); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 507, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_2 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
@@ -10657,16 +10659,16 @@ static int __pyx_pf_6gevent_6_queue_13JoinableQueue___init__(struct __pyx_obj_6g
       }
     }
     if (__pyx_t_2) {
-      __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 502, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 507, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     } else {
-      __pyx_t_3 = __Pyx_PyObject_CallNoArg(__pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 502, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_CallNoArg(__pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 507, __pyx_L1_error)
     }
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "src/gevent/queue.py":501
+    /* "src/gevent/queue.py":506
  *             self.unfinished_tasks = 0
  * 
  *         if self.unfinished_tasks:             # <<<<<<<<<<<<<<
@@ -10675,7 +10677,7 @@ static int __pyx_pf_6gevent_6_queue_13JoinableQueue___init__(struct __pyx_obj_6g
  */
   }
 
-  /* "src/gevent/queue.py":480
+  /* "src/gevent/queue.py":485
  *     )
  * 
  *     def __init__(self, maxsize=None, items=(), unfinished_tasks=None):             # <<<<<<<<<<<<<<
@@ -10699,7 +10701,7 @@ static int __pyx_pf_6gevent_6_queue_13JoinableQueue___init__(struct __pyx_obj_6g
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":504
+/* "src/gevent/queue.py":509
  *             self._cond.clear()
  * 
  *     def copy(self):             # <<<<<<<<<<<<<<
@@ -10734,7 +10736,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_13JoinableQueue_2copy(struct __pyx_obj
   PyObject *__pyx_t_7 = NULL;
   __Pyx_RefNannySetupContext("copy", 0);
 
-  /* "src/gevent/queue.py":505
+  /* "src/gevent/queue.py":510
  * 
  *     def copy(self):
  *         return type(self)(self.maxsize, self.queue, self.unfinished_tasks)             # <<<<<<<<<<<<<<
@@ -10742,9 +10744,9 @@ static PyObject *__pyx_pf_6gevent_6_queue_13JoinableQueue_2copy(struct __pyx_obj
  *     def _format(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_maxsize); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 505, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_maxsize); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 510, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_self->unfinished_tasks); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 505, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_self->unfinished_tasks); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 510, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_INCREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
   __pyx_t_4 = ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))); __pyx_t_5 = NULL;
@@ -10762,7 +10764,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_13JoinableQueue_2copy(struct __pyx_obj
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_4)) {
     PyObject *__pyx_temp[4] = {__pyx_t_5, __pyx_t_2, __pyx_v_self->__pyx_base.queue, __pyx_t_3};
-    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_6, 3+__pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 505, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_6, 3+__pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 510, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -10772,7 +10774,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_13JoinableQueue_2copy(struct __pyx_obj
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_4)) {
     PyObject *__pyx_temp[4] = {__pyx_t_5, __pyx_t_2, __pyx_v_self->__pyx_base.queue, __pyx_t_3};
-    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_6, 3+__pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 505, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_6, 3+__pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 510, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -10780,7 +10782,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_13JoinableQueue_2copy(struct __pyx_obj
   } else
   #endif
   {
-    __pyx_t_7 = PyTuple_New(3+__pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 505, __pyx_L1_error)
+    __pyx_t_7 = PyTuple_New(3+__pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 510, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     if (__pyx_t_5) {
       __Pyx_GIVEREF(__pyx_t_5); PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_5); __pyx_t_5 = NULL;
@@ -10794,7 +10796,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_13JoinableQueue_2copy(struct __pyx_obj
     PyTuple_SET_ITEM(__pyx_t_7, 2+__pyx_t_6, __pyx_t_3);
     __pyx_t_2 = 0;
     __pyx_t_3 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_7, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 505, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_7, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 510, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   }
@@ -10803,7 +10805,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_13JoinableQueue_2copy(struct __pyx_obj
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":504
+  /* "src/gevent/queue.py":509
  *             self._cond.clear()
  * 
  *     def copy(self):             # <<<<<<<<<<<<<<
@@ -10827,7 +10829,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_13JoinableQueue_2copy(struct __pyx_obj
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":507
+/* "src/gevent/queue.py":512
  *         return type(self)(self.maxsize, self.queue, self.unfinished_tasks)
  * 
  *     def _format(self):             # <<<<<<<<<<<<<<
@@ -10861,14 +10863,14 @@ static PyObject *__pyx_pf_6gevent_6_queue_13JoinableQueue_4_format(struct __pyx_
   int __pyx_t_5;
   __Pyx_RefNannySetupContext("_format", 0);
 
-  /* "src/gevent/queue.py":508
+  /* "src/gevent/queue.py":513
  * 
  *     def _format(self):
  *         result = Queue._format(self)             # <<<<<<<<<<<<<<
  *         if self.unfinished_tasks:
  *             result += ' tasks=%s _cond=%s' % (self.unfinished_tasks, self._cond)
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_ptype_6gevent_6_queue_Queue), __pyx_n_s_format); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 508, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_ptype_6gevent_6_queue_Queue), __pyx_n_s_format); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 513, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -10881,13 +10883,13 @@ static PyObject *__pyx_pf_6gevent_6_queue_13JoinableQueue_4_format(struct __pyx_
     }
   }
   if (!__pyx_t_3) {
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, ((PyObject *)__pyx_v_self)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 508, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, ((PyObject *)__pyx_v_self)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 513, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   } else {
     #if CYTHON_FAST_PYCALL
     if (PyFunction_Check(__pyx_t_2)) {
       PyObject *__pyx_temp[2] = {__pyx_t_3, ((PyObject *)__pyx_v_self)};
-      __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 508, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 513, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_GOTREF(__pyx_t_1);
     } else
@@ -10895,19 +10897,19 @@ static PyObject *__pyx_pf_6gevent_6_queue_13JoinableQueue_4_format(struct __pyx_
     #if CYTHON_FAST_PYCCALL
     if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
       PyObject *__pyx_temp[2] = {__pyx_t_3, ((PyObject *)__pyx_v_self)};
-      __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 508, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 513, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_GOTREF(__pyx_t_1);
     } else
     #endif
     {
-      __pyx_t_4 = PyTuple_New(1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 508, __pyx_L1_error)
+      __pyx_t_4 = PyTuple_New(1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 513, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_3); __pyx_t_3 = NULL;
       __Pyx_INCREF(((PyObject *)__pyx_v_self));
       __Pyx_GIVEREF(((PyObject *)__pyx_v_self));
       PyTuple_SET_ITEM(__pyx_t_4, 0+1, ((PyObject *)__pyx_v_self));
-      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_4, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 508, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_4, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 513, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     }
@@ -10916,7 +10918,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_13JoinableQueue_4_format(struct __pyx_
   __pyx_v_result = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "src/gevent/queue.py":509
+  /* "src/gevent/queue.py":514
  *     def _format(self):
  *         result = Queue._format(self)
  *         if self.unfinished_tasks:             # <<<<<<<<<<<<<<
@@ -10926,16 +10928,16 @@ static PyObject *__pyx_pf_6gevent_6_queue_13JoinableQueue_4_format(struct __pyx_
   __pyx_t_5 = (__pyx_v_self->unfinished_tasks != 0);
   if (__pyx_t_5) {
 
-    /* "src/gevent/queue.py":510
+    /* "src/gevent/queue.py":515
  *         result = Queue._format(self)
  *         if self.unfinished_tasks:
  *             result += ' tasks=%s _cond=%s' % (self.unfinished_tasks, self._cond)             # <<<<<<<<<<<<<<
  *         return result
  * 
  */
-    __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->unfinished_tasks); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 510, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->unfinished_tasks); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 515, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 510, __pyx_L1_error)
+    __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 515, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_GIVEREF(__pyx_t_1);
     PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1);
@@ -10943,16 +10945,16 @@ static PyObject *__pyx_pf_6gevent_6_queue_13JoinableQueue_4_format(struct __pyx_
     __Pyx_GIVEREF(((PyObject *)__pyx_v_self->_cond));
     PyTuple_SET_ITEM(__pyx_t_2, 1, ((PyObject *)__pyx_v_self->_cond));
     __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyString_Format(__pyx_kp_s_tasks_s__cond_s, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 510, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyString_Format(__pyx_kp_s_tasks_s__cond_s, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 515, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = PyNumber_InPlaceAdd(__pyx_v_result, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 510, __pyx_L1_error)
+    __pyx_t_2 = PyNumber_InPlaceAdd(__pyx_v_result, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 515, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF_SET(__pyx_v_result, __pyx_t_2);
     __pyx_t_2 = 0;
 
-    /* "src/gevent/queue.py":509
+    /* "src/gevent/queue.py":514
  *     def _format(self):
  *         result = Queue._format(self)
  *         if self.unfinished_tasks:             # <<<<<<<<<<<<<<
@@ -10961,7 +10963,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_13JoinableQueue_4_format(struct __pyx_
  */
   }
 
-  /* "src/gevent/queue.py":511
+  /* "src/gevent/queue.py":516
  *         if self.unfinished_tasks:
  *             result += ' tasks=%s _cond=%s' % (self.unfinished_tasks, self._cond)
  *         return result             # <<<<<<<<<<<<<<
@@ -10973,7 +10975,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_13JoinableQueue_4_format(struct __pyx_
   __pyx_r = __pyx_v_result;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":507
+  /* "src/gevent/queue.py":512
  *         return type(self)(self.maxsize, self.queue, self.unfinished_tasks)
  * 
  *     def _format(self):             # <<<<<<<<<<<<<<
@@ -10996,7 +10998,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_13JoinableQueue_4_format(struct __pyx_
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":513
+/* "src/gevent/queue.py":518
  *         return result
  * 
  *     def _put(self, item):             # <<<<<<<<<<<<<<
@@ -11018,7 +11020,7 @@ static PyObject *__pyx_f_6gevent_6_queue_13JoinableQueue__put(struct __pyx_obj_6
   if (unlikely(__pyx_skip_dispatch)) ;
   /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_put); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 513, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_put); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 518, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)__pyx_pw_6gevent_6_queue_13JoinableQueue_7_put)) {
       __Pyx_XDECREF(__pyx_r);
@@ -11034,13 +11036,13 @@ static PyObject *__pyx_f_6gevent_6_queue_13JoinableQueue__put(struct __pyx_obj_6
         }
       }
       if (!__pyx_t_4) {
-        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_item); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 513, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_item); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 518, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
       } else {
         #if CYTHON_FAST_PYCALL
         if (PyFunction_Check(__pyx_t_3)) {
           PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_v_item};
-          __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 513, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 518, __pyx_L1_error)
           __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_GOTREF(__pyx_t_2);
         } else
@@ -11048,19 +11050,19 @@ static PyObject *__pyx_f_6gevent_6_queue_13JoinableQueue__put(struct __pyx_obj_6
         #if CYTHON_FAST_PYCCALL
         if (__Pyx_PyFastCFunction_Check(__pyx_t_3)) {
           PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_v_item};
-          __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 513, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 518, __pyx_L1_error)
           __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_GOTREF(__pyx_t_2);
         } else
         #endif
         {
-          __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 513, __pyx_L1_error)
+          __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 518, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_5);
           __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_4); __pyx_t_4 = NULL;
           __Pyx_INCREF(__pyx_v_item);
           __Pyx_GIVEREF(__pyx_v_item);
           PyTuple_SET_ITEM(__pyx_t_5, 0+1, __pyx_v_item);
-          __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_5, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 513, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_5, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 518, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
         }
@@ -11074,18 +11076,18 @@ static PyObject *__pyx_f_6gevent_6_queue_13JoinableQueue__put(struct __pyx_obj_6
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
 
-  /* "src/gevent/queue.py":514
+  /* "src/gevent/queue.py":519
  * 
  *     def _put(self, item):
  *         Queue._put(self, item)             # <<<<<<<<<<<<<<
  *         self.unfinished_tasks += 1
  *         self._cond.clear()
  */
-  __pyx_t_1 = __pyx_f_6gevent_6_queue_5Queue__put(((struct __pyx_obj_6gevent_6_queue_Queue *)__pyx_v_self), __pyx_v_item, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 514, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_6gevent_6_queue_5Queue__put(((struct __pyx_obj_6gevent_6_queue_Queue *)__pyx_v_self), __pyx_v_item, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 519, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/gevent/queue.py":515
+  /* "src/gevent/queue.py":520
  *     def _put(self, item):
  *         Queue._put(self, item)
  *         self.unfinished_tasks += 1             # <<<<<<<<<<<<<<
@@ -11094,14 +11096,14 @@ static PyObject *__pyx_f_6gevent_6_queue_13JoinableQueue__put(struct __pyx_obj_6
  */
   __pyx_v_self->unfinished_tasks = (__pyx_v_self->unfinished_tasks + 1);
 
-  /* "src/gevent/queue.py":516
+  /* "src/gevent/queue.py":521
  *         Queue._put(self, item)
  *         self.unfinished_tasks += 1
  *         self._cond.clear()             # <<<<<<<<<<<<<<
  * 
  *     def task_done(self):
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self->_cond), __pyx_n_s_clear); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 516, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self->_cond), __pyx_n_s_clear); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 521, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -11114,16 +11116,16 @@ static PyObject *__pyx_f_6gevent_6_queue_13JoinableQueue__put(struct __pyx_obj_6
     }
   }
   if (__pyx_t_3) {
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 516, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 521, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   } else {
-    __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 516, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 521, __pyx_L1_error)
   }
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/gevent/queue.py":513
+  /* "src/gevent/queue.py":518
  *         return result
  * 
  *     def _put(self, item):             # <<<<<<<<<<<<<<
@@ -11169,7 +11171,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_13JoinableQueue_6_put(struct __pyx_obj
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("_put", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_6gevent_6_queue_13JoinableQueue__put(__pyx_v_self, __pyx_v_item, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 513, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_6gevent_6_queue_13JoinableQueue__put(__pyx_v_self, __pyx_v_item, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 518, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -11186,7 +11188,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_13JoinableQueue_6_put(struct __pyx_obj
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":518
+/* "src/gevent/queue.py":523
  *         self._cond.clear()
  * 
  *     def task_done(self):             # <<<<<<<<<<<<<<
@@ -11218,7 +11220,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_13JoinableQueue_8task_done(struct __py
   PyObject *__pyx_t_4 = NULL;
   __Pyx_RefNannySetupContext("task_done", 0);
 
-  /* "src/gevent/queue.py":529
+  /* "src/gevent/queue.py":534
  *         Raises a :exc:`ValueError` if called more times than there were items placed in the queue.
  *         '''
  *         if self.unfinished_tasks <= 0:             # <<<<<<<<<<<<<<
@@ -11228,20 +11230,20 @@ static PyObject *__pyx_pf_6gevent_6_queue_13JoinableQueue_8task_done(struct __py
   __pyx_t_1 = ((__pyx_v_self->unfinished_tasks <= 0) != 0);
   if (unlikely(__pyx_t_1)) {
 
-    /* "src/gevent/queue.py":530
+    /* "src/gevent/queue.py":535
  *         '''
  *         if self.unfinished_tasks <= 0:
  *             raise ValueError('task_done() called too many times')             # <<<<<<<<<<<<<<
  *         self.unfinished_tasks -= 1
  *         if self.unfinished_tasks == 0:
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 530, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 535, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_ERR(0, 530, __pyx_L1_error)
+    __PYX_ERR(0, 535, __pyx_L1_error)
 
-    /* "src/gevent/queue.py":529
+    /* "src/gevent/queue.py":534
  *         Raises a :exc:`ValueError` if called more times than there were items placed in the queue.
  *         '''
  *         if self.unfinished_tasks <= 0:             # <<<<<<<<<<<<<<
@@ -11250,7 +11252,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_13JoinableQueue_8task_done(struct __py
  */
   }
 
-  /* "src/gevent/queue.py":531
+  /* "src/gevent/queue.py":536
  *         if self.unfinished_tasks <= 0:
  *             raise ValueError('task_done() called too many times')
  *         self.unfinished_tasks -= 1             # <<<<<<<<<<<<<<
@@ -11259,7 +11261,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_13JoinableQueue_8task_done(struct __py
  */
   __pyx_v_self->unfinished_tasks = (__pyx_v_self->unfinished_tasks - 1);
 
-  /* "src/gevent/queue.py":532
+  /* "src/gevent/queue.py":537
  *             raise ValueError('task_done() called too many times')
  *         self.unfinished_tasks -= 1
  *         if self.unfinished_tasks == 0:             # <<<<<<<<<<<<<<
@@ -11269,14 +11271,14 @@ static PyObject *__pyx_pf_6gevent_6_queue_13JoinableQueue_8task_done(struct __py
   __pyx_t_1 = ((__pyx_v_self->unfinished_tasks == 0) != 0);
   if (__pyx_t_1) {
 
-    /* "src/gevent/queue.py":533
+    /* "src/gevent/queue.py":538
  *         self.unfinished_tasks -= 1
  *         if self.unfinished_tasks == 0:
  *             self._cond.set()             # <<<<<<<<<<<<<<
  * 
  *     def join(self, timeout=None):
  */
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self->_cond), __pyx_n_s_set); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 533, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self->_cond), __pyx_n_s_set); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 538, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_t_4 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
@@ -11289,16 +11291,16 @@ static PyObject *__pyx_pf_6gevent_6_queue_13JoinableQueue_8task_done(struct __py
       }
     }
     if (__pyx_t_4) {
-      __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 533, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 538, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     } else {
-      __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 533, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 538, __pyx_L1_error)
     }
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "src/gevent/queue.py":532
+    /* "src/gevent/queue.py":537
  *             raise ValueError('task_done() called too many times')
  *         self.unfinished_tasks -= 1
  *         if self.unfinished_tasks == 0:             # <<<<<<<<<<<<<<
@@ -11307,7 +11309,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_13JoinableQueue_8task_done(struct __py
  */
   }
 
-  /* "src/gevent/queue.py":518
+  /* "src/gevent/queue.py":523
  *         self._cond.clear()
  * 
  *     def task_done(self):             # <<<<<<<<<<<<<<
@@ -11330,7 +11332,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_13JoinableQueue_8task_done(struct __py
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":535
+/* "src/gevent/queue.py":540
  *             self._cond.set()
  * 
  *     def join(self, timeout=None):             # <<<<<<<<<<<<<<
@@ -11369,7 +11371,7 @@ static PyObject *__pyx_pw_6gevent_6_queue_13JoinableQueue_11join(PyObject *__pyx
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "join") < 0)) __PYX_ERR(0, 535, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "join") < 0)) __PYX_ERR(0, 540, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -11383,7 +11385,7 @@ static PyObject *__pyx_pw_6gevent_6_queue_13JoinableQueue_11join(PyObject *__pyx
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("join", 0, 0, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 535, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("join", 0, 0, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 540, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gevent._queue.JoinableQueue.join", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -11404,7 +11406,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_13JoinableQueue_10join(struct __pyx_ob
   PyObject *__pyx_t_3 = NULL;
   __Pyx_RefNannySetupContext("join", 0);
 
-  /* "src/gevent/queue.py":552
+  /* "src/gevent/queue.py":557
  *            Add the *timeout* parameter.
  *         '''
  *         return self._cond.wait(timeout=timeout)             # <<<<<<<<<<<<<<
@@ -11412,12 +11414,12 @@ static PyObject *__pyx_pf_6gevent_6_queue_13JoinableQueue_10join(struct __pyx_ob
  * 
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self->_cond), __pyx_n_s_wait); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 552, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self->_cond), __pyx_n_s_wait); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 557, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 552, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 557, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_timeout, __pyx_v_timeout) < 0) __PYX_ERR(0, 552, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_empty_tuple, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 552, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_timeout, __pyx_v_timeout) < 0) __PYX_ERR(0, 557, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_empty_tuple, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 557, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -11425,7 +11427,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_13JoinableQueue_10join(struct __pyx_ob
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":535
+  /* "src/gevent/queue.py":540
  *             self._cond.set()
  * 
  *     def join(self, timeout=None):             # <<<<<<<<<<<<<<
@@ -11490,7 +11492,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_13JoinableQueue_16unfinished_tasks___g
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":565
+/* "src/gevent/queue.py":570
  *     )
  * 
  *     def __init__(self, maxsize=1):             # <<<<<<<<<<<<<<
@@ -11527,7 +11529,7 @@ static int __pyx_pw_6gevent_6_queue_7Channel_1__init__(PyObject *__pyx_v_self, P
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 565, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 570, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -11541,7 +11543,7 @@ static int __pyx_pw_6gevent_6_queue_7Channel_1__init__(PyObject *__pyx_v_self, P
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__init__", 0, 0, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 565, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__init__", 0, 0, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 570, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gevent._queue.Channel.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -11563,32 +11565,32 @@ static int __pyx_pf_6gevent_6_queue_7Channel___init__(struct __pyx_obj_6gevent_6
   PyObject *__pyx_t_4 = NULL;
   __Pyx_RefNannySetupContext("__init__", 0);
 
-  /* "src/gevent/queue.py":567
+  /* "src/gevent/queue.py":572
  *     def __init__(self, maxsize=1):
  *         # We take maxsize to simplify certain kinds of code
  *         if maxsize != 1:             # <<<<<<<<<<<<<<
  *             raise ValueError("Channels have a maxsize of 1")
  *         self.getters = collections.deque()
  */
-  __pyx_t_1 = PyObject_RichCompare(__pyx_v_maxsize, __pyx_int_1, Py_NE); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 567, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 567, __pyx_L1_error)
+  __pyx_t_1 = PyObject_RichCompare(__pyx_v_maxsize, __pyx_int_1, Py_NE); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 572, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 572, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   if (unlikely(__pyx_t_2)) {
 
-    /* "src/gevent/queue.py":568
+    /* "src/gevent/queue.py":573
  *         # We take maxsize to simplify certain kinds of code
  *         if maxsize != 1:
  *             raise ValueError("Channels have a maxsize of 1")             # <<<<<<<<<<<<<<
  *         self.getters = collections.deque()
  *         self.putters = collections.deque()
  */
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 568, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 573, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_Raise(__pyx_t_1, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __PYX_ERR(0, 568, __pyx_L1_error)
+    __PYX_ERR(0, 573, __pyx_L1_error)
 
-    /* "src/gevent/queue.py":567
+    /* "src/gevent/queue.py":572
  *     def __init__(self, maxsize=1):
  *         # We take maxsize to simplify certain kinds of code
  *         if maxsize != 1:             # <<<<<<<<<<<<<<
@@ -11597,16 +11599,16 @@ static int __pyx_pf_6gevent_6_queue_7Channel___init__(struct __pyx_obj_6gevent_6
  */
   }
 
-  /* "src/gevent/queue.py":569
+  /* "src/gevent/queue.py":574
  *         if maxsize != 1:
  *             raise ValueError("Channels have a maxsize of 1")
  *         self.getters = collections.deque()             # <<<<<<<<<<<<<<
  *         self.putters = collections.deque()
  *         self.hub = get_hub()
  */
-  __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_collections); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 569, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_collections); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 574, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_deque); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 569, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_deque); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 574, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_3 = NULL;
@@ -11620,10 +11622,10 @@ static int __pyx_pf_6gevent_6_queue_7Channel___init__(struct __pyx_obj_6gevent_6
     }
   }
   if (__pyx_t_3) {
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 569, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 574, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   } else {
-    __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 569, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 574, __pyx_L1_error)
   }
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -11633,16 +11635,16 @@ static int __pyx_pf_6gevent_6_queue_7Channel___init__(struct __pyx_obj_6gevent_6
   __pyx_v_self->getters = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "src/gevent/queue.py":570
+  /* "src/gevent/queue.py":575
  *             raise ValueError("Channels have a maxsize of 1")
  *         self.getters = collections.deque()
  *         self.putters = collections.deque()             # <<<<<<<<<<<<<<
  *         self.hub = get_hub()
  *         self._event_unlock = None
  */
-  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_collections); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 570, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_collections); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 575, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_deque); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 570, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_deque); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 575, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_4 = NULL;
@@ -11656,10 +11658,10 @@ static int __pyx_pf_6gevent_6_queue_7Channel___init__(struct __pyx_obj_6gevent_6
     }
   }
   if (__pyx_t_4) {
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 570, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 575, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   } else {
-    __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 570, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 575, __pyx_L1_error)
   }
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -11669,14 +11671,14 @@ static int __pyx_pf_6gevent_6_queue_7Channel___init__(struct __pyx_obj_6gevent_6
   __pyx_v_self->putters = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "src/gevent/queue.py":571
+  /* "src/gevent/queue.py":576
  *         self.getters = collections.deque()
  *         self.putters = collections.deque()
  *         self.hub = get_hub()             # <<<<<<<<<<<<<<
  *         self._event_unlock = None
  * 
  */
-  __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_get_hub); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 571, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_get_hub); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 576, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_4 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -11689,10 +11691,10 @@ static int __pyx_pf_6gevent_6_queue_7Channel___init__(struct __pyx_obj_6gevent_6
     }
   }
   if (__pyx_t_4) {
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 571, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 576, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   } else {
-    __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 571, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 576, __pyx_L1_error)
   }
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -11702,7 +11704,7 @@ static int __pyx_pf_6gevent_6_queue_7Channel___init__(struct __pyx_obj_6gevent_6
   __pyx_v_self->hub = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "src/gevent/queue.py":572
+  /* "src/gevent/queue.py":577
  *         self.putters = collections.deque()
  *         self.hub = get_hub()
  *         self._event_unlock = None             # <<<<<<<<<<<<<<
@@ -11715,7 +11717,7 @@ static int __pyx_pf_6gevent_6_queue_7Channel___init__(struct __pyx_obj_6gevent_6
   __Pyx_DECREF(__pyx_v_self->_event_unlock);
   __pyx_v_self->_event_unlock = Py_None;
 
-  /* "src/gevent/queue.py":565
+  /* "src/gevent/queue.py":570
  *     )
  * 
  *     def __init__(self, maxsize=1):             # <<<<<<<<<<<<<<
@@ -11737,7 +11739,7 @@ static int __pyx_pf_6gevent_6_queue_7Channel___init__(struct __pyx_obj_6gevent_6
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":574
+/* "src/gevent/queue.py":579
  *         self._event_unlock = None
  * 
  *     def __repr__(self):             # <<<<<<<<<<<<<<
@@ -11768,7 +11770,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_2__repr__(struct __pyx_obj_6g
   PyObject *__pyx_t_5 = NULL;
   __Pyx_RefNannySetupContext("__repr__", 0);
 
-  /* "src/gevent/queue.py":575
+  /* "src/gevent/queue.py":580
  * 
  *     def __repr__(self):
  *         return '<%s at %s %s>' % (type(self).__name__, hex(id(self)), self._format())             # <<<<<<<<<<<<<<
@@ -11776,14 +11778,14 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_2__repr__(struct __pyx_obj_6g
  *     def __str__(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))), __pyx_n_s_name); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 575, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))), __pyx_n_s_name); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 580, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_id, ((PyObject *)__pyx_v_self)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 575, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_id, ((PyObject *)__pyx_v_self)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 580, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_builtin_hex, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 575, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_builtin_hex, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 580, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_format); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 575, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_format); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 580, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_5 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
@@ -11796,14 +11798,14 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_2__repr__(struct __pyx_obj_6g
     }
   }
   if (__pyx_t_5) {
-    __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 575, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 580, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   } else {
-    __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 575, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 580, __pyx_L1_error)
   }
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 575, __pyx_L1_error)
+  __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 580, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_1);
@@ -11814,14 +11816,14 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_2__repr__(struct __pyx_obj_6g
   __pyx_t_1 = 0;
   __pyx_t_3 = 0;
   __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyString_Format(__pyx_kp_s_s_at_s_s_2, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 575, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyString_Format(__pyx_kp_s_s_at_s_s_2, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 580, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":574
+  /* "src/gevent/queue.py":579
  *         self._event_unlock = None
  * 
  *     def __repr__(self):             # <<<<<<<<<<<<<<
@@ -11844,7 +11846,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_2__repr__(struct __pyx_obj_6g
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":577
+/* "src/gevent/queue.py":582
  *         return '<%s at %s %s>' % (type(self).__name__, hex(id(self)), self._format())
  * 
  *     def __str__(self):             # <<<<<<<<<<<<<<
@@ -11874,7 +11876,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_4__str__(struct __pyx_obj_6ge
   PyObject *__pyx_t_4 = NULL;
   __Pyx_RefNannySetupContext("__str__", 0);
 
-  /* "src/gevent/queue.py":578
+  /* "src/gevent/queue.py":583
  * 
  *     def __str__(self):
  *         return '<%s %s>' % (type(self).__name__, self._format())             # <<<<<<<<<<<<<<
@@ -11882,9 +11884,9 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_4__str__(struct __pyx_obj_6ge
  *     def _format(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))), __pyx_n_s_name); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 578, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))), __pyx_n_s_name); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 583, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_format); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 578, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_format); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 583, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_4 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
@@ -11897,14 +11899,14 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_4__str__(struct __pyx_obj_6ge
     }
   }
   if (__pyx_t_4) {
-    __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 578, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 583, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   } else {
-    __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 578, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 583, __pyx_L1_error)
   }
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 578, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 583, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1);
@@ -11912,14 +11914,14 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_4__str__(struct __pyx_obj_6ge
   PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_2);
   __pyx_t_1 = 0;
   __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyString_Format(__pyx_kp_s_s_s_2, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 578, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyString_Format(__pyx_kp_s_s_s_2, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 583, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":577
+  /* "src/gevent/queue.py":582
  *         return '<%s at %s %s>' % (type(self).__name__, hex(id(self)), self._format())
  * 
  *     def __str__(self):             # <<<<<<<<<<<<<<
@@ -11941,7 +11943,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_4__str__(struct __pyx_obj_6ge
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":580
+/* "src/gevent/queue.py":585
  *         return '<%s %s>' % (type(self).__name__, self._format())
  * 
  *     def _format(self):             # <<<<<<<<<<<<<<
@@ -11974,7 +11976,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_6_format(struct __pyx_obj_6ge
   PyObject *__pyx_t_4 = NULL;
   __Pyx_RefNannySetupContext("_format", 0);
 
-  /* "src/gevent/queue.py":581
+  /* "src/gevent/queue.py":586
  * 
  *     def _format(self):
  *         result = ''             # <<<<<<<<<<<<<<
@@ -11984,17 +11986,17 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_6_format(struct __pyx_obj_6ge
   __Pyx_INCREF(__pyx_kp_s__3);
   __pyx_v_result = __pyx_kp_s__3;
 
-  /* "src/gevent/queue.py":582
+  /* "src/gevent/queue.py":587
  *     def _format(self):
  *         result = ''
  *         if self.getters:             # <<<<<<<<<<<<<<
  *             result += ' getters[%s]' % len(self.getters)
  *         if self.putters:
  */
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_self->getters); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 582, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_self->getters); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 587, __pyx_L1_error)
   if (__pyx_t_1) {
 
-    /* "src/gevent/queue.py":583
+    /* "src/gevent/queue.py":588
  *         result = ''
  *         if self.getters:
  *             result += ' getters[%s]' % len(self.getters)             # <<<<<<<<<<<<<<
@@ -12003,20 +12005,20 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_6_format(struct __pyx_obj_6ge
  */
     __pyx_t_2 = __pyx_v_self->getters;
     __Pyx_INCREF(__pyx_t_2);
-    __pyx_t_3 = PyObject_Length(__pyx_t_2); if (unlikely(__pyx_t_3 == ((Py_ssize_t)-1))) __PYX_ERR(0, 583, __pyx_L1_error)
+    __pyx_t_3 = PyObject_Length(__pyx_t_2); if (unlikely(__pyx_t_3 == ((Py_ssize_t)-1))) __PYX_ERR(0, 588, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = PyInt_FromSsize_t(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 583, __pyx_L1_error)
+    __pyx_t_2 = PyInt_FromSsize_t(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 588, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_4 = __Pyx_PyString_Format(__pyx_kp_s_getters_s_2, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 583, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyString_Format(__pyx_kp_s_getters_s_2, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 588, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = PyNumber_InPlaceAdd(__pyx_v_result, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 583, __pyx_L1_error)
+    __pyx_t_2 = PyNumber_InPlaceAdd(__pyx_v_result, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 588, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF_SET(__pyx_v_result, __pyx_t_2);
     __pyx_t_2 = 0;
 
-    /* "src/gevent/queue.py":582
+    /* "src/gevent/queue.py":587
  *     def _format(self):
  *         result = ''
  *         if self.getters:             # <<<<<<<<<<<<<<
@@ -12025,17 +12027,17 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_6_format(struct __pyx_obj_6ge
  */
   }
 
-  /* "src/gevent/queue.py":584
+  /* "src/gevent/queue.py":589
  *         if self.getters:
  *             result += ' getters[%s]' % len(self.getters)
  *         if self.putters:             # <<<<<<<<<<<<<<
  *             result += ' putters[%s]' % len(self.putters)
  *         return result
  */
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_self->putters); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 584, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_self->putters); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 589, __pyx_L1_error)
   if (__pyx_t_1) {
 
-    /* "src/gevent/queue.py":585
+    /* "src/gevent/queue.py":590
  *             result += ' getters[%s]' % len(self.getters)
  *         if self.putters:
  *             result += ' putters[%s]' % len(self.putters)             # <<<<<<<<<<<<<<
@@ -12044,20 +12046,20 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_6_format(struct __pyx_obj_6ge
  */
     __pyx_t_2 = __pyx_v_self->putters;
     __Pyx_INCREF(__pyx_t_2);
-    __pyx_t_3 = PyObject_Length(__pyx_t_2); if (unlikely(__pyx_t_3 == ((Py_ssize_t)-1))) __PYX_ERR(0, 585, __pyx_L1_error)
+    __pyx_t_3 = PyObject_Length(__pyx_t_2); if (unlikely(__pyx_t_3 == ((Py_ssize_t)-1))) __PYX_ERR(0, 590, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = PyInt_FromSsize_t(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 585, __pyx_L1_error)
+    __pyx_t_2 = PyInt_FromSsize_t(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 590, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_4 = __Pyx_PyString_Format(__pyx_kp_s_putters_s_2, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 585, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyString_Format(__pyx_kp_s_putters_s_2, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 590, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = PyNumber_InPlaceAdd(__pyx_v_result, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 585, __pyx_L1_error)
+    __pyx_t_2 = PyNumber_InPlaceAdd(__pyx_v_result, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 590, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF_SET(__pyx_v_result, __pyx_t_2);
     __pyx_t_2 = 0;
 
-    /* "src/gevent/queue.py":584
+    /* "src/gevent/queue.py":589
  *         if self.getters:
  *             result += ' getters[%s]' % len(self.getters)
  *         if self.putters:             # <<<<<<<<<<<<<<
@@ -12066,7 +12068,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_6_format(struct __pyx_obj_6ge
  */
   }
 
-  /* "src/gevent/queue.py":586
+  /* "src/gevent/queue.py":591
  *         if self.putters:
  *             result += ' putters[%s]' % len(self.putters)
  *         return result             # <<<<<<<<<<<<<<
@@ -12078,7 +12080,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_6_format(struct __pyx_obj_6ge
   __pyx_r = __pyx_v_result;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":580
+  /* "src/gevent/queue.py":585
  *         return '<%s %s>' % (type(self).__name__, self._format())
  * 
  *     def _format(self):             # <<<<<<<<<<<<<<
@@ -12099,7 +12101,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_6_format(struct __pyx_obj_6ge
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":589
+/* "src/gevent/queue.py":594
  * 
  *     @property
  *     def balance(self):             # <<<<<<<<<<<<<<
@@ -12128,7 +12130,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_7balance___get__(struct __pyx
   Py_ssize_t __pyx_t_3;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "src/gevent/queue.py":590
+  /* "src/gevent/queue.py":595
  *     @property
  *     def balance(self):
  *         return len(self.putters) - len(self.getters)             # <<<<<<<<<<<<<<
@@ -12138,19 +12140,19 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_7balance___get__(struct __pyx
   __Pyx_XDECREF(__pyx_r);
   __pyx_t_1 = __pyx_v_self->putters;
   __Pyx_INCREF(__pyx_t_1);
-  __pyx_t_2 = PyObject_Length(__pyx_t_1); if (unlikely(__pyx_t_2 == ((Py_ssize_t)-1))) __PYX_ERR(0, 590, __pyx_L1_error)
+  __pyx_t_2 = PyObject_Length(__pyx_t_1); if (unlikely(__pyx_t_2 == ((Py_ssize_t)-1))) __PYX_ERR(0, 595, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_t_1 = __pyx_v_self->getters;
   __Pyx_INCREF(__pyx_t_1);
-  __pyx_t_3 = PyObject_Length(__pyx_t_1); if (unlikely(__pyx_t_3 == ((Py_ssize_t)-1))) __PYX_ERR(0, 590, __pyx_L1_error)
+  __pyx_t_3 = PyObject_Length(__pyx_t_1); if (unlikely(__pyx_t_3 == ((Py_ssize_t)-1))) __PYX_ERR(0, 595, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyInt_FromSsize_t((__pyx_t_2 - __pyx_t_3)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 590, __pyx_L1_error)
+  __pyx_t_1 = PyInt_FromSsize_t((__pyx_t_2 - __pyx_t_3)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 595, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":589
+  /* "src/gevent/queue.py":594
  * 
  *     @property
  *     def balance(self):             # <<<<<<<<<<<<<<
@@ -12169,7 +12171,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_7balance___get__(struct __pyx
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":592
+/* "src/gevent/queue.py":597
  *         return len(self.putters) - len(self.getters)
  * 
  *     def qsize(self):             # <<<<<<<<<<<<<<
@@ -12197,7 +12199,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_8qsize(CYTHON_UNUSED struct _
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("qsize", 0);
 
-  /* "src/gevent/queue.py":593
+  /* "src/gevent/queue.py":598
  * 
  *     def qsize(self):
  *         return 0             # <<<<<<<<<<<<<<
@@ -12209,7 +12211,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_8qsize(CYTHON_UNUSED struct _
   __pyx_r = __pyx_int_0;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":592
+  /* "src/gevent/queue.py":597
  *         return len(self.putters) - len(self.getters)
  * 
  *     def qsize(self):             # <<<<<<<<<<<<<<
@@ -12224,7 +12226,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_8qsize(CYTHON_UNUSED struct _
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":595
+/* "src/gevent/queue.py":600
  *         return 0
  * 
  *     def empty(self):             # <<<<<<<<<<<<<<
@@ -12252,7 +12254,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_10empty(CYTHON_UNUSED struct 
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("empty", 0);
 
-  /* "src/gevent/queue.py":596
+  /* "src/gevent/queue.py":601
  * 
  *     def empty(self):
  *         return True             # <<<<<<<<<<<<<<
@@ -12264,7 +12266,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_10empty(CYTHON_UNUSED struct 
   __pyx_r = Py_True;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":595
+  /* "src/gevent/queue.py":600
  *         return 0
  * 
  *     def empty(self):             # <<<<<<<<<<<<<<
@@ -12279,7 +12281,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_10empty(CYTHON_UNUSED struct 
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":598
+/* "src/gevent/queue.py":603
  *         return True
  * 
  *     def full(self):             # <<<<<<<<<<<<<<
@@ -12307,7 +12309,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_12full(CYTHON_UNUSED struct _
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("full", 0);
 
-  /* "src/gevent/queue.py":599
+  /* "src/gevent/queue.py":604
  * 
  *     def full(self):
  *         return True             # <<<<<<<<<<<<<<
@@ -12319,7 +12321,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_12full(CYTHON_UNUSED struct _
   __pyx_r = Py_True;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":598
+  /* "src/gevent/queue.py":603
  *         return True
  * 
  *     def full(self):             # <<<<<<<<<<<<<<
@@ -12334,7 +12336,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_12full(CYTHON_UNUSED struct _
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":601
+/* "src/gevent/queue.py":606
  *         return True
  * 
  *     def put(self, item, block=True, timeout=None):             # <<<<<<<<<<<<<<
@@ -12390,7 +12392,7 @@ static PyObject *__pyx_pw_6gevent_6_queue_7Channel_15put(PyObject *__pyx_v_self,
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "put") < 0)) __PYX_ERR(0, 601, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "put") < 0)) __PYX_ERR(0, 606, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -12409,7 +12411,7 @@ static PyObject *__pyx_pw_6gevent_6_queue_7Channel_15put(PyObject *__pyx_v_self,
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("put", 0, 1, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 601, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("put", 0, 1, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 606, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gevent._queue.Channel.put", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -12449,14 +12451,14 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
   __Pyx_INCREF(__pyx_v_item);
   __Pyx_INCREF(__pyx_v_timeout);
 
-  /* "src/gevent/queue.py":602
+  /* "src/gevent/queue.py":607
  * 
  *     def put(self, item, block=True, timeout=None):
  *         if self.hub is getcurrent():             # <<<<<<<<<<<<<<
  *             if self.getters:
  *                 getter = self.getters.popleft()
  */
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_getcurrent); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 602, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_getcurrent); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 607, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -12469,10 +12471,10 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
     }
   }
   if (__pyx_t_3) {
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 602, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 607, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   } else {
-    __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 602, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 607, __pyx_L1_error)
   }
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -12481,24 +12483,24 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
   __pyx_t_5 = (__pyx_t_4 != 0);
   if (__pyx_t_5) {
 
-    /* "src/gevent/queue.py":603
+    /* "src/gevent/queue.py":608
  *     def put(self, item, block=True, timeout=None):
  *         if self.hub is getcurrent():
  *             if self.getters:             # <<<<<<<<<<<<<<
  *                 getter = self.getters.popleft()
  *                 getter.switch(item)
  */
-    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_v_self->getters); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 603, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_v_self->getters); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 608, __pyx_L1_error)
     if (__pyx_t_5) {
 
-      /* "src/gevent/queue.py":604
+      /* "src/gevent/queue.py":609
  *         if self.hub is getcurrent():
  *             if self.getters:
  *                 getter = self.getters.popleft()             # <<<<<<<<<<<<<<
  *                 getter.switch(item)
  *                 return
  */
-      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->getters, __pyx_n_s_popleft); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 604, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->getters, __pyx_n_s_popleft); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 609, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __pyx_t_3 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -12511,24 +12513,24 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
         }
       }
       if (__pyx_t_3) {
-        __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 604, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 609, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       } else {
-        __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 604, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 609, __pyx_L1_error)
       }
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __pyx_v_getter = __pyx_t_1;
       __pyx_t_1 = 0;
 
-      /* "src/gevent/queue.py":605
+      /* "src/gevent/queue.py":610
  *             if self.getters:
  *                 getter = self.getters.popleft()
  *                 getter.switch(item)             # <<<<<<<<<<<<<<
  *                 return
  *             raise Full
  */
-      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_getter, __pyx_n_s_switch); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 605, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_getter, __pyx_n_s_switch); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 610, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __pyx_t_3 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -12541,13 +12543,13 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
         }
       }
       if (!__pyx_t_3) {
-        __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_item); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 605, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_item); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 610, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
       } else {
         #if CYTHON_FAST_PYCALL
         if (PyFunction_Check(__pyx_t_2)) {
           PyObject *__pyx_temp[2] = {__pyx_t_3, __pyx_v_item};
-          __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 605, __pyx_L1_error)
+          __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 610, __pyx_L1_error)
           __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
           __Pyx_GOTREF(__pyx_t_1);
         } else
@@ -12555,19 +12557,19 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
         #if CYTHON_FAST_PYCCALL
         if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
           PyObject *__pyx_temp[2] = {__pyx_t_3, __pyx_v_item};
-          __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 605, __pyx_L1_error)
+          __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 610, __pyx_L1_error)
           __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
           __Pyx_GOTREF(__pyx_t_1);
         } else
         #endif
         {
-          __pyx_t_6 = PyTuple_New(1+1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 605, __pyx_L1_error)
+          __pyx_t_6 = PyTuple_New(1+1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 610, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
           __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_3); __pyx_t_3 = NULL;
           __Pyx_INCREF(__pyx_v_item);
           __Pyx_GIVEREF(__pyx_v_item);
           PyTuple_SET_ITEM(__pyx_t_6, 0+1, __pyx_v_item);
-          __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 605, __pyx_L1_error)
+          __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 610, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_1);
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         }
@@ -12575,7 +12577,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "src/gevent/queue.py":606
+      /* "src/gevent/queue.py":611
  *                 getter = self.getters.popleft()
  *                 getter.switch(item)
  *                 return             # <<<<<<<<<<<<<<
@@ -12586,7 +12588,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
       __pyx_r = Py_None; __Pyx_INCREF(Py_None);
       goto __pyx_L0;
 
-      /* "src/gevent/queue.py":603
+      /* "src/gevent/queue.py":608
  *     def put(self, item, block=True, timeout=None):
  *         if self.hub is getcurrent():
  *             if self.getters:             # <<<<<<<<<<<<<<
@@ -12595,20 +12597,20 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
  */
     }
 
-    /* "src/gevent/queue.py":607
+    /* "src/gevent/queue.py":612
  *                 getter.switch(item)
  *                 return
  *             raise Full             # <<<<<<<<<<<<<<
  * 
  *         if not block:
  */
-    __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_Full); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 607, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_Full); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 612, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_Raise(__pyx_t_1, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __PYX_ERR(0, 607, __pyx_L1_error)
+    __PYX_ERR(0, 612, __pyx_L1_error)
 
-    /* "src/gevent/queue.py":602
+    /* "src/gevent/queue.py":607
  * 
  *     def put(self, item, block=True, timeout=None):
  *         if self.hub is getcurrent():             # <<<<<<<<<<<<<<
@@ -12617,18 +12619,18 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
  */
   }
 
-  /* "src/gevent/queue.py":609
+  /* "src/gevent/queue.py":614
  *             raise Full
  * 
  *         if not block:             # <<<<<<<<<<<<<<
  *             timeout = 0
  * 
  */
-  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_v_block); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 609, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_v_block); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 614, __pyx_L1_error)
   __pyx_t_4 = ((!__pyx_t_5) != 0);
   if (__pyx_t_4) {
 
-    /* "src/gevent/queue.py":610
+    /* "src/gevent/queue.py":615
  * 
  *         if not block:
  *             timeout = 0             # <<<<<<<<<<<<<<
@@ -12638,7 +12640,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
     __Pyx_INCREF(__pyx_int_0);
     __Pyx_DECREF_SET(__pyx_v_timeout, __pyx_int_0);
 
-    /* "src/gevent/queue.py":609
+    /* "src/gevent/queue.py":614
  *             raise Full
  * 
  *         if not block:             # <<<<<<<<<<<<<<
@@ -12647,26 +12649,26 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
  */
   }
 
-  /* "src/gevent/queue.py":612
+  /* "src/gevent/queue.py":617
  *             timeout = 0
  * 
  *         waiter = Waiter() # pylint:disable=undefined-variable             # <<<<<<<<<<<<<<
  *         item = (item, waiter)
  *         self.putters.append(item)
  */
-  __pyx_t_1 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_6gevent_8__waiter_Waiter)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 612, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_6gevent_8__waiter_Waiter)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 617, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_waiter = ((struct __pyx_obj_6gevent_8__waiter_Waiter *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/gevent/queue.py":613
+  /* "src/gevent/queue.py":618
  * 
  *         waiter = Waiter() # pylint:disable=undefined-variable
  *         item = (item, waiter)             # <<<<<<<<<<<<<<
  *         self.putters.append(item)
  *         timeout = Timeout._start_new_or_dummy(timeout, Full)
  */
-  __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 613, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 618, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_v_item);
   __Pyx_GIVEREF(__pyx_v_item);
@@ -12677,28 +12679,28 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
   __Pyx_DECREF_SET(__pyx_v_item, __pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/gevent/queue.py":614
+  /* "src/gevent/queue.py":619
  *         waiter = Waiter() # pylint:disable=undefined-variable
  *         item = (item, waiter)
  *         self.putters.append(item)             # <<<<<<<<<<<<<<
  *         timeout = Timeout._start_new_or_dummy(timeout, Full)
  *         try:
  */
-  __pyx_t_7 = __Pyx_PyObject_Append(__pyx_v_self->putters, __pyx_v_item); if (unlikely(__pyx_t_7 == ((int)-1))) __PYX_ERR(0, 614, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_Append(__pyx_v_self->putters, __pyx_v_item); if (unlikely(__pyx_t_7 == ((int)-1))) __PYX_ERR(0, 619, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":615
+  /* "src/gevent/queue.py":620
  *         item = (item, waiter)
  *         self.putters.append(item)
  *         timeout = Timeout._start_new_or_dummy(timeout, Full)             # <<<<<<<<<<<<<<
  *         try:
  *             if self.getters:
  */
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_Timeout); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 615, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_Timeout); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 620, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_start_new_or_dummy); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 615, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_start_new_or_dummy); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 620, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_Full); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 615, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_Full); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 620, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   __pyx_t_8 = 0;
@@ -12715,7 +12717,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_6)) {
     PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_v_timeout, __pyx_t_2};
-    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_6, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 615, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_6, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 620, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -12724,14 +12726,14 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_6)) {
     PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_v_timeout, __pyx_t_2};
-    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_6, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 615, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_6, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 620, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   } else
   #endif
   {
-    __pyx_t_9 = PyTuple_New(2+__pyx_t_8); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 615, __pyx_L1_error)
+    __pyx_t_9 = PyTuple_New(2+__pyx_t_8); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 620, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
     if (__pyx_t_3) {
       __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_9, 0, __pyx_t_3); __pyx_t_3 = NULL;
@@ -12742,7 +12744,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
     __Pyx_GIVEREF(__pyx_t_2);
     PyTuple_SET_ITEM(__pyx_t_9, 1+__pyx_t_8, __pyx_t_2);
     __pyx_t_2 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_9, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 615, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_9, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 620, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
   }
@@ -12750,7 +12752,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
   __Pyx_DECREF_SET(__pyx_v_timeout, __pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/gevent/queue.py":616
+  /* "src/gevent/queue.py":621
  *         self.putters.append(item)
  *         timeout = Timeout._start_new_or_dummy(timeout, Full)
  *         try:             # <<<<<<<<<<<<<<
@@ -12767,28 +12769,28 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
       __Pyx_XGOTREF(__pyx_t_12);
       /*try:*/ {
 
-        /* "src/gevent/queue.py":617
+        /* "src/gevent/queue.py":622
  *         timeout = Timeout._start_new_or_dummy(timeout, Full)
  *         try:
  *             if self.getters:             # <<<<<<<<<<<<<<
  *                 self._schedule_unlock()
  *             result = waiter.get()
  */
-        __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_v_self->getters); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 617, __pyx_L9_error)
+        __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_v_self->getters); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 622, __pyx_L9_error)
         if (__pyx_t_4) {
 
-          /* "src/gevent/queue.py":618
+          /* "src/gevent/queue.py":623
  *         try:
  *             if self.getters:
  *                 self._schedule_unlock()             # <<<<<<<<<<<<<<
  *             result = waiter.get()
  *             if result is not waiter:
  */
-          __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_6_queue_Channel *)__pyx_v_self->__pyx_vtab)->_schedule_unlock(__pyx_v_self); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 618, __pyx_L9_error)
+          __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_6_queue_Channel *)__pyx_v_self->__pyx_vtab)->_schedule_unlock(__pyx_v_self); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 623, __pyx_L9_error)
           __Pyx_GOTREF(__pyx_t_1);
           __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-          /* "src/gevent/queue.py":617
+          /* "src/gevent/queue.py":622
  *         timeout = Timeout._start_new_or_dummy(timeout, Full)
  *         try:
  *             if self.getters:             # <<<<<<<<<<<<<<
@@ -12797,19 +12799,19 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
  */
         }
 
-        /* "src/gevent/queue.py":619
+        /* "src/gevent/queue.py":624
  *             if self.getters:
  *                 self._schedule_unlock()
  *             result = waiter.get()             # <<<<<<<<<<<<<<
  *             if result is not waiter:
  *                 raise InvalidSwitchError("Invalid switch into Channel.put: %r" % (result, ))
  */
-        __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_8__waiter_Waiter *)__pyx_v_waiter->__pyx_vtab)->get(__pyx_v_waiter, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 619, __pyx_L9_error)
+        __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_8__waiter_Waiter *)__pyx_v_waiter->__pyx_vtab)->get(__pyx_v_waiter, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 624, __pyx_L9_error)
         __Pyx_GOTREF(__pyx_t_1);
         __pyx_v_result = __pyx_t_1;
         __pyx_t_1 = 0;
 
-        /* "src/gevent/queue.py":620
+        /* "src/gevent/queue.py":625
  *                 self._schedule_unlock()
  *             result = waiter.get()
  *             if result is not waiter:             # <<<<<<<<<<<<<<
@@ -12820,21 +12822,21 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
         __pyx_t_5 = (__pyx_t_4 != 0);
         if (unlikely(__pyx_t_5)) {
 
-          /* "src/gevent/queue.py":621
+          /* "src/gevent/queue.py":626
  *             result = waiter.get()
  *             if result is not waiter:
  *                 raise InvalidSwitchError("Invalid switch into Channel.put: %r" % (result, ))             # <<<<<<<<<<<<<<
  *         except:
  *             _safe_remove(self.putters, item)
  */
-          __pyx_t_6 = __Pyx_GetModuleGlobalName(__pyx_n_s_InvalidSwitchError); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 621, __pyx_L9_error)
+          __pyx_t_6 = __Pyx_GetModuleGlobalName(__pyx_n_s_InvalidSwitchError); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 626, __pyx_L9_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_9 = PyTuple_New(1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 621, __pyx_L9_error)
+          __pyx_t_9 = PyTuple_New(1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 626, __pyx_L9_error)
           __Pyx_GOTREF(__pyx_t_9);
           __Pyx_INCREF(__pyx_v_result);
           __Pyx_GIVEREF(__pyx_v_result);
           PyTuple_SET_ITEM(__pyx_t_9, 0, __pyx_v_result);
-          __pyx_t_2 = __Pyx_PyString_Format(__pyx_kp_s_Invalid_switch_into_Channel_put, __pyx_t_9); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 621, __pyx_L9_error)
+          __pyx_t_2 = __Pyx_PyString_Format(__pyx_kp_s_Invalid_switch_into_Channel_put, __pyx_t_9); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 626, __pyx_L9_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
           __pyx_t_9 = NULL;
@@ -12848,14 +12850,14 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
             }
           }
           if (!__pyx_t_9) {
-            __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 621, __pyx_L9_error)
+            __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 626, __pyx_L9_error)
             __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
             __Pyx_GOTREF(__pyx_t_1);
           } else {
             #if CYTHON_FAST_PYCALL
             if (PyFunction_Check(__pyx_t_6)) {
               PyObject *__pyx_temp[2] = {__pyx_t_9, __pyx_t_2};
-              __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_6, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 621, __pyx_L9_error)
+              __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_6, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 626, __pyx_L9_error)
               __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
               __Pyx_GOTREF(__pyx_t_1);
               __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -12864,20 +12866,20 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
             #if CYTHON_FAST_PYCCALL
             if (__Pyx_PyFastCFunction_Check(__pyx_t_6)) {
               PyObject *__pyx_temp[2] = {__pyx_t_9, __pyx_t_2};
-              __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_6, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 621, __pyx_L9_error)
+              __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_6, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 626, __pyx_L9_error)
               __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
               __Pyx_GOTREF(__pyx_t_1);
               __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
             } else
             #endif
             {
-              __pyx_t_3 = PyTuple_New(1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 621, __pyx_L9_error)
+              __pyx_t_3 = PyTuple_New(1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 626, __pyx_L9_error)
               __Pyx_GOTREF(__pyx_t_3);
               __Pyx_GIVEREF(__pyx_t_9); PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_9); __pyx_t_9 = NULL;
               __Pyx_GIVEREF(__pyx_t_2);
               PyTuple_SET_ITEM(__pyx_t_3, 0+1, __pyx_t_2);
               __pyx_t_2 = 0;
-              __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_3, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 621, __pyx_L9_error)
+              __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_3, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 626, __pyx_L9_error)
               __Pyx_GOTREF(__pyx_t_1);
               __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
             }
@@ -12885,9 +12887,9 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __Pyx_Raise(__pyx_t_1, 0, 0, 0);
           __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-          __PYX_ERR(0, 621, __pyx_L9_error)
+          __PYX_ERR(0, 626, __pyx_L9_error)
 
-          /* "src/gevent/queue.py":620
+          /* "src/gevent/queue.py":625
  *                 self._schedule_unlock()
  *             result = waiter.get()
  *             if result is not waiter:             # <<<<<<<<<<<<<<
@@ -12896,7 +12898,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
  */
         }
 
-        /* "src/gevent/queue.py":616
+        /* "src/gevent/queue.py":621
  *         self.putters.append(item)
  *         timeout = Timeout._start_new_or_dummy(timeout, Full)
  *         try:             # <<<<<<<<<<<<<<
@@ -12915,7 +12917,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
       __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
       __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "src/gevent/queue.py":622
+      /* "src/gevent/queue.py":627
  *             if result is not waiter:
  *                 raise InvalidSwitchError("Invalid switch into Channel.put: %r" % (result, ))
  *         except:             # <<<<<<<<<<<<<<
@@ -12924,12 +12926,12 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
  */
       /*except:*/ {
         __Pyx_AddTraceback("gevent._queue.Channel.put", __pyx_clineno, __pyx_lineno, __pyx_filename);
-        if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_6, &__pyx_t_3) < 0) __PYX_ERR(0, 622, __pyx_L11_except_error)
+        if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_6, &__pyx_t_3) < 0) __PYX_ERR(0, 627, __pyx_L11_except_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_GOTREF(__pyx_t_6);
         __Pyx_GOTREF(__pyx_t_3);
 
-        /* "src/gevent/queue.py":623
+        /* "src/gevent/queue.py":628
  *                 raise InvalidSwitchError("Invalid switch into Channel.put: %r" % (result, ))
  *         except:
  *             _safe_remove(self.putters, item)             # <<<<<<<<<<<<<<
@@ -12938,12 +12940,12 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
  */
         __pyx_t_2 = __pyx_v_self->putters;
         __Pyx_INCREF(__pyx_t_2);
-        __pyx_t_9 = __pyx_f_6gevent_6_queue__safe_remove(__pyx_t_2, __pyx_v_item); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 623, __pyx_L11_except_error)
+        __pyx_t_9 = __pyx_f_6gevent_6_queue__safe_remove(__pyx_t_2, __pyx_v_item); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 628, __pyx_L11_except_error)
         __Pyx_GOTREF(__pyx_t_9);
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-        /* "src/gevent/queue.py":624
+        /* "src/gevent/queue.py":629
  *         except:
  *             _safe_remove(self.putters, item)
  *             raise             # <<<<<<<<<<<<<<
@@ -12955,11 +12957,11 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
         __Pyx_XGIVEREF(__pyx_t_3);
         __Pyx_ErrRestoreWithState(__pyx_t_1, __pyx_t_6, __pyx_t_3);
         __pyx_t_1 = 0; __pyx_t_6 = 0; __pyx_t_3 = 0; 
-        __PYX_ERR(0, 624, __pyx_L11_except_error)
+        __PYX_ERR(0, 629, __pyx_L11_except_error)
       }
       __pyx_L11_except_error:;
 
-      /* "src/gevent/queue.py":616
+      /* "src/gevent/queue.py":621
  *         self.putters.append(item)
  *         timeout = Timeout._start_new_or_dummy(timeout, Full)
  *         try:             # <<<<<<<<<<<<<<
@@ -12975,7 +12977,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
     }
   }
 
-  /* "src/gevent/queue.py":626
+  /* "src/gevent/queue.py":631
  *             raise
  *         finally:
  *             timeout.cancel()             # <<<<<<<<<<<<<<
@@ -12984,7 +12986,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
  */
   /*finally:*/ {
     /*normal exit:*/{
-      __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_timeout, __pyx_n_s_cancel); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 626, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_timeout, __pyx_n_s_cancel); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 631, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __pyx_t_1 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_6))) {
@@ -12997,10 +12999,10 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
         }
       }
       if (__pyx_t_1) {
-        __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 626, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 631, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       } else {
-        __pyx_t_3 = __Pyx_PyObject_CallNoArg(__pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 626, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PyObject_CallNoArg(__pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 631, __pyx_L1_error)
       }
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
@@ -13027,7 +13029,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
       __Pyx_XGOTREF(__pyx_t_17);
       __pyx_t_8 = __pyx_lineno; __pyx_t_13 = __pyx_clineno; __pyx_t_14 = __pyx_filename;
       {
-        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_timeout, __pyx_n_s_cancel); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 626, __pyx_L20_error)
+        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_timeout, __pyx_n_s_cancel); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 631, __pyx_L20_error)
         __Pyx_GOTREF(__pyx_t_6);
         __pyx_t_1 = NULL;
         if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_6))) {
@@ -13040,10 +13042,10 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
           }
         }
         if (__pyx_t_1) {
-          __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 626, __pyx_L20_error)
+          __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 631, __pyx_L20_error)
           __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
         } else {
-          __pyx_t_3 = __Pyx_PyObject_CallNoArg(__pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 626, __pyx_L20_error)
+          __pyx_t_3 = __Pyx_PyObject_CallNoArg(__pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 631, __pyx_L20_error)
         }
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
@@ -13078,7 +13080,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
     __pyx_L8:;
   }
 
-  /* "src/gevent/queue.py":601
+  /* "src/gevent/queue.py":606
  *         return True
  * 
  *     def put(self, item, block=True, timeout=None):             # <<<<<<<<<<<<<<
@@ -13108,7 +13110,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_14put(struct __pyx_obj_6geven
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":628
+/* "src/gevent/queue.py":633
  *             timeout.cancel()
  * 
  *     def put_nowait(self, item):             # <<<<<<<<<<<<<<
@@ -13141,14 +13143,14 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_16put_nowait(struct __pyx_obj
   PyObject *__pyx_t_5 = NULL;
   __Pyx_RefNannySetupContext("put_nowait", 0);
 
-  /* "src/gevent/queue.py":629
+  /* "src/gevent/queue.py":634
  * 
  *     def put_nowait(self, item):
  *         self.put(item, False)             # <<<<<<<<<<<<<<
  * 
  *     def get(self, block=True, timeout=None):
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_put_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 629, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_put_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 634, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   __pyx_t_4 = 0;
@@ -13165,7 +13167,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_16put_nowait(struct __pyx_obj
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_v_item, Py_False};
-    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 629, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 634, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_GOTREF(__pyx_t_1);
   } else
@@ -13173,13 +13175,13 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_16put_nowait(struct __pyx_obj
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_v_item, Py_False};
-    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 629, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 634, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_GOTREF(__pyx_t_1);
   } else
   #endif
   {
-    __pyx_t_5 = PyTuple_New(2+__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 629, __pyx_L1_error)
+    __pyx_t_5 = PyTuple_New(2+__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 634, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     if (__pyx_t_3) {
       __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_3); __pyx_t_3 = NULL;
@@ -13190,14 +13192,14 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_16put_nowait(struct __pyx_obj
     __Pyx_INCREF(Py_False);
     __Pyx_GIVEREF(Py_False);
     PyTuple_SET_ITEM(__pyx_t_5, 1+__pyx_t_4, Py_False);
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 629, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 634, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/gevent/queue.py":628
+  /* "src/gevent/queue.py":633
  *             timeout.cancel()
  * 
  *     def put_nowait(self, item):             # <<<<<<<<<<<<<<
@@ -13221,7 +13223,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_16put_nowait(struct __pyx_obj
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":631
+/* "src/gevent/queue.py":636
  *         self.put(item, False)
  * 
  *     def get(self, block=True, timeout=None):             # <<<<<<<<<<<<<<
@@ -13272,7 +13274,7 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
   if (unlikely(__pyx_skip_dispatch)) ;
   /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_get_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 631, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_get_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 636, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)__pyx_pw_6gevent_6_queue_7Channel_19get)) {
       __Pyx_XDECREF(__pyx_r);
@@ -13292,7 +13294,7 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
       #if CYTHON_FAST_PYCALL
       if (PyFunction_Check(__pyx_t_3)) {
         PyObject *__pyx_temp[3] = {__pyx_t_4, __pyx_v_block, __pyx_v_timeout};
-        __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 631, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 636, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
         __Pyx_GOTREF(__pyx_t_2);
       } else
@@ -13300,13 +13302,13 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
       #if CYTHON_FAST_PYCCALL
       if (__Pyx_PyFastCFunction_Check(__pyx_t_3)) {
         PyObject *__pyx_temp[3] = {__pyx_t_4, __pyx_v_block, __pyx_v_timeout};
-        __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 631, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 636, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
         __Pyx_GOTREF(__pyx_t_2);
       } else
       #endif
       {
-        __pyx_t_6 = PyTuple_New(2+__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 631, __pyx_L1_error)
+        __pyx_t_6 = PyTuple_New(2+__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 636, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
         if (__pyx_t_4) {
           __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_4); __pyx_t_4 = NULL;
@@ -13317,7 +13319,7 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
         __Pyx_INCREF(__pyx_v_timeout);
         __Pyx_GIVEREF(__pyx_v_timeout);
         PyTuple_SET_ITEM(__pyx_t_6, 1+__pyx_t_5, __pyx_v_timeout);
-        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_6, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 631, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_6, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 636, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       }
@@ -13330,14 +13332,14 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
 
-  /* "src/gevent/queue.py":632
+  /* "src/gevent/queue.py":637
  * 
  *     def get(self, block=True, timeout=None):
  *         if self.hub is getcurrent():             # <<<<<<<<<<<<<<
  *             if self.putters:
  *                 item, putter = self.putters.popleft()
  */
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_getcurrent); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 632, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_getcurrent); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 637, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -13350,10 +13352,10 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
     }
   }
   if (__pyx_t_3) {
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 632, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 637, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   } else {
-    __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 632, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 637, __pyx_L1_error)
   }
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -13362,24 +13364,24 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
   __pyx_t_8 = (__pyx_t_7 != 0);
   if (__pyx_t_8) {
 
-    /* "src/gevent/queue.py":633
+    /* "src/gevent/queue.py":638
  *     def get(self, block=True, timeout=None):
  *         if self.hub is getcurrent():
  *             if self.putters:             # <<<<<<<<<<<<<<
  *                 item, putter = self.putters.popleft()
  *                 self.hub.loop.run_callback(putter.switch, putter)
  */
-    __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_v_self->putters); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 633, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_v_self->putters); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 638, __pyx_L1_error)
     if (__pyx_t_8) {
 
-      /* "src/gevent/queue.py":634
+      /* "src/gevent/queue.py":639
  *         if self.hub is getcurrent():
  *             if self.putters:
  *                 item, putter = self.putters.popleft()             # <<<<<<<<<<<<<<
  *                 self.hub.loop.run_callback(putter.switch, putter)
  *                 return item
  */
-      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->putters, __pyx_n_s_popleft); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 634, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->putters, __pyx_n_s_popleft); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 639, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __pyx_t_3 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -13392,10 +13394,10 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
         }
       }
       if (__pyx_t_3) {
-        __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 634, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 639, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       } else {
-        __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 634, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 639, __pyx_L1_error)
       }
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -13405,7 +13407,7 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
         if (unlikely(size != 2)) {
           if (size > 2) __Pyx_RaiseTooManyValuesError(2);
           else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-          __PYX_ERR(0, 634, __pyx_L1_error)
+          __PYX_ERR(0, 639, __pyx_L1_error)
         }
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
         if (likely(PyTuple_CheckExact(sequence))) {
@@ -13418,15 +13420,15 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
         __Pyx_INCREF(__pyx_t_2);
         __Pyx_INCREF(__pyx_t_3);
         #else
-        __pyx_t_2 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 634, __pyx_L1_error)
+        __pyx_t_2 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 639, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
-        __pyx_t_3 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 634, __pyx_L1_error)
+        __pyx_t_3 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 639, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         #endif
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       } else {
         Py_ssize_t index = -1;
-        __pyx_t_6 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 634, __pyx_L1_error)
+        __pyx_t_6 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 639, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
         __pyx_t_9 = Py_TYPE(__pyx_t_6)->tp_iternext;
@@ -13434,7 +13436,7 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
         __Pyx_GOTREF(__pyx_t_2);
         index = 1; __pyx_t_3 = __pyx_t_9(__pyx_t_6); if (unlikely(!__pyx_t_3)) goto __pyx_L5_unpacking_failed;
         __Pyx_GOTREF(__pyx_t_3);
-        if (__Pyx_IternextUnpackEndCheck(__pyx_t_9(__pyx_t_6), 2) < 0) __PYX_ERR(0, 634, __pyx_L1_error)
+        if (__Pyx_IternextUnpackEndCheck(__pyx_t_9(__pyx_t_6), 2) < 0) __PYX_ERR(0, 639, __pyx_L1_error)
         __pyx_t_9 = NULL;
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         goto __pyx_L6_unpacking_done;
@@ -13442,7 +13444,7 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         __pyx_t_9 = NULL;
         if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-        __PYX_ERR(0, 634, __pyx_L1_error)
+        __PYX_ERR(0, 639, __pyx_L1_error)
         __pyx_L6_unpacking_done:;
       }
       __pyx_v_item = __pyx_t_2;
@@ -13450,19 +13452,19 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
       __pyx_v_putter = __pyx_t_3;
       __pyx_t_3 = 0;
 
-      /* "src/gevent/queue.py":635
+      /* "src/gevent/queue.py":640
  *             if self.putters:
  *                 item, putter = self.putters.popleft()
  *                 self.hub.loop.run_callback(putter.switch, putter)             # <<<<<<<<<<<<<<
  *                 return item
  * 
  */
-      __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->hub, __pyx_n_s_loop); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 635, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->hub, __pyx_n_s_loop); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 640, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_run_callback); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 635, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_run_callback); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 640, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_putter, __pyx_n_s_switch); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 635, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_putter, __pyx_n_s_switch); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 640, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __pyx_t_6 = NULL;
       __pyx_t_5 = 0;
@@ -13479,7 +13481,7 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
       #if CYTHON_FAST_PYCALL
       if (PyFunction_Check(__pyx_t_2)) {
         PyObject *__pyx_temp[3] = {__pyx_t_6, __pyx_t_3, __pyx_v_putter};
-        __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 635, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 640, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -13488,14 +13490,14 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
       #if CYTHON_FAST_PYCCALL
       if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
         PyObject *__pyx_temp[3] = {__pyx_t_6, __pyx_t_3, __pyx_v_putter};
-        __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 635, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 640, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       } else
       #endif
       {
-        __pyx_t_4 = PyTuple_New(2+__pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 635, __pyx_L1_error)
+        __pyx_t_4 = PyTuple_New(2+__pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 640, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         if (__pyx_t_6) {
           __Pyx_GIVEREF(__pyx_t_6); PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_6); __pyx_t_6 = NULL;
@@ -13506,14 +13508,14 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
         __Pyx_GIVEREF(__pyx_v_putter);
         PyTuple_SET_ITEM(__pyx_t_4, 1+__pyx_t_5, __pyx_v_putter);
         __pyx_t_3 = 0;
-        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_4, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 635, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_4, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 640, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       }
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "src/gevent/queue.py":636
+      /* "src/gevent/queue.py":641
  *                 item, putter = self.putters.popleft()
  *                 self.hub.loop.run_callback(putter.switch, putter)
  *                 return item             # <<<<<<<<<<<<<<
@@ -13525,7 +13527,7 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
       __pyx_r = __pyx_v_item;
       goto __pyx_L0;
 
-      /* "src/gevent/queue.py":633
+      /* "src/gevent/queue.py":638
  *     def get(self, block=True, timeout=None):
  *         if self.hub is getcurrent():
  *             if self.putters:             # <<<<<<<<<<<<<<
@@ -13534,7 +13536,7 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
  */
     }
 
-    /* "src/gevent/queue.py":632
+    /* "src/gevent/queue.py":637
  * 
  *     def get(self, block=True, timeout=None):
  *         if self.hub is getcurrent():             # <<<<<<<<<<<<<<
@@ -13543,18 +13545,18 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
  */
   }
 
-  /* "src/gevent/queue.py":638
+  /* "src/gevent/queue.py":643
  *                 return item
  * 
  *         if not block:             # <<<<<<<<<<<<<<
  *             timeout = 0
  * 
  */
-  __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_v_block); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 638, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_v_block); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 643, __pyx_L1_error)
   __pyx_t_7 = ((!__pyx_t_8) != 0);
   if (__pyx_t_7) {
 
-    /* "src/gevent/queue.py":639
+    /* "src/gevent/queue.py":644
  * 
  *         if not block:
  *             timeout = 0             # <<<<<<<<<<<<<<
@@ -13564,7 +13566,7 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
     __Pyx_INCREF(__pyx_int_0);
     __Pyx_DECREF_SET(__pyx_v_timeout, __pyx_int_0);
 
-    /* "src/gevent/queue.py":638
+    /* "src/gevent/queue.py":643
  *                 return item
  * 
  *         if not block:             # <<<<<<<<<<<<<<
@@ -13573,31 +13575,31 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
  */
   }
 
-  /* "src/gevent/queue.py":641
+  /* "src/gevent/queue.py":646
  *             timeout = 0
  * 
  *         waiter = Waiter() # pylint:disable=undefined-variable             # <<<<<<<<<<<<<<
  *         timeout = Timeout._start_new_or_dummy(timeout, Empty)
  *         try:
  */
-  __pyx_t_1 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_6gevent_8__waiter_Waiter)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 641, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_6gevent_8__waiter_Waiter)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 646, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_waiter = ((struct __pyx_obj_6gevent_8__waiter_Waiter *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/gevent/queue.py":642
+  /* "src/gevent/queue.py":647
  * 
  *         waiter = Waiter() # pylint:disable=undefined-variable
  *         timeout = Timeout._start_new_or_dummy(timeout, Empty)             # <<<<<<<<<<<<<<
  *         try:
  *             self.getters.append(waiter)
  */
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_Timeout); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 642, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_Timeout); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 647, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_start_new_or_dummy); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 642, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_start_new_or_dummy); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 647, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_Empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 642, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_Empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 647, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   __pyx_t_5 = 0;
@@ -13614,7 +13616,7 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_4)) {
     PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_v_timeout, __pyx_t_2};
-    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 642, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 647, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -13623,14 +13625,14 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_4)) {
     PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_v_timeout, __pyx_t_2};
-    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 642, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 647, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   } else
   #endif
   {
-    __pyx_t_6 = PyTuple_New(2+__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 642, __pyx_L1_error)
+    __pyx_t_6 = PyTuple_New(2+__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 647, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     if (__pyx_t_3) {
       __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_3); __pyx_t_3 = NULL;
@@ -13641,7 +13643,7 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
     __Pyx_GIVEREF(__pyx_t_2);
     PyTuple_SET_ITEM(__pyx_t_6, 1+__pyx_t_5, __pyx_t_2);
     __pyx_t_2 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 642, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 647, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   }
@@ -13649,7 +13651,7 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
   __Pyx_DECREF_SET(__pyx_v_timeout, __pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/gevent/queue.py":643
+  /* "src/gevent/queue.py":648
  *         waiter = Waiter() # pylint:disable=undefined-variable
  *         timeout = Timeout._start_new_or_dummy(timeout, Empty)
  *         try:             # <<<<<<<<<<<<<<
@@ -13666,37 +13668,37 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
       __Pyx_XGOTREF(__pyx_t_12);
       /*try:*/ {
 
-        /* "src/gevent/queue.py":644
+        /* "src/gevent/queue.py":649
  *         timeout = Timeout._start_new_or_dummy(timeout, Empty)
  *         try:
  *             self.getters.append(waiter)             # <<<<<<<<<<<<<<
  *             if self.putters:
  *                 self._schedule_unlock()
  */
-        __pyx_t_13 = __Pyx_PyObject_Append(__pyx_v_self->getters, ((PyObject *)__pyx_v_waiter)); if (unlikely(__pyx_t_13 == ((int)-1))) __PYX_ERR(0, 644, __pyx_L11_error)
+        __pyx_t_13 = __Pyx_PyObject_Append(__pyx_v_self->getters, ((PyObject *)__pyx_v_waiter)); if (unlikely(__pyx_t_13 == ((int)-1))) __PYX_ERR(0, 649, __pyx_L11_error)
 
-        /* "src/gevent/queue.py":645
+        /* "src/gevent/queue.py":650
  *         try:
  *             self.getters.append(waiter)
  *             if self.putters:             # <<<<<<<<<<<<<<
  *                 self._schedule_unlock()
  *             return waiter.get()
  */
-        __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_v_self->putters); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 645, __pyx_L11_error)
+        __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_v_self->putters); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 650, __pyx_L11_error)
         if (__pyx_t_7) {
 
-          /* "src/gevent/queue.py":646
+          /* "src/gevent/queue.py":651
  *             self.getters.append(waiter)
  *             if self.putters:
  *                 self._schedule_unlock()             # <<<<<<<<<<<<<<
  *             return waiter.get()
  *         except:
  */
-          __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_6_queue_Channel *)__pyx_v_self->__pyx_vtab)->_schedule_unlock(__pyx_v_self); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 646, __pyx_L11_error)
+          __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_6_queue_Channel *)__pyx_v_self->__pyx_vtab)->_schedule_unlock(__pyx_v_self); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 651, __pyx_L11_error)
           __Pyx_GOTREF(__pyx_t_1);
           __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-          /* "src/gevent/queue.py":645
+          /* "src/gevent/queue.py":650
  *         try:
  *             self.getters.append(waiter)
  *             if self.putters:             # <<<<<<<<<<<<<<
@@ -13705,7 +13707,7 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
  */
         }
 
-        /* "src/gevent/queue.py":647
+        /* "src/gevent/queue.py":652
  *             if self.putters:
  *                 self._schedule_unlock()
  *             return waiter.get()             # <<<<<<<<<<<<<<
@@ -13713,13 +13715,13 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
  *             self.getters.remove(waiter)
  */
         __Pyx_XDECREF(__pyx_r);
-        __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_8__waiter_Waiter *)__pyx_v_waiter->__pyx_vtab)->get(__pyx_v_waiter, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 647, __pyx_L11_error)
+        __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_8__waiter_Waiter *)__pyx_v_waiter->__pyx_vtab)->get(__pyx_v_waiter, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 652, __pyx_L11_error)
         __Pyx_GOTREF(__pyx_t_1);
         __pyx_r = __pyx_t_1;
         __pyx_t_1 = 0;
         goto __pyx_L15_try_return;
 
-        /* "src/gevent/queue.py":643
+        /* "src/gevent/queue.py":648
  *         waiter = Waiter() # pylint:disable=undefined-variable
  *         timeout = Timeout._start_new_or_dummy(timeout, Empty)
  *         try:             # <<<<<<<<<<<<<<
@@ -13734,7 +13736,7 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "src/gevent/queue.py":648
+      /* "src/gevent/queue.py":653
  *                 self._schedule_unlock()
  *             return waiter.get()
  *         except:             # <<<<<<<<<<<<<<
@@ -13743,19 +13745,19 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
  */
       /*except:*/ {
         __Pyx_AddTraceback("gevent._queue.Channel.get", __pyx_clineno, __pyx_lineno, __pyx_filename);
-        if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_4, &__pyx_t_6) < 0) __PYX_ERR(0, 648, __pyx_L13_except_error)
+        if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_4, &__pyx_t_6) < 0) __PYX_ERR(0, 653, __pyx_L13_except_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_GOTREF(__pyx_t_6);
 
-        /* "src/gevent/queue.py":649
+        /* "src/gevent/queue.py":654
  *             return waiter.get()
  *         except:
  *             self.getters.remove(waiter)             # <<<<<<<<<<<<<<
  *             raise
  *         finally:
  */
-        __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->getters, __pyx_n_s_remove); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 649, __pyx_L13_except_error)
+        __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->getters, __pyx_n_s_remove); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 654, __pyx_L13_except_error)
         __Pyx_GOTREF(__pyx_t_3);
         __pyx_t_14 = NULL;
         if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
@@ -13768,13 +13770,13 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
           }
         }
         if (!__pyx_t_14) {
-          __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, ((PyObject *)__pyx_v_waiter)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 649, __pyx_L13_except_error)
+          __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, ((PyObject *)__pyx_v_waiter)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 654, __pyx_L13_except_error)
           __Pyx_GOTREF(__pyx_t_2);
         } else {
           #if CYTHON_FAST_PYCALL
           if (PyFunction_Check(__pyx_t_3)) {
             PyObject *__pyx_temp[2] = {__pyx_t_14, ((PyObject *)__pyx_v_waiter)};
-            __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 649, __pyx_L13_except_error)
+            __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 654, __pyx_L13_except_error)
             __Pyx_XDECREF(__pyx_t_14); __pyx_t_14 = 0;
             __Pyx_GOTREF(__pyx_t_2);
           } else
@@ -13782,19 +13784,19 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
           #if CYTHON_FAST_PYCCALL
           if (__Pyx_PyFastCFunction_Check(__pyx_t_3)) {
             PyObject *__pyx_temp[2] = {__pyx_t_14, ((PyObject *)__pyx_v_waiter)};
-            __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 649, __pyx_L13_except_error)
+            __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 654, __pyx_L13_except_error)
             __Pyx_XDECREF(__pyx_t_14); __pyx_t_14 = 0;
             __Pyx_GOTREF(__pyx_t_2);
           } else
           #endif
           {
-            __pyx_t_15 = PyTuple_New(1+1); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 649, __pyx_L13_except_error)
+            __pyx_t_15 = PyTuple_New(1+1); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 654, __pyx_L13_except_error)
             __Pyx_GOTREF(__pyx_t_15);
             __Pyx_GIVEREF(__pyx_t_14); PyTuple_SET_ITEM(__pyx_t_15, 0, __pyx_t_14); __pyx_t_14 = NULL;
             __Pyx_INCREF(((PyObject *)__pyx_v_waiter));
             __Pyx_GIVEREF(((PyObject *)__pyx_v_waiter));
             PyTuple_SET_ITEM(__pyx_t_15, 0+1, ((PyObject *)__pyx_v_waiter));
-            __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_15, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 649, __pyx_L13_except_error)
+            __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_15, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 654, __pyx_L13_except_error)
             __Pyx_GOTREF(__pyx_t_2);
             __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
           }
@@ -13802,7 +13804,7 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-        /* "src/gevent/queue.py":650
+        /* "src/gevent/queue.py":655
  *         except:
  *             self.getters.remove(waiter)
  *             raise             # <<<<<<<<<<<<<<
@@ -13814,11 +13816,11 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
         __Pyx_XGIVEREF(__pyx_t_6);
         __Pyx_ErrRestoreWithState(__pyx_t_1, __pyx_t_4, __pyx_t_6);
         __pyx_t_1 = 0; __pyx_t_4 = 0; __pyx_t_6 = 0; 
-        __PYX_ERR(0, 650, __pyx_L13_except_error)
+        __PYX_ERR(0, 655, __pyx_L13_except_error)
       }
       __pyx_L13_except_error:;
 
-      /* "src/gevent/queue.py":643
+      /* "src/gevent/queue.py":648
  *         waiter = Waiter() # pylint:disable=undefined-variable
  *         timeout = Timeout._start_new_or_dummy(timeout, Empty)
  *         try:             # <<<<<<<<<<<<<<
@@ -13839,7 +13841,7 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
     }
   }
 
-  /* "src/gevent/queue.py":652
+  /* "src/gevent/queue.py":657
  *             raise
  *         finally:
  *             timeout.close()             # <<<<<<<<<<<<<<
@@ -13869,7 +13871,7 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
       __Pyx_XGOTREF(__pyx_t_20);
       __pyx_t_5 = __pyx_lineno; __pyx_t_16 = __pyx_clineno; __pyx_t_17 = __pyx_filename;
       {
-        __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_timeout, __pyx_n_s_close); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 652, __pyx_L21_error)
+        __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_timeout, __pyx_n_s_close); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 657, __pyx_L21_error)
         __Pyx_GOTREF(__pyx_t_4);
         __pyx_t_1 = NULL;
         if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
@@ -13882,10 +13884,10 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
           }
         }
         if (__pyx_t_1) {
-          __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 652, __pyx_L21_error)
+          __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 657, __pyx_L21_error)
           __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
         } else {
-          __pyx_t_6 = __Pyx_PyObject_CallNoArg(__pyx_t_4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 652, __pyx_L21_error)
+          __pyx_t_6 = __Pyx_PyObject_CallNoArg(__pyx_t_4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 657, __pyx_L21_error)
         }
         __Pyx_GOTREF(__pyx_t_6);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -13920,7 +13922,7 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
     __pyx_L8_return: {
       __pyx_t_20 = __pyx_r;
       __pyx_r = 0;
-      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_timeout, __pyx_n_s_close); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 652, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_timeout, __pyx_n_s_close); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 657, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __pyx_t_1 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
@@ -13933,10 +13935,10 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
         }
       }
       if (__pyx_t_1) {
-        __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 652, __pyx_L1_error)
+        __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 657, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       } else {
-        __pyx_t_6 = __Pyx_PyObject_CallNoArg(__pyx_t_4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 652, __pyx_L1_error)
+        __pyx_t_6 = __Pyx_PyObject_CallNoArg(__pyx_t_4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 657, __pyx_L1_error)
       }
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -13947,7 +13949,7 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get(struct __pyx_obj_6gevent_6
     }
   }
 
-  /* "src/gevent/queue.py":631
+  /* "src/gevent/queue.py":636
  *         self.put(item, False)
  * 
  *     def get(self, block=True, timeout=None):             # <<<<<<<<<<<<<<
@@ -14017,7 +14019,7 @@ static PyObject *__pyx_pw_6gevent_6_queue_7Channel_19get(PyObject *__pyx_v_self,
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "get") < 0)) __PYX_ERR(0, 631, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "get") < 0)) __PYX_ERR(0, 636, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -14034,7 +14036,7 @@ static PyObject *__pyx_pw_6gevent_6_queue_7Channel_19get(PyObject *__pyx_v_self,
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("get", 0, 0, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 631, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("get", 0, 0, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 636, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gevent._queue.Channel.get", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -14057,7 +14059,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_18get(struct __pyx_obj_6geven
   __pyx_t_2.__pyx_n = 2;
   __pyx_t_2.block = __pyx_v_block;
   __pyx_t_2.timeout = __pyx_v_timeout;
-  __pyx_t_1 = __pyx_vtabptr_6gevent_6_queue_Channel->get(__pyx_v_self, 1, &__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 631, __pyx_L1_error)
+  __pyx_t_1 = __pyx_vtabptr_6gevent_6_queue_Channel->get(__pyx_v_self, 1, &__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 636, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -14074,7 +14076,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_18get(struct __pyx_obj_6geven
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":654
+/* "src/gevent/queue.py":659
  *             timeout.close()
  * 
  *     def get_nowait(self):             # <<<<<<<<<<<<<<
@@ -14096,7 +14098,7 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get_nowait(struct __pyx_obj_6g
   if (unlikely(__pyx_skip_dispatch)) ;
   /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_get_nowait); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 654, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_get_nowait); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 659, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)__pyx_pw_6gevent_6_queue_7Channel_21get_nowait)) {
       __Pyx_XDECREF(__pyx_r);
@@ -14112,10 +14114,10 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get_nowait(struct __pyx_obj_6g
         }
       }
       if (__pyx_t_4) {
-        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 654, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 659, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       } else {
-        __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 654, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 659, __pyx_L1_error)
       }
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -14127,7 +14129,7 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get_nowait(struct __pyx_obj_6g
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
 
-  /* "src/gevent/queue.py":655
+  /* "src/gevent/queue.py":660
  * 
  *     def get_nowait(self):
  *         return self.get(False)             # <<<<<<<<<<<<<<
@@ -14137,13 +14139,13 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel_get_nowait(struct __pyx_obj_6g
   __Pyx_XDECREF(__pyx_r);
   __pyx_t_5.__pyx_n = 1;
   __pyx_t_5.block = Py_False;
-  __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_6_queue_Channel *)__pyx_v_self->__pyx_vtab)->get(__pyx_v_self, 0, &__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 655, __pyx_L1_error)
+  __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_6_queue_Channel *)__pyx_v_self->__pyx_vtab)->get(__pyx_v_self, 0, &__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 660, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":654
+  /* "src/gevent/queue.py":659
  *             timeout.close()
  * 
  *     def get_nowait(self):             # <<<<<<<<<<<<<<
@@ -14186,7 +14188,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_20get_nowait(struct __pyx_obj
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("get_nowait", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_6gevent_6_queue_7Channel_get_nowait(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 654, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_6gevent_6_queue_7Channel_get_nowait(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 659, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -14203,7 +14205,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_20get_nowait(struct __pyx_obj
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":657
+/* "src/gevent/queue.py":662
  *         return self.get(False)
  * 
  *     def _unlock(self):             # <<<<<<<<<<<<<<
@@ -14241,7 +14243,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_22_unlock(struct __pyx_obj_6g
   PyObject *(*__pyx_t_7)(PyObject *);
   __Pyx_RefNannySetupContext("_unlock", 0);
 
-  /* "src/gevent/queue.py":658
+  /* "src/gevent/queue.py":663
  * 
  *     def _unlock(self):
  *         while self.putters and self.getters:             # <<<<<<<<<<<<<<
@@ -14249,25 +14251,25 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_22_unlock(struct __pyx_obj_6g
  *             item, putter = self.putters.popleft()
  */
   while (1) {
-    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_self->putters); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 658, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_self->putters); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 663, __pyx_L1_error)
     if (__pyx_t_2) {
     } else {
       __pyx_t_1 = __pyx_t_2;
       goto __pyx_L5_bool_binop_done;
     }
-    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_self->getters); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 658, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_self->getters); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 663, __pyx_L1_error)
     __pyx_t_1 = __pyx_t_2;
     __pyx_L5_bool_binop_done:;
     if (!__pyx_t_1) break;
 
-    /* "src/gevent/queue.py":659
+    /* "src/gevent/queue.py":664
  *     def _unlock(self):
  *         while self.putters and self.getters:
  *             getter = self.getters.popleft()             # <<<<<<<<<<<<<<
  *             item, putter = self.putters.popleft()
  *             getter.switch(item)
  */
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->getters, __pyx_n_s_popleft); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 659, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->getters, __pyx_n_s_popleft); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 664, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_5 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
@@ -14280,24 +14282,24 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_22_unlock(struct __pyx_obj_6g
       }
     }
     if (__pyx_t_5) {
-      __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 659, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 664, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     } else {
-      __pyx_t_3 = __Pyx_PyObject_CallNoArg(__pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 659, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_CallNoArg(__pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 664, __pyx_L1_error)
     }
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_XDECREF_SET(__pyx_v_getter, __pyx_t_3);
     __pyx_t_3 = 0;
 
-    /* "src/gevent/queue.py":660
+    /* "src/gevent/queue.py":665
  *         while self.putters and self.getters:
  *             getter = self.getters.popleft()
  *             item, putter = self.putters.popleft()             # <<<<<<<<<<<<<<
  *             getter.switch(item)
  *             putter.switch(putter)
  */
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->putters, __pyx_n_s_popleft); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 660, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->putters, __pyx_n_s_popleft); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 665, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_5 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
@@ -14310,10 +14312,10 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_22_unlock(struct __pyx_obj_6g
       }
     }
     if (__pyx_t_5) {
-      __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 660, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 665, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     } else {
-      __pyx_t_3 = __Pyx_PyObject_CallNoArg(__pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 660, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_CallNoArg(__pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 665, __pyx_L1_error)
     }
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -14323,7 +14325,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_22_unlock(struct __pyx_obj_6g
       if (unlikely(size != 2)) {
         if (size > 2) __Pyx_RaiseTooManyValuesError(2);
         else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-        __PYX_ERR(0, 660, __pyx_L1_error)
+        __PYX_ERR(0, 665, __pyx_L1_error)
       }
       #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
       if (likely(PyTuple_CheckExact(sequence))) {
@@ -14336,15 +14338,15 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_22_unlock(struct __pyx_obj_6g
       __Pyx_INCREF(__pyx_t_4);
       __Pyx_INCREF(__pyx_t_5);
       #else
-      __pyx_t_4 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 660, __pyx_L1_error)
+      __pyx_t_4 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 665, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_5 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 660, __pyx_L1_error)
+      __pyx_t_5 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 665, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       #endif
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     } else {
       Py_ssize_t index = -1;
-      __pyx_t_6 = PyObject_GetIter(__pyx_t_3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 660, __pyx_L1_error)
+      __pyx_t_6 = PyObject_GetIter(__pyx_t_3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 665, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __pyx_t_7 = Py_TYPE(__pyx_t_6)->tp_iternext;
@@ -14352,7 +14354,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_22_unlock(struct __pyx_obj_6g
       __Pyx_GOTREF(__pyx_t_4);
       index = 1; __pyx_t_5 = __pyx_t_7(__pyx_t_6); if (unlikely(!__pyx_t_5)) goto __pyx_L7_unpacking_failed;
       __Pyx_GOTREF(__pyx_t_5);
-      if (__Pyx_IternextUnpackEndCheck(__pyx_t_7(__pyx_t_6), 2) < 0) __PYX_ERR(0, 660, __pyx_L1_error)
+      if (__Pyx_IternextUnpackEndCheck(__pyx_t_7(__pyx_t_6), 2) < 0) __PYX_ERR(0, 665, __pyx_L1_error)
       __pyx_t_7 = NULL;
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       goto __pyx_L8_unpacking_done;
@@ -14360,7 +14362,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_22_unlock(struct __pyx_obj_6g
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __pyx_t_7 = NULL;
       if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-      __PYX_ERR(0, 660, __pyx_L1_error)
+      __PYX_ERR(0, 665, __pyx_L1_error)
       __pyx_L8_unpacking_done:;
     }
     __Pyx_XDECREF_SET(__pyx_v_item, __pyx_t_4);
@@ -14368,14 +14370,14 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_22_unlock(struct __pyx_obj_6g
     __Pyx_XDECREF_SET(__pyx_v_putter, __pyx_t_5);
     __pyx_t_5 = 0;
 
-    /* "src/gevent/queue.py":661
+    /* "src/gevent/queue.py":666
  *             getter = self.getters.popleft()
  *             item, putter = self.putters.popleft()
  *             getter.switch(item)             # <<<<<<<<<<<<<<
  *             putter.switch(putter)
  * 
  */
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_getter, __pyx_n_s_switch); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 661, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_getter, __pyx_n_s_switch); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 666, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __pyx_t_4 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
@@ -14388,13 +14390,13 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_22_unlock(struct __pyx_obj_6g
       }
     }
     if (!__pyx_t_4) {
-      __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_v_item); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 661, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_v_item); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 666, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
     } else {
       #if CYTHON_FAST_PYCALL
       if (PyFunction_Check(__pyx_t_5)) {
         PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_v_item};
-        __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 661, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 666, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
         __Pyx_GOTREF(__pyx_t_3);
       } else
@@ -14402,19 +14404,19 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_22_unlock(struct __pyx_obj_6g
       #if CYTHON_FAST_PYCCALL
       if (__Pyx_PyFastCFunction_Check(__pyx_t_5)) {
         PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_v_item};
-        __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 661, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 666, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
         __Pyx_GOTREF(__pyx_t_3);
       } else
       #endif
       {
-        __pyx_t_6 = PyTuple_New(1+1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 661, __pyx_L1_error)
+        __pyx_t_6 = PyTuple_New(1+1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 666, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
         __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_4); __pyx_t_4 = NULL;
         __Pyx_INCREF(__pyx_v_item);
         __Pyx_GIVEREF(__pyx_v_item);
         PyTuple_SET_ITEM(__pyx_t_6, 0+1, __pyx_v_item);
-        __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_6, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 661, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_6, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 666, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       }
@@ -14422,14 +14424,14 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_22_unlock(struct __pyx_obj_6g
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "src/gevent/queue.py":662
+    /* "src/gevent/queue.py":667
  *             item, putter = self.putters.popleft()
  *             getter.switch(item)
  *             putter.switch(putter)             # <<<<<<<<<<<<<<
  * 
  *     def _schedule_unlock(self):
  */
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_putter, __pyx_n_s_switch); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 662, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_putter, __pyx_n_s_switch); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 667, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __pyx_t_6 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
@@ -14442,13 +14444,13 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_22_unlock(struct __pyx_obj_6g
       }
     }
     if (!__pyx_t_6) {
-      __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_v_putter); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 662, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_v_putter); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 667, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
     } else {
       #if CYTHON_FAST_PYCALL
       if (PyFunction_Check(__pyx_t_5)) {
         PyObject *__pyx_temp[2] = {__pyx_t_6, __pyx_v_putter};
-        __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 662, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 667, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_GOTREF(__pyx_t_3);
       } else
@@ -14456,19 +14458,19 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_22_unlock(struct __pyx_obj_6g
       #if CYTHON_FAST_PYCCALL
       if (__Pyx_PyFastCFunction_Check(__pyx_t_5)) {
         PyObject *__pyx_temp[2] = {__pyx_t_6, __pyx_v_putter};
-        __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 662, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 667, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_GOTREF(__pyx_t_3);
       } else
       #endif
       {
-        __pyx_t_4 = PyTuple_New(1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 662, __pyx_L1_error)
+        __pyx_t_4 = PyTuple_New(1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 667, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_GIVEREF(__pyx_t_6); PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_6); __pyx_t_6 = NULL;
         __Pyx_INCREF(__pyx_v_putter);
         __Pyx_GIVEREF(__pyx_v_putter);
         PyTuple_SET_ITEM(__pyx_t_4, 0+1, __pyx_v_putter);
-        __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_4, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 662, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_4, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 667, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       }
@@ -14477,7 +14479,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_22_unlock(struct __pyx_obj_6g
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   }
 
-  /* "src/gevent/queue.py":657
+  /* "src/gevent/queue.py":662
  *         return self.get(False)
  * 
  *     def _unlock(self):             # <<<<<<<<<<<<<<
@@ -14504,7 +14506,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_22_unlock(struct __pyx_obj_6g
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":664
+/* "src/gevent/queue.py":669
  *             putter.switch(putter)
  * 
  *     def _schedule_unlock(self):             # <<<<<<<<<<<<<<
@@ -14524,30 +14526,30 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel__schedule_unlock(struct __pyx_
   PyObject *__pyx_t_7 = NULL;
   __Pyx_RefNannySetupContext("_schedule_unlock", 0);
 
-  /* "src/gevent/queue.py":665
+  /* "src/gevent/queue.py":670
  * 
  *     def _schedule_unlock(self):
  *         if not self._event_unlock:             # <<<<<<<<<<<<<<
  *             self._event_unlock = self.hub.loop.run_callback(self._unlock)
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_self->_event_unlock); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 665, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_self->_event_unlock); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 670, __pyx_L1_error)
   __pyx_t_2 = ((!__pyx_t_1) != 0);
   if (__pyx_t_2) {
 
-    /* "src/gevent/queue.py":666
+    /* "src/gevent/queue.py":671
  *     def _schedule_unlock(self):
  *         if not self._event_unlock:
  *             self._event_unlock = self.hub.loop.run_callback(self._unlock)             # <<<<<<<<<<<<<<
  * 
  *     def __iter__(self):
  */
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->hub, __pyx_n_s_loop); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 666, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->hub, __pyx_n_s_loop); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 671, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_run_callback); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 666, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_run_callback); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 671, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_unlock); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 666, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_unlock); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 671, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_6 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
@@ -14560,14 +14562,14 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel__schedule_unlock(struct __pyx_
       }
     }
     if (!__pyx_t_6) {
-      __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 666, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 671, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_GOTREF(__pyx_t_3);
     } else {
       #if CYTHON_FAST_PYCALL
       if (PyFunction_Check(__pyx_t_5)) {
         PyObject *__pyx_temp[2] = {__pyx_t_6, __pyx_t_4};
-        __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 666, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 671, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -14576,20 +14578,20 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel__schedule_unlock(struct __pyx_
       #if CYTHON_FAST_PYCCALL
       if (__Pyx_PyFastCFunction_Check(__pyx_t_5)) {
         PyObject *__pyx_temp[2] = {__pyx_t_6, __pyx_t_4};
-        __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 666, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 671, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       } else
       #endif
       {
-        __pyx_t_7 = PyTuple_New(1+1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 666, __pyx_L1_error)
+        __pyx_t_7 = PyTuple_New(1+1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 671, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_7);
         __Pyx_GIVEREF(__pyx_t_6); PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_6); __pyx_t_6 = NULL;
         __Pyx_GIVEREF(__pyx_t_4);
         PyTuple_SET_ITEM(__pyx_t_7, 0+1, __pyx_t_4);
         __pyx_t_4 = 0;
-        __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_7, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 666, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_7, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 671, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       }
@@ -14601,7 +14603,7 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel__schedule_unlock(struct __pyx_
     __pyx_v_self->_event_unlock = __pyx_t_3;
     __pyx_t_3 = 0;
 
-    /* "src/gevent/queue.py":665
+    /* "src/gevent/queue.py":670
  * 
  *     def _schedule_unlock(self):
  *         if not self._event_unlock:             # <<<<<<<<<<<<<<
@@ -14610,7 +14612,7 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel__schedule_unlock(struct __pyx_
  */
   }
 
-  /* "src/gevent/queue.py":664
+  /* "src/gevent/queue.py":669
  *             putter.switch(putter)
  * 
  *     def _schedule_unlock(self):             # <<<<<<<<<<<<<<
@@ -14635,7 +14637,7 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel__schedule_unlock(struct __pyx_
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":668
+/* "src/gevent/queue.py":673
  *             self._event_unlock = self.hub.loop.run_callback(self._unlock)
  * 
  *     def __iter__(self):             # <<<<<<<<<<<<<<
@@ -14661,7 +14663,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_24__iter__(struct __pyx_obj_6
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__iter__", 0);
 
-  /* "src/gevent/queue.py":669
+  /* "src/gevent/queue.py":674
  * 
  *     def __iter__(self):
  *         return self             # <<<<<<<<<<<<<<
@@ -14673,7 +14675,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_24__iter__(struct __pyx_obj_6
   __pyx_r = ((PyObject *)__pyx_v_self);
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":668
+  /* "src/gevent/queue.py":673
  *             self._event_unlock = self.hub.loop.run_callback(self._unlock)
  * 
  *     def __iter__(self):             # <<<<<<<<<<<<<<
@@ -14688,7 +14690,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_24__iter__(struct __pyx_obj_6
   return __pyx_r;
 }
 
-/* "src/gevent/queue.py":671
+/* "src/gevent/queue.py":676
  *         return self
  * 
  *     def __next__(self):             # <<<<<<<<<<<<<<
@@ -14718,19 +14720,19 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_26__next__(struct __pyx_obj_6
   int __pyx_t_3;
   __Pyx_RefNannySetupContext("__next__", 0);
 
-  /* "src/gevent/queue.py":672
+  /* "src/gevent/queue.py":677
  * 
  *     def __next__(self):
  *         result = self.get()             # <<<<<<<<<<<<<<
  *         if result is StopIteration:
  *             raise result
  */
-  __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_6_queue_Channel *)__pyx_v_self->__pyx_vtab)->get(__pyx_v_self, 0, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 672, __pyx_L1_error)
+  __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_6_queue_Channel *)__pyx_v_self->__pyx_vtab)->get(__pyx_v_self, 0, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 677, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_result = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "src/gevent/queue.py":673
+  /* "src/gevent/queue.py":678
  *     def __next__(self):
  *         result = self.get()
  *         if result is StopIteration:             # <<<<<<<<<<<<<<
@@ -14741,7 +14743,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_26__next__(struct __pyx_obj_6
   __pyx_t_3 = (__pyx_t_2 != 0);
   if (unlikely(__pyx_t_3)) {
 
-    /* "src/gevent/queue.py":674
+    /* "src/gevent/queue.py":679
  *         result = self.get()
  *         if result is StopIteration:
  *             raise result             # <<<<<<<<<<<<<<
@@ -14749,9 +14751,9 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_26__next__(struct __pyx_obj_6
  * 
  */
     __Pyx_Raise(__pyx_v_result, 0, 0, 0);
-    __PYX_ERR(0, 674, __pyx_L1_error)
+    __PYX_ERR(0, 679, __pyx_L1_error)
 
-    /* "src/gevent/queue.py":673
+    /* "src/gevent/queue.py":678
  *     def __next__(self):
  *         result = self.get()
  *         if result is StopIteration:             # <<<<<<<<<<<<<<
@@ -14760,7 +14762,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_26__next__(struct __pyx_obj_6
  */
   }
 
-  /* "src/gevent/queue.py":675
+  /* "src/gevent/queue.py":680
  *         if result is StopIteration:
  *             raise result
  *         return result             # <<<<<<<<<<<<<<
@@ -14772,7 +14774,7 @@ static PyObject *__pyx_pf_6gevent_6_queue_7Channel_26__next__(struct __pyx_obj_6
   __pyx_r = __pyx_v_result;
   goto __pyx_L0;
 
-  /* "src/gevent/queue.py":671
+  /* "src/gevent/queue.py":676
  *         return self
  * 
  *     def __next__(self):             # <<<<<<<<<<<<<<
@@ -16303,6 +16305,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_PriorityQueue__create_queue, __pyx_k_PriorityQueue__create_queue, sizeof(__pyx_k_PriorityQueue__create_queue), 0, 0, 1, 1},
   {&__pyx_n_s_PriorityQueue__get, __pyx_k_PriorityQueue__get, sizeof(__pyx_k_PriorityQueue__get), 0, 0, 1, 1},
   {&__pyx_n_s_PriorityQueue__put, __pyx_k_PriorityQueue__put, sizeof(__pyx_k_PriorityQueue__put), 0, 0, 1, 1},
+  {&__pyx_n_s_PySimpleQueue, __pyx_k_PySimpleQueue, sizeof(__pyx_k_PySimpleQueue), 0, 0, 1, 1},
   {&__pyx_n_s_Queue, __pyx_k_Queue, sizeof(__pyx_k_Queue), 0, 0, 1, 1},
   {&__pyx_kp_s_Queue_0_now_equivalent_to_Queue, __pyx_k_Queue_0_now_equivalent_to_Queue, sizeof(__pyx_k_Queue_0_now_equivalent_to_Queue), 0, 0, 1, 0},
   {&__pyx_n_s_Queue__create_queue, __pyx_k_Queue__create_queue, sizeof(__pyx_k_Queue__create_queue), 0, 0, 1, 1},
@@ -16448,11 +16451,11 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, 0, 0, 0, 0, 0, 0}
 };
 static int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(0, 64, __pyx_L1_error)
-  __pyx_builtin_DeprecationWarning = __Pyx_GetBuiltinName(__pyx_n_s_DeprecationWarning); if (!__pyx_builtin_DeprecationWarning) __PYX_ERR(0, 125, __pyx_L1_error)
-  __pyx_builtin_hex = __Pyx_GetBuiltinName(__pyx_n_s_hex); if (!__pyx_builtin_hex) __PYX_ERR(0, 176, __pyx_L1_error)
-  __pyx_builtin_id = __Pyx_GetBuiltinName(__pyx_n_s_id); if (!__pyx_builtin_id) __PYX_ERR(0, 176, __pyx_L1_error)
-  __pyx_builtin_StopIteration = __Pyx_GetBuiltinName(__pyx_n_s_StopIteration); if (!__pyx_builtin_StopIteration) __PYX_ERR(0, 401, __pyx_L1_error)
+  __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(0, 69, __pyx_L1_error)
+  __pyx_builtin_DeprecationWarning = __Pyx_GetBuiltinName(__pyx_n_s_DeprecationWarning); if (!__pyx_builtin_DeprecationWarning) __PYX_ERR(0, 130, __pyx_L1_error)
+  __pyx_builtin_hex = __Pyx_GetBuiltinName(__pyx_n_s_hex); if (!__pyx_builtin_hex) __PYX_ERR(0, 181, __pyx_L1_error)
+  __pyx_builtin_id = __Pyx_GetBuiltinName(__pyx_n_s_id); if (!__pyx_builtin_id) __PYX_ERR(0, 181, __pyx_L1_error)
+  __pyx_builtin_StopIteration = __Pyx_GetBuiltinName(__pyx_n_s_StopIteration); if (!__pyx_builtin_StopIteration) __PYX_ERR(0, 406, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -16462,561 +16465,561 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "src/gevent/queue.py":123
+  /* "src/gevent/queue.py":128
  *             if maxsize == 0:
  *                 import warnings
  *                 warnings.warn(             # <<<<<<<<<<<<<<
  *                     'Queue(0) now equivalent to Queue(None); if you want a channel, use Channel',
  *                     DeprecationWarning,
  */
-  __pyx_tuple_ = PyTuple_Pack(2, __pyx_kp_s_Queue_0_now_equivalent_to_Queue, __pyx_builtin_DeprecationWarning); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 123, __pyx_L1_error)
+  __pyx_tuple_ = PyTuple_Pack(2, __pyx_kp_s_Queue_0_now_equivalent_to_Queue, __pyx_builtin_DeprecationWarning); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 128, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple_);
   __Pyx_GIVEREF(__pyx_tuple_);
 
-  /* "src/gevent/queue.py":416
+  /* "src/gevent/queue.py":421
  *     def __init__(self, maxsize=None, items=()):
  *         if maxsize is not None:
  *             raise ValueError("UnboundQueue has no maxsize")             # <<<<<<<<<<<<<<
  *         Queue.__init__(self, maxsize, items)
  *         self.putters = None # Will never be used.
  */
-  __pyx_tuple__4 = PyTuple_Pack(1, __pyx_kp_s_UnboundQueue_has_no_maxsize); if (unlikely(!__pyx_tuple__4)) __PYX_ERR(0, 416, __pyx_L1_error)
+  __pyx_tuple__4 = PyTuple_Pack(1, __pyx_kp_s_UnboundQueue_has_no_maxsize); if (unlikely(!__pyx_tuple__4)) __PYX_ERR(0, 421, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__4);
   __Pyx_GIVEREF(__pyx_tuple__4);
 
-  /* "src/gevent/queue.py":530
+  /* "src/gevent/queue.py":535
  *         '''
  *         if self.unfinished_tasks <= 0:
  *             raise ValueError('task_done() called too many times')             # <<<<<<<<<<<<<<
  *         self.unfinished_tasks -= 1
  *         if self.unfinished_tasks == 0:
  */
-  __pyx_tuple__5 = PyTuple_Pack(1, __pyx_kp_s_task_done_called_too_many_times); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 530, __pyx_L1_error)
+  __pyx_tuple__5 = PyTuple_Pack(1, __pyx_kp_s_task_done_called_too_many_times); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 535, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__5);
   __Pyx_GIVEREF(__pyx_tuple__5);
 
-  /* "src/gevent/queue.py":568
+  /* "src/gevent/queue.py":573
  *         # We take maxsize to simplify certain kinds of code
  *         if maxsize != 1:
  *             raise ValueError("Channels have a maxsize of 1")             # <<<<<<<<<<<<<<
  *         self.getters = collections.deque()
  *         self.putters = collections.deque()
  */
-  __pyx_tuple__6 = PyTuple_Pack(1, __pyx_kp_s_Channels_have_a_maxsize_of_1); if (unlikely(!__pyx_tuple__6)) __PYX_ERR(0, 568, __pyx_L1_error)
+  __pyx_tuple__6 = PyTuple_Pack(1, __pyx_kp_s_Channels_have_a_maxsize_of_1); if (unlikely(!__pyx_tuple__6)) __PYX_ERR(0, 573, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__6);
   __Pyx_GIVEREF(__pyx_tuple__6);
 
-  /* "src/gevent/queue.py":73
+  /* "src/gevent/queue.py":78
  *     # pylint:disable=assigning-non-slot
  *     __slots__ = (
  *         'item',             # <<<<<<<<<<<<<<
  *         'queue',
  *     )
  */
-  __pyx_tuple__7 = PyTuple_Pack(2, __pyx_n_s_item, __pyx_n_s_queue); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 73, __pyx_L1_error)
+  __pyx_tuple__7 = PyTuple_Pack(2, __pyx_n_s_item, __pyx_n_s_queue); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 78, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__7);
   __Pyx_GIVEREF(__pyx_tuple__7);
 
-  /* "src/gevent/queue.py":82
+  /* "src/gevent/queue.py":87
  *         self.queue = queue
  * 
  *     def put_and_switch(self):             # <<<<<<<<<<<<<<
  *         self.queue._put(self.item)
  *         self.queue = None
  */
-  __pyx_tuple__8 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__8)) __PYX_ERR(0, 82, __pyx_L1_error)
+  __pyx_tuple__8 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__8)) __PYX_ERR(0, 87, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__8);
   __Pyx_GIVEREF(__pyx_tuple__8);
-  __pyx_codeobj__9 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_put_and_switch, 82, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__9)) __PYX_ERR(0, 82, __pyx_L1_error)
+  __pyx_codeobj__9 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_put_and_switch, 87, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__9)) __PYX_ERR(0, 87, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":110
+  /* "src/gevent/queue.py":115
  * 
  *     __slots__ = (
  *         '_maxsize',             # <<<<<<<<<<<<<<
  *         'getters',
  *         'putters',
  */
-  __pyx_tuple__10 = PyTuple_Pack(7, __pyx_n_s_maxsize_2, __pyx_n_s_getters, __pyx_n_s_putters, __pyx_n_s_hub, __pyx_n_s_event_unlock, __pyx_n_s_queue, __pyx_n_s_weakref); if (unlikely(!__pyx_tuple__10)) __PYX_ERR(0, 110, __pyx_L1_error)
+  __pyx_tuple__10 = PyTuple_Pack(7, __pyx_n_s_maxsize_2, __pyx_n_s_getters, __pyx_n_s_putters, __pyx_n_s_hub, __pyx_n_s_event_unlock, __pyx_n_s_queue, __pyx_n_s_weakref); if (unlikely(!__pyx_tuple__10)) __PYX_ERR(0, 115, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__10);
   __Pyx_GIVEREF(__pyx_tuple__10);
 
-  /* "src/gevent/queue.py":160
+  /* "src/gevent/queue.py":165
  *             self._maxsize = nv
  * 
  *     def copy(self):             # <<<<<<<<<<<<<<
  *         return type(self)(self.maxsize, self.queue)
  * 
  */
-  __pyx_tuple__11 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(0, 160, __pyx_L1_error)
+  __pyx_tuple__11 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(0, 165, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__11);
   __Pyx_GIVEREF(__pyx_tuple__11);
-  __pyx_codeobj__12 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__11, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_copy, 160, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__12)) __PYX_ERR(0, 160, __pyx_L1_error)
+  __pyx_codeobj__12 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__11, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_copy, 165, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__12)) __PYX_ERR(0, 165, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":163
+  /* "src/gevent/queue.py":168
  *         return type(self)(self.maxsize, self.queue)
  * 
  *     def _create_queue(self, items=()):             # <<<<<<<<<<<<<<
  *         return collections.deque(items)
  * 
  */
-  __pyx_tuple__13 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_items); if (unlikely(!__pyx_tuple__13)) __PYX_ERR(0, 163, __pyx_L1_error)
+  __pyx_tuple__13 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_items); if (unlikely(!__pyx_tuple__13)) __PYX_ERR(0, 168, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__13);
   __Pyx_GIVEREF(__pyx_tuple__13);
-  __pyx_codeobj__14 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__13, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_create_queue, 163, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__14)) __PYX_ERR(0, 163, __pyx_L1_error)
+  __pyx_codeobj__14 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__13, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_create_queue, 168, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__14)) __PYX_ERR(0, 168, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":166
+  /* "src/gevent/queue.py":171
  *         return collections.deque(items)
  * 
  *     def _get(self):             # <<<<<<<<<<<<<<
  *         return self.queue.popleft()
  * 
  */
-  __pyx_tuple__15 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__15)) __PYX_ERR(0, 166, __pyx_L1_error)
+  __pyx_tuple__15 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__15)) __PYX_ERR(0, 171, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__15);
   __Pyx_GIVEREF(__pyx_tuple__15);
-  __pyx_codeobj__16 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__15, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_get, 166, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__16)) __PYX_ERR(0, 166, __pyx_L1_error)
+  __pyx_codeobj__16 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__15, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_get, 171, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__16)) __PYX_ERR(0, 171, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":169
+  /* "src/gevent/queue.py":174
  *         return self.queue.popleft()
  * 
  *     def _peek(self):             # <<<<<<<<<<<<<<
  *         return self.queue[0]
  * 
  */
-  __pyx_tuple__17 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__17)) __PYX_ERR(0, 169, __pyx_L1_error)
+  __pyx_tuple__17 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__17)) __PYX_ERR(0, 174, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__17);
   __Pyx_GIVEREF(__pyx_tuple__17);
-  __pyx_codeobj__18 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__17, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_peek, 169, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__18)) __PYX_ERR(0, 169, __pyx_L1_error)
+  __pyx_codeobj__18 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__17, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_peek, 174, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__18)) __PYX_ERR(0, 174, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":172
+  /* "src/gevent/queue.py":177
  *         return self.queue[0]
  * 
  *     def _put(self, item):             # <<<<<<<<<<<<<<
  *         self.queue.append(item)
  * 
  */
-  __pyx_tuple__19 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_item); if (unlikely(!__pyx_tuple__19)) __PYX_ERR(0, 172, __pyx_L1_error)
+  __pyx_tuple__19 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_item); if (unlikely(!__pyx_tuple__19)) __PYX_ERR(0, 177, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__19);
   __Pyx_GIVEREF(__pyx_tuple__19);
-  __pyx_codeobj__20 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__19, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_put, 172, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__20)) __PYX_ERR(0, 172, __pyx_L1_error)
+  __pyx_codeobj__20 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__19, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_put, 177, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__20)) __PYX_ERR(0, 177, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":181
+  /* "src/gevent/queue.py":186
  *         return '<%s%s>' % (type(self).__name__, self._format())
  * 
  *     def _format(self):             # <<<<<<<<<<<<<<
  *         result = []
  *         if self.maxsize is not None:
  */
-  __pyx_tuple__21 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_result); if (unlikely(!__pyx_tuple__21)) __PYX_ERR(0, 181, __pyx_L1_error)
+  __pyx_tuple__21 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_result); if (unlikely(!__pyx_tuple__21)) __PYX_ERR(0, 186, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__21);
   __Pyx_GIVEREF(__pyx_tuple__21);
-  __pyx_codeobj__22 = (PyObject*)__Pyx_PyCode_New(1, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__21, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_format, 181, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__22)) __PYX_ERR(0, 181, __pyx_L1_error)
+  __pyx_codeobj__22 = (PyObject*)__Pyx_PyCode_New(1, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__21, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_format, 186, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__22)) __PYX_ERR(0, 186, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":195
+  /* "src/gevent/queue.py":200
  *         return ''
  * 
  *     def qsize(self):             # <<<<<<<<<<<<<<
  *         """Return the size of the queue."""
  *         return len(self.queue)
  */
-  __pyx_tuple__23 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__23)) __PYX_ERR(0, 195, __pyx_L1_error)
+  __pyx_tuple__23 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__23)) __PYX_ERR(0, 200, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__23);
   __Pyx_GIVEREF(__pyx_tuple__23);
-  __pyx_codeobj__24 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__23, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_qsize, 195, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__24)) __PYX_ERR(0, 195, __pyx_L1_error)
+  __pyx_codeobj__24 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__23, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_qsize, 200, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__24)) __PYX_ERR(0, 200, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":227
+  /* "src/gevent/queue.py":232
  *         return True
  * 
  *     def empty(self):             # <<<<<<<<<<<<<<
  *         """Return ``True`` if the queue is empty, ``False`` otherwise."""
  *         return not self.qsize()
  */
-  __pyx_tuple__25 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__25)) __PYX_ERR(0, 227, __pyx_L1_error)
+  __pyx_tuple__25 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__25)) __PYX_ERR(0, 232, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__25);
   __Pyx_GIVEREF(__pyx_tuple__25);
-  __pyx_codeobj__26 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__25, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_empty, 227, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__26)) __PYX_ERR(0, 227, __pyx_L1_error)
+  __pyx_codeobj__26 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__25, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_empty, 232, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__26)) __PYX_ERR(0, 232, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":231
+  /* "src/gevent/queue.py":236
  *         return not self.qsize()
  * 
  *     def full(self):             # <<<<<<<<<<<<<<
  *         """Return ``True`` if the queue is full, ``False`` otherwise.
  * 
  */
-  __pyx_tuple__27 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__27)) __PYX_ERR(0, 231, __pyx_L1_error)
+  __pyx_tuple__27 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__27)) __PYX_ERR(0, 236, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__27);
   __Pyx_GIVEREF(__pyx_tuple__27);
-  __pyx_codeobj__28 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__27, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_full, 231, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__28)) __PYX_ERR(0, 231, __pyx_L1_error)
+  __pyx_codeobj__28 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__27, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_full, 236, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__28)) __PYX_ERR(0, 236, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":238
+  /* "src/gevent/queue.py":243
  *         return self._maxsize > 0 and self.qsize() >= self._maxsize
  * 
  *     def put(self, item, block=True, timeout=None):             # <<<<<<<<<<<<<<
  *         """Put an item into the queue.
  * 
  */
-  __pyx_tuple__29 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_item, __pyx_n_s_block, __pyx_n_s_timeout); if (unlikely(!__pyx_tuple__29)) __PYX_ERR(0, 238, __pyx_L1_error)
+  __pyx_tuple__29 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_item, __pyx_n_s_block, __pyx_n_s_timeout); if (unlikely(!__pyx_tuple__29)) __PYX_ERR(0, 243, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__29);
   __Pyx_GIVEREF(__pyx_tuple__29);
-  __pyx_codeobj__30 = (PyObject*)__Pyx_PyCode_New(4, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__29, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_put_2, 238, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__30)) __PYX_ERR(0, 238, __pyx_L1_error)
+  __pyx_codeobj__30 = (PyObject*)__Pyx_PyCode_New(4, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__29, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_put_2, 243, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__30)) __PYX_ERR(0, 243, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":280
+  /* "src/gevent/queue.py":285
  *             raise Full
  * 
  *     def put_nowait(self, item):             # <<<<<<<<<<<<<<
  *         """Put an item into the queue without blocking.
  * 
  */
-  __pyx_tuple__31 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_item); if (unlikely(!__pyx_tuple__31)) __PYX_ERR(0, 280, __pyx_L1_error)
+  __pyx_tuple__31 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_item); if (unlikely(!__pyx_tuple__31)) __PYX_ERR(0, 285, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__31);
   __Pyx_GIVEREF(__pyx_tuple__31);
-  __pyx_codeobj__32 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__31, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_put_nowait, 280, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__32)) __PYX_ERR(0, 280, __pyx_L1_error)
+  __pyx_codeobj__32 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__31, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_put_nowait, 285, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__32)) __PYX_ERR(0, 285, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":324
+  /* "src/gevent/queue.py":329
  *             _safe_remove(self.getters, waiter)
  * 
  *     def get(self, block=True, timeout=None):             # <<<<<<<<<<<<<<
  *         """Remove and return an item from the queue.
  * 
  */
-  __pyx_tuple__33 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_block, __pyx_n_s_timeout); if (unlikely(!__pyx_tuple__33)) __PYX_ERR(0, 324, __pyx_L1_error)
+  __pyx_tuple__33 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_block, __pyx_n_s_timeout); if (unlikely(!__pyx_tuple__33)) __PYX_ERR(0, 329, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__33);
   __Pyx_GIVEREF(__pyx_tuple__33);
-  __pyx_codeobj__34 = (PyObject*)__Pyx_PyCode_New(3, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__33, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_get_2, 324, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__34)) __PYX_ERR(0, 324, __pyx_L1_error)
+  __pyx_codeobj__34 = (PyObject*)__Pyx_PyCode_New(3, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__33, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_get_2, 329, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__34)) __PYX_ERR(0, 329, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":341
+  /* "src/gevent/queue.py":346
  *         return self.__get_or_peek(self._get, block, timeout)
  * 
  *     def get_nowait(self):             # <<<<<<<<<<<<<<
  *         """Remove and return an item from the queue without blocking.
  * 
  */
-  __pyx_tuple__35 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__35)) __PYX_ERR(0, 341, __pyx_L1_error)
+  __pyx_tuple__35 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__35)) __PYX_ERR(0, 346, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__35);
   __Pyx_GIVEREF(__pyx_tuple__35);
-  __pyx_codeobj__36 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__35, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_get_nowait, 341, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__36)) __PYX_ERR(0, 341, __pyx_L1_error)
+  __pyx_codeobj__36 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__35, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_get_nowait, 346, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__36)) __PYX_ERR(0, 346, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":349
+  /* "src/gevent/queue.py":354
  *         return self.get(False)
  * 
  *     def peek(self, block=True, timeout=None):             # <<<<<<<<<<<<<<
  *         """Return an item from the queue without removing it.
  * 
  */
-  __pyx_tuple__37 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_block, __pyx_n_s_timeout); if (unlikely(!__pyx_tuple__37)) __PYX_ERR(0, 349, __pyx_L1_error)
+  __pyx_tuple__37 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_block, __pyx_n_s_timeout); if (unlikely(!__pyx_tuple__37)) __PYX_ERR(0, 354, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__37);
   __Pyx_GIVEREF(__pyx_tuple__37);
-  __pyx_codeobj__38 = (PyObject*)__Pyx_PyCode_New(3, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__37, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_peek_2, 349, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__38)) __PYX_ERR(0, 349, __pyx_L1_error)
+  __pyx_codeobj__38 = (PyObject*)__Pyx_PyCode_New(3, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__37, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_peek_2, 354, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__38)) __PYX_ERR(0, 354, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":365
+  /* "src/gevent/queue.py":370
  *         return self.__get_or_peek(self._peek, block, timeout)
  * 
  *     def peek_nowait(self):             # <<<<<<<<<<<<<<
  *         """Return an item from the queue without blocking.
  * 
  */
-  __pyx_tuple__39 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__39)) __PYX_ERR(0, 365, __pyx_L1_error)
+  __pyx_tuple__39 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__39)) __PYX_ERR(0, 370, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__39);
   __Pyx_GIVEREF(__pyx_tuple__39);
-  __pyx_codeobj__40 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__39, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_peek_nowait, 365, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__40)) __PYX_ERR(0, 365, __pyx_L1_error)
+  __pyx_codeobj__40 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__39, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_peek_nowait, 370, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__40)) __PYX_ERR(0, 370, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":373
+  /* "src/gevent/queue.py":378
  *         return self.peek(False)
  * 
  *     def _unlock(self):             # <<<<<<<<<<<<<<
  *         while True:
  *             repeat = False
  */
-  __pyx_tuple__41 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_repeat, __pyx_n_s_putter, __pyx_n_s_getter); if (unlikely(!__pyx_tuple__41)) __PYX_ERR(0, 373, __pyx_L1_error)
+  __pyx_tuple__41 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_repeat, __pyx_n_s_putter, __pyx_n_s_getter); if (unlikely(!__pyx_tuple__41)) __PYX_ERR(0, 378, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__41);
   __Pyx_GIVEREF(__pyx_tuple__41);
-  __pyx_codeobj__42 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__41, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_unlock, 373, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__42)) __PYX_ERR(0, 373, __pyx_L1_error)
+  __pyx_codeobj__42 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__41, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_unlock, 378, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__42)) __PYX_ERR(0, 378, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":420
+  /* "src/gevent/queue.py":425
  *         self.putters = None # Will never be used.
  * 
  *     def put(self, item, block=True, timeout=None):             # <<<<<<<<<<<<<<
  *         self._put(item)
  *         if self.getters:
  */
-  __pyx_tuple__43 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_item, __pyx_n_s_block, __pyx_n_s_timeout); if (unlikely(!__pyx_tuple__43)) __PYX_ERR(0, 420, __pyx_L1_error)
+  __pyx_tuple__43 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_item, __pyx_n_s_block, __pyx_n_s_timeout); if (unlikely(!__pyx_tuple__43)) __PYX_ERR(0, 425, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__43);
   __Pyx_GIVEREF(__pyx_tuple__43);
-  __pyx_codeobj__44 = (PyObject*)__Pyx_PyCode_New(4, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__43, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_put_2, 420, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__44)) __PYX_ERR(0, 420, __pyx_L1_error)
+  __pyx_codeobj__44 = (PyObject*)__Pyx_PyCode_New(4, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__43, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_put_2, 425, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__44)) __PYX_ERR(0, 425, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":439
+  /* "src/gevent/queue.py":444
  *     __slots__ = ()
  * 
  *     def _create_queue(self, items=()):             # <<<<<<<<<<<<<<
  *         q = list(items)
  *         _heapify(q)
  */
-  __pyx_tuple__45 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_items, __pyx_n_s_q); if (unlikely(!__pyx_tuple__45)) __PYX_ERR(0, 439, __pyx_L1_error)
+  __pyx_tuple__45 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_items, __pyx_n_s_q); if (unlikely(!__pyx_tuple__45)) __PYX_ERR(0, 444, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__45);
   __Pyx_GIVEREF(__pyx_tuple__45);
-  __pyx_codeobj__46 = (PyObject*)__Pyx_PyCode_New(2, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__45, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_create_queue, 439, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__46)) __PYX_ERR(0, 439, __pyx_L1_error)
+  __pyx_codeobj__46 = (PyObject*)__Pyx_PyCode_New(2, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__45, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_create_queue, 444, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__46)) __PYX_ERR(0, 444, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":444
+  /* "src/gevent/queue.py":449
  *         return q
  * 
  *     def _put(self, item):             # <<<<<<<<<<<<<<
  *         _heappush(self.queue, item)
  * 
  */
-  __pyx_tuple__47 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_item); if (unlikely(!__pyx_tuple__47)) __PYX_ERR(0, 444, __pyx_L1_error)
+  __pyx_tuple__47 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_item); if (unlikely(!__pyx_tuple__47)) __PYX_ERR(0, 449, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__47);
   __Pyx_GIVEREF(__pyx_tuple__47);
-  __pyx_codeobj__48 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__47, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_put, 444, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__48)) __PYX_ERR(0, 444, __pyx_L1_error)
+  __pyx_codeobj__48 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__47, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_put, 449, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__48)) __PYX_ERR(0, 449, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":447
+  /* "src/gevent/queue.py":452
  *         _heappush(self.queue, item)
  * 
  *     def _get(self):             # <<<<<<<<<<<<<<
  *         return _heappop(self.queue)
  * 
  */
-  __pyx_tuple__49 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__49)) __PYX_ERR(0, 447, __pyx_L1_error)
+  __pyx_tuple__49 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__49)) __PYX_ERR(0, 452, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__49);
   __Pyx_GIVEREF(__pyx_tuple__49);
-  __pyx_codeobj__50 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__49, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_get, 447, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__50)) __PYX_ERR(0, 447, __pyx_L1_error)
+  __pyx_codeobj__50 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__49, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_get, 452, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__50)) __PYX_ERR(0, 452, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":456
+  /* "src/gevent/queue.py":461
  *     __slots__ = ()
  * 
  *     def _create_queue(self, items=()):             # <<<<<<<<<<<<<<
  *         return list(items)
  * 
  */
-  __pyx_tuple__51 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_items); if (unlikely(!__pyx_tuple__51)) __PYX_ERR(0, 456, __pyx_L1_error)
+  __pyx_tuple__51 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_items); if (unlikely(!__pyx_tuple__51)) __PYX_ERR(0, 461, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__51);
   __Pyx_GIVEREF(__pyx_tuple__51);
-  __pyx_codeobj__52 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__51, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_create_queue, 456, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__52)) __PYX_ERR(0, 456, __pyx_L1_error)
+  __pyx_codeobj__52 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__51, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_create_queue, 461, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__52)) __PYX_ERR(0, 461, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":459
+  /* "src/gevent/queue.py":464
  *         return list(items)
  * 
  *     def _put(self, item):             # <<<<<<<<<<<<<<
  *         self.queue.append(item)
  * 
  */
-  __pyx_tuple__53 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_item); if (unlikely(!__pyx_tuple__53)) __PYX_ERR(0, 459, __pyx_L1_error)
+  __pyx_tuple__53 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_item); if (unlikely(!__pyx_tuple__53)) __PYX_ERR(0, 464, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__53);
   __Pyx_GIVEREF(__pyx_tuple__53);
-  __pyx_codeobj__54 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__53, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_put, 459, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__54)) __PYX_ERR(0, 459, __pyx_L1_error)
+  __pyx_codeobj__54 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__53, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_put, 464, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__54)) __PYX_ERR(0, 464, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":462
+  /* "src/gevent/queue.py":467
  *         self.queue.append(item)
  * 
  *     def _get(self):             # <<<<<<<<<<<<<<
  *         return self.queue.pop()
  * 
  */
-  __pyx_tuple__55 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__55)) __PYX_ERR(0, 462, __pyx_L1_error)
+  __pyx_tuple__55 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__55)) __PYX_ERR(0, 467, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__55);
   __Pyx_GIVEREF(__pyx_tuple__55);
-  __pyx_codeobj__56 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__55, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_get, 462, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__56)) __PYX_ERR(0, 462, __pyx_L1_error)
+  __pyx_codeobj__56 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__55, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_get, 467, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__56)) __PYX_ERR(0, 467, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":465
+  /* "src/gevent/queue.py":470
  *         return self.queue.pop()
  * 
  *     def _peek(self):             # <<<<<<<<<<<<<<
  *         return self.queue[-1]
  * 
  */
-  __pyx_tuple__57 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__57)) __PYX_ERR(0, 465, __pyx_L1_error)
+  __pyx_tuple__57 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__57)) __PYX_ERR(0, 470, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__57);
   __Pyx_GIVEREF(__pyx_tuple__57);
-  __pyx_codeobj__58 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__57, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_peek, 465, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__58)) __PYX_ERR(0, 465, __pyx_L1_error)
+  __pyx_codeobj__58 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__57, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_peek, 470, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__58)) __PYX_ERR(0, 470, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":476
+  /* "src/gevent/queue.py":481
  * 
  *     __slots__ = (
  *         '_cond',             # <<<<<<<<<<<<<<
  *         'unfinished_tasks',
  *     )
  */
-  __pyx_tuple__59 = PyTuple_Pack(2, __pyx_n_s_cond, __pyx_n_s_unfinished_tasks); if (unlikely(!__pyx_tuple__59)) __PYX_ERR(0, 476, __pyx_L1_error)
+  __pyx_tuple__59 = PyTuple_Pack(2, __pyx_n_s_cond, __pyx_n_s_unfinished_tasks); if (unlikely(!__pyx_tuple__59)) __PYX_ERR(0, 481, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__59);
   __Pyx_GIVEREF(__pyx_tuple__59);
 
-  /* "src/gevent/queue.py":504
+  /* "src/gevent/queue.py":509
  *             self._cond.clear()
  * 
  *     def copy(self):             # <<<<<<<<<<<<<<
  *         return type(self)(self.maxsize, self.queue, self.unfinished_tasks)
  * 
  */
-  __pyx_tuple__60 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__60)) __PYX_ERR(0, 504, __pyx_L1_error)
+  __pyx_tuple__60 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__60)) __PYX_ERR(0, 509, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__60);
   __Pyx_GIVEREF(__pyx_tuple__60);
-  __pyx_codeobj__61 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__60, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_copy, 504, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__61)) __PYX_ERR(0, 504, __pyx_L1_error)
+  __pyx_codeobj__61 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__60, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_copy, 509, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__61)) __PYX_ERR(0, 509, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":507
+  /* "src/gevent/queue.py":512
  *         return type(self)(self.maxsize, self.queue, self.unfinished_tasks)
  * 
  *     def _format(self):             # <<<<<<<<<<<<<<
  *         result = Queue._format(self)
  *         if self.unfinished_tasks:
  */
-  __pyx_tuple__62 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_result); if (unlikely(!__pyx_tuple__62)) __PYX_ERR(0, 507, __pyx_L1_error)
+  __pyx_tuple__62 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_result); if (unlikely(!__pyx_tuple__62)) __PYX_ERR(0, 512, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__62);
   __Pyx_GIVEREF(__pyx_tuple__62);
-  __pyx_codeobj__63 = (PyObject*)__Pyx_PyCode_New(1, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__62, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_format, 507, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__63)) __PYX_ERR(0, 507, __pyx_L1_error)
+  __pyx_codeobj__63 = (PyObject*)__Pyx_PyCode_New(1, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__62, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_format, 512, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__63)) __PYX_ERR(0, 512, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":513
+  /* "src/gevent/queue.py":518
  *         return result
  * 
  *     def _put(self, item):             # <<<<<<<<<<<<<<
  *         Queue._put(self, item)
  *         self.unfinished_tasks += 1
  */
-  __pyx_tuple__64 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_item); if (unlikely(!__pyx_tuple__64)) __PYX_ERR(0, 513, __pyx_L1_error)
+  __pyx_tuple__64 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_item); if (unlikely(!__pyx_tuple__64)) __PYX_ERR(0, 518, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__64);
   __Pyx_GIVEREF(__pyx_tuple__64);
-  __pyx_codeobj__65 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__64, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_put, 513, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__65)) __PYX_ERR(0, 513, __pyx_L1_error)
+  __pyx_codeobj__65 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__64, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_put, 518, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__65)) __PYX_ERR(0, 518, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":518
+  /* "src/gevent/queue.py":523
  *         self._cond.clear()
  * 
  *     def task_done(self):             # <<<<<<<<<<<<<<
  *         '''Indicate that a formerly enqueued task is complete. Used by queue consumer threads.
  *         For each :meth:`get <Queue.get>` used to fetch a task, a subsequent call to :meth:`task_done` tells the queue
  */
-  __pyx_tuple__66 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__66)) __PYX_ERR(0, 518, __pyx_L1_error)
+  __pyx_tuple__66 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__66)) __PYX_ERR(0, 523, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__66);
   __Pyx_GIVEREF(__pyx_tuple__66);
-  __pyx_codeobj__67 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__66, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_task_done, 518, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__67)) __PYX_ERR(0, 518, __pyx_L1_error)
+  __pyx_codeobj__67 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__66, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_task_done, 523, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__67)) __PYX_ERR(0, 523, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":535
+  /* "src/gevent/queue.py":540
  *             self._cond.set()
  * 
  *     def join(self, timeout=None):             # <<<<<<<<<<<<<<
  *         '''
  *         Block until all items in the queue have been gotten and processed.
  */
-  __pyx_tuple__68 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_timeout); if (unlikely(!__pyx_tuple__68)) __PYX_ERR(0, 535, __pyx_L1_error)
+  __pyx_tuple__68 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_timeout); if (unlikely(!__pyx_tuple__68)) __PYX_ERR(0, 540, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__68);
   __Pyx_GIVEREF(__pyx_tuple__68);
-  __pyx_codeobj__69 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__68, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_join, 535, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__69)) __PYX_ERR(0, 535, __pyx_L1_error)
+  __pyx_codeobj__69 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__68, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_join, 540, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__69)) __PYX_ERR(0, 540, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":558
+  /* "src/gevent/queue.py":563
  * 
  *     __slots__ = (
  *         'getters',             # <<<<<<<<<<<<<<
  *         'putters',
  *         'hub',
  */
-  __pyx_tuple__70 = PyTuple_Pack(5, __pyx_n_s_getters, __pyx_n_s_putters, __pyx_n_s_hub, __pyx_n_s_event_unlock, __pyx_n_s_weakref); if (unlikely(!__pyx_tuple__70)) __PYX_ERR(0, 558, __pyx_L1_error)
+  __pyx_tuple__70 = PyTuple_Pack(5, __pyx_n_s_getters, __pyx_n_s_putters, __pyx_n_s_hub, __pyx_n_s_event_unlock, __pyx_n_s_weakref); if (unlikely(!__pyx_tuple__70)) __PYX_ERR(0, 563, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__70);
   __Pyx_GIVEREF(__pyx_tuple__70);
 
-  /* "src/gevent/queue.py":580
+  /* "src/gevent/queue.py":585
  *         return '<%s %s>' % (type(self).__name__, self._format())
  * 
  *     def _format(self):             # <<<<<<<<<<<<<<
  *         result = ''
  *         if self.getters:
  */
-  __pyx_tuple__71 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_result); if (unlikely(!__pyx_tuple__71)) __PYX_ERR(0, 580, __pyx_L1_error)
+  __pyx_tuple__71 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_result); if (unlikely(!__pyx_tuple__71)) __PYX_ERR(0, 585, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__71);
   __Pyx_GIVEREF(__pyx_tuple__71);
-  __pyx_codeobj__72 = (PyObject*)__Pyx_PyCode_New(1, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__71, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_format, 580, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__72)) __PYX_ERR(0, 580, __pyx_L1_error)
+  __pyx_codeobj__72 = (PyObject*)__Pyx_PyCode_New(1, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__71, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_format, 585, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__72)) __PYX_ERR(0, 585, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":592
+  /* "src/gevent/queue.py":597
  *         return len(self.putters) - len(self.getters)
  * 
  *     def qsize(self):             # <<<<<<<<<<<<<<
  *         return 0
  * 
  */
-  __pyx_tuple__73 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__73)) __PYX_ERR(0, 592, __pyx_L1_error)
+  __pyx_tuple__73 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__73)) __PYX_ERR(0, 597, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__73);
   __Pyx_GIVEREF(__pyx_tuple__73);
-  __pyx_codeobj__74 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__73, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_qsize, 592, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__74)) __PYX_ERR(0, 592, __pyx_L1_error)
+  __pyx_codeobj__74 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__73, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_qsize, 597, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__74)) __PYX_ERR(0, 597, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":595
+  /* "src/gevent/queue.py":600
  *         return 0
  * 
  *     def empty(self):             # <<<<<<<<<<<<<<
  *         return True
  * 
  */
-  __pyx_tuple__75 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__75)) __PYX_ERR(0, 595, __pyx_L1_error)
+  __pyx_tuple__75 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__75)) __PYX_ERR(0, 600, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__75);
   __Pyx_GIVEREF(__pyx_tuple__75);
-  __pyx_codeobj__76 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__75, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_empty, 595, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__76)) __PYX_ERR(0, 595, __pyx_L1_error)
+  __pyx_codeobj__76 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__75, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_empty, 600, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__76)) __PYX_ERR(0, 600, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":598
+  /* "src/gevent/queue.py":603
  *         return True
  * 
  *     def full(self):             # <<<<<<<<<<<<<<
  *         return True
  * 
  */
-  __pyx_tuple__77 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__77)) __PYX_ERR(0, 598, __pyx_L1_error)
+  __pyx_tuple__77 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__77)) __PYX_ERR(0, 603, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__77);
   __Pyx_GIVEREF(__pyx_tuple__77);
-  __pyx_codeobj__78 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__77, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_full, 598, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__78)) __PYX_ERR(0, 598, __pyx_L1_error)
+  __pyx_codeobj__78 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__77, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_full, 603, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__78)) __PYX_ERR(0, 603, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":601
+  /* "src/gevent/queue.py":606
  *         return True
  * 
  *     def put(self, item, block=True, timeout=None):             # <<<<<<<<<<<<<<
  *         if self.hub is getcurrent():
  *             if self.getters:
  */
-  __pyx_tuple__79 = PyTuple_Pack(7, __pyx_n_s_self, __pyx_n_s_item, __pyx_n_s_block, __pyx_n_s_timeout, __pyx_n_s_getter, __pyx_n_s_waiter_2, __pyx_n_s_result); if (unlikely(!__pyx_tuple__79)) __PYX_ERR(0, 601, __pyx_L1_error)
+  __pyx_tuple__79 = PyTuple_Pack(7, __pyx_n_s_self, __pyx_n_s_item, __pyx_n_s_block, __pyx_n_s_timeout, __pyx_n_s_getter, __pyx_n_s_waiter_2, __pyx_n_s_result); if (unlikely(!__pyx_tuple__79)) __PYX_ERR(0, 606, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__79);
   __Pyx_GIVEREF(__pyx_tuple__79);
-  __pyx_codeobj__80 = (PyObject*)__Pyx_PyCode_New(4, 0, 7, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__79, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_put_2, 601, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__80)) __PYX_ERR(0, 601, __pyx_L1_error)
+  __pyx_codeobj__80 = (PyObject*)__Pyx_PyCode_New(4, 0, 7, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__79, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_put_2, 606, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__80)) __PYX_ERR(0, 606, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":628
+  /* "src/gevent/queue.py":633
  *             timeout.cancel()
  * 
  *     def put_nowait(self, item):             # <<<<<<<<<<<<<<
  *         self.put(item, False)
  * 
  */
-  __pyx_tuple__81 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_item); if (unlikely(!__pyx_tuple__81)) __PYX_ERR(0, 628, __pyx_L1_error)
+  __pyx_tuple__81 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_item); if (unlikely(!__pyx_tuple__81)) __PYX_ERR(0, 633, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__81);
   __Pyx_GIVEREF(__pyx_tuple__81);
-  __pyx_codeobj__82 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__81, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_put_nowait, 628, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__82)) __PYX_ERR(0, 628, __pyx_L1_error)
+  __pyx_codeobj__82 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__81, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_put_nowait, 633, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__82)) __PYX_ERR(0, 633, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":631
+  /* "src/gevent/queue.py":636
  *         self.put(item, False)
  * 
  *     def get(self, block=True, timeout=None):             # <<<<<<<<<<<<<<
  *         if self.hub is getcurrent():
  *             if self.putters:
  */
-  __pyx_tuple__83 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_block, __pyx_n_s_timeout); if (unlikely(!__pyx_tuple__83)) __PYX_ERR(0, 631, __pyx_L1_error)
+  __pyx_tuple__83 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_block, __pyx_n_s_timeout); if (unlikely(!__pyx_tuple__83)) __PYX_ERR(0, 636, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__83);
   __Pyx_GIVEREF(__pyx_tuple__83);
-  __pyx_codeobj__84 = (PyObject*)__Pyx_PyCode_New(3, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__83, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_get_2, 631, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__84)) __PYX_ERR(0, 631, __pyx_L1_error)
+  __pyx_codeobj__84 = (PyObject*)__Pyx_PyCode_New(3, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__83, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_get_2, 636, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__84)) __PYX_ERR(0, 636, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":654
+  /* "src/gevent/queue.py":659
  *             timeout.close()
  * 
  *     def get_nowait(self):             # <<<<<<<<<<<<<<
  *         return self.get(False)
  * 
  */
-  __pyx_tuple__85 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__85)) __PYX_ERR(0, 654, __pyx_L1_error)
+  __pyx_tuple__85 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__85)) __PYX_ERR(0, 659, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__85);
   __Pyx_GIVEREF(__pyx_tuple__85);
-  __pyx_codeobj__86 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__85, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_get_nowait, 654, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__86)) __PYX_ERR(0, 654, __pyx_L1_error)
+  __pyx_codeobj__86 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__85, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_get_nowait, 659, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__86)) __PYX_ERR(0, 659, __pyx_L1_error)
 
-  /* "src/gevent/queue.py":657
+  /* "src/gevent/queue.py":662
  *         return self.get(False)
  * 
  *     def _unlock(self):             # <<<<<<<<<<<<<<
  *         while self.putters and self.getters:
  *             getter = self.getters.popleft()
  */
-  __pyx_tuple__87 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_getter, __pyx_n_s_item, __pyx_n_s_putter); if (unlikely(!__pyx_tuple__87)) __PYX_ERR(0, 657, __pyx_L1_error)
+  __pyx_tuple__87 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_getter, __pyx_n_s_item, __pyx_n_s_putter); if (unlikely(!__pyx_tuple__87)) __PYX_ERR(0, 662, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__87);
   __Pyx_GIVEREF(__pyx_tuple__87);
-  __pyx_codeobj__88 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__87, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_unlock, 657, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__88)) __PYX_ERR(0, 657, __pyx_L1_error)
+  __pyx_codeobj__88 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__87, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_queue_py, __pyx_n_s_unlock, 662, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__88)) __PYX_ERR(0, 662, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -17090,13 +17093,13 @@ static int __Pyx_modinit_type_init_code(void) {
   __pyx_vtabptr_6gevent_6_queue_ItemWaiter = &__pyx_vtable_6gevent_6_queue_ItemWaiter;
   __pyx_vtable_6gevent_6_queue_ItemWaiter.__pyx_base = *__pyx_vtabptr_6gevent_8__waiter_Waiter;
   __pyx_type_6gevent_6_queue_ItemWaiter.tp_base = __pyx_ptype_6gevent_8__waiter_Waiter;
-  if (PyType_Ready(&__pyx_type_6gevent_6_queue_ItemWaiter) < 0) __PYX_ERR(0, 70, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_6gevent_6_queue_ItemWaiter) < 0) __PYX_ERR(0, 75, __pyx_L1_error)
   __pyx_type_6gevent_6_queue_ItemWaiter.tp_print = 0;
   if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_6gevent_6_queue_ItemWaiter.tp_dictoffset && __pyx_type_6gevent_6_queue_ItemWaiter.tp_getattro == PyObject_GenericGetAttr)) {
     __pyx_type_6gevent_6_queue_ItemWaiter.tp_getattro = __Pyx_PyObject_GenericGetAttrNoDict;
   }
-  if (__Pyx_SetVtable(__pyx_type_6gevent_6_queue_ItemWaiter.tp_dict, __pyx_vtabptr_6gevent_6_queue_ItemWaiter) < 0) __PYX_ERR(0, 70, __pyx_L1_error)
-  if (PyObject_SetAttrString(__pyx_m, "ItemWaiter", (PyObject *)&__pyx_type_6gevent_6_queue_ItemWaiter) < 0) __PYX_ERR(0, 70, __pyx_L1_error)
+  if (__Pyx_SetVtable(__pyx_type_6gevent_6_queue_ItemWaiter.tp_dict, __pyx_vtabptr_6gevent_6_queue_ItemWaiter) < 0) __PYX_ERR(0, 75, __pyx_L1_error)
+  if (PyObject_SetAttrString(__pyx_m, "ItemWaiter", (PyObject *)&__pyx_type_6gevent_6_queue_ItemWaiter) < 0) __PYX_ERR(0, 75, __pyx_L1_error)
   __pyx_ptype_6gevent_6_queue_ItemWaiter = &__pyx_type_6gevent_6_queue_ItemWaiter;
   __pyx_vtabptr_6gevent_6_queue_Queue = &__pyx_vtable_6gevent_6_queue_Queue;
   __pyx_vtable_6gevent_6_queue_Queue._get = (PyObject *(*)(struct __pyx_obj_6gevent_6_queue_Queue *, int __pyx_skip_dispatch))__pyx_f_6gevent_6_queue_5Queue__get;
@@ -17113,14 +17116,14 @@ static int __Pyx_modinit_type_init_code(void) {
   __pyx_vtable_6gevent_6_queue_Queue.peek = (PyObject *(*)(struct __pyx_obj_6gevent_6_queue_Queue *, int __pyx_skip_dispatch, struct __pyx_opt_args_6gevent_6_queue_5Queue_peek *__pyx_optional_args))__pyx_f_6gevent_6_queue_5Queue_peek;
   __pyx_vtable_6gevent_6_queue_Queue.peek_nowait = (PyObject *(*)(struct __pyx_obj_6gevent_6_queue_Queue *, int __pyx_skip_dispatch))__pyx_f_6gevent_6_queue_5Queue_peek_nowait;
   __pyx_vtable_6gevent_6_queue_Queue._schedule_unlock = (PyObject *(*)(struct __pyx_obj_6gevent_6_queue_Queue *))__pyx_f_6gevent_6_queue_5Queue__schedule_unlock;
-  if (PyType_Ready(&__pyx_type_6gevent_6_queue_Queue) < 0) __PYX_ERR(0, 88, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_6gevent_6_queue_Queue) < 0) __PYX_ERR(0, 93, __pyx_L1_error)
   __pyx_type_6gevent_6_queue_Queue.tp_print = 0;
   if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_6gevent_6_queue_Queue.tp_dictoffset && __pyx_type_6gevent_6_queue_Queue.tp_getattro == PyObject_GenericGetAttr)) {
     __pyx_type_6gevent_6_queue_Queue.tp_getattro = __Pyx_PyObject_GenericGetAttr;
   }
   #if CYTHON_COMPILING_IN_CPYTHON
   {
-    PyObject *wrapper = PyObject_GetAttrString((PyObject *)&__pyx_type_6gevent_6_queue_Queue, "__len__"); if (unlikely(!wrapper)) __PYX_ERR(0, 88, __pyx_L1_error)
+    PyObject *wrapper = PyObject_GetAttrString((PyObject *)&__pyx_type_6gevent_6_queue_Queue, "__len__"); if (unlikely(!wrapper)) __PYX_ERR(0, 93, __pyx_L1_error)
     if (Py_TYPE(wrapper) == &PyWrapperDescr_Type) {
       __pyx_wrapperbase_6gevent_6_queue_5Queue_20__len__ = *((PyWrapperDescrObject *)wrapper)->d_base;
       __pyx_wrapperbase_6gevent_6_queue_5Queue_20__len__.doc = __pyx_doc_6gevent_6_queue_5Queue_20__len__;
@@ -17128,21 +17131,21 @@ static int __Pyx_modinit_type_init_code(void) {
     }
   }
   #endif
-  if (__Pyx_SetVtable(__pyx_type_6gevent_6_queue_Queue.tp_dict, __pyx_vtabptr_6gevent_6_queue_Queue) < 0) __PYX_ERR(0, 88, __pyx_L1_error)
-  if (PyObject_SetAttrString(__pyx_m, "Queue", (PyObject *)&__pyx_type_6gevent_6_queue_Queue) < 0) __PYX_ERR(0, 88, __pyx_L1_error)
+  if (__Pyx_SetVtable(__pyx_type_6gevent_6_queue_Queue.tp_dict, __pyx_vtabptr_6gevent_6_queue_Queue) < 0) __PYX_ERR(0, 93, __pyx_L1_error)
+  if (PyObject_SetAttrString(__pyx_m, "Queue", (PyObject *)&__pyx_type_6gevent_6_queue_Queue) < 0) __PYX_ERR(0, 93, __pyx_L1_error)
   if (__pyx_type_6gevent_6_queue_Queue.tp_weaklistoffset == 0) __pyx_type_6gevent_6_queue_Queue.tp_weaklistoffset = offsetof(struct __pyx_obj_6gevent_6_queue_Queue, __weakref__);
   __pyx_ptype_6gevent_6_queue_Queue = &__pyx_type_6gevent_6_queue_Queue;
   __pyx_vtabptr_6gevent_6_queue_UnboundQueue = &__pyx_vtable_6gevent_6_queue_UnboundQueue;
   __pyx_vtable_6gevent_6_queue_UnboundQueue.__pyx_base = *__pyx_vtabptr_6gevent_6_queue_Queue;
   __pyx_vtable_6gevent_6_queue_UnboundQueue.__pyx_base.put = (PyObject *(*)(struct __pyx_obj_6gevent_6_queue_Queue *, PyObject *, int __pyx_skip_dispatch, struct __pyx_opt_args_6gevent_6_queue_5Queue_put *__pyx_optional_args))__pyx_f_6gevent_6_queue_12UnboundQueue_put;
   __pyx_type_6gevent_6_queue_UnboundQueue.tp_base = __pyx_ptype_6gevent_6_queue_Queue;
-  if (PyType_Ready(&__pyx_type_6gevent_6_queue_UnboundQueue) < 0) __PYX_ERR(0, 408, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_6gevent_6_queue_UnboundQueue) < 0) __PYX_ERR(0, 413, __pyx_L1_error)
   __pyx_type_6gevent_6_queue_UnboundQueue.tp_print = 0;
   if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_6gevent_6_queue_UnboundQueue.tp_dictoffset && __pyx_type_6gevent_6_queue_UnboundQueue.tp_getattro == PyObject_GenericGetAttr)) {
     __pyx_type_6gevent_6_queue_UnboundQueue.tp_getattro = __Pyx_PyObject_GenericGetAttrNoDict;
   }
-  if (__Pyx_SetVtable(__pyx_type_6gevent_6_queue_UnboundQueue.tp_dict, __pyx_vtabptr_6gevent_6_queue_UnboundQueue) < 0) __PYX_ERR(0, 408, __pyx_L1_error)
-  if (PyObject_SetAttrString(__pyx_m, "UnboundQueue", (PyObject *)&__pyx_type_6gevent_6_queue_UnboundQueue) < 0) __PYX_ERR(0, 408, __pyx_L1_error)
+  if (__Pyx_SetVtable(__pyx_type_6gevent_6_queue_UnboundQueue.tp_dict, __pyx_vtabptr_6gevent_6_queue_UnboundQueue) < 0) __PYX_ERR(0, 413, __pyx_L1_error)
+  if (PyObject_SetAttrString(__pyx_m, "UnboundQueue", (PyObject *)&__pyx_type_6gevent_6_queue_UnboundQueue) < 0) __PYX_ERR(0, 413, __pyx_L1_error)
   if (__pyx_type_6gevent_6_queue_UnboundQueue.tp_weaklistoffset == 0) __pyx_type_6gevent_6_queue_UnboundQueue.tp_weaklistoffset = offsetof(struct __pyx_obj_6gevent_6_queue_UnboundQueue, __pyx_base.__weakref__);
   __pyx_ptype_6gevent_6_queue_UnboundQueue = &__pyx_type_6gevent_6_queue_UnboundQueue;
   __pyx_vtabptr_6gevent_6_queue_PriorityQueue = &__pyx_vtable_6gevent_6_queue_PriorityQueue;
@@ -17150,13 +17153,13 @@ static int __Pyx_modinit_type_init_code(void) {
   __pyx_vtable_6gevent_6_queue_PriorityQueue.__pyx_base._get = (PyObject *(*)(struct __pyx_obj_6gevent_6_queue_Queue *, int __pyx_skip_dispatch))__pyx_f_6gevent_6_queue_13PriorityQueue__get;
   __pyx_vtable_6gevent_6_queue_PriorityQueue.__pyx_base._put = (PyObject *(*)(struct __pyx_obj_6gevent_6_queue_Queue *, PyObject *, int __pyx_skip_dispatch))__pyx_f_6gevent_6_queue_13PriorityQueue__put;
   __pyx_type_6gevent_6_queue_PriorityQueue.tp_base = __pyx_ptype_6gevent_6_queue_Queue;
-  if (PyType_Ready(&__pyx_type_6gevent_6_queue_PriorityQueue) < 0) __PYX_ERR(0, 426, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_6gevent_6_queue_PriorityQueue) < 0) __PYX_ERR(0, 431, __pyx_L1_error)
   __pyx_type_6gevent_6_queue_PriorityQueue.tp_print = 0;
   if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_6gevent_6_queue_PriorityQueue.tp_dictoffset && __pyx_type_6gevent_6_queue_PriorityQueue.tp_getattro == PyObject_GenericGetAttr)) {
     __pyx_type_6gevent_6_queue_PriorityQueue.tp_getattro = __Pyx_PyObject_GenericGetAttr;
   }
-  if (__Pyx_SetVtable(__pyx_type_6gevent_6_queue_PriorityQueue.tp_dict, __pyx_vtabptr_6gevent_6_queue_PriorityQueue) < 0) __PYX_ERR(0, 426, __pyx_L1_error)
-  if (PyObject_SetAttrString(__pyx_m, "PriorityQueue", (PyObject *)&__pyx_type_6gevent_6_queue_PriorityQueue) < 0) __PYX_ERR(0, 426, __pyx_L1_error)
+  if (__Pyx_SetVtable(__pyx_type_6gevent_6_queue_PriorityQueue.tp_dict, __pyx_vtabptr_6gevent_6_queue_PriorityQueue) < 0) __PYX_ERR(0, 431, __pyx_L1_error)
+  if (PyObject_SetAttrString(__pyx_m, "PriorityQueue", (PyObject *)&__pyx_type_6gevent_6_queue_PriorityQueue) < 0) __PYX_ERR(0, 431, __pyx_L1_error)
   if (__pyx_type_6gevent_6_queue_PriorityQueue.tp_weaklistoffset == 0) __pyx_type_6gevent_6_queue_PriorityQueue.tp_weaklistoffset = offsetof(struct __pyx_obj_6gevent_6_queue_PriorityQueue, __pyx_base.__weakref__);
   __pyx_ptype_6gevent_6_queue_PriorityQueue = &__pyx_type_6gevent_6_queue_PriorityQueue;
   __pyx_vtabptr_6gevent_6_queue_LifoQueue = &__pyx_vtable_6gevent_6_queue_LifoQueue;
@@ -17165,27 +17168,27 @@ static int __Pyx_modinit_type_init_code(void) {
   __pyx_vtable_6gevent_6_queue_LifoQueue.__pyx_base._put = (PyObject *(*)(struct __pyx_obj_6gevent_6_queue_Queue *, PyObject *, int __pyx_skip_dispatch))__pyx_f_6gevent_6_queue_9LifoQueue__put;
   __pyx_vtable_6gevent_6_queue_LifoQueue.__pyx_base._peek = (PyObject *(*)(struct __pyx_obj_6gevent_6_queue_Queue *, int __pyx_skip_dispatch))__pyx_f_6gevent_6_queue_9LifoQueue__peek;
   __pyx_type_6gevent_6_queue_LifoQueue.tp_base = __pyx_ptype_6gevent_6_queue_Queue;
-  if (PyType_Ready(&__pyx_type_6gevent_6_queue_LifoQueue) < 0) __PYX_ERR(0, 451, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_6gevent_6_queue_LifoQueue) < 0) __PYX_ERR(0, 456, __pyx_L1_error)
   __pyx_type_6gevent_6_queue_LifoQueue.tp_print = 0;
   if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_6gevent_6_queue_LifoQueue.tp_dictoffset && __pyx_type_6gevent_6_queue_LifoQueue.tp_getattro == PyObject_GenericGetAttr)) {
     __pyx_type_6gevent_6_queue_LifoQueue.tp_getattro = __Pyx_PyObject_GenericGetAttr;
   }
-  if (__Pyx_SetVtable(__pyx_type_6gevent_6_queue_LifoQueue.tp_dict, __pyx_vtabptr_6gevent_6_queue_LifoQueue) < 0) __PYX_ERR(0, 451, __pyx_L1_error)
-  if (PyObject_SetAttrString(__pyx_m, "LifoQueue", (PyObject *)&__pyx_type_6gevent_6_queue_LifoQueue) < 0) __PYX_ERR(0, 451, __pyx_L1_error)
+  if (__Pyx_SetVtable(__pyx_type_6gevent_6_queue_LifoQueue.tp_dict, __pyx_vtabptr_6gevent_6_queue_LifoQueue) < 0) __PYX_ERR(0, 456, __pyx_L1_error)
+  if (PyObject_SetAttrString(__pyx_m, "LifoQueue", (PyObject *)&__pyx_type_6gevent_6_queue_LifoQueue) < 0) __PYX_ERR(0, 456, __pyx_L1_error)
   if (__pyx_type_6gevent_6_queue_LifoQueue.tp_weaklistoffset == 0) __pyx_type_6gevent_6_queue_LifoQueue.tp_weaklistoffset = offsetof(struct __pyx_obj_6gevent_6_queue_LifoQueue, __pyx_base.__weakref__);
   __pyx_ptype_6gevent_6_queue_LifoQueue = &__pyx_type_6gevent_6_queue_LifoQueue;
   __pyx_vtabptr_6gevent_6_queue_JoinableQueue = &__pyx_vtable_6gevent_6_queue_JoinableQueue;
   __pyx_vtable_6gevent_6_queue_JoinableQueue.__pyx_base = *__pyx_vtabptr_6gevent_6_queue_Queue;
   __pyx_vtable_6gevent_6_queue_JoinableQueue.__pyx_base._put = (PyObject *(*)(struct __pyx_obj_6gevent_6_queue_Queue *, PyObject *, int __pyx_skip_dispatch))__pyx_f_6gevent_6_queue_13JoinableQueue__put;
   __pyx_type_6gevent_6_queue_JoinableQueue.tp_base = __pyx_ptype_6gevent_6_queue_Queue;
-  if (PyType_Ready(&__pyx_type_6gevent_6_queue_JoinableQueue) < 0) __PYX_ERR(0, 469, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_6gevent_6_queue_JoinableQueue) < 0) __PYX_ERR(0, 474, __pyx_L1_error)
   __pyx_type_6gevent_6_queue_JoinableQueue.tp_print = 0;
   if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_6gevent_6_queue_JoinableQueue.tp_dictoffset && __pyx_type_6gevent_6_queue_JoinableQueue.tp_getattro == PyObject_GenericGetAttr)) {
     __pyx_type_6gevent_6_queue_JoinableQueue.tp_getattro = __Pyx_PyObject_GenericGetAttr;
   }
   #if CYTHON_COMPILING_IN_CPYTHON
   {
-    PyObject *wrapper = PyObject_GetAttrString((PyObject *)&__pyx_type_6gevent_6_queue_JoinableQueue, "__init__"); if (unlikely(!wrapper)) __PYX_ERR(0, 469, __pyx_L1_error)
+    PyObject *wrapper = PyObject_GetAttrString((PyObject *)&__pyx_type_6gevent_6_queue_JoinableQueue, "__init__"); if (unlikely(!wrapper)) __PYX_ERR(0, 474, __pyx_L1_error)
     if (Py_TYPE(wrapper) == &PyWrapperDescr_Type) {
       __pyx_wrapperbase_6gevent_6_queue_13JoinableQueue___init__ = *((PyWrapperDescrObject *)wrapper)->d_base;
       __pyx_wrapperbase_6gevent_6_queue_13JoinableQueue___init__.doc = __pyx_doc_6gevent_6_queue_13JoinableQueue___init__;
@@ -17193,21 +17196,21 @@ static int __Pyx_modinit_type_init_code(void) {
     }
   }
   #endif
-  if (__Pyx_SetVtable(__pyx_type_6gevent_6_queue_JoinableQueue.tp_dict, __pyx_vtabptr_6gevent_6_queue_JoinableQueue) < 0) __PYX_ERR(0, 469, __pyx_L1_error)
-  if (PyObject_SetAttrString(__pyx_m, "JoinableQueue", (PyObject *)&__pyx_type_6gevent_6_queue_JoinableQueue) < 0) __PYX_ERR(0, 469, __pyx_L1_error)
+  if (__Pyx_SetVtable(__pyx_type_6gevent_6_queue_JoinableQueue.tp_dict, __pyx_vtabptr_6gevent_6_queue_JoinableQueue) < 0) __PYX_ERR(0, 474, __pyx_L1_error)
+  if (PyObject_SetAttrString(__pyx_m, "JoinableQueue", (PyObject *)&__pyx_type_6gevent_6_queue_JoinableQueue) < 0) __PYX_ERR(0, 474, __pyx_L1_error)
   if (__pyx_type_6gevent_6_queue_JoinableQueue.tp_weaklistoffset == 0) __pyx_type_6gevent_6_queue_JoinableQueue.tp_weaklistoffset = offsetof(struct __pyx_obj_6gevent_6_queue_JoinableQueue, __pyx_base.__weakref__);
   __pyx_ptype_6gevent_6_queue_JoinableQueue = &__pyx_type_6gevent_6_queue_JoinableQueue;
   __pyx_vtabptr_6gevent_6_queue_Channel = &__pyx_vtable_6gevent_6_queue_Channel;
   __pyx_vtable_6gevent_6_queue_Channel.get = (PyObject *(*)(struct __pyx_obj_6gevent_6_queue_Channel *, int __pyx_skip_dispatch, struct __pyx_opt_args_6gevent_6_queue_7Channel_get *__pyx_optional_args))__pyx_f_6gevent_6_queue_7Channel_get;
   __pyx_vtable_6gevent_6_queue_Channel.get_nowait = (PyObject *(*)(struct __pyx_obj_6gevent_6_queue_Channel *, int __pyx_skip_dispatch))__pyx_f_6gevent_6_queue_7Channel_get_nowait;
   __pyx_vtable_6gevent_6_queue_Channel._schedule_unlock = (PyObject *(*)(struct __pyx_obj_6gevent_6_queue_Channel *))__pyx_f_6gevent_6_queue_7Channel__schedule_unlock;
-  if (PyType_Ready(&__pyx_type_6gevent_6_queue_Channel) < 0) __PYX_ERR(0, 555, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_6gevent_6_queue_Channel) < 0) __PYX_ERR(0, 560, __pyx_L1_error)
   __pyx_type_6gevent_6_queue_Channel.tp_print = 0;
   if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_6gevent_6_queue_Channel.tp_dictoffset && __pyx_type_6gevent_6_queue_Channel.tp_getattro == PyObject_GenericGetAttr)) {
     __pyx_type_6gevent_6_queue_Channel.tp_getattro = __Pyx_PyObject_GenericGetAttr;
   }
-  if (__Pyx_SetVtable(__pyx_type_6gevent_6_queue_Channel.tp_dict, __pyx_vtabptr_6gevent_6_queue_Channel) < 0) __PYX_ERR(0, 555, __pyx_L1_error)
-  if (PyObject_SetAttrString(__pyx_m, "Channel", (PyObject *)&__pyx_type_6gevent_6_queue_Channel) < 0) __PYX_ERR(0, 555, __pyx_L1_error)
+  if (__Pyx_SetVtable(__pyx_type_6gevent_6_queue_Channel.tp_dict, __pyx_vtabptr_6gevent_6_queue_Channel) < 0) __PYX_ERR(0, 560, __pyx_L1_error)
+  if (PyObject_SetAttrString(__pyx_m, "Channel", (PyObject *)&__pyx_type_6gevent_6_queue_Channel) < 0) __PYX_ERR(0, 560, __pyx_L1_error)
   if (__pyx_type_6gevent_6_queue_Channel.tp_weaklistoffset == 0) __pyx_type_6gevent_6_queue_Channel.tp_weaklistoffset = offsetof(struct __pyx_obj_6gevent_6_queue_Channel, __weakref__);
   __pyx_ptype_6gevent_6_queue_Channel = &__pyx_type_6gevent_6_queue_Channel;
   __Pyx_RefNannyFinishContext();
@@ -17380,6 +17383,7 @@ static int __pyx_pymod_exec__queue(PyObject *__pyx_pyinit_module)
   int __pyx_t_4;
   int __pyx_t_5;
   PyObject *__pyx_t_6 = NULL;
+  PyObject *__pyx_t_7 = NULL;
   __Pyx_RefNannyDeclarations
   #if CYTHON_PEP489_MULTI_PHASE_INIT
   if (__pyx_m && __pyx_m == __pyx_pyinit_module) return 0;
@@ -17731,7 +17735,7 @@ if (!__Pyx_RefNanny) {
  * from greenlet import getcurrent
  * from gevent.exceptions import InvalidSwitchError             # <<<<<<<<<<<<<<
  * 
- * 
+ * __all__ = []
  */
   __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 47, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
@@ -17747,9 +17751,21 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
+  /* "src/gevent/queue.py":49
+ * from gevent.exceptions import InvalidSwitchError
+ * 
+ * __all__ = []             # <<<<<<<<<<<<<<
+ * __implements__ = ['Queue', 'PriorityQueue', 'LifoQueue']
+ * __extensions__ = ['JoinableQueue', 'Channel']
+ */
+  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 49, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_all, __pyx_t_1) < 0) __PYX_ERR(0, 49, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
   /* "src/gevent/queue.py":50
  * 
- * 
+ * __all__ = []
  * __implements__ = ['Queue', 'PriorityQueue', 'LifoQueue']             # <<<<<<<<<<<<<<
  * __extensions__ = ['JoinableQueue', 'Channel']
  * __imports__ = ['Empty', 'Full']
@@ -17769,7 +17785,7 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "src/gevent/queue.py":51
- * 
+ * __all__ = []
  * __implements__ = ['Queue', 'PriorityQueue', 'LifoQueue']
  * __extensions__ = ['JoinableQueue', 'Channel']             # <<<<<<<<<<<<<<
  * __imports__ = ['Empty', 'Full']
@@ -17791,7 +17807,7 @@ if (!__Pyx_RefNanny) {
  * __extensions__ = ['JoinableQueue', 'Channel']
  * __imports__ = ['Empty', 'Full']             # <<<<<<<<<<<<<<
  * if hasattr(__queue__, 'SimpleQueue'):
- *     __imports__.append('SimpleQueue') # New in 3.7
+ *     __all__.append('SimpleQueue') # New in 3.7
  */
   __pyx_t_1 = PyList_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 52, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -17808,8 +17824,8 @@ if (!__Pyx_RefNanny) {
  * __extensions__ = ['JoinableQueue', 'Channel']
  * __imports__ = ['Empty', 'Full']
  * if hasattr(__queue__, 'SimpleQueue'):             # <<<<<<<<<<<<<<
- *     __imports__.append('SimpleQueue') # New in 3.7
- *     SimpleQueue = __queue__.SimpleQueue # pylint:disable=no-member
+ *     __all__.append('SimpleQueue') # New in 3.7
+ *     # SimpleQueue is implemented in C and directly allocates locks
  */
   __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_queue_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 53, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -17821,751 +17837,757 @@ if (!__Pyx_RefNanny) {
     /* "src/gevent/queue.py":54
  * __imports__ = ['Empty', 'Full']
  * if hasattr(__queue__, 'SimpleQueue'):
- *     __imports__.append('SimpleQueue') # New in 3.7             # <<<<<<<<<<<<<<
- *     SimpleQueue = __queue__.SimpleQueue # pylint:disable=no-member
- * __all__ = __implements__ + __extensions__ + __imports__
+ *     __all__.append('SimpleQueue') # New in 3.7             # <<<<<<<<<<<<<<
+ *     # SimpleQueue is implemented in C and directly allocates locks
+ *     # unaffected by monkey patching. We need the Python version.
  */
-    __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_imports); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 54, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_all); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 54, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_5 = __Pyx_PyObject_Append(__pyx_t_1, __pyx_n_s_SimpleQueue); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 54, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "src/gevent/queue.py":55
- * if hasattr(__queue__, 'SimpleQueue'):
- *     __imports__.append('SimpleQueue') # New in 3.7
- *     SimpleQueue = __queue__.SimpleQueue # pylint:disable=no-member             # <<<<<<<<<<<<<<
- * __all__ = __implements__ + __extensions__ + __imports__
+    /* "src/gevent/queue.py":57
+ *     # SimpleQueue is implemented in C and directly allocates locks
+ *     # unaffected by monkey patching. We need the Python version.
+ *     SimpleQueue = __queue__._PySimpleQueue # pylint:disable=no-member             # <<<<<<<<<<<<<<
+ * __all__ += (__implements__ + __extensions__ + __imports__)
  * 
  */
-    __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_queue_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 55, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_queue_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 57, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_SimpleQueue); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 55, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_PySimpleQueue); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 57, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_SimpleQueue, __pyx_t_2) < 0) __PYX_ERR(0, 55, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_SimpleQueue, __pyx_t_2) < 0) __PYX_ERR(0, 57, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
     /* "src/gevent/queue.py":53
  * __extensions__ = ['JoinableQueue', 'Channel']
  * __imports__ = ['Empty', 'Full']
  * if hasattr(__queue__, 'SimpleQueue'):             # <<<<<<<<<<<<<<
- *     __imports__.append('SimpleQueue') # New in 3.7
- *     SimpleQueue = __queue__.SimpleQueue # pylint:disable=no-member
+ *     __all__.append('SimpleQueue') # New in 3.7
+ *     # SimpleQueue is implemented in C and directly allocates locks
  */
   }
 
-  /* "src/gevent/queue.py":56
- *     __imports__.append('SimpleQueue') # New in 3.7
- *     SimpleQueue = __queue__.SimpleQueue # pylint:disable=no-member
- * __all__ = __implements__ + __extensions__ + __imports__             # <<<<<<<<<<<<<<
+  /* "src/gevent/queue.py":58
+ *     # unaffected by monkey patching. We need the Python version.
+ *     SimpleQueue = __queue__._PySimpleQueue # pylint:disable=no-member
+ * __all__ += (__implements__ + __extensions__ + __imports__)             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_implements); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 56, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_all); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 58, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_extensions); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 56, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_implements); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 58, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_6 = PyNumber_Add(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 56, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_GetModuleGlobalName(__pyx_n_s_extensions); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 58, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __pyx_t_7 = PyNumber_Add(__pyx_t_1, __pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 58, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __pyx_t_6 = __Pyx_GetModuleGlobalName(__pyx_n_s_imports); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 58, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __pyx_t_1 = PyNumber_Add(__pyx_t_7, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 58, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __pyx_t_6 = PyNumber_InPlaceAdd(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 58, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_imports); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 56, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyNumber_Add(__pyx_t_6, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 56, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_all, __pyx_t_6) < 0) __PYX_ERR(0, 58, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_all, __pyx_t_2) < 0) __PYX_ERR(0, 56, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "src/gevent/queue.py":67
+  /* "src/gevent/queue.py":72
  *         pass
  * 
  * import gevent._waiter             # <<<<<<<<<<<<<<
  * locals()['Waiter'] = gevent._waiter.Waiter
  * 
  */
-  __pyx_t_2 = __Pyx_Import(__pyx_n_s_gevent__waiter, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 67, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_gevent, __pyx_t_2) < 0) __PYX_ERR(0, 67, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_Import(__pyx_n_s_gevent__waiter, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 72, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_gevent, __pyx_t_6) < 0) __PYX_ERR(0, 72, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-  /* "src/gevent/queue.py":68
+  /* "src/gevent/queue.py":73
  * 
  * import gevent._waiter
  * locals()['Waiter'] = gevent._waiter.Waiter             # <<<<<<<<<<<<<<
  * 
  * class ItemWaiter(Waiter): # pylint:disable=undefined-variable
  */
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_gevent); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 68, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_waiter); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 68, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_GetModuleGlobalName(__pyx_n_s_gevent); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 73, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_waiter); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 73, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_Waiter); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 68, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_Waiter); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 73, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_Globals(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 68, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_Globals(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 73, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (unlikely(PyDict_SetItem(__pyx_t_1, __pyx_n_s_Waiter, __pyx_t_2) < 0)) __PYX_ERR(0, 68, __pyx_L1_error)
+  if (unlikely(PyDict_SetItem(__pyx_t_1, __pyx_n_s_Waiter, __pyx_t_6) < 0)) __PYX_ERR(0, 73, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-  /* "src/gevent/queue.py":73
+  /* "src/gevent/queue.py":78
  *     # pylint:disable=assigning-non-slot
  *     __slots__ = (
  *         'item',             # <<<<<<<<<<<<<<
  *         'queue',
  *     )
  */
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_ItemWaiter->tp_dict, __pyx_n_s_slots, __pyx_tuple__7) < 0) __PYX_ERR(0, 72, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_ItemWaiter->tp_dict, __pyx_n_s_slots, __pyx_tuple__7) < 0) __PYX_ERR(0, 77, __pyx_L1_error)
   PyType_Modified(__pyx_ptype_6gevent_6_queue_ItemWaiter);
 
-  /* "src/gevent/queue.py":82
+  /* "src/gevent/queue.py":87
  *         self.queue = queue
  * 
  *     def put_and_switch(self):             # <<<<<<<<<<<<<<
  *         self.queue._put(self.item)
  *         self.queue = None
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_10ItemWaiter_3put_and_switch, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_ItemWaiter_put_and_switch, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__9)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 82, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_ItemWaiter->tp_dict, __pyx_n_s_put_and_switch, __pyx_t_2) < 0) __PYX_ERR(0, 82, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_10ItemWaiter_3put_and_switch, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_ItemWaiter_put_and_switch, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__9)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 87, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_ItemWaiter->tp_dict, __pyx_n_s_put_and_switch, __pyx_t_6) < 0) __PYX_ERR(0, 87, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_ItemWaiter);
 
-  /* "src/gevent/queue.py":110
+  /* "src/gevent/queue.py":115
  * 
  *     __slots__ = (
  *         '_maxsize',             # <<<<<<<<<<<<<<
  *         'getters',
  *         'putters',
  */
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_slots, __pyx_tuple__10) < 0) __PYX_ERR(0, 109, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_slots, __pyx_tuple__10) < 0) __PYX_ERR(0, 114, __pyx_L1_error)
   PyType_Modified(__pyx_ptype_6gevent_6_queue_Queue);
 
-  /* "src/gevent/queue.py":160
+  /* "src/gevent/queue.py":165
  *             self._maxsize = nv
  * 
  *     def copy(self):             # <<<<<<<<<<<<<<
  *         return type(self)(self.maxsize, self.queue)
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_5Queue_3copy, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Queue_copy, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__12)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 160, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_copy, __pyx_t_2) < 0) __PYX_ERR(0, 160, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_5Queue_3copy, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Queue_copy, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__12)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 165, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_copy, __pyx_t_6) < 0) __PYX_ERR(0, 165, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_Queue);
 
-  /* "src/gevent/queue.py":163
+  /* "src/gevent/queue.py":168
  *         return type(self)(self.maxsize, self.queue)
  * 
  *     def _create_queue(self, items=()):             # <<<<<<<<<<<<<<
  *         return collections.deque(items)
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_5Queue_5_create_queue, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Queue__create_queue, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__14)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 163, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_create_queue, __pyx_t_2) < 0) __PYX_ERR(0, 163, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_5Queue_5_create_queue, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Queue__create_queue, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__14)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 168, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_create_queue, __pyx_t_6) < 0) __PYX_ERR(0, 168, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_Queue);
 
-  /* "src/gevent/queue.py":166
+  /* "src/gevent/queue.py":171
  *         return collections.deque(items)
  * 
  *     def _get(self):             # <<<<<<<<<<<<<<
  *         return self.queue.popleft()
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_5Queue_7_get, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Queue__get, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__16)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 166, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_get, __pyx_t_2) < 0) __PYX_ERR(0, 166, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_5Queue_7_get, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Queue__get, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__16)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 171, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_get, __pyx_t_6) < 0) __PYX_ERR(0, 171, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_Queue);
 
-  /* "src/gevent/queue.py":169
+  /* "src/gevent/queue.py":174
  *         return self.queue.popleft()
  * 
  *     def _peek(self):             # <<<<<<<<<<<<<<
  *         return self.queue[0]
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_5Queue_9_peek, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Queue__peek, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__18)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 169, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_peek, __pyx_t_2) < 0) __PYX_ERR(0, 169, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_5Queue_9_peek, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Queue__peek, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__18)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 174, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_peek, __pyx_t_6) < 0) __PYX_ERR(0, 174, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_Queue);
 
-  /* "src/gevent/queue.py":172
+  /* "src/gevent/queue.py":177
  *         return self.queue[0]
  * 
  *     def _put(self, item):             # <<<<<<<<<<<<<<
  *         self.queue.append(item)
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_5Queue_11_put, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Queue__put, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__20)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 172, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_put, __pyx_t_2) < 0) __PYX_ERR(0, 172, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_5Queue_11_put, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Queue__put, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__20)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 177, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_put, __pyx_t_6) < 0) __PYX_ERR(0, 177, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_Queue);
 
-  /* "src/gevent/queue.py":181
+  /* "src/gevent/queue.py":186
  *         return '<%s%s>' % (type(self).__name__, self._format())
  * 
  *     def _format(self):             # <<<<<<<<<<<<<<
  *         result = []
  *         if self.maxsize is not None:
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_5Queue_17_format, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Queue__format, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__22)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 181, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_format, __pyx_t_2) < 0) __PYX_ERR(0, 181, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_5Queue_17_format, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Queue__format, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__22)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 186, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_format, __pyx_t_6) < 0) __PYX_ERR(0, 186, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_Queue);
 
-  /* "src/gevent/queue.py":195
+  /* "src/gevent/queue.py":200
  *         return ''
  * 
  *     def qsize(self):             # <<<<<<<<<<<<<<
  *         """Return the size of the queue."""
  *         return len(self.queue)
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_5Queue_19qsize, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Queue_qsize, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__24)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 195, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_qsize, __pyx_t_2) < 0) __PYX_ERR(0, 195, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_5Queue_19qsize, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Queue_qsize, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__24)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 200, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_qsize, __pyx_t_6) < 0) __PYX_ERR(0, 200, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_Queue);
 
-  /* "src/gevent/queue.py":227
+  /* "src/gevent/queue.py":232
  *         return True
  * 
  *     def empty(self):             # <<<<<<<<<<<<<<
  *         """Return ``True`` if the queue is empty, ``False`` otherwise."""
  *         return not self.qsize()
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_5Queue_27empty, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Queue_empty, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__26)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 227, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_empty, __pyx_t_2) < 0) __PYX_ERR(0, 227, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_5Queue_27empty, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Queue_empty, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__26)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 232, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_empty, __pyx_t_6) < 0) __PYX_ERR(0, 232, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_Queue);
 
-  /* "src/gevent/queue.py":231
+  /* "src/gevent/queue.py":236
  *         return not self.qsize()
  * 
  *     def full(self):             # <<<<<<<<<<<<<<
  *         """Return ``True`` if the queue is full, ``False`` otherwise.
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_5Queue_29full, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Queue_full, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__28)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 231, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_full, __pyx_t_2) < 0) __PYX_ERR(0, 231, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_5Queue_29full, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Queue_full, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__28)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 236, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_full, __pyx_t_6) < 0) __PYX_ERR(0, 236, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_Queue);
 
-  /* "src/gevent/queue.py":238
+  /* "src/gevent/queue.py":243
  *         return self._maxsize > 0 and self.qsize() >= self._maxsize
  * 
  *     def put(self, item, block=True, timeout=None):             # <<<<<<<<<<<<<<
  *         """Put an item into the queue.
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_5Queue_31put, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Queue_put, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__30)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 238, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_put_2, __pyx_t_2) < 0) __PYX_ERR(0, 238, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_5Queue_31put, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Queue_put, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__30)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 243, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_put_2, __pyx_t_6) < 0) __PYX_ERR(0, 243, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_Queue);
 
-  /* "src/gevent/queue.py":280
+  /* "src/gevent/queue.py":285
  *             raise Full
  * 
  *     def put_nowait(self, item):             # <<<<<<<<<<<<<<
  *         """Put an item into the queue without blocking.
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_5Queue_33put_nowait, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Queue_put_nowait, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__32)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 280, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_put_nowait, __pyx_t_2) < 0) __PYX_ERR(0, 280, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_5Queue_33put_nowait, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Queue_put_nowait, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__32)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 285, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_put_nowait, __pyx_t_6) < 0) __PYX_ERR(0, 285, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_Queue);
 
-  /* "src/gevent/queue.py":324
+  /* "src/gevent/queue.py":329
  *             _safe_remove(self.getters, waiter)
  * 
  *     def get(self, block=True, timeout=None):             # <<<<<<<<<<<<<<
  *         """Remove and return an item from the queue.
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_5Queue_35get, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Queue_get, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__34)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 324, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_get_2, __pyx_t_2) < 0) __PYX_ERR(0, 324, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_5Queue_35get, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Queue_get, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__34)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 329, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_get_2, __pyx_t_6) < 0) __PYX_ERR(0, 329, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_Queue);
 
-  /* "src/gevent/queue.py":341
+  /* "src/gevent/queue.py":346
  *         return self.__get_or_peek(self._get, block, timeout)
  * 
  *     def get_nowait(self):             # <<<<<<<<<<<<<<
  *         """Remove and return an item from the queue without blocking.
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_5Queue_37get_nowait, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Queue_get_nowait, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__36)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 341, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_get_nowait, __pyx_t_2) < 0) __PYX_ERR(0, 341, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_5Queue_37get_nowait, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Queue_get_nowait, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__36)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 346, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_get_nowait, __pyx_t_6) < 0) __PYX_ERR(0, 346, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_Queue);
 
-  /* "src/gevent/queue.py":349
+  /* "src/gevent/queue.py":354
  *         return self.get(False)
  * 
  *     def peek(self, block=True, timeout=None):             # <<<<<<<<<<<<<<
  *         """Return an item from the queue without removing it.
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_5Queue_39peek, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Queue_peek, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__38)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 349, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_peek_2, __pyx_t_2) < 0) __PYX_ERR(0, 349, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_5Queue_39peek, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Queue_peek, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__38)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 354, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_peek_2, __pyx_t_6) < 0) __PYX_ERR(0, 354, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_Queue);
 
-  /* "src/gevent/queue.py":365
+  /* "src/gevent/queue.py":370
  *         return self.__get_or_peek(self._peek, block, timeout)
  * 
  *     def peek_nowait(self):             # <<<<<<<<<<<<<<
  *         """Return an item from the queue without blocking.
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_5Queue_41peek_nowait, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Queue_peek_nowait, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__40)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 365, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_peek_nowait, __pyx_t_2) < 0) __PYX_ERR(0, 365, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_5Queue_41peek_nowait, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Queue_peek_nowait, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__40)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 370, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_peek_nowait, __pyx_t_6) < 0) __PYX_ERR(0, 370, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_Queue);
 
-  /* "src/gevent/queue.py":373
+  /* "src/gevent/queue.py":378
  *         return self.peek(False)
  * 
  *     def _unlock(self):             # <<<<<<<<<<<<<<
  *         while True:
  *             repeat = False
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_5Queue_43_unlock, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Queue__unlock, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__42)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 373, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_unlock, __pyx_t_2) < 0) __PYX_ERR(0, 373, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_5Queue_43_unlock, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Queue__unlock, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__42)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 378, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_unlock, __pyx_t_6) < 0) __PYX_ERR(0, 378, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_Queue);
 
-  /* "src/gevent/queue.py":405
+  /* "src/gevent/queue.py":410
  *         return result
  * 
  *     next = __next__ # Py2             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __pyx_t_2 = __Pyx_GetNameInClass((PyObject *)__pyx_ptype_6gevent_6_queue_Queue, __pyx_n_s_next); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 405, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_next_2, __pyx_t_2) < 0) __PYX_ERR(0, 405, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_GetNameInClass((PyObject *)__pyx_ptype_6gevent_6_queue_Queue, __pyx_n_s_next); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 410, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Queue->tp_dict, __pyx_n_s_next_2, __pyx_t_6) < 0) __PYX_ERR(0, 410, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_Queue);
 
-  /* "src/gevent/queue.py":412
+  /* "src/gevent/queue.py":417
  *     # be bound. Changing its maxsize has no effect.
  * 
  *     __slots__ = ()             # <<<<<<<<<<<<<<
  * 
  *     def __init__(self, maxsize=None, items=()):
  */
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_UnboundQueue->tp_dict, __pyx_n_s_slots, __pyx_empty_tuple) < 0) __PYX_ERR(0, 412, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_UnboundQueue->tp_dict, __pyx_n_s_slots, __pyx_empty_tuple) < 0) __PYX_ERR(0, 417, __pyx_L1_error)
   PyType_Modified(__pyx_ptype_6gevent_6_queue_UnboundQueue);
 
-  /* "src/gevent/queue.py":420
+  /* "src/gevent/queue.py":425
  *         self.putters = None # Will never be used.
  * 
  *     def put(self, item, block=True, timeout=None):             # <<<<<<<<<<<<<<
  *         self._put(item)
  *         if self.getters:
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_12UnboundQueue_3put, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_UnboundQueue_put, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__44)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 420, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_UnboundQueue->tp_dict, __pyx_n_s_put_2, __pyx_t_2) < 0) __PYX_ERR(0, 420, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_12UnboundQueue_3put, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_UnboundQueue_put, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__44)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 425, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_UnboundQueue->tp_dict, __pyx_n_s_put_2, __pyx_t_6) < 0) __PYX_ERR(0, 425, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_UnboundQueue);
 
-  /* "src/gevent/queue.py":437
+  /* "src/gevent/queue.py":442
  *     '''
  * 
  *     __slots__ = ()             # <<<<<<<<<<<<<<
  * 
  *     def _create_queue(self, items=()):
  */
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_PriorityQueue->tp_dict, __pyx_n_s_slots, __pyx_empty_tuple) < 0) __PYX_ERR(0, 437, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_PriorityQueue->tp_dict, __pyx_n_s_slots, __pyx_empty_tuple) < 0) __PYX_ERR(0, 442, __pyx_L1_error)
   PyType_Modified(__pyx_ptype_6gevent_6_queue_PriorityQueue);
 
-  /* "src/gevent/queue.py":439
+  /* "src/gevent/queue.py":444
  *     __slots__ = ()
  * 
  *     def _create_queue(self, items=()):             # <<<<<<<<<<<<<<
  *         q = list(items)
  *         _heapify(q)
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_13PriorityQueue_1_create_queue, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_PriorityQueue__create_queue, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__46)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 439, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_PriorityQueue->tp_dict, __pyx_n_s_create_queue, __pyx_t_2) < 0) __PYX_ERR(0, 439, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_13PriorityQueue_1_create_queue, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_PriorityQueue__create_queue, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__46)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 444, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_PriorityQueue->tp_dict, __pyx_n_s_create_queue, __pyx_t_6) < 0) __PYX_ERR(0, 444, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_PriorityQueue);
 
-  /* "src/gevent/queue.py":444
+  /* "src/gevent/queue.py":449
  *         return q
  * 
  *     def _put(self, item):             # <<<<<<<<<<<<<<
  *         _heappush(self.queue, item)
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_13PriorityQueue_3_put, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_PriorityQueue__put, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__48)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 444, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_PriorityQueue->tp_dict, __pyx_n_s_put, __pyx_t_2) < 0) __PYX_ERR(0, 444, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_13PriorityQueue_3_put, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_PriorityQueue__put, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__48)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 449, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_PriorityQueue->tp_dict, __pyx_n_s_put, __pyx_t_6) < 0) __PYX_ERR(0, 449, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_PriorityQueue);
 
-  /* "src/gevent/queue.py":447
+  /* "src/gevent/queue.py":452
  *         _heappush(self.queue, item)
  * 
  *     def _get(self):             # <<<<<<<<<<<<<<
  *         return _heappop(self.queue)
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_13PriorityQueue_5_get, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_PriorityQueue__get, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__50)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 447, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_PriorityQueue->tp_dict, __pyx_n_s_get, __pyx_t_2) < 0) __PYX_ERR(0, 447, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_13PriorityQueue_5_get, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_PriorityQueue__get, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__50)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 452, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_PriorityQueue->tp_dict, __pyx_n_s_get, __pyx_t_6) < 0) __PYX_ERR(0, 452, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_PriorityQueue);
 
-  /* "src/gevent/queue.py":454
+  /* "src/gevent/queue.py":459
  *     '''A subclass of :class:`Queue` that retrieves most recently added entries first.'''
  * 
  *     __slots__ = ()             # <<<<<<<<<<<<<<
  * 
  *     def _create_queue(self, items=()):
  */
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_LifoQueue->tp_dict, __pyx_n_s_slots, __pyx_empty_tuple) < 0) __PYX_ERR(0, 454, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_LifoQueue->tp_dict, __pyx_n_s_slots, __pyx_empty_tuple) < 0) __PYX_ERR(0, 459, __pyx_L1_error)
   PyType_Modified(__pyx_ptype_6gevent_6_queue_LifoQueue);
 
-  /* "src/gevent/queue.py":456
+  /* "src/gevent/queue.py":461
  *     __slots__ = ()
  * 
  *     def _create_queue(self, items=()):             # <<<<<<<<<<<<<<
  *         return list(items)
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_9LifoQueue_1_create_queue, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_LifoQueue__create_queue, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__52)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 456, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_LifoQueue->tp_dict, __pyx_n_s_create_queue, __pyx_t_2) < 0) __PYX_ERR(0, 456, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_9LifoQueue_1_create_queue, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_LifoQueue__create_queue, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__52)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 461, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_LifoQueue->tp_dict, __pyx_n_s_create_queue, __pyx_t_6) < 0) __PYX_ERR(0, 461, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_LifoQueue);
 
-  /* "src/gevent/queue.py":459
+  /* "src/gevent/queue.py":464
  *         return list(items)
  * 
  *     def _put(self, item):             # <<<<<<<<<<<<<<
  *         self.queue.append(item)
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_9LifoQueue_3_put, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_LifoQueue__put, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__54)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 459, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_LifoQueue->tp_dict, __pyx_n_s_put, __pyx_t_2) < 0) __PYX_ERR(0, 459, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_9LifoQueue_3_put, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_LifoQueue__put, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__54)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 464, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_LifoQueue->tp_dict, __pyx_n_s_put, __pyx_t_6) < 0) __PYX_ERR(0, 464, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_LifoQueue);
 
-  /* "src/gevent/queue.py":462
+  /* "src/gevent/queue.py":467
  *         self.queue.append(item)
  * 
  *     def _get(self):             # <<<<<<<<<<<<<<
  *         return self.queue.pop()
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_9LifoQueue_5_get, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_LifoQueue__get, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__56)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 462, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_LifoQueue->tp_dict, __pyx_n_s_get, __pyx_t_2) < 0) __PYX_ERR(0, 462, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_9LifoQueue_5_get, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_LifoQueue__get, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__56)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 467, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_LifoQueue->tp_dict, __pyx_n_s_get, __pyx_t_6) < 0) __PYX_ERR(0, 467, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_LifoQueue);
 
-  /* "src/gevent/queue.py":465
+  /* "src/gevent/queue.py":470
  *         return self.queue.pop()
  * 
  *     def _peek(self):             # <<<<<<<<<<<<<<
  *         return self.queue[-1]
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_9LifoQueue_7_peek, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_LifoQueue__peek, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__58)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 465, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_LifoQueue->tp_dict, __pyx_n_s_peek, __pyx_t_2) < 0) __PYX_ERR(0, 465, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_9LifoQueue_7_peek, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_LifoQueue__peek, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__58)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 470, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_LifoQueue->tp_dict, __pyx_n_s_peek, __pyx_t_6) < 0) __PYX_ERR(0, 470, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_LifoQueue);
 
-  /* "src/gevent/queue.py":476
+  /* "src/gevent/queue.py":481
  * 
  *     __slots__ = (
  *         '_cond',             # <<<<<<<<<<<<<<
  *         'unfinished_tasks',
  *     )
  */
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_JoinableQueue->tp_dict, __pyx_n_s_slots, __pyx_tuple__59) < 0) __PYX_ERR(0, 475, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_JoinableQueue->tp_dict, __pyx_n_s_slots, __pyx_tuple__59) < 0) __PYX_ERR(0, 480, __pyx_L1_error)
   PyType_Modified(__pyx_ptype_6gevent_6_queue_JoinableQueue);
 
-  /* "src/gevent/queue.py":504
+  /* "src/gevent/queue.py":509
  *             self._cond.clear()
  * 
  *     def copy(self):             # <<<<<<<<<<<<<<
  *         return type(self)(self.maxsize, self.queue, self.unfinished_tasks)
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_13JoinableQueue_3copy, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_JoinableQueue_copy, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__61)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 504, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_JoinableQueue->tp_dict, __pyx_n_s_copy, __pyx_t_2) < 0) __PYX_ERR(0, 504, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_13JoinableQueue_3copy, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_JoinableQueue_copy, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__61)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 509, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_JoinableQueue->tp_dict, __pyx_n_s_copy, __pyx_t_6) < 0) __PYX_ERR(0, 509, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_JoinableQueue);
 
-  /* "src/gevent/queue.py":507
+  /* "src/gevent/queue.py":512
  *         return type(self)(self.maxsize, self.queue, self.unfinished_tasks)
  * 
  *     def _format(self):             # <<<<<<<<<<<<<<
  *         result = Queue._format(self)
  *         if self.unfinished_tasks:
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_13JoinableQueue_5_format, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_JoinableQueue__format, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__63)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 507, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_JoinableQueue->tp_dict, __pyx_n_s_format, __pyx_t_2) < 0) __PYX_ERR(0, 507, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_13JoinableQueue_5_format, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_JoinableQueue__format, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__63)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 512, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_JoinableQueue->tp_dict, __pyx_n_s_format, __pyx_t_6) < 0) __PYX_ERR(0, 512, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_JoinableQueue);
 
-  /* "src/gevent/queue.py":513
+  /* "src/gevent/queue.py":518
  *         return result
  * 
  *     def _put(self, item):             # <<<<<<<<<<<<<<
  *         Queue._put(self, item)
  *         self.unfinished_tasks += 1
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_13JoinableQueue_7_put, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_JoinableQueue__put, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__65)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 513, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_JoinableQueue->tp_dict, __pyx_n_s_put, __pyx_t_2) < 0) __PYX_ERR(0, 513, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_13JoinableQueue_7_put, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_JoinableQueue__put, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__65)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 518, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_JoinableQueue->tp_dict, __pyx_n_s_put, __pyx_t_6) < 0) __PYX_ERR(0, 518, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_JoinableQueue);
 
-  /* "src/gevent/queue.py":518
+  /* "src/gevent/queue.py":523
  *         self._cond.clear()
  * 
  *     def task_done(self):             # <<<<<<<<<<<<<<
  *         '''Indicate that a formerly enqueued task is complete. Used by queue consumer threads.
  *         For each :meth:`get <Queue.get>` used to fetch a task, a subsequent call to :meth:`task_done` tells the queue
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_13JoinableQueue_9task_done, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_JoinableQueue_task_done, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__67)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 518, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_JoinableQueue->tp_dict, __pyx_n_s_task_done, __pyx_t_2) < 0) __PYX_ERR(0, 518, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_13JoinableQueue_9task_done, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_JoinableQueue_task_done, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__67)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 523, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_JoinableQueue->tp_dict, __pyx_n_s_task_done, __pyx_t_6) < 0) __PYX_ERR(0, 523, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_JoinableQueue);
 
-  /* "src/gevent/queue.py":535
+  /* "src/gevent/queue.py":540
  *             self._cond.set()
  * 
  *     def join(self, timeout=None):             # <<<<<<<<<<<<<<
  *         '''
  *         Block until all items in the queue have been gotten and processed.
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_13JoinableQueue_11join, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_JoinableQueue_join, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__69)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 535, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_JoinableQueue->tp_dict, __pyx_n_s_join, __pyx_t_2) < 0) __PYX_ERR(0, 535, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_13JoinableQueue_11join, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_JoinableQueue_join, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__69)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 540, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_JoinableQueue->tp_dict, __pyx_n_s_join, __pyx_t_6) < 0) __PYX_ERR(0, 540, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_JoinableQueue);
 
-  /* "src/gevent/queue.py":558
+  /* "src/gevent/queue.py":563
  * 
  *     __slots__ = (
  *         'getters',             # <<<<<<<<<<<<<<
  *         'putters',
  *         'hub',
  */
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Channel->tp_dict, __pyx_n_s_slots, __pyx_tuple__70) < 0) __PYX_ERR(0, 557, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Channel->tp_dict, __pyx_n_s_slots, __pyx_tuple__70) < 0) __PYX_ERR(0, 562, __pyx_L1_error)
   PyType_Modified(__pyx_ptype_6gevent_6_queue_Channel);
 
-  /* "src/gevent/queue.py":580
+  /* "src/gevent/queue.py":585
  *         return '<%s %s>' % (type(self).__name__, self._format())
  * 
  *     def _format(self):             # <<<<<<<<<<<<<<
  *         result = ''
  *         if self.getters:
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_7Channel_7_format, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Channel__format, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__72)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 580, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Channel->tp_dict, __pyx_n_s_format, __pyx_t_2) < 0) __PYX_ERR(0, 580, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_7Channel_7_format, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Channel__format, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__72)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 585, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Channel->tp_dict, __pyx_n_s_format, __pyx_t_6) < 0) __PYX_ERR(0, 585, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_Channel);
 
-  /* "src/gevent/queue.py":592
+  /* "src/gevent/queue.py":597
  *         return len(self.putters) - len(self.getters)
  * 
  *     def qsize(self):             # <<<<<<<<<<<<<<
  *         return 0
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_7Channel_9qsize, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Channel_qsize, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__74)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 592, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Channel->tp_dict, __pyx_n_s_qsize, __pyx_t_2) < 0) __PYX_ERR(0, 592, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_7Channel_9qsize, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Channel_qsize, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__74)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 597, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Channel->tp_dict, __pyx_n_s_qsize, __pyx_t_6) < 0) __PYX_ERR(0, 597, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_Channel);
 
-  /* "src/gevent/queue.py":595
+  /* "src/gevent/queue.py":600
  *         return 0
  * 
  *     def empty(self):             # <<<<<<<<<<<<<<
  *         return True
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_7Channel_11empty, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Channel_empty, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__76)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 595, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Channel->tp_dict, __pyx_n_s_empty, __pyx_t_2) < 0) __PYX_ERR(0, 595, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_7Channel_11empty, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Channel_empty, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__76)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 600, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Channel->tp_dict, __pyx_n_s_empty, __pyx_t_6) < 0) __PYX_ERR(0, 600, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_Channel);
 
-  /* "src/gevent/queue.py":598
+  /* "src/gevent/queue.py":603
  *         return True
  * 
  *     def full(self):             # <<<<<<<<<<<<<<
  *         return True
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_7Channel_13full, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Channel_full, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__78)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 598, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Channel->tp_dict, __pyx_n_s_full, __pyx_t_2) < 0) __PYX_ERR(0, 598, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_7Channel_13full, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Channel_full, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__78)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 603, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Channel->tp_dict, __pyx_n_s_full, __pyx_t_6) < 0) __PYX_ERR(0, 603, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_Channel);
 
-  /* "src/gevent/queue.py":601
+  /* "src/gevent/queue.py":606
  *         return True
  * 
  *     def put(self, item, block=True, timeout=None):             # <<<<<<<<<<<<<<
  *         if self.hub is getcurrent():
  *             if self.getters:
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_7Channel_15put, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Channel_put, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__80)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 601, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Channel->tp_dict, __pyx_n_s_put_2, __pyx_t_2) < 0) __PYX_ERR(0, 601, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_7Channel_15put, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Channel_put, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__80)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 606, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Channel->tp_dict, __pyx_n_s_put_2, __pyx_t_6) < 0) __PYX_ERR(0, 606, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_Channel);
 
-  /* "src/gevent/queue.py":628
+  /* "src/gevent/queue.py":633
  *             timeout.cancel()
  * 
  *     def put_nowait(self, item):             # <<<<<<<<<<<<<<
  *         self.put(item, False)
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_7Channel_17put_nowait, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Channel_put_nowait, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__82)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 628, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Channel->tp_dict, __pyx_n_s_put_nowait, __pyx_t_2) < 0) __PYX_ERR(0, 628, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_7Channel_17put_nowait, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Channel_put_nowait, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__82)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 633, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Channel->tp_dict, __pyx_n_s_put_nowait, __pyx_t_6) < 0) __PYX_ERR(0, 633, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_Channel);
 
-  /* "src/gevent/queue.py":631
+  /* "src/gevent/queue.py":636
  *         self.put(item, False)
  * 
  *     def get(self, block=True, timeout=None):             # <<<<<<<<<<<<<<
  *         if self.hub is getcurrent():
  *             if self.putters:
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_7Channel_19get, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Channel_get, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__84)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 631, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Channel->tp_dict, __pyx_n_s_get_2, __pyx_t_2) < 0) __PYX_ERR(0, 631, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_7Channel_19get, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Channel_get, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__84)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 636, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Channel->tp_dict, __pyx_n_s_get_2, __pyx_t_6) < 0) __PYX_ERR(0, 636, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_Channel);
 
-  /* "src/gevent/queue.py":654
+  /* "src/gevent/queue.py":659
  *             timeout.close()
  * 
  *     def get_nowait(self):             # <<<<<<<<<<<<<<
  *         return self.get(False)
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_7Channel_21get_nowait, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Channel_get_nowait, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__86)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 654, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Channel->tp_dict, __pyx_n_s_get_nowait, __pyx_t_2) < 0) __PYX_ERR(0, 654, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_7Channel_21get_nowait, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Channel_get_nowait, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__86)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 659, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Channel->tp_dict, __pyx_n_s_get_nowait, __pyx_t_6) < 0) __PYX_ERR(0, 659, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_Channel);
 
-  /* "src/gevent/queue.py":657
+  /* "src/gevent/queue.py":662
  *         return self.get(False)
  * 
  *     def _unlock(self):             # <<<<<<<<<<<<<<
  *         while self.putters and self.getters:
  *             getter = self.getters.popleft()
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_7Channel_23_unlock, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Channel__unlock, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__88)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 657, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Channel->tp_dict, __pyx_n_s_unlock, __pyx_t_2) < 0) __PYX_ERR(0, 657, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_queue_7Channel_23_unlock, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Channel__unlock, NULL, __pyx_n_s_gevent__queue, __pyx_d, ((PyObject *)__pyx_codeobj__88)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 662, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Channel->tp_dict, __pyx_n_s_unlock, __pyx_t_6) < 0) __PYX_ERR(0, 662, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_Channel);
 
-  /* "src/gevent/queue.py":677
+  /* "src/gevent/queue.py":682
  *         return result
  * 
  *     next = __next__ # Py2             # <<<<<<<<<<<<<<
  * 
  * from gevent._util import import_c_accel
  */
-  __pyx_t_2 = __Pyx_GetNameInClass((PyObject *)__pyx_ptype_6gevent_6_queue_Channel, __pyx_n_s_next); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 677, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Channel->tp_dict, __pyx_n_s_next_2, __pyx_t_2) < 0) __PYX_ERR(0, 677, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_GetNameInClass((PyObject *)__pyx_ptype_6gevent_6_queue_Channel, __pyx_n_s_next); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 682, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_queue_Channel->tp_dict, __pyx_n_s_next_2, __pyx_t_6) < 0) __PYX_ERR(0, 682, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_queue_Channel);
 
-  /* "src/gevent/queue.py":679
+  /* "src/gevent/queue.py":684
  *     next = __next__ # Py2
  * 
  * from gevent._util import import_c_accel             # <<<<<<<<<<<<<<
  * import_c_accel(globals(), 'gevent._queue')
  */
-  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 679, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_6 = PyList_New(1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 684, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
   __Pyx_INCREF(__pyx_n_s_import_c_accel);
   __Pyx_GIVEREF(__pyx_n_s_import_c_accel);
-  PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_import_c_accel);
-  __pyx_t_1 = __Pyx_Import(__pyx_n_s_gevent__util, __pyx_t_2, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 679, __pyx_L1_error)
+  PyList_SET_ITEM(__pyx_t_6, 0, __pyx_n_s_import_c_accel);
+  __pyx_t_1 = __Pyx_Import(__pyx_n_s_gevent__util, __pyx_t_6, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 684, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_import_c_accel); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 679, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_import_c_accel, __pyx_t_2) < 0) __PYX_ERR(0, 679, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __pyx_t_6 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_import_c_accel); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 684, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_import_c_accel, __pyx_t_6) < 0) __PYX_ERR(0, 684, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/gevent/queue.py":680
+  /* "src/gevent/queue.py":685
  * 
  * from gevent._util import import_c_accel
  * import_c_accel(globals(), 'gevent._queue')             # <<<<<<<<<<<<<<
  */
-  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_import_c_accel); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 680, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_import_c_accel); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 685, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_Globals(); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 680, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_6 = PyTuple_New(2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 680, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_Globals(); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 685, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __Pyx_GIVEREF(__pyx_t_2);
-  PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_2);
+  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 685, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_GIVEREF(__pyx_t_6);
+  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_6);
   __Pyx_INCREF(__pyx_n_s_gevent__queue);
   __Pyx_GIVEREF(__pyx_n_s_gevent__queue);
-  PyTuple_SET_ITEM(__pyx_t_6, 1, __pyx_n_s_gevent__queue);
-  __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_6, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 680, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
+  PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_n_s_gevent__queue);
+  __pyx_t_6 = 0;
+  __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_2, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 685, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
   /* "src/gevent/queue.py":1
  * # Copyright (c) 2009-2012 Denis Bilenko. See LICENSE for details.             # <<<<<<<<<<<<<<
  * # copyright (c) 2018 gevent
  * # cython: auto_pickle=False,embedsignature=True,always_allow_keywords=False
  */
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_6) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
   /* "gevent/_event.pxd":30
  *     return PyGreenlet_GetCurrent()
@@ -18582,6 +18604,7 @@ if (!__Pyx_RefNanny) {
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_6);
+  __Pyx_XDECREF(__pyx_t_7);
   if (__pyx_m) {
     if (__pyx_d) {
       __Pyx_AddTraceback("init gevent._queue", 0, __pyx_lineno, __pyx_filename);

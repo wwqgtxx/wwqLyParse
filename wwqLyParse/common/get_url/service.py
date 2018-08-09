@@ -32,18 +32,18 @@ class GetUrlService(object):
             config.read(get_real_path("./config.ini"))
             self.http_proxy = config.get("get_url", "http_proxy", fallback=None)
             self.ssl_verify = config.getboolean("get_url", "ssl_verify", fallback=True)
-            # if self.impl is None:
-            #     try:
-            #         from .aiohttp import AioHttpGetUrlImpl
-            #         self.impl = AioHttpGetUrlImpl(self)
-            #     except:
-            #         pass
-            # if self.impl is None:
-            #     try:
-            #         from .requests import RequestsGetUrlImpl
-            #         self.impl = RequestsGetUrlImpl(self)
-            #     except:
-            #         pass
+            if self.impl is None:
+                try:
+                    from .aiohttp import AioHttpGetUrlImpl
+                    self.impl = AioHttpGetUrlImpl(self)
+                except:
+                    pass
+            if self.impl is None:
+                try:
+                    from .requests import RequestsGetUrlImpl
+                    self.impl = RequestsGetUrlImpl(self)
+                except:
+                    pass
             if self.impl is None:
                 try:
                     from .urllib import UrlLibGetUrlImpl

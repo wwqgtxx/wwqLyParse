@@ -8,7 +8,7 @@
             "src\\gevent\\_local.pxd"
         ],
         "include_dirs": [
-            "X:\\Python36\\Include",
+            "d:\\python37\\Include",
             "deps"
         ],
         "name": "gevent._local",
@@ -1574,9 +1574,6 @@ static CYTHON_INLINE int __Pyx_PyDict_ContainsTF(PyObject* item, PyObject* dict,
     return unlikely(result < 0) ? result : (result == (eq == Py_EQ));
 }
 
-/* HasAttr.proto */
-static CYTHON_INLINE int __Pyx_HasAttr(PyObject *, PyObject *);
-
 /* PySequenceContains.proto */
 static CYTHON_INLINE int __Pyx_PySequence_ContainsTF(PyObject* item, PyObject* seq, int eq) {
     int result = PySequence_Contains(seq, item);
@@ -1611,6 +1608,9 @@ static CYTHON_INLINE PyObject *__Pyx_PyObject_GetItem(PyObject *obj, PyObject* k
 #else
 #define __Pyx_PyObject_GetItem(obj, key)  PyObject_GetItem(obj, key)
 #endif
+
+/* HasAttr.proto */
+static CYTHON_INLINE int __Pyx_HasAttr(PyObject *, PyObject *);
 
 /* SliceTupleAndList.proto */
 #if CYTHON_COMPILING_IN_CPYTHON
@@ -4887,6 +4887,10 @@ static PyObject *__pyx_pw_6gevent_6_local_5local_3__getattribute__(PyObject *__p
 static PyObject *__pyx_pf_6gevent_6_local_5local_2__getattribute__(struct __pyx_obj_6gevent_6_local_local *__pyx_v_self, PyObject *__pyx_v_name) {
   PyObject *__pyx_v_dct = NULL;
   PyObject *__pyx_v_type_attr = NULL;
+  PyObject *__pyx_v_base = NULL;
+  PyObject *__pyx_v_bd = NULL;
+  PyObject *__pyx_v_attr_on_type = NULL;
+  PyObject *__pyx_v_result = NULL;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
@@ -4897,6 +4901,8 @@ static PyObject *__pyx_pf_6gevent_6_local_5local_2__getattribute__(struct __pyx_
   int __pyx_t_6;
   PyObject *__pyx_t_7 = NULL;
   PyObject *__pyx_t_8 = NULL;
+  Py_ssize_t __pyx_t_9;
+  PyObject *(*__pyx_t_10)(PyObject *);
   __Pyx_RefNannySetupContext("__getattribute__", 0);
 
   /* "src/gevent/local.py":383
@@ -5353,8 +5359,8 @@ static PyObject *__pyx_pf_6gevent_6_local_5local_2__getattribute__(struct __pyx_
  *             return dct[name]
  * 
  *         if name in self._local_type_vars:             # <<<<<<<<<<<<<<
- *             type_attr = getattr(self._local_type, name)
- * 
+ *             # Not in the dictionary, but is found in the type. It could be
+ *             # a non-data descriptor still. Some descriptors, like @staticmethod,
  */
   if (unlikely(__pyx_v_self->_local_type_vars == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
@@ -5364,69 +5370,57 @@ static PyObject *__pyx_pf_6gevent_6_local_5local_2__getattribute__(struct __pyx_
   __pyx_t_2 = (__pyx_t_1 != 0);
   if (__pyx_t_2) {
 
-    /* "src/gevent/local.py":441
- * 
- *         if name in self._local_type_vars:
- *             type_attr = getattr(self._local_type, name)             # <<<<<<<<<<<<<<
- * 
- *             # It's not in the dict at all. Is it in the type?
- */
-    __pyx_t_4 = ((PyObject *)__pyx_v_self->_local_type);
-    __Pyx_INCREF(__pyx_t_4);
-    __pyx_t_3 = __Pyx_GetAttr(__pyx_t_4, __pyx_v_name); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 441, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_v_type_attr = __pyx_t_3;
-    __pyx_t_3 = 0;
-
-    /* "src/gevent/local.py":444
- * 
- *             # It's not in the dict at all. Is it in the type?
+    /* "src/gevent/local.py":447
+ *             # So we can't rely on getattr() on the type for them, we have to
+ *             # look through the MRO dicts ourself.
  *             if name not in self._local_type_get_descriptors:             # <<<<<<<<<<<<<<
- *                 # Not a descriptor, can't execute code
- *                 return type_attr
+ *                 # Not a descriptor, can't execute code. So all we need is
+ *                 # the return value of getattr() on our type.
  */
     if (unlikely(__pyx_v_self->_local_type_get_descriptors == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-      __PYX_ERR(0, 444, __pyx_L1_error)
+      __PYX_ERR(0, 447, __pyx_L1_error)
     }
-    __pyx_t_2 = (__Pyx_PySet_ContainsTF(__pyx_v_name, __pyx_v_self->_local_type_get_descriptors, Py_NE)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 444, __pyx_L1_error)
+    __pyx_t_2 = (__Pyx_PySet_ContainsTF(__pyx_v_name, __pyx_v_self->_local_type_get_descriptors, Py_NE)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 447, __pyx_L1_error)
     __pyx_t_1 = (__pyx_t_2 != 0);
     if (__pyx_t_1) {
 
-      /* "src/gevent/local.py":446
- *             if name not in self._local_type_get_descriptors:
- *                 # Not a descriptor, can't execute code
- *                 return type_attr             # <<<<<<<<<<<<<<
- *             return type(type_attr).__get__(type_attr, self, self._local_type)
+      /* "src/gevent/local.py":450
+ *                 # Not a descriptor, can't execute code. So all we need is
+ *                 # the return value of getattr() on our type.
+ *                 return getattr(self._local_type, name)             # <<<<<<<<<<<<<<
  * 
+ *             for base in self._local_type.mro():
  */
       __Pyx_XDECREF(__pyx_r);
-      __Pyx_INCREF(__pyx_v_type_attr);
-      __pyx_r = __pyx_v_type_attr;
+      __pyx_t_4 = ((PyObject *)__pyx_v_self->_local_type);
+      __Pyx_INCREF(__pyx_t_4);
+      __pyx_t_3 = __Pyx_GetAttr(__pyx_t_4, __pyx_v_name); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 450, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
+      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+      __pyx_r = __pyx_t_3;
+      __pyx_t_3 = 0;
       goto __pyx_L0;
 
-      /* "src/gevent/local.py":444
- * 
- *             # It's not in the dict at all. Is it in the type?
+      /* "src/gevent/local.py":447
+ *             # So we can't rely on getattr() on the type for them, we have to
+ *             # look through the MRO dicts ourself.
  *             if name not in self._local_type_get_descriptors:             # <<<<<<<<<<<<<<
- *                 # Not a descriptor, can't execute code
- *                 return type_attr
+ *                 # Not a descriptor, can't execute code. So all we need is
+ *                 # the return value of getattr() on our type.
  */
     }
 
-    /* "src/gevent/local.py":447
- *                 # Not a descriptor, can't execute code
- *                 return type_attr
- *             return type(type_attr).__get__(type_attr, self, self._local_type)             # <<<<<<<<<<<<<<
+    /* "src/gevent/local.py":452
+ *                 return getattr(self._local_type, name)
  * 
- *         # It wasn't in the dict and it wasn't in the type.
+ *             for base in self._local_type.mro():             # <<<<<<<<<<<<<<
+ *                 bd = base.__dict__
+ *                 if name in bd:
  */
-    __Pyx_XDECREF(__pyx_r);
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)Py_TYPE(__pyx_v_type_attr)), __pyx_n_s_get); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 447, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self->_local_type), __pyx_n_s_mro); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 452, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_8 = NULL;
-    __pyx_t_6 = 0;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
       __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_4);
       if (likely(__pyx_t_8)) {
@@ -5434,73 +5428,210 @@ static PyObject *__pyx_pf_6gevent_6_local_5local_2__getattribute__(struct __pyx_
         __Pyx_INCREF(__pyx_t_8);
         __Pyx_INCREF(function);
         __Pyx_DECREF_SET(__pyx_t_4, function);
-        __pyx_t_6 = 1;
       }
     }
-    #if CYTHON_FAST_PYCALL
-    if (PyFunction_Check(__pyx_t_4)) {
-      PyObject *__pyx_temp[4] = {__pyx_t_8, __pyx_v_type_attr, ((PyObject *)__pyx_v_self), ((PyObject *)__pyx_v_self->_local_type)};
-      __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_6, 3+__pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 447, __pyx_L1_error)
-      __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-      __Pyx_GOTREF(__pyx_t_3);
-    } else
-    #endif
-    #if CYTHON_FAST_PYCCALL
-    if (__Pyx_PyFastCFunction_Check(__pyx_t_4)) {
-      PyObject *__pyx_temp[4] = {__pyx_t_8, __pyx_v_type_attr, ((PyObject *)__pyx_v_self), ((PyObject *)__pyx_v_self->_local_type)};
-      __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_6, 3+__pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 447, __pyx_L1_error)
-      __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-      __Pyx_GOTREF(__pyx_t_3);
-    } else
-    #endif
-    {
-      __pyx_t_7 = PyTuple_New(3+__pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 447, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_7);
-      if (__pyx_t_8) {
-        __Pyx_GIVEREF(__pyx_t_8); PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_8); __pyx_t_8 = NULL;
+    if (__pyx_t_8) {
+      __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_8); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 452, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+    } else {
+      __pyx_t_3 = __Pyx_PyObject_CallNoArg(__pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 452, __pyx_L1_error)
+    }
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    if (likely(PyList_CheckExact(__pyx_t_3)) || PyTuple_CheckExact(__pyx_t_3)) {
+      __pyx_t_4 = __pyx_t_3; __Pyx_INCREF(__pyx_t_4); __pyx_t_9 = 0;
+      __pyx_t_10 = NULL;
+    } else {
+      __pyx_t_9 = -1; __pyx_t_4 = PyObject_GetIter(__pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 452, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      __pyx_t_10 = Py_TYPE(__pyx_t_4)->tp_iternext; if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 452, __pyx_L1_error)
+    }
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    for (;;) {
+      if (likely(!__pyx_t_10)) {
+        if (likely(PyList_CheckExact(__pyx_t_4))) {
+          if (__pyx_t_9 >= PyList_GET_SIZE(__pyx_t_4)) break;
+          #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+          __pyx_t_3 = PyList_GET_ITEM(__pyx_t_4, __pyx_t_9); __Pyx_INCREF(__pyx_t_3); __pyx_t_9++; if (unlikely(0 < 0)) __PYX_ERR(0, 452, __pyx_L1_error)
+          #else
+          __pyx_t_3 = PySequence_ITEM(__pyx_t_4, __pyx_t_9); __pyx_t_9++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 452, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_3);
+          #endif
+        } else {
+          if (__pyx_t_9 >= PyTuple_GET_SIZE(__pyx_t_4)) break;
+          #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+          __pyx_t_3 = PyTuple_GET_ITEM(__pyx_t_4, __pyx_t_9); __Pyx_INCREF(__pyx_t_3); __pyx_t_9++; if (unlikely(0 < 0)) __PYX_ERR(0, 452, __pyx_L1_error)
+          #else
+          __pyx_t_3 = PySequence_ITEM(__pyx_t_4, __pyx_t_9); __pyx_t_9++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 452, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_3);
+          #endif
+        }
+      } else {
+        __pyx_t_3 = __pyx_t_10(__pyx_t_4);
+        if (unlikely(!__pyx_t_3)) {
+          PyObject* exc_type = PyErr_Occurred();
+          if (exc_type) {
+            if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
+            else __PYX_ERR(0, 452, __pyx_L1_error)
+          }
+          break;
+        }
+        __Pyx_GOTREF(__pyx_t_3);
       }
-      __Pyx_INCREF(__pyx_v_type_attr);
-      __Pyx_GIVEREF(__pyx_v_type_attr);
-      PyTuple_SET_ITEM(__pyx_t_7, 0+__pyx_t_6, __pyx_v_type_attr);
-      __Pyx_INCREF(((PyObject *)__pyx_v_self));
-      __Pyx_GIVEREF(((PyObject *)__pyx_v_self));
-      PyTuple_SET_ITEM(__pyx_t_7, 1+__pyx_t_6, ((PyObject *)__pyx_v_self));
-      __Pyx_INCREF(((PyObject *)__pyx_v_self->_local_type));
-      __Pyx_GIVEREF(((PyObject *)__pyx_v_self->_local_type));
-      PyTuple_SET_ITEM(__pyx_t_7, 2+__pyx_t_6, ((PyObject *)__pyx_v_self->_local_type));
-      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_7, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 447, __pyx_L1_error)
+      __Pyx_XDECREF_SET(__pyx_v_base, __pyx_t_3);
+      __pyx_t_3 = 0;
+
+      /* "src/gevent/local.py":453
+ * 
+ *             for base in self._local_type.mro():
+ *                 bd = base.__dict__             # <<<<<<<<<<<<<<
+ *                 if name in bd:
+ *                     attr_on_type = bd[name]
+ */
+      __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_base, __pyx_n_s_dict); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 453, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+      __Pyx_XDECREF_SET(__pyx_v_bd, __pyx_t_3);
+      __pyx_t_3 = 0;
+
+      /* "src/gevent/local.py":454
+ *             for base in self._local_type.mro():
+ *                 bd = base.__dict__
+ *                 if name in bd:             # <<<<<<<<<<<<<<
+ *                     attr_on_type = bd[name]
+ *                     result = type(attr_on_type).__get__(attr_on_type, self, self._local_type)
+ */
+      __pyx_t_1 = (__Pyx_PySequence_ContainsTF(__pyx_v_name, __pyx_v_bd, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 454, __pyx_L1_error)
+      __pyx_t_2 = (__pyx_t_1 != 0);
+      if (__pyx_t_2) {
+
+        /* "src/gevent/local.py":455
+ *                 bd = base.__dict__
+ *                 if name in bd:
+ *                     attr_on_type = bd[name]             # <<<<<<<<<<<<<<
+ *                     result = type(attr_on_type).__get__(attr_on_type, self, self._local_type)
+ *                     return result
+ */
+        __pyx_t_3 = __Pyx_PyObject_GetItem(__pyx_v_bd, __pyx_v_name); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 455, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_3);
+        __pyx_v_attr_on_type = __pyx_t_3;
+        __pyx_t_3 = 0;
+
+        /* "src/gevent/local.py":456
+ *                 if name in bd:
+ *                     attr_on_type = bd[name]
+ *                     result = type(attr_on_type).__get__(attr_on_type, self, self._local_type)             # <<<<<<<<<<<<<<
+ *                     return result
+ * 
+ */
+        __pyx_t_8 = __Pyx_PyObject_GetAttrStr(((PyObject *)Py_TYPE(__pyx_v_attr_on_type)), __pyx_n_s_get); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 456, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_8);
+        __pyx_t_7 = NULL;
+        __pyx_t_6 = 0;
+        if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_8))) {
+          __pyx_t_7 = PyMethod_GET_SELF(__pyx_t_8);
+          if (likely(__pyx_t_7)) {
+            PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_8);
+            __Pyx_INCREF(__pyx_t_7);
+            __Pyx_INCREF(function);
+            __Pyx_DECREF_SET(__pyx_t_8, function);
+            __pyx_t_6 = 1;
+          }
+        }
+        #if CYTHON_FAST_PYCALL
+        if (PyFunction_Check(__pyx_t_8)) {
+          PyObject *__pyx_temp[4] = {__pyx_t_7, __pyx_v_attr_on_type, ((PyObject *)__pyx_v_self), ((PyObject *)__pyx_v_self->_local_type)};
+          __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_8, __pyx_temp+1-__pyx_t_6, 3+__pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 456, __pyx_L1_error)
+          __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
+          __Pyx_GOTREF(__pyx_t_3);
+        } else
+        #endif
+        #if CYTHON_FAST_PYCCALL
+        if (__Pyx_PyFastCFunction_Check(__pyx_t_8)) {
+          PyObject *__pyx_temp[4] = {__pyx_t_7, __pyx_v_attr_on_type, ((PyObject *)__pyx_v_self), ((PyObject *)__pyx_v_self->_local_type)};
+          __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_8, __pyx_temp+1-__pyx_t_6, 3+__pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 456, __pyx_L1_error)
+          __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
+          __Pyx_GOTREF(__pyx_t_3);
+        } else
+        #endif
+        {
+          __pyx_t_5 = PyTuple_New(3+__pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 456, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_5);
+          if (__pyx_t_7) {
+            __Pyx_GIVEREF(__pyx_t_7); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_7); __pyx_t_7 = NULL;
+          }
+          __Pyx_INCREF(__pyx_v_attr_on_type);
+          __Pyx_GIVEREF(__pyx_v_attr_on_type);
+          PyTuple_SET_ITEM(__pyx_t_5, 0+__pyx_t_6, __pyx_v_attr_on_type);
+          __Pyx_INCREF(((PyObject *)__pyx_v_self));
+          __Pyx_GIVEREF(((PyObject *)__pyx_v_self));
+          PyTuple_SET_ITEM(__pyx_t_5, 1+__pyx_t_6, ((PyObject *)__pyx_v_self));
+          __Pyx_INCREF(((PyObject *)__pyx_v_self->_local_type));
+          __Pyx_GIVEREF(((PyObject *)__pyx_v_self->_local_type));
+          PyTuple_SET_ITEM(__pyx_t_5, 2+__pyx_t_6, ((PyObject *)__pyx_v_self->_local_type));
+          __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_8, __pyx_t_5, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 456, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_3);
+          __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+        }
+        __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+        __pyx_v_result = __pyx_t_3;
+        __pyx_t_3 = 0;
+
+        /* "src/gevent/local.py":457
+ *                     attr_on_type = bd[name]
+ *                     result = type(attr_on_type).__get__(attr_on_type, self, self._local_type)
+ *                     return result             # <<<<<<<<<<<<<<
+ * 
+ *         # It wasn't in the dict and it wasn't in the type.
+ */
+        __Pyx_XDECREF(__pyx_r);
+        __Pyx_INCREF(__pyx_v_result);
+        __pyx_r = __pyx_v_result;
+        __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+        goto __pyx_L0;
+
+        /* "src/gevent/local.py":454
+ *             for base in self._local_type.mro():
+ *                 bd = base.__dict__
+ *                 if name in bd:             # <<<<<<<<<<<<<<
+ *                     attr_on_type = bd[name]
+ *                     result = type(attr_on_type).__get__(attr_on_type, self, self._local_type)
+ */
+      }
+
+      /* "src/gevent/local.py":452
+ *                 return getattr(self._local_type, name)
+ * 
+ *             for base in self._local_type.mro():             # <<<<<<<<<<<<<<
+ *                 bd = base.__dict__
+ *                 if name in bd:
+ */
     }
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_r = __pyx_t_3;
-    __pyx_t_3 = 0;
-    goto __pyx_L0;
 
     /* "src/gevent/local.py":440
  *             return dct[name]
  * 
  *         if name in self._local_type_vars:             # <<<<<<<<<<<<<<
- *             type_attr = getattr(self._local_type, name)
- * 
+ *             # Not in the dictionary, but is found in the type. It could be
+ *             # a non-data descriptor still. Some descriptors, like @staticmethod,
  */
   }
 
-  /* "src/gevent/local.py":453
+  /* "src/gevent/local.py":463
  *         # exists, otherwise raise an AttributeError.
  *         # we will invoke type(self).__getattr__ or raise an attribute error.
  *         if hasattr(self._local_type, '__getattr__'):             # <<<<<<<<<<<<<<
  *             return self._local_type.__getattr__(self, name)
  *         raise AttributeError("%r object has no attribute '%s'"
  */
-  __pyx_t_3 = ((PyObject *)__pyx_v_self->_local_type);
-  __Pyx_INCREF(__pyx_t_3);
-  __pyx_t_1 = __Pyx_HasAttr(__pyx_t_3, __pyx_n_s_getattr); if (unlikely(__pyx_t_1 == ((int)-1))) __PYX_ERR(0, 453, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_2 = (__pyx_t_1 != 0);
-  if (__pyx_t_2) {
+  __pyx_t_4 = ((PyObject *)__pyx_v_self->_local_type);
+  __Pyx_INCREF(__pyx_t_4);
+  __pyx_t_2 = __Pyx_HasAttr(__pyx_t_4, __pyx_n_s_getattr); if (unlikely(__pyx_t_2 == ((int)-1))) __PYX_ERR(0, 463, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_t_1 = (__pyx_t_2 != 0);
+  if (__pyx_t_1) {
 
-    /* "src/gevent/local.py":454
+    /* "src/gevent/local.py":464
  *         # we will invoke type(self).__getattr__ or raise an attribute error.
  *         if hasattr(self._local_type, '__getattr__'):
  *             return self._local_type.__getattr__(self, name)             # <<<<<<<<<<<<<<
@@ -5508,58 +5639,58 @@ static PyObject *__pyx_pf_6gevent_6_local_5local_2__getattribute__(struct __pyx_
  *                              % (self._local_type.__name__, name))
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self->_local_type), __pyx_n_s_getattr); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 454, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_7 = NULL;
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self->_local_type), __pyx_n_s_getattr); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 464, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_8 = NULL;
     __pyx_t_6 = 0;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
-      __pyx_t_7 = PyMethod_GET_SELF(__pyx_t_4);
-      if (likely(__pyx_t_7)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
-        __Pyx_INCREF(__pyx_t_7);
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
+      __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_3);
+      if (likely(__pyx_t_8)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+        __Pyx_INCREF(__pyx_t_8);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_4, function);
+        __Pyx_DECREF_SET(__pyx_t_3, function);
         __pyx_t_6 = 1;
       }
     }
     #if CYTHON_FAST_PYCALL
-    if (PyFunction_Check(__pyx_t_4)) {
-      PyObject *__pyx_temp[3] = {__pyx_t_7, ((PyObject *)__pyx_v_self), __pyx_v_name};
-      __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_6, 2+__pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 454, __pyx_L1_error)
-      __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-      __Pyx_GOTREF(__pyx_t_3);
+    if (PyFunction_Check(__pyx_t_3)) {
+      PyObject *__pyx_temp[3] = {__pyx_t_8, ((PyObject *)__pyx_v_self), __pyx_v_name};
+      __pyx_t_4 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_6, 2+__pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 464, __pyx_L1_error)
+      __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
+      __Pyx_GOTREF(__pyx_t_4);
     } else
     #endif
     #if CYTHON_FAST_PYCCALL
-    if (__Pyx_PyFastCFunction_Check(__pyx_t_4)) {
-      PyObject *__pyx_temp[3] = {__pyx_t_7, ((PyObject *)__pyx_v_self), __pyx_v_name};
-      __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_6, 2+__pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 454, __pyx_L1_error)
-      __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-      __Pyx_GOTREF(__pyx_t_3);
+    if (__Pyx_PyFastCFunction_Check(__pyx_t_3)) {
+      PyObject *__pyx_temp[3] = {__pyx_t_8, ((PyObject *)__pyx_v_self), __pyx_v_name};
+      __pyx_t_4 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_6, 2+__pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 464, __pyx_L1_error)
+      __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
+      __Pyx_GOTREF(__pyx_t_4);
     } else
     #endif
     {
-      __pyx_t_8 = PyTuple_New(2+__pyx_t_6); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 454, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_8);
-      if (__pyx_t_7) {
-        __Pyx_GIVEREF(__pyx_t_7); PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_7); __pyx_t_7 = NULL;
+      __pyx_t_5 = PyTuple_New(2+__pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 464, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      if (__pyx_t_8) {
+        __Pyx_GIVEREF(__pyx_t_8); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_8); __pyx_t_8 = NULL;
       }
       __Pyx_INCREF(((PyObject *)__pyx_v_self));
       __Pyx_GIVEREF(((PyObject *)__pyx_v_self));
-      PyTuple_SET_ITEM(__pyx_t_8, 0+__pyx_t_6, ((PyObject *)__pyx_v_self));
+      PyTuple_SET_ITEM(__pyx_t_5, 0+__pyx_t_6, ((PyObject *)__pyx_v_self));
       __Pyx_INCREF(__pyx_v_name);
       __Pyx_GIVEREF(__pyx_v_name);
-      PyTuple_SET_ITEM(__pyx_t_8, 1+__pyx_t_6, __pyx_v_name);
-      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_8, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 454, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_3);
-      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+      PyTuple_SET_ITEM(__pyx_t_5, 1+__pyx_t_6, __pyx_v_name);
+      __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_5, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 464, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     }
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_r = __pyx_t_3;
-    __pyx_t_3 = 0;
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __pyx_r = __pyx_t_4;
+    __pyx_t_4 = 0;
     goto __pyx_L0;
 
-    /* "src/gevent/local.py":453
+    /* "src/gevent/local.py":463
  *         # exists, otherwise raise an AttributeError.
  *         # we will invoke type(self).__getattr__ or raise an attribute error.
  *         if hasattr(self._local_type, '__getattr__'):             # <<<<<<<<<<<<<<
@@ -5568,40 +5699,40 @@ static PyObject *__pyx_pf_6gevent_6_local_5local_2__getattribute__(struct __pyx_
  */
   }
 
-  /* "src/gevent/local.py":456
+  /* "src/gevent/local.py":466
  *             return self._local_type.__getattr__(self, name)
  *         raise AttributeError("%r object has no attribute '%s'"
  *                              % (self._local_type.__name__, name))             # <<<<<<<<<<<<<<
  * 
  *     def __setattr__(self, name, value):
  */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self->_local_type), __pyx_n_s_name); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 456, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 456, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self->_local_type), __pyx_n_s_name); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 466, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_GIVEREF(__pyx_t_3);
-  PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_3);
+  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 466, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_GIVEREF(__pyx_t_4);
+  PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_4);
   __Pyx_INCREF(__pyx_v_name);
   __Pyx_GIVEREF(__pyx_v_name);
-  PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_v_name);
-  __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyString_Format(__pyx_kp_s_r_object_has_no_attribute_s, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 456, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_v_name);
+  __pyx_t_4 = 0;
+  __pyx_t_4 = __Pyx_PyString_Format(__pyx_kp_s_r_object_has_no_attribute_s, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 466, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "src/gevent/local.py":455
+  /* "src/gevent/local.py":465
  *         if hasattr(self._local_type, '__getattr__'):
  *             return self._local_type.__getattr__(self, name)
  *         raise AttributeError("%r object has no attribute '%s'"             # <<<<<<<<<<<<<<
  *                              % (self._local_type.__name__, name))
  * 
  */
-  __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_builtin_AttributeError, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 455, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_Raise(__pyx_t_4, 0, 0, 0);
+  __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_builtin_AttributeError, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 465, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __PYX_ERR(0, 455, __pyx_L1_error)
+  __Pyx_Raise(__pyx_t_3, 0, 0, 0);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __PYX_ERR(0, 465, __pyx_L1_error)
 
   /* "src/gevent/local.py":382
  *         self._local_type_vars = set(dir(self._local_type))
@@ -5623,12 +5754,16 @@ static PyObject *__pyx_pf_6gevent_6_local_5local_2__getattribute__(struct __pyx_
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_dct);
   __Pyx_XDECREF(__pyx_v_type_attr);
+  __Pyx_XDECREF(__pyx_v_base);
+  __Pyx_XDECREF(__pyx_v_bd);
+  __Pyx_XDECREF(__pyx_v_attr_on_type);
+  __Pyx_XDECREF(__pyx_v_result);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "src/gevent/local.py":458
+/* "src/gevent/local.py":468
  *                              % (self._local_type.__name__, name))
  * 
  *     def __setattr__(self, name, value):             # <<<<<<<<<<<<<<
@@ -5663,41 +5798,41 @@ static int __pyx_pf_6gevent_6_local_5local_4__setattr__(struct __pyx_obj_6gevent
   PyObject *__pyx_t_7 = NULL;
   __Pyx_RefNannySetupContext("__setattr__", 0);
 
-  /* "src/gevent/local.py":459
+  /* "src/gevent/local.py":469
  * 
  *     def __setattr__(self, name, value):
  *         if name == '__dict__':             # <<<<<<<<<<<<<<
  *             raise AttributeError(
  *                 "%r object attribute '__dict__' is read-only"
  */
-  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_name, __pyx_n_s_dict, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 459, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_name, __pyx_n_s_dict, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 469, __pyx_L1_error)
   if (unlikely(__pyx_t_1)) {
 
-    /* "src/gevent/local.py":462
+    /* "src/gevent/local.py":472
  *             raise AttributeError(
  *                 "%r object attribute '__dict__' is read-only"
  *                 % type(self))             # <<<<<<<<<<<<<<
  * 
  *         if name in _local_attrs:
  */
-    __pyx_t_2 = __Pyx_PyString_Format(__pyx_kp_s_r_object_attribute___dict___is, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self)))); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 462, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyString_Format(__pyx_kp_s_r_object_attribute___dict___is, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self)))); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 472, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
 
-    /* "src/gevent/local.py":460
+    /* "src/gevent/local.py":470
  *     def __setattr__(self, name, value):
  *         if name == '__dict__':
  *             raise AttributeError(             # <<<<<<<<<<<<<<
  *                 "%r object attribute '__dict__' is read-only"
  *                 % type(self))
  */
-    __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_builtin_AttributeError, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 460, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_builtin_AttributeError, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 470, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __PYX_ERR(0, 460, __pyx_L1_error)
+    __PYX_ERR(0, 470, __pyx_L1_error)
 
-    /* "src/gevent/local.py":459
+    /* "src/gevent/local.py":469
  * 
  *     def __setattr__(self, name, value):
  *         if name == '__dict__':             # <<<<<<<<<<<<<<
@@ -5706,7 +5841,7 @@ static int __pyx_pf_6gevent_6_local_5local_4__setattr__(struct __pyx_obj_6gevent
  */
   }
 
-  /* "src/gevent/local.py":464
+  /* "src/gevent/local.py":474
  *                 % type(self))
  * 
  *         if name in _local_attrs:             # <<<<<<<<<<<<<<
@@ -5715,20 +5850,20 @@ static int __pyx_pf_6gevent_6_local_5local_4__setattr__(struct __pyx_obj_6gevent
  */
   if (unlikely(__pyx_v_6gevent_6_local__local_attrs == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-    __PYX_ERR(0, 464, __pyx_L1_error)
+    __PYX_ERR(0, 474, __pyx_L1_error)
   }
-  __pyx_t_1 = (__Pyx_PySet_ContainsTF(__pyx_v_name, __pyx_v_6gevent_6_local__local_attrs, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 464, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PySet_ContainsTF(__pyx_v_name, __pyx_v_6gevent_6_local__local_attrs, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 474, __pyx_L1_error)
   __pyx_t_4 = (__pyx_t_1 != 0);
   if (__pyx_t_4) {
 
-    /* "src/gevent/local.py":465
+    /* "src/gevent/local.py":475
  * 
  *         if name in _local_attrs:
  *             object.__setattr__(self, name, value)             # <<<<<<<<<<<<<<
  *             return
  * 
  */
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_builtin_object, __pyx_n_s_setattr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 465, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_builtin_object, __pyx_n_s_setattr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 475, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_5 = NULL;
     __pyx_t_6 = 0;
@@ -5745,7 +5880,7 @@ static int __pyx_pf_6gevent_6_local_5local_4__setattr__(struct __pyx_obj_6gevent
     #if CYTHON_FAST_PYCALL
     if (PyFunction_Check(__pyx_t_2)) {
       PyObject *__pyx_temp[4] = {__pyx_t_5, ((PyObject *)__pyx_v_self), __pyx_v_name, __pyx_v_value};
-      __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_6, 3+__pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 465, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_6, 3+__pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 475, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
       __Pyx_GOTREF(__pyx_t_3);
     } else
@@ -5753,13 +5888,13 @@ static int __pyx_pf_6gevent_6_local_5local_4__setattr__(struct __pyx_obj_6gevent
     #if CYTHON_FAST_PYCCALL
     if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
       PyObject *__pyx_temp[4] = {__pyx_t_5, ((PyObject *)__pyx_v_self), __pyx_v_name, __pyx_v_value};
-      __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_6, 3+__pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 465, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_6, 3+__pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 475, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
       __Pyx_GOTREF(__pyx_t_3);
     } else
     #endif
     {
-      __pyx_t_7 = PyTuple_New(3+__pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 465, __pyx_L1_error)
+      __pyx_t_7 = PyTuple_New(3+__pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 475, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       if (__pyx_t_5) {
         __Pyx_GIVEREF(__pyx_t_5); PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_5); __pyx_t_5 = NULL;
@@ -5773,14 +5908,14 @@ static int __pyx_pf_6gevent_6_local_5local_4__setattr__(struct __pyx_obj_6gevent
       __Pyx_INCREF(__pyx_v_value);
       __Pyx_GIVEREF(__pyx_v_value);
       PyTuple_SET_ITEM(__pyx_t_7, 2+__pyx_t_6, __pyx_v_value);
-      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_7, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 465, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_7, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 475, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     }
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "src/gevent/local.py":466
+    /* "src/gevent/local.py":476
  *         if name in _local_attrs:
  *             object.__setattr__(self, name, value)
  *             return             # <<<<<<<<<<<<<<
@@ -5790,7 +5925,7 @@ static int __pyx_pf_6gevent_6_local_5local_4__setattr__(struct __pyx_obj_6gevent
     __pyx_r = 0;
     goto __pyx_L0;
 
-    /* "src/gevent/local.py":464
+    /* "src/gevent/local.py":474
  *                 % type(self))
  * 
  *         if name in _local_attrs:             # <<<<<<<<<<<<<<
@@ -5799,19 +5934,19 @@ static int __pyx_pf_6gevent_6_local_5local_4__setattr__(struct __pyx_obj_6gevent
  */
   }
 
-  /* "src/gevent/local.py":468
+  /* "src/gevent/local.py":478
  *             return
  * 
  *         dct = _local_get_dict(self)             # <<<<<<<<<<<<<<
  * 
  *         if self._local_type is local:
  */
-  __pyx_t_3 = __pyx_f_6gevent_6_local__local_get_dict(__pyx_v_self); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 468, __pyx_L1_error)
+  __pyx_t_3 = __pyx_f_6gevent_6_local__local_get_dict(__pyx_v_self); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 478, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_v_dct = ((PyObject*)__pyx_t_3);
   __pyx_t_3 = 0;
 
-  /* "src/gevent/local.py":470
+  /* "src/gevent/local.py":480
  *         dct = _local_get_dict(self)
  * 
  *         if self._local_type is local:             # <<<<<<<<<<<<<<
@@ -5822,7 +5957,7 @@ static int __pyx_pf_6gevent_6_local_5local_4__setattr__(struct __pyx_obj_6gevent
   __pyx_t_1 = (__pyx_t_4 != 0);
   if (__pyx_t_1) {
 
-    /* "src/gevent/local.py":473
+    /* "src/gevent/local.py":483
  *             # Optimization: If we're not subclassed, we can't
  *             # have data descriptors, so this goes right in the dict.
  *             dct[name] = value             # <<<<<<<<<<<<<<
@@ -5831,11 +5966,11 @@ static int __pyx_pf_6gevent_6_local_5local_4__setattr__(struct __pyx_obj_6gevent
  */
     if (unlikely(__pyx_v_dct == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 473, __pyx_L1_error)
+      __PYX_ERR(0, 483, __pyx_L1_error)
     }
-    if (unlikely(PyDict_SetItem(__pyx_v_dct, __pyx_v_name, __pyx_v_value) < 0)) __PYX_ERR(0, 473, __pyx_L1_error)
+    if (unlikely(PyDict_SetItem(__pyx_v_dct, __pyx_v_name, __pyx_v_value) < 0)) __PYX_ERR(0, 483, __pyx_L1_error)
 
-    /* "src/gevent/local.py":474
+    /* "src/gevent/local.py":484
  *             # have data descriptors, so this goes right in the dict.
  *             dct[name] = value
  *             return             # <<<<<<<<<<<<<<
@@ -5845,7 +5980,7 @@ static int __pyx_pf_6gevent_6_local_5local_4__setattr__(struct __pyx_obj_6gevent
     __pyx_r = 0;
     goto __pyx_L0;
 
-    /* "src/gevent/local.py":470
+    /* "src/gevent/local.py":480
  *         dct = _local_get_dict(self)
  * 
  *         if self._local_type is local:             # <<<<<<<<<<<<<<
@@ -5854,7 +5989,7 @@ static int __pyx_pf_6gevent_6_local_5local_4__setattr__(struct __pyx_obj_6gevent
  */
   }
 
-  /* "src/gevent/local.py":476
+  /* "src/gevent/local.py":486
  *             return
  * 
  *         if name in self._local_type_vars:             # <<<<<<<<<<<<<<
@@ -5863,13 +5998,13 @@ static int __pyx_pf_6gevent_6_local_5local_4__setattr__(struct __pyx_obj_6gevent
  */
   if (unlikely(__pyx_v_self->_local_type_vars == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-    __PYX_ERR(0, 476, __pyx_L1_error)
+    __PYX_ERR(0, 486, __pyx_L1_error)
   }
-  __pyx_t_1 = (__Pyx_PySet_ContainsTF(__pyx_v_name, __pyx_v_self->_local_type_vars, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 476, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PySet_ContainsTF(__pyx_v_name, __pyx_v_self->_local_type_vars, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 486, __pyx_L1_error)
   __pyx_t_4 = (__pyx_t_1 != 0);
   if (__pyx_t_4) {
 
-    /* "src/gevent/local.py":477
+    /* "src/gevent/local.py":487
  * 
  *         if name in self._local_type_vars:
  *             if name in self._local_type_set_descriptors:             # <<<<<<<<<<<<<<
@@ -5878,13 +6013,13 @@ static int __pyx_pf_6gevent_6_local_5local_4__setattr__(struct __pyx_obj_6gevent
  */
     if (unlikely(__pyx_v_self->_local_type_set_descriptors == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-      __PYX_ERR(0, 477, __pyx_L1_error)
+      __PYX_ERR(0, 487, __pyx_L1_error)
     }
-    __pyx_t_4 = (__Pyx_PySet_ContainsTF(__pyx_v_name, __pyx_v_self->_local_type_set_descriptors, Py_EQ)); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 477, __pyx_L1_error)
+    __pyx_t_4 = (__Pyx_PySet_ContainsTF(__pyx_v_name, __pyx_v_self->_local_type_set_descriptors, Py_EQ)); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 487, __pyx_L1_error)
     __pyx_t_1 = (__pyx_t_4 != 0);
     if (__pyx_t_1) {
 
-      /* "src/gevent/local.py":478
+      /* "src/gevent/local.py":488
  *         if name in self._local_type_vars:
  *             if name in self._local_type_set_descriptors:
  *                 type_attr = getattr(self._local_type, name, _marker)             # <<<<<<<<<<<<<<
@@ -5895,21 +6030,21 @@ static int __pyx_pf_6gevent_6_local_5local_4__setattr__(struct __pyx_obj_6gevent
       __Pyx_INCREF(__pyx_t_3);
       __pyx_t_2 = __pyx_v_6gevent_6_local__marker;
       __Pyx_INCREF(__pyx_t_2);
-      __pyx_t_7 = __Pyx_GetAttr3(__pyx_t_3, __pyx_v_name, __pyx_t_2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 478, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_GetAttr3(__pyx_t_3, __pyx_v_name, __pyx_t_2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 488, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __pyx_v_type_attr = __pyx_t_7;
       __pyx_t_7 = 0;
 
-      /* "src/gevent/local.py":480
+      /* "src/gevent/local.py":490
  *                 type_attr = getattr(self._local_type, name, _marker)
  *                 # A data descriptor, like a property or a slot.
  *                 type(type_attr).__set__(type_attr, self, value)             # <<<<<<<<<<<<<<
  *                 return
  *         # Otherwise it goes directly in the dict
  */
-      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)Py_TYPE(__pyx_v_type_attr)), __pyx_n_s_set); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 480, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)Py_TYPE(__pyx_v_type_attr)), __pyx_n_s_set); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 490, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __pyx_t_3 = NULL;
       __pyx_t_6 = 0;
@@ -5926,7 +6061,7 @@ static int __pyx_pf_6gevent_6_local_5local_4__setattr__(struct __pyx_obj_6gevent
       #if CYTHON_FAST_PYCALL
       if (PyFunction_Check(__pyx_t_2)) {
         PyObject *__pyx_temp[4] = {__pyx_t_3, __pyx_v_type_attr, ((PyObject *)__pyx_v_self), __pyx_v_value};
-        __pyx_t_7 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_6, 3+__pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 480, __pyx_L1_error)
+        __pyx_t_7 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_6, 3+__pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 490, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
         __Pyx_GOTREF(__pyx_t_7);
       } else
@@ -5934,13 +6069,13 @@ static int __pyx_pf_6gevent_6_local_5local_4__setattr__(struct __pyx_obj_6gevent
       #if CYTHON_FAST_PYCCALL
       if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
         PyObject *__pyx_temp[4] = {__pyx_t_3, __pyx_v_type_attr, ((PyObject *)__pyx_v_self), __pyx_v_value};
-        __pyx_t_7 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_6, 3+__pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 480, __pyx_L1_error)
+        __pyx_t_7 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_6, 3+__pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 490, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
         __Pyx_GOTREF(__pyx_t_7);
       } else
       #endif
       {
-        __pyx_t_5 = PyTuple_New(3+__pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 480, __pyx_L1_error)
+        __pyx_t_5 = PyTuple_New(3+__pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 490, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_5);
         if (__pyx_t_3) {
           __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_3); __pyx_t_3 = NULL;
@@ -5954,14 +6089,14 @@ static int __pyx_pf_6gevent_6_local_5local_4__setattr__(struct __pyx_obj_6gevent
         __Pyx_INCREF(__pyx_v_value);
         __Pyx_GIVEREF(__pyx_v_value);
         PyTuple_SET_ITEM(__pyx_t_5, 2+__pyx_t_6, __pyx_v_value);
-        __pyx_t_7 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, NULL); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 480, __pyx_L1_error)
+        __pyx_t_7 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, NULL); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 490, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_7);
         __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       }
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-      /* "src/gevent/local.py":481
+      /* "src/gevent/local.py":491
  *                 # A data descriptor, like a property or a slot.
  *                 type(type_attr).__set__(type_attr, self, value)
  *                 return             # <<<<<<<<<<<<<<
@@ -5971,7 +6106,7 @@ static int __pyx_pf_6gevent_6_local_5local_4__setattr__(struct __pyx_obj_6gevent
       __pyx_r = 0;
       goto __pyx_L0;
 
-      /* "src/gevent/local.py":477
+      /* "src/gevent/local.py":487
  * 
  *         if name in self._local_type_vars:
  *             if name in self._local_type_set_descriptors:             # <<<<<<<<<<<<<<
@@ -5980,7 +6115,7 @@ static int __pyx_pf_6gevent_6_local_5local_4__setattr__(struct __pyx_obj_6gevent
  */
     }
 
-    /* "src/gevent/local.py":476
+    /* "src/gevent/local.py":486
  *             return
  * 
  *         if name in self._local_type_vars:             # <<<<<<<<<<<<<<
@@ -5989,7 +6124,7 @@ static int __pyx_pf_6gevent_6_local_5local_4__setattr__(struct __pyx_obj_6gevent
  */
   }
 
-  /* "src/gevent/local.py":483
+  /* "src/gevent/local.py":493
  *                 return
  *         # Otherwise it goes directly in the dict
  *         dct[name] = value             # <<<<<<<<<<<<<<
@@ -5998,11 +6133,11 @@ static int __pyx_pf_6gevent_6_local_5local_4__setattr__(struct __pyx_obj_6gevent
  */
   if (unlikely(__pyx_v_dct == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 483, __pyx_L1_error)
+    __PYX_ERR(0, 493, __pyx_L1_error)
   }
-  if (unlikely(PyDict_SetItem(__pyx_v_dct, __pyx_v_name, __pyx_v_value) < 0)) __PYX_ERR(0, 483, __pyx_L1_error)
+  if (unlikely(PyDict_SetItem(__pyx_v_dct, __pyx_v_name, __pyx_v_value) < 0)) __PYX_ERR(0, 493, __pyx_L1_error)
 
-  /* "src/gevent/local.py":458
+  /* "src/gevent/local.py":468
  *                              % (self._local_type.__name__, name))
  * 
  *     def __setattr__(self, name, value):             # <<<<<<<<<<<<<<
@@ -6027,7 +6162,7 @@ static int __pyx_pf_6gevent_6_local_5local_4__setattr__(struct __pyx_obj_6gevent
   return __pyx_r;
 }
 
-/* "src/gevent/local.py":485
+/* "src/gevent/local.py":495
  *         dct[name] = value
  * 
  *     def __delattr__(self, name):             # <<<<<<<<<<<<<<
@@ -6065,47 +6200,47 @@ static int __pyx_pf_6gevent_6_local_5local_6__delattr__(struct __pyx_obj_6gevent
   PyObject *__pyx_t_10 = NULL;
   __Pyx_RefNannySetupContext("__delattr__", 0);
 
-  /* "src/gevent/local.py":486
+  /* "src/gevent/local.py":496
  * 
  *     def __delattr__(self, name):
  *         if name == '__dict__':             # <<<<<<<<<<<<<<
  *             raise AttributeError(
  *                 "%r object attribute '__dict__' is read-only"
  */
-  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_name, __pyx_n_s_dict, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 486, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_name, __pyx_n_s_dict, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 496, __pyx_L1_error)
   if (unlikely(__pyx_t_1)) {
 
-    /* "src/gevent/local.py":489
+    /* "src/gevent/local.py":499
  *             raise AttributeError(
  *                 "%r object attribute '__dict__' is read-only"
  *                 % self.__class__.__name__)             # <<<<<<<<<<<<<<
  * 
  *         if name in self._local_type_vars:
  */
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_class); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 489, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_class); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 499, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_name); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 489, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_name); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 499, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyString_Format(__pyx_kp_s_r_object_attribute___dict___is, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 489, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyString_Format(__pyx_kp_s_r_object_attribute___dict___is, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 499, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "src/gevent/local.py":487
+    /* "src/gevent/local.py":497
  *     def __delattr__(self, name):
  *         if name == '__dict__':
  *             raise AttributeError(             # <<<<<<<<<<<<<<
  *                 "%r object attribute '__dict__' is read-only"
  *                 % self.__class__.__name__)
  */
-    __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_builtin_AttributeError, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 487, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_builtin_AttributeError, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 497, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __PYX_ERR(0, 487, __pyx_L1_error)
+    __PYX_ERR(0, 497, __pyx_L1_error)
 
-    /* "src/gevent/local.py":486
+    /* "src/gevent/local.py":496
  * 
  *     def __delattr__(self, name):
  *         if name == '__dict__':             # <<<<<<<<<<<<<<
@@ -6114,7 +6249,7 @@ static int __pyx_pf_6gevent_6_local_5local_6__delattr__(struct __pyx_obj_6gevent
  */
   }
 
-  /* "src/gevent/local.py":491
+  /* "src/gevent/local.py":501
  *                 % self.__class__.__name__)
  * 
  *         if name in self._local_type_vars:             # <<<<<<<<<<<<<<
@@ -6123,13 +6258,13 @@ static int __pyx_pf_6gevent_6_local_5local_6__delattr__(struct __pyx_obj_6gevent
  */
   if (unlikely(__pyx_v_self->_local_type_vars == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-    __PYX_ERR(0, 491, __pyx_L1_error)
+    __PYX_ERR(0, 501, __pyx_L1_error)
   }
-  __pyx_t_1 = (__Pyx_PySet_ContainsTF(__pyx_v_name, __pyx_v_self->_local_type_vars, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 491, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PySet_ContainsTF(__pyx_v_name, __pyx_v_self->_local_type_vars, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 501, __pyx_L1_error)
   __pyx_t_4 = (__pyx_t_1 != 0);
   if (__pyx_t_4) {
 
-    /* "src/gevent/local.py":492
+    /* "src/gevent/local.py":502
  * 
  *         if name in self._local_type_vars:
  *             if name in self._local_type_del_descriptors:             # <<<<<<<<<<<<<<
@@ -6138,13 +6273,13 @@ static int __pyx_pf_6gevent_6_local_5local_6__delattr__(struct __pyx_obj_6gevent
  */
     if (unlikely(__pyx_v_self->_local_type_del_descriptors == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-      __PYX_ERR(0, 492, __pyx_L1_error)
+      __PYX_ERR(0, 502, __pyx_L1_error)
     }
-    __pyx_t_4 = (__Pyx_PySet_ContainsTF(__pyx_v_name, __pyx_v_self->_local_type_del_descriptors, Py_EQ)); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 492, __pyx_L1_error)
+    __pyx_t_4 = (__Pyx_PySet_ContainsTF(__pyx_v_name, __pyx_v_self->_local_type_del_descriptors, Py_EQ)); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 502, __pyx_L1_error)
     __pyx_t_1 = (__pyx_t_4 != 0);
     if (__pyx_t_1) {
 
-      /* "src/gevent/local.py":494
+      /* "src/gevent/local.py":504
  *             if name in self._local_type_del_descriptors:
  *                 # A data descriptor, like a property or a slot.
  *                 type_attr = getattr(self._local_type, name, _marker)             # <<<<<<<<<<<<<<
@@ -6155,21 +6290,21 @@ static int __pyx_pf_6gevent_6_local_5local_6__delattr__(struct __pyx_obj_6gevent
       __Pyx_INCREF(__pyx_t_3);
       __pyx_t_2 = __pyx_v_6gevent_6_local__marker;
       __Pyx_INCREF(__pyx_t_2);
-      __pyx_t_5 = __Pyx_GetAttr3(__pyx_t_3, __pyx_v_name, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 494, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_GetAttr3(__pyx_t_3, __pyx_v_name, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 504, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __pyx_v_type_attr = __pyx_t_5;
       __pyx_t_5 = 0;
 
-      /* "src/gevent/local.py":495
+      /* "src/gevent/local.py":505
  *                 # A data descriptor, like a property or a slot.
  *                 type_attr = getattr(self._local_type, name, _marker)
  *                 type(type_attr).__delete__(type_attr, self)             # <<<<<<<<<<<<<<
  *                 return
  *         # Otherwise it goes directly in the dict
  */
-      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)Py_TYPE(__pyx_v_type_attr)), __pyx_n_s_delete); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 495, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)Py_TYPE(__pyx_v_type_attr)), __pyx_n_s_delete); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 505, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __pyx_t_3 = NULL;
       __pyx_t_6 = 0;
@@ -6186,7 +6321,7 @@ static int __pyx_pf_6gevent_6_local_5local_6__delattr__(struct __pyx_obj_6gevent
       #if CYTHON_FAST_PYCALL
       if (PyFunction_Check(__pyx_t_2)) {
         PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_v_type_attr, ((PyObject *)__pyx_v_self)};
-        __pyx_t_5 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_6, 2+__pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 495, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_6, 2+__pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 505, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
         __Pyx_GOTREF(__pyx_t_5);
       } else
@@ -6194,13 +6329,13 @@ static int __pyx_pf_6gevent_6_local_5local_6__delattr__(struct __pyx_obj_6gevent
       #if CYTHON_FAST_PYCCALL
       if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
         PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_v_type_attr, ((PyObject *)__pyx_v_self)};
-        __pyx_t_5 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_6, 2+__pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 495, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_6, 2+__pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 505, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
         __Pyx_GOTREF(__pyx_t_5);
       } else
       #endif
       {
-        __pyx_t_7 = PyTuple_New(2+__pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 495, __pyx_L1_error)
+        __pyx_t_7 = PyTuple_New(2+__pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 505, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_7);
         if (__pyx_t_3) {
           __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_3); __pyx_t_3 = NULL;
@@ -6211,14 +6346,14 @@ static int __pyx_pf_6gevent_6_local_5local_6__delattr__(struct __pyx_obj_6gevent
         __Pyx_INCREF(((PyObject *)__pyx_v_self));
         __Pyx_GIVEREF(((PyObject *)__pyx_v_self));
         PyTuple_SET_ITEM(__pyx_t_7, 1+__pyx_t_6, ((PyObject *)__pyx_v_self));
-        __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_7, NULL); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 495, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_7, NULL); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 505, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_5);
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       }
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-      /* "src/gevent/local.py":496
+      /* "src/gevent/local.py":506
  *                 type_attr = getattr(self._local_type, name, _marker)
  *                 type(type_attr).__delete__(type_attr, self)
  *                 return             # <<<<<<<<<<<<<<
@@ -6228,7 +6363,7 @@ static int __pyx_pf_6gevent_6_local_5local_6__delattr__(struct __pyx_obj_6gevent
       __pyx_r = 0;
       goto __pyx_L0;
 
-      /* "src/gevent/local.py":492
+      /* "src/gevent/local.py":502
  * 
  *         if name in self._local_type_vars:
  *             if name in self._local_type_del_descriptors:             # <<<<<<<<<<<<<<
@@ -6237,7 +6372,7 @@ static int __pyx_pf_6gevent_6_local_5local_6__delattr__(struct __pyx_obj_6gevent
  */
     }
 
-    /* "src/gevent/local.py":491
+    /* "src/gevent/local.py":501
  *                 % self.__class__.__name__)
  * 
  *         if name in self._local_type_vars:             # <<<<<<<<<<<<<<
@@ -6246,19 +6381,19 @@ static int __pyx_pf_6gevent_6_local_5local_6__delattr__(struct __pyx_obj_6gevent
  */
   }
 
-  /* "src/gevent/local.py":500
+  /* "src/gevent/local.py":510
  * 
  *         # Begin inlined function _get_dict()
  *         dct = _local_get_dict(self)             # <<<<<<<<<<<<<<
  * 
  *         try:
  */
-  __pyx_t_5 = __pyx_f_6gevent_6_local__local_get_dict(__pyx_v_self); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 500, __pyx_L1_error)
+  __pyx_t_5 = __pyx_f_6gevent_6_local__local_get_dict(__pyx_v_self); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 510, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __pyx_v_dct = ((PyObject*)__pyx_t_5);
   __pyx_t_5 = 0;
 
-  /* "src/gevent/local.py":502
+  /* "src/gevent/local.py":512
  *         dct = _local_get_dict(self)
  * 
  *         try:             # <<<<<<<<<<<<<<
@@ -6274,7 +6409,7 @@ static int __pyx_pf_6gevent_6_local_5local_6__delattr__(struct __pyx_obj_6gevent
     __Pyx_XGOTREF(__pyx_t_10);
     /*try:*/ {
 
-      /* "src/gevent/local.py":503
+      /* "src/gevent/local.py":513
  * 
  *         try:
  *             del dct[name]             # <<<<<<<<<<<<<<
@@ -6283,11 +6418,11 @@ static int __pyx_pf_6gevent_6_local_5local_6__delattr__(struct __pyx_obj_6gevent
  */
       if (unlikely(__pyx_v_dct == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 503, __pyx_L6_error)
+        __PYX_ERR(0, 513, __pyx_L6_error)
       }
-      if (unlikely(PyDict_DelItem(__pyx_v_dct, __pyx_v_name) < 0)) __PYX_ERR(0, 503, __pyx_L6_error)
+      if (unlikely(PyDict_DelItem(__pyx_v_dct, __pyx_v_name) < 0)) __PYX_ERR(0, 513, __pyx_L6_error)
 
-      /* "src/gevent/local.py":502
+      /* "src/gevent/local.py":512
  *         dct = _local_get_dict(self)
  * 
  *         try:             # <<<<<<<<<<<<<<
@@ -6305,7 +6440,7 @@ static int __pyx_pf_6gevent_6_local_5local_6__delattr__(struct __pyx_obj_6gevent
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-    /* "src/gevent/local.py":504
+    /* "src/gevent/local.py":514
  *         try:
  *             del dct[name]
  *         except KeyError:             # <<<<<<<<<<<<<<
@@ -6315,28 +6450,28 @@ static int __pyx_pf_6gevent_6_local_5local_6__delattr__(struct __pyx_obj_6gevent
     __pyx_t_6 = __Pyx_PyErr_ExceptionMatches(__pyx_builtin_KeyError);
     if (__pyx_t_6) {
       __Pyx_AddTraceback("gevent._local.local.__delattr__", __pyx_clineno, __pyx_lineno, __pyx_filename);
-      if (__Pyx_GetException(&__pyx_t_5, &__pyx_t_2, &__pyx_t_7) < 0) __PYX_ERR(0, 504, __pyx_L8_except_error)
+      if (__Pyx_GetException(&__pyx_t_5, &__pyx_t_2, &__pyx_t_7) < 0) __PYX_ERR(0, 514, __pyx_L8_except_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_GOTREF(__pyx_t_7);
 
-      /* "src/gevent/local.py":505
+      /* "src/gevent/local.py":515
  *             del dct[name]
  *         except KeyError:
  *             raise AttributeError(name)             # <<<<<<<<<<<<<<
  * 
  *     def __copy__(self):
  */
-      __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_builtin_AttributeError, __pyx_v_name); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 505, __pyx_L8_except_error)
+      __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_builtin_AttributeError, __pyx_v_name); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 515, __pyx_L8_except_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_Raise(__pyx_t_3, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __PYX_ERR(0, 505, __pyx_L8_except_error)
+      __PYX_ERR(0, 515, __pyx_L8_except_error)
     }
     goto __pyx_L8_except_error;
     __pyx_L8_except_error:;
 
-    /* "src/gevent/local.py":502
+    /* "src/gevent/local.py":512
  *         dct = _local_get_dict(self)
  * 
  *         try:             # <<<<<<<<<<<<<<
@@ -6351,7 +6486,7 @@ static int __pyx_pf_6gevent_6_local_5local_6__delattr__(struct __pyx_obj_6gevent
     __pyx_L11_try_end:;
   }
 
-  /* "src/gevent/local.py":485
+  /* "src/gevent/local.py":495
  *         dct[name] = value
  * 
  *     def __delattr__(self, name):             # <<<<<<<<<<<<<<
@@ -6376,7 +6511,7 @@ static int __pyx_pf_6gevent_6_local_5local_6__delattr__(struct __pyx_obj_6gevent
   return __pyx_r;
 }
 
-/* "src/gevent/local.py":507
+/* "src/gevent/local.py":517
  *             raise AttributeError(name)
  * 
  *     def __copy__(self):             # <<<<<<<<<<<<<<
@@ -6403,7 +6538,7 @@ static struct __pyx_obj_6gevent_6_local_local *__pyx_f_6gevent_6_local_5local___
   if (unlikely(__pyx_skip_dispatch)) ;
   /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_copy); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 507, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_copy); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 517, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)__pyx_pw_6gevent_6_local_5local_9__copy__)) {
       __Pyx_XDECREF(((PyObject *)__pyx_r));
@@ -6419,14 +6554,14 @@ static struct __pyx_obj_6gevent_6_local_local *__pyx_f_6gevent_6_local_5local___
         }
       }
       if (__pyx_t_4) {
-        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 507, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 517, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       } else {
-        __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 507, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 517, __pyx_L1_error)
       }
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (!(likely(((__pyx_t_2) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_2, __pyx_ptype_6gevent_6_local_local))))) __PYX_ERR(0, 507, __pyx_L1_error)
+      if (!(likely(((__pyx_t_2) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_2, __pyx_ptype_6gevent_6_local_local))))) __PYX_ERR(0, 517, __pyx_L1_error)
       __pyx_r = ((struct __pyx_obj_6gevent_6_local_local *)__pyx_t_2);
       __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -6435,7 +6570,7 @@ static struct __pyx_obj_6gevent_6_local_local *__pyx_f_6gevent_6_local_5local___
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
 
-  /* "src/gevent/local.py":508
+  /* "src/gevent/local.py":518
  * 
  *     def __copy__(self):
  *         impl = self._local__impl             # <<<<<<<<<<<<<<
@@ -6447,7 +6582,7 @@ static struct __pyx_obj_6gevent_6_local_local *__pyx_f_6gevent_6_local_5local___
   __pyx_v_impl = ((struct __pyx_obj_6gevent_6_local__localimpl *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/gevent/local.py":509
+  /* "src/gevent/local.py":519
  *     def __copy__(self):
  *         impl = self._local__impl
  *         entry = impl.dicts[id(getcurrent())]  # pylint:disable=undefined-variable             # <<<<<<<<<<<<<<
@@ -6456,21 +6591,21 @@ static struct __pyx_obj_6gevent_6_local_local *__pyx_f_6gevent_6_local_5local___
  */
   if (unlikely(__pyx_v_impl->dicts == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 509, __pyx_L1_error)
+    __PYX_ERR(0, 519, __pyx_L1_error)
   }
-  __pyx_t_1 = ((PyObject *)__pyx_f_6gevent_6_local_getcurrent()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 509, __pyx_L1_error)
+  __pyx_t_1 = ((PyObject *)__pyx_f_6gevent_6_local_getcurrent()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 519, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_id, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 509, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_id, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 519, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyDict_GetItem(__pyx_v_impl->dicts, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 509, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_GetItem(__pyx_v_impl->dicts, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 519, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_6gevent_6_local__localimpl_dict_entry))))) __PYX_ERR(0, 509, __pyx_L1_error)
+  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_6gevent_6_local__localimpl_dict_entry))))) __PYX_ERR(0, 519, __pyx_L1_error)
   __pyx_v_entry = ((struct __pyx_obj_6gevent_6_local__localimpl_dict_entry *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/gevent/local.py":511
+  /* "src/gevent/local.py":521
  *         entry = impl.dicts[id(getcurrent())]  # pylint:disable=undefined-variable
  * 
  *         dct = entry.localdict             # <<<<<<<<<<<<<<
@@ -6482,7 +6617,7 @@ static struct __pyx_obj_6gevent_6_local_local *__pyx_f_6gevent_6_local_5local___
   __pyx_v_dct = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/gevent/local.py":512
+  /* "src/gevent/local.py":522
  * 
  *         dct = entry.localdict
  *         duplicate = copy(dct)             # <<<<<<<<<<<<<<
@@ -6501,13 +6636,13 @@ static struct __pyx_obj_6gevent_6_local_local *__pyx_f_6gevent_6_local_5local___
     }
   }
   if (!__pyx_t_3) {
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_dct); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 512, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_dct); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 522, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   } else {
     #if CYTHON_FAST_PYCALL
     if (PyFunction_Check(__pyx_t_2)) {
       PyObject *__pyx_temp[2] = {__pyx_t_3, __pyx_v_dct};
-      __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 512, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 522, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_GOTREF(__pyx_t_1);
     } else
@@ -6515,29 +6650,29 @@ static struct __pyx_obj_6gevent_6_local_local *__pyx_f_6gevent_6_local_5local___
     #if CYTHON_FAST_PYCCALL
     if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
       PyObject *__pyx_temp[2] = {__pyx_t_3, __pyx_v_dct};
-      __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 512, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 522, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_GOTREF(__pyx_t_1);
     } else
     #endif
     {
-      __pyx_t_4 = PyTuple_New(1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 512, __pyx_L1_error)
+      __pyx_t_4 = PyTuple_New(1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 522, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_3); __pyx_t_3 = NULL;
       __Pyx_INCREF(__pyx_v_dct);
       __Pyx_GIVEREF(__pyx_v_dct);
       PyTuple_SET_ITEM(__pyx_t_4, 0+1, __pyx_v_dct);
-      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_4, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 512, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_4, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 522, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     }
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (!(likely(PyDict_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "dict", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 512, __pyx_L1_error)
+  if (!(likely(PyDict_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "dict", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 522, __pyx_L1_error)
   __pyx_v_duplicate = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/gevent/local.py":514
+  /* "src/gevent/local.py":524
  *         duplicate = copy(dct)
  * 
  *         cls = type(self)             # <<<<<<<<<<<<<<
@@ -6547,7 +6682,7 @@ static struct __pyx_obj_6gevent_6_local_local *__pyx_f_6gevent_6_local_5local___
   __Pyx_INCREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
   __pyx_v_cls = ((PyTypeObject*)((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
 
-  /* "src/gevent/local.py":515
+  /* "src/gevent/local.py":525
  * 
  *         cls = type(self)
  *         instance = cls(*impl.localargs, **impl.localkwargs)             # <<<<<<<<<<<<<<
@@ -6556,30 +6691,30 @@ static struct __pyx_obj_6gevent_6_local_local *__pyx_f_6gevent_6_local_5local___
  */
   if (unlikely(__pyx_v_impl->localargs == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-    __PYX_ERR(0, 515, __pyx_L1_error)
+    __PYX_ERR(0, 525, __pyx_L1_error)
   }
   if (unlikely(__pyx_v_impl->localkwargs == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "argument after ** must be a mapping, not NoneType");
-    __PYX_ERR(0, 515, __pyx_L1_error)
+    __PYX_ERR(0, 525, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_v_cls), __pyx_v_impl->localargs, __pyx_v_impl->localkwargs); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 515, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_v_cls), __pyx_v_impl->localargs, __pyx_v_impl->localkwargs); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 525, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_6gevent_6_local_local))))) __PYX_ERR(0, 515, __pyx_L1_error)
+  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_6gevent_6_local_local))))) __PYX_ERR(0, 525, __pyx_L1_error)
   __pyx_v_instance = ((struct __pyx_obj_6gevent_6_local_local *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/gevent/local.py":516
+  /* "src/gevent/local.py":526
  *         cls = type(self)
  *         instance = cls(*impl.localargs, **impl.localkwargs)
  *         _local__copy_dict_from(instance, impl, duplicate)             # <<<<<<<<<<<<<<
  *         return instance
  * 
  */
-  __pyx_t_1 = __pyx_f_6gevent_6_local__local__copy_dict_from(__pyx_v_instance, __pyx_v_impl, __pyx_v_duplicate); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 516, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_6gevent_6_local__local__copy_dict_from(__pyx_v_instance, __pyx_v_impl, __pyx_v_duplicate); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 526, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/gevent/local.py":517
+  /* "src/gevent/local.py":527
  *         instance = cls(*impl.localargs, **impl.localkwargs)
  *         _local__copy_dict_from(instance, impl, duplicate)
  *         return instance             # <<<<<<<<<<<<<<
@@ -6591,7 +6726,7 @@ static struct __pyx_obj_6gevent_6_local_local *__pyx_f_6gevent_6_local_5local___
   __pyx_r = __pyx_v_instance;
   goto __pyx_L0;
 
-  /* "src/gevent/local.py":507
+  /* "src/gevent/local.py":517
  *             raise AttributeError(name)
  * 
  *     def __copy__(self):             # <<<<<<<<<<<<<<
@@ -6640,7 +6775,7 @@ static PyObject *__pyx_pf_6gevent_6_local_5local_8__copy__(struct __pyx_obj_6gev
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("__copy__", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = ((PyObject *)__pyx_f_6gevent_6_local_5local___copy__(__pyx_v_self, 1)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 507, __pyx_L1_error)
+  __pyx_t_1 = ((PyObject *)__pyx_f_6gevent_6_local_5local___copy__(__pyx_v_self, 1)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 517, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -6657,7 +6792,7 @@ static PyObject *__pyx_pf_6gevent_6_local_5local_8__copy__(struct __pyx_obj_6gev
   return __pyx_r;
 }
 
-/* "src/gevent/local.py":519
+/* "src/gevent/local.py":529
  *         return instance
  * 
  * def _local__copy_dict_from(self, impl, duplicate):             # <<<<<<<<<<<<<<
@@ -6677,31 +6812,31 @@ static PyObject *__pyx_f_6gevent_6_local__local__copy_dict_from(struct __pyx_obj
   PyObject *__pyx_t_3 = NULL;
   __Pyx_RefNannySetupContext("_local__copy_dict_from", 0);
 
-  /* "src/gevent/local.py":520
+  /* "src/gevent/local.py":530
  * 
  * def _local__copy_dict_from(self, impl, duplicate):
  *     current = getcurrent() # pylint:disable=undefined-variable             # <<<<<<<<<<<<<<
  *     currentId = id(current)
  *     new_impl = self._local__impl
  */
-  __pyx_t_1 = ((PyObject *)__pyx_f_6gevent_6_local_getcurrent()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 520, __pyx_L1_error)
+  __pyx_t_1 = ((PyObject *)__pyx_f_6gevent_6_local_getcurrent()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 530, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_current = ((PyGreenlet *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/gevent/local.py":521
+  /* "src/gevent/local.py":531
  * def _local__copy_dict_from(self, impl, duplicate):
  *     current = getcurrent() # pylint:disable=undefined-variable
  *     currentId = id(current)             # <<<<<<<<<<<<<<
  *     new_impl = self._local__impl
  *     assert new_impl is not impl
  */
-  __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_builtin_id, ((PyObject *)__pyx_v_current)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 521, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_builtin_id, ((PyObject *)__pyx_v_current)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 531, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_currentId = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "src/gevent/local.py":522
+  /* "src/gevent/local.py":532
  *     current = getcurrent() # pylint:disable=undefined-variable
  *     currentId = id(current)
  *     new_impl = self._local__impl             # <<<<<<<<<<<<<<
@@ -6713,7 +6848,7 @@ static PyObject *__pyx_f_6gevent_6_local__local__copy_dict_from(struct __pyx_obj
   __pyx_v_new_impl = ((struct __pyx_obj_6gevent_6_local__localimpl *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/gevent/local.py":523
+  /* "src/gevent/local.py":533
  *     currentId = id(current)
  *     new_impl = self._local__impl
  *     assert new_impl is not impl             # <<<<<<<<<<<<<<
@@ -6725,12 +6860,12 @@ static PyObject *__pyx_f_6gevent_6_local__local__copy_dict_from(struct __pyx_obj
     __pyx_t_2 = (__pyx_v_new_impl != __pyx_v_impl);
     if (unlikely(!(__pyx_t_2 != 0))) {
       PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 523, __pyx_L1_error)
+      __PYX_ERR(0, 533, __pyx_L1_error)
     }
   }
   #endif
 
-  /* "src/gevent/local.py":524
+  /* "src/gevent/local.py":534
  *     new_impl = self._local__impl
  *     assert new_impl is not impl
  *     entry = new_impl.dicts[currentId]             # <<<<<<<<<<<<<<
@@ -6739,22 +6874,22 @@ static PyObject *__pyx_f_6gevent_6_local__local__copy_dict_from(struct __pyx_obj
  */
   if (unlikely(__pyx_v_new_impl->dicts == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 524, __pyx_L1_error)
+    __PYX_ERR(0, 534, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_PyDict_GetItem(__pyx_v_new_impl->dicts, __pyx_v_currentId); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 524, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_GetItem(__pyx_v_new_impl->dicts, __pyx_v_currentId); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 534, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_6gevent_6_local__localimpl_dict_entry))))) __PYX_ERR(0, 524, __pyx_L1_error)
+  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_6gevent_6_local__localimpl_dict_entry))))) __PYX_ERR(0, 534, __pyx_L1_error)
   __pyx_v_entry = ((struct __pyx_obj_6gevent_6_local__localimpl_dict_entry *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/gevent/local.py":525
+  /* "src/gevent/local.py":535
  *     assert new_impl is not impl
  *     entry = new_impl.dicts[currentId]
  *     new_impl.dicts[currentId] = _localimpl_dict_entry(entry.wrgreenlet, duplicate)             # <<<<<<<<<<<<<<
  * 
  * def _local_find_descriptors(self):
  */
-  __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 525, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 535, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_v_entry->wrgreenlet);
   __Pyx_GIVEREF(__pyx_v_entry->wrgreenlet);
@@ -6762,17 +6897,17 @@ static PyObject *__pyx_f_6gevent_6_local__local__copy_dict_from(struct __pyx_obj
   __Pyx_INCREF(__pyx_v_duplicate);
   __Pyx_GIVEREF(__pyx_v_duplicate);
   PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_v_duplicate);
-  __pyx_t_3 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_6gevent_6_local__localimpl_dict_entry), __pyx_t_1, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 525, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_6gevent_6_local__localimpl_dict_entry), __pyx_t_1, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 535, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   if (unlikely(__pyx_v_new_impl->dicts == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 525, __pyx_L1_error)
+    __PYX_ERR(0, 535, __pyx_L1_error)
   }
-  if (unlikely(PyDict_SetItem(__pyx_v_new_impl->dicts, __pyx_v_currentId, __pyx_t_3) < 0)) __PYX_ERR(0, 525, __pyx_L1_error)
+  if (unlikely(PyDict_SetItem(__pyx_v_new_impl->dicts, __pyx_v_currentId, __pyx_t_3) < 0)) __PYX_ERR(0, 535, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "src/gevent/local.py":519
+  /* "src/gevent/local.py":529
  *         return instance
  * 
  * def _local__copy_dict_from(self, impl, duplicate):             # <<<<<<<<<<<<<<
@@ -6798,7 +6933,7 @@ static PyObject *__pyx_f_6gevent_6_local__local__copy_dict_from(struct __pyx_obj
   return __pyx_r;
 }
 
-/* "src/gevent/local.py":527
+/* "src/gevent/local.py":537
  *     new_impl.dicts[currentId] = _localimpl_dict_entry(entry.wrgreenlet, duplicate)
  * 
  * def _local_find_descriptors(self):             # <<<<<<<<<<<<<<
@@ -6831,7 +6966,7 @@ static PyObject *__pyx_f_6gevent_6_local__local_find_descriptors(struct __pyx_ob
   int __pyx_t_9;
   __Pyx_RefNannySetupContext("_local_find_descriptors", 0);
 
-  /* "src/gevent/local.py":528
+  /* "src/gevent/local.py":538
  * 
  * def _local_find_descriptors(self):
  *     type_self = type(self)             # <<<<<<<<<<<<<<
@@ -6841,62 +6976,62 @@ static PyObject *__pyx_f_6gevent_6_local__local_find_descriptors(struct __pyx_ob
   __Pyx_INCREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
   __pyx_v_type_self = ((PyTypeObject*)((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
 
-  /* "src/gevent/local.py":529
+  /* "src/gevent/local.py":539
  * def _local_find_descriptors(self):
  *     type_self = type(self)
  *     gets = set()             # <<<<<<<<<<<<<<
  *     dels = set()
  *     set_or_del = set()
  */
-  __pyx_t_1 = PySet_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 529, __pyx_L1_error)
+  __pyx_t_1 = PySet_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 539, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_gets = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/gevent/local.py":530
+  /* "src/gevent/local.py":540
  *     type_self = type(self)
  *     gets = set()
  *     dels = set()             # <<<<<<<<<<<<<<
  *     set_or_del = set()
  *     sets = set()
  */
-  __pyx_t_1 = PySet_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 530, __pyx_L1_error)
+  __pyx_t_1 = PySet_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 540, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_dels = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/gevent/local.py":531
+  /* "src/gevent/local.py":541
  *     gets = set()
  *     dels = set()
  *     set_or_del = set()             # <<<<<<<<<<<<<<
  *     sets = set()
  *     mro = list(type_self.mro())
  */
-  __pyx_t_1 = PySet_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 531, __pyx_L1_error)
+  __pyx_t_1 = PySet_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 541, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_set_or_del = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/gevent/local.py":532
+  /* "src/gevent/local.py":542
  *     dels = set()
  *     set_or_del = set()
  *     sets = set()             # <<<<<<<<<<<<<<
  *     mro = list(type_self.mro())
  * 
  */
-  __pyx_t_1 = PySet_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 532, __pyx_L1_error)
+  __pyx_t_1 = PySet_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 542, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_sets = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/gevent/local.py":533
+  /* "src/gevent/local.py":543
  *     set_or_del = set()
  *     sets = set()
  *     mro = list(type_self.mro())             # <<<<<<<<<<<<<<
  * 
  *     for attr_name in dir(type_self):
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_type_self), __pyx_n_s_mro); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 533, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_type_self), __pyx_n_s_mro); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 543, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -6909,35 +7044,35 @@ static PyObject *__pyx_f_6gevent_6_local__local_find_descriptors(struct __pyx_ob
     }
   }
   if (__pyx_t_3) {
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 533, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 543, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   } else {
-    __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 533, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 543, __pyx_L1_error)
   }
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PySequence_List(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 533, __pyx_L1_error)
+  __pyx_t_2 = PySequence_List(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 543, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_mro = ((PyObject*)__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "src/gevent/local.py":535
+  /* "src/gevent/local.py":545
  *     mro = list(type_self.mro())
  * 
  *     for attr_name in dir(type_self):             # <<<<<<<<<<<<<<
  *         # Conventionally, descriptors when called on a class
  *         # return themself, but not all do. Notable exceptions are
  */
-  __pyx_t_2 = PyObject_Dir(((PyObject *)__pyx_v_type_self)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 535, __pyx_L1_error)
+  __pyx_t_2 = PyObject_Dir(((PyObject *)__pyx_v_type_self)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 545, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   if (likely(PyList_CheckExact(__pyx_t_2)) || PyTuple_CheckExact(__pyx_t_2)) {
     __pyx_t_1 = __pyx_t_2; __Pyx_INCREF(__pyx_t_1); __pyx_t_4 = 0;
     __pyx_t_5 = NULL;
   } else {
-    __pyx_t_4 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 535, __pyx_L1_error)
+    __pyx_t_4 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 545, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_5 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 535, __pyx_L1_error)
+    __pyx_t_5 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 545, __pyx_L1_error)
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   for (;;) {
@@ -6945,17 +7080,17 @@ static PyObject *__pyx_f_6gevent_6_local__local_find_descriptors(struct __pyx_ob
       if (likely(PyList_CheckExact(__pyx_t_1))) {
         if (__pyx_t_4 >= PyList_GET_SIZE(__pyx_t_1)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_2 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_4); __Pyx_INCREF(__pyx_t_2); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 535, __pyx_L1_error)
+        __pyx_t_2 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_4); __Pyx_INCREF(__pyx_t_2); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 545, __pyx_L1_error)
         #else
-        __pyx_t_2 = PySequence_ITEM(__pyx_t_1, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 535, __pyx_L1_error)
+        __pyx_t_2 = PySequence_ITEM(__pyx_t_1, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 545, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         #endif
       } else {
         if (__pyx_t_4 >= PyTuple_GET_SIZE(__pyx_t_1)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_2 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_4); __Pyx_INCREF(__pyx_t_2); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 535, __pyx_L1_error)
+        __pyx_t_2 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_4); __Pyx_INCREF(__pyx_t_2); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 545, __pyx_L1_error)
         #else
-        __pyx_t_2 = PySequence_ITEM(__pyx_t_1, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 535, __pyx_L1_error)
+        __pyx_t_2 = PySequence_ITEM(__pyx_t_1, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 545, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         #endif
       }
@@ -6965,7 +7100,7 @@ static PyObject *__pyx_f_6gevent_6_local__local_find_descriptors(struct __pyx_ob
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 535, __pyx_L1_error)
+          else __PYX_ERR(0, 545, __pyx_L1_error)
         }
         break;
       }
@@ -6974,7 +7109,7 @@ static PyObject *__pyx_f_6gevent_6_local__local_find_descriptors(struct __pyx_ob
     __Pyx_XDECREF_SET(__pyx_v_attr_name, __pyx_t_2);
     __pyx_t_2 = 0;
 
-    /* "src/gevent/local.py":541
+    /* "src/gevent/local.py":551
  *         # return other class attributes. So we can't use getattr, and instead
  *         # walk up the dicts
  *         for base in mro:             # <<<<<<<<<<<<<<
@@ -6985,50 +7120,50 @@ static PyObject *__pyx_f_6gevent_6_local__local_find_descriptors(struct __pyx_ob
     for (;;) {
       if (__pyx_t_6 >= PyList_GET_SIZE(__pyx_t_2)) break;
       #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-      __pyx_t_3 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_6); __Pyx_INCREF(__pyx_t_3); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(0, 541, __pyx_L1_error)
+      __pyx_t_3 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_6); __Pyx_INCREF(__pyx_t_3); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(0, 551, __pyx_L1_error)
       #else
-      __pyx_t_3 = PySequence_ITEM(__pyx_t_2, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 541, __pyx_L1_error)
+      __pyx_t_3 = PySequence_ITEM(__pyx_t_2, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 551, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       #endif
       __Pyx_XDECREF_SET(__pyx_v_base, __pyx_t_3);
       __pyx_t_3 = 0;
 
-      /* "src/gevent/local.py":542
+      /* "src/gevent/local.py":552
  *         # walk up the dicts
  *         for base in mro:
  *             bd = base.__dict__             # <<<<<<<<<<<<<<
  *             if attr_name in bd:
  *                 attr = bd[attr_name]
  */
-      __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_base, __pyx_n_s_dict); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 542, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_base, __pyx_n_s_dict); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 552, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_XDECREF_SET(__pyx_v_bd, __pyx_t_3);
       __pyx_t_3 = 0;
 
-      /* "src/gevent/local.py":543
+      /* "src/gevent/local.py":553
  *         for base in mro:
  *             bd = base.__dict__
  *             if attr_name in bd:             # <<<<<<<<<<<<<<
  *                 attr = bd[attr_name]
  *                 break
  */
-      __pyx_t_7 = (__Pyx_PySequence_ContainsTF(__pyx_v_attr_name, __pyx_v_bd, Py_EQ)); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 543, __pyx_L1_error)
+      __pyx_t_7 = (__Pyx_PySequence_ContainsTF(__pyx_v_attr_name, __pyx_v_bd, Py_EQ)); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 553, __pyx_L1_error)
       __pyx_t_8 = (__pyx_t_7 != 0);
       if (__pyx_t_8) {
 
-        /* "src/gevent/local.py":544
+        /* "src/gevent/local.py":554
  *             bd = base.__dict__
  *             if attr_name in bd:
  *                 attr = bd[attr_name]             # <<<<<<<<<<<<<<
  *                 break
  *         else:
  */
-        __pyx_t_3 = __Pyx_PyObject_GetItem(__pyx_v_bd, __pyx_v_attr_name); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 544, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PyObject_GetItem(__pyx_v_bd, __pyx_v_attr_name); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 554, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_XDECREF_SET(__pyx_v_attr, __pyx_t_3);
         __pyx_t_3 = 0;
 
-        /* "src/gevent/local.py":545
+        /* "src/gevent/local.py":555
  *             if attr_name in bd:
  *                 attr = bd[attr_name]
  *                 break             # <<<<<<<<<<<<<<
@@ -7037,7 +7172,7 @@ static PyObject *__pyx_f_6gevent_6_local__local_find_descriptors(struct __pyx_ob
  */
         goto __pyx_L6_break;
 
-        /* "src/gevent/local.py":543
+        /* "src/gevent/local.py":553
  *         for base in mro:
  *             bd = base.__dict__
  *             if attr_name in bd:             # <<<<<<<<<<<<<<
@@ -7046,7 +7181,7 @@ static PyObject *__pyx_f_6gevent_6_local__local_find_descriptors(struct __pyx_ob
  */
       }
 
-      /* "src/gevent/local.py":541
+      /* "src/gevent/local.py":551
  *         # return other class attributes. So we can't use getattr, and instead
  *         # walk up the dicts
  *         for base in mro:             # <<<<<<<<<<<<<<
@@ -7056,21 +7191,21 @@ static PyObject *__pyx_f_6gevent_6_local__local_find_descriptors(struct __pyx_ob
     }
     /*else*/ {
 
-      /* "src/gevent/local.py":547
+      /* "src/gevent/local.py":557
  *                 break
  *         else:
  *             raise AttributeError(attr_name)             # <<<<<<<<<<<<<<
  * 
  *         type_attr = type(attr)
  */
-      __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_builtin_AttributeError, __pyx_v_attr_name); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 547, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_builtin_AttributeError, __pyx_v_attr_name); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 557, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_Raise(__pyx_t_3, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __PYX_ERR(0, 547, __pyx_L1_error)
+      __PYX_ERR(0, 557, __pyx_L1_error)
     }
 
-    /* "src/gevent/local.py":541
+    /* "src/gevent/local.py":551
  *         # return other class attributes. So we can't use getattr, and instead
  *         # walk up the dicts
  *         for base in mro:             # <<<<<<<<<<<<<<
@@ -7080,7 +7215,7 @@ static PyObject *__pyx_f_6gevent_6_local__local_find_descriptors(struct __pyx_ob
     __pyx_L6_break:;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "src/gevent/local.py":549
+    /* "src/gevent/local.py":559
  *             raise AttributeError(attr_name)
  * 
  *         type_attr = type(attr)             # <<<<<<<<<<<<<<
@@ -7090,27 +7225,27 @@ static PyObject *__pyx_f_6gevent_6_local__local_find_descriptors(struct __pyx_ob
     __Pyx_INCREF(((PyObject *)Py_TYPE(__pyx_v_attr)));
     __Pyx_XDECREF_SET(__pyx_v_type_attr, ((PyTypeObject*)((PyObject *)Py_TYPE(__pyx_v_attr))));
 
-    /* "src/gevent/local.py":550
+    /* "src/gevent/local.py":560
  * 
  *         type_attr = type(attr)
  *         if hasattr(type_attr, '__get__'):             # <<<<<<<<<<<<<<
  *             gets.add(attr_name)
  *         if hasattr(type_attr, '__delete__'):
  */
-    __pyx_t_8 = __Pyx_HasAttr(((PyObject *)__pyx_v_type_attr), __pyx_n_s_get); if (unlikely(__pyx_t_8 == ((int)-1))) __PYX_ERR(0, 550, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_HasAttr(((PyObject *)__pyx_v_type_attr), __pyx_n_s_get); if (unlikely(__pyx_t_8 == ((int)-1))) __PYX_ERR(0, 560, __pyx_L1_error)
     __pyx_t_7 = (__pyx_t_8 != 0);
     if (__pyx_t_7) {
 
-      /* "src/gevent/local.py":551
+      /* "src/gevent/local.py":561
  *         type_attr = type(attr)
  *         if hasattr(type_attr, '__get__'):
  *             gets.add(attr_name)             # <<<<<<<<<<<<<<
  *         if hasattr(type_attr, '__delete__'):
  *             dels.add(attr_name)
  */
-      __pyx_t_9 = PySet_Add(__pyx_v_gets, __pyx_v_attr_name); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(0, 551, __pyx_L1_error)
+      __pyx_t_9 = PySet_Add(__pyx_v_gets, __pyx_v_attr_name); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(0, 561, __pyx_L1_error)
 
-      /* "src/gevent/local.py":550
+      /* "src/gevent/local.py":560
  * 
  *         type_attr = type(attr)
  *         if hasattr(type_attr, '__get__'):             # <<<<<<<<<<<<<<
@@ -7119,36 +7254,36 @@ static PyObject *__pyx_f_6gevent_6_local__local_find_descriptors(struct __pyx_ob
  */
     }
 
-    /* "src/gevent/local.py":552
+    /* "src/gevent/local.py":562
  *         if hasattr(type_attr, '__get__'):
  *             gets.add(attr_name)
  *         if hasattr(type_attr, '__delete__'):             # <<<<<<<<<<<<<<
  *             dels.add(attr_name)
  *             set_or_del.add(attr_name)
  */
-    __pyx_t_7 = __Pyx_HasAttr(((PyObject *)__pyx_v_type_attr), __pyx_n_s_delete); if (unlikely(__pyx_t_7 == ((int)-1))) __PYX_ERR(0, 552, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_HasAttr(((PyObject *)__pyx_v_type_attr), __pyx_n_s_delete); if (unlikely(__pyx_t_7 == ((int)-1))) __PYX_ERR(0, 562, __pyx_L1_error)
     __pyx_t_8 = (__pyx_t_7 != 0);
     if (__pyx_t_8) {
 
-      /* "src/gevent/local.py":553
+      /* "src/gevent/local.py":563
  *             gets.add(attr_name)
  *         if hasattr(type_attr, '__delete__'):
  *             dels.add(attr_name)             # <<<<<<<<<<<<<<
  *             set_or_del.add(attr_name)
  *         if hasattr(type_attr, '__set__'):
  */
-      __pyx_t_9 = PySet_Add(__pyx_v_dels, __pyx_v_attr_name); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(0, 553, __pyx_L1_error)
+      __pyx_t_9 = PySet_Add(__pyx_v_dels, __pyx_v_attr_name); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(0, 563, __pyx_L1_error)
 
-      /* "src/gevent/local.py":554
+      /* "src/gevent/local.py":564
  *         if hasattr(type_attr, '__delete__'):
  *             dels.add(attr_name)
  *             set_or_del.add(attr_name)             # <<<<<<<<<<<<<<
  *         if hasattr(type_attr, '__set__'):
  *             sets.add(attr_name)
  */
-      __pyx_t_9 = PySet_Add(__pyx_v_set_or_del, __pyx_v_attr_name); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(0, 554, __pyx_L1_error)
+      __pyx_t_9 = PySet_Add(__pyx_v_set_or_del, __pyx_v_attr_name); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(0, 564, __pyx_L1_error)
 
-      /* "src/gevent/local.py":552
+      /* "src/gevent/local.py":562
  *         if hasattr(type_attr, '__get__'):
  *             gets.add(attr_name)
  *         if hasattr(type_attr, '__delete__'):             # <<<<<<<<<<<<<<
@@ -7157,27 +7292,27 @@ static PyObject *__pyx_f_6gevent_6_local__local_find_descriptors(struct __pyx_ob
  */
     }
 
-    /* "src/gevent/local.py":555
+    /* "src/gevent/local.py":565
  *             dels.add(attr_name)
  *             set_or_del.add(attr_name)
  *         if hasattr(type_attr, '__set__'):             # <<<<<<<<<<<<<<
  *             sets.add(attr_name)
  * 
  */
-    __pyx_t_8 = __Pyx_HasAttr(((PyObject *)__pyx_v_type_attr), __pyx_n_s_set); if (unlikely(__pyx_t_8 == ((int)-1))) __PYX_ERR(0, 555, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_HasAttr(((PyObject *)__pyx_v_type_attr), __pyx_n_s_set); if (unlikely(__pyx_t_8 == ((int)-1))) __PYX_ERR(0, 565, __pyx_L1_error)
     __pyx_t_7 = (__pyx_t_8 != 0);
     if (__pyx_t_7) {
 
-      /* "src/gevent/local.py":556
+      /* "src/gevent/local.py":566
  *             set_or_del.add(attr_name)
  *         if hasattr(type_attr, '__set__'):
  *             sets.add(attr_name)             # <<<<<<<<<<<<<<
  * 
  *     return (gets, dels, set_or_del, sets)
  */
-      __pyx_t_9 = PySet_Add(__pyx_v_sets, __pyx_v_attr_name); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(0, 556, __pyx_L1_error)
+      __pyx_t_9 = PySet_Add(__pyx_v_sets, __pyx_v_attr_name); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(0, 566, __pyx_L1_error)
 
-      /* "src/gevent/local.py":555
+      /* "src/gevent/local.py":565
  *             dels.add(attr_name)
  *             set_or_del.add(attr_name)
  *         if hasattr(type_attr, '__set__'):             # <<<<<<<<<<<<<<
@@ -7186,7 +7321,7 @@ static PyObject *__pyx_f_6gevent_6_local__local_find_descriptors(struct __pyx_ob
  */
     }
 
-    /* "src/gevent/local.py":535
+    /* "src/gevent/local.py":545
  *     mro = list(type_self.mro())
  * 
  *     for attr_name in dir(type_self):             # <<<<<<<<<<<<<<
@@ -7196,7 +7331,7 @@ static PyObject *__pyx_f_6gevent_6_local__local_find_descriptors(struct __pyx_ob
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/gevent/local.py":558
+  /* "src/gevent/local.py":568
  *             sets.add(attr_name)
  * 
  *     return (gets, dels, set_or_del, sets)             # <<<<<<<<<<<<<<
@@ -7204,7 +7339,7 @@ static PyObject *__pyx_f_6gevent_6_local__local_find_descriptors(struct __pyx_ob
  * # Cython doesn't let us use __new__, it requires
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyTuple_New(4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 558, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_New(4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 568, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_v_gets);
   __Pyx_GIVEREF(__pyx_v_gets);
@@ -7222,7 +7357,7 @@ static PyObject *__pyx_f_6gevent_6_local__local_find_descriptors(struct __pyx_ob
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "src/gevent/local.py":527
+  /* "src/gevent/local.py":537
  *     new_impl.dicts[currentId] = _localimpl_dict_entry(entry.wrgreenlet, duplicate)
  * 
  * def _local_find_descriptors(self):             # <<<<<<<<<<<<<<
@@ -7254,7 +7389,7 @@ static PyObject *__pyx_f_6gevent_6_local__local_find_descriptors(struct __pyx_ob
   return __pyx_r;
 }
 
-/* "src/gevent/local.py":564
+/* "src/gevent/local.py":574
  * # (e.g., on PyPy). So we set it at runtime. Cython
  * # will raise an error if we're compiled.
  * def __new__(cls, *args, **kw):             # <<<<<<<<<<<<<<
@@ -7306,7 +7441,7 @@ static PyObject *__pyx_pw_6gevent_6_local_3__new__(PyObject *__pyx_self, PyObjec
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t used_pos_args = (pos_args < 1) ? pos_args : 1;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, __pyx_v_kw, values, used_pos_args, "__new__") < 0)) __PYX_ERR(0, 564, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, __pyx_v_kw, values, used_pos_args, "__new__") < 0)) __PYX_ERR(0, 574, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) < 1) {
       goto __pyx_L5_argtuple_error;
@@ -7317,7 +7452,7 @@ static PyObject *__pyx_pw_6gevent_6_local_3__new__(PyObject *__pyx_self, PyObjec
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__new__", 0, 1, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 564, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__new__", 0, 1, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 574, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_DECREF(__pyx_v_args); __pyx_v_args = 0;
   __Pyx_DECREF(__pyx_v_kw); __pyx_v_kw = 0;
@@ -7344,14 +7479,14 @@ static PyObject *__pyx_pf_6gevent_6_local_2__new__(CYTHON_UNUSED PyObject *__pyx
   PyObject *__pyx_t_4 = NULL;
   __Pyx_RefNannySetupContext("__new__", 0);
 
-  /* "src/gevent/local.py":565
+  /* "src/gevent/local.py":575
  * # will raise an error if we're compiled.
  * def __new__(cls, *args, **kw):
  *     self = super(local, cls).__new__(cls)             # <<<<<<<<<<<<<<
  *     # We get the cls in *args for some reason
  *     # too when we do it this way....except on PyPy3, which does
  */
-  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 565, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 575, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(((PyObject *)__pyx_ptype_6gevent_6_local_local));
   __Pyx_GIVEREF(((PyObject *)__pyx_ptype_6gevent_6_local_local));
@@ -7359,10 +7494,10 @@ static PyObject *__pyx_pf_6gevent_6_local_2__new__(CYTHON_UNUSED PyObject *__pyx
   __Pyx_INCREF(__pyx_v_cls);
   __Pyx_GIVEREF(__pyx_v_cls);
   PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_v_cls);
-  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_super, __pyx_t_2, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 565, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_super, __pyx_t_2, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 575, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_new); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 565, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_new); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 575, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_3 = NULL;
@@ -7376,13 +7511,13 @@ static PyObject *__pyx_pf_6gevent_6_local_2__new__(CYTHON_UNUSED PyObject *__pyx
     }
   }
   if (!__pyx_t_3) {
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_cls); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 565, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_cls); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 575, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   } else {
     #if CYTHON_FAST_PYCALL
     if (PyFunction_Check(__pyx_t_2)) {
       PyObject *__pyx_temp[2] = {__pyx_t_3, __pyx_v_cls};
-      __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 565, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 575, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_GOTREF(__pyx_t_1);
     } else
@@ -7390,19 +7525,19 @@ static PyObject *__pyx_pf_6gevent_6_local_2__new__(CYTHON_UNUSED PyObject *__pyx
     #if CYTHON_FAST_PYCCALL
     if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
       PyObject *__pyx_temp[2] = {__pyx_t_3, __pyx_v_cls};
-      __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 565, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 575, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_GOTREF(__pyx_t_1);
     } else
     #endif
     {
-      __pyx_t_4 = PyTuple_New(1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 565, __pyx_L1_error)
+      __pyx_t_4 = PyTuple_New(1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 575, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_3); __pyx_t_3 = NULL;
       __Pyx_INCREF(__pyx_v_cls);
       __Pyx_GIVEREF(__pyx_v_cls);
       PyTuple_SET_ITEM(__pyx_t_4, 0+1, __pyx_v_cls);
-      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_4, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 565, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_4, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 575, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     }
@@ -7411,24 +7546,24 @@ static PyObject *__pyx_pf_6gevent_6_local_2__new__(CYTHON_UNUSED PyObject *__pyx
   __pyx_v_self = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "src/gevent/local.py":569
+  /* "src/gevent/local.py":579
  *     # too when we do it this way....except on PyPy3, which does
  *     # not *unless* it's wrapped in a classmethod (which it is)
  *     self.__cinit__(*args[1:], **kw)             # <<<<<<<<<<<<<<
  *     return self
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_cinit); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 569, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_cinit); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 579, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyTuple_GetSlice(__pyx_v_args, 1, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 569, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyTuple_GetSlice(__pyx_v_args, 1, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 579, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_2, __pyx_v_kw); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 569, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_2, __pyx_v_kw); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 579, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "src/gevent/local.py":570
+  /* "src/gevent/local.py":580
  *     # not *unless* it's wrapped in a classmethod (which it is)
  *     self.__cinit__(*args[1:], **kw)
  *     return self             # <<<<<<<<<<<<<<
@@ -7440,7 +7575,7 @@ static PyObject *__pyx_pf_6gevent_6_local_2__new__(CYTHON_UNUSED PyObject *__pyx
   __pyx_r = __pyx_v_self;
   goto __pyx_L0;
 
-  /* "src/gevent/local.py":564
+  /* "src/gevent/local.py":574
  * # (e.g., on PyPy). So we set it at runtime. Cython
  * # will raise an error if we're compiled.
  * def __new__(cls, *args, **kw):             # <<<<<<<<<<<<<<
@@ -8774,12 +8909,12 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
 static int __Pyx_InitCachedBuiltins(void) {
   __pyx_builtin___import__ = __Pyx_GetBuiltinName(__pyx_n_s_import); if (!__pyx_builtin___import__) __PYX_ERR(0, 160, __pyx_L1_error)
   __pyx_builtin_object = __Pyx_GetBuiltinName(__pyx_n_s_object); if (!__pyx_builtin_object) __PYX_ERR(0, 331, __pyx_L1_error)
-  __pyx_builtin_TypeError = __Pyx_GetBuiltinName(__pyx_n_s_TypeError); if (!__pyx_builtin_TypeError) __PYX_ERR(0, 578, __pyx_L1_error)
-  __pyx_builtin_classmethod = __Pyx_GetBuiltinName(__pyx_n_s_classmethod); if (!__pyx_builtin_classmethod) __PYX_ERR(0, 587, __pyx_L1_error)
+  __pyx_builtin_TypeError = __Pyx_GetBuiltinName(__pyx_n_s_TypeError); if (!__pyx_builtin_TypeError) __PYX_ERR(0, 588, __pyx_L1_error)
+  __pyx_builtin_classmethod = __Pyx_GetBuiltinName(__pyx_n_s_classmethod); if (!__pyx_builtin_classmethod) __PYX_ERR(0, 597, __pyx_L1_error)
   __pyx_builtin_id = __Pyx_GetBuiltinName(__pyx_n_s_id); if (!__pyx_builtin_id) __PYX_ERR(0, 192, __pyx_L1_error)
   __pyx_builtin_AttributeError = __Pyx_GetBuiltinName(__pyx_n_s_AttributeError); if (!__pyx_builtin_AttributeError) __PYX_ERR(0, 246, __pyx_L1_error)
   __pyx_builtin_KeyError = __Pyx_GetBuiltinName(__pyx_n_s_KeyError); if (!__pyx_builtin_KeyError) __PYX_ERR(0, 341, __pyx_L1_error)
-  __pyx_builtin_super = __Pyx_GetBuiltinName(__pyx_n_s_super); if (!__pyx_builtin_super) __PYX_ERR(0, 565, __pyx_L1_error)
+  __pyx_builtin_super = __Pyx_GetBuiltinName(__pyx_n_s_super); if (!__pyx_builtin_super) __PYX_ERR(0, 575, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -8856,29 +8991,29 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__7);
   __Pyx_GIVEREF(__pyx_tuple__7);
 
-  /* "src/gevent/local.py":507
+  /* "src/gevent/local.py":517
  *             raise AttributeError(name)
  * 
  *     def __copy__(self):             # <<<<<<<<<<<<<<
  *         impl = self._local__impl
  *         entry = impl.dicts[id(getcurrent())]  # pylint:disable=undefined-variable
  */
-  __pyx_tuple__8 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__8)) __PYX_ERR(0, 507, __pyx_L1_error)
+  __pyx_tuple__8 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__8)) __PYX_ERR(0, 517, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__8);
   __Pyx_GIVEREF(__pyx_tuple__8);
-  __pyx_codeobj__9 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_local_py, __pyx_n_s_copy, 507, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__9)) __PYX_ERR(0, 507, __pyx_L1_error)
+  __pyx_codeobj__9 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_local_py, __pyx_n_s_copy, 517, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__9)) __PYX_ERR(0, 517, __pyx_L1_error)
 
-  /* "src/gevent/local.py":564
+  /* "src/gevent/local.py":574
  * # (e.g., on PyPy). So we set it at runtime. Cython
  * # will raise an error if we're compiled.
  * def __new__(cls, *args, **kw):             # <<<<<<<<<<<<<<
  *     self = super(local, cls).__new__(cls)
  *     # We get the cls in *args for some reason
  */
-  __pyx_tuple__10 = PyTuple_Pack(4, __pyx_n_s_cls, __pyx_n_s_args, __pyx_n_s_kw, __pyx_n_s_self); if (unlikely(!__pyx_tuple__10)) __PYX_ERR(0, 564, __pyx_L1_error)
+  __pyx_tuple__10 = PyTuple_Pack(4, __pyx_n_s_cls, __pyx_n_s_args, __pyx_n_s_kw, __pyx_n_s_self); if (unlikely(!__pyx_tuple__10)) __PYX_ERR(0, 574, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__10);
   __Pyx_GIVEREF(__pyx_tuple__10);
-  __pyx_codeobj__11 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS|CO_VARARGS|CO_VARKEYWORDS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__10, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_local_py, __pyx_n_s_new, 564, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__11)) __PYX_ERR(0, 564, __pyx_L1_error)
+  __pyx_codeobj__11 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS|CO_VARARGS|CO_VARKEYWORDS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__10, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_local_py, __pyx_n_s_new, 574, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__11)) __PYX_ERR(0, 574, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -9519,32 +9654,32 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_local_local);
 
-  /* "src/gevent/local.py":507
+  /* "src/gevent/local.py":517
  *             raise AttributeError(name)
  * 
  *     def __copy__(self):             # <<<<<<<<<<<<<<
  *         impl = self._local__impl
  *         entry = impl.dicts[id(getcurrent())]  # pylint:disable=undefined-variable
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_local_5local_9__copy__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_local___copy, NULL, __pyx_n_s_gevent__local, __pyx_d, ((PyObject *)__pyx_codeobj__9)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 507, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_local_5local_9__copy__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_local___copy, NULL, __pyx_n_s_gevent__local, __pyx_d, ((PyObject *)__pyx_codeobj__9)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 517, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_local_local->tp_dict, __pyx_n_s_copy, __pyx_t_2) < 0) __PYX_ERR(0, 507, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_6_local_local->tp_dict, __pyx_n_s_copy, __pyx_t_2) < 0) __PYX_ERR(0, 517, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_6_local_local);
 
-  /* "src/gevent/local.py":564
+  /* "src/gevent/local.py":574
  * # (e.g., on PyPy). So we set it at runtime. Cython
  * # will raise an error if we're compiled.
  * def __new__(cls, *args, **kw):             # <<<<<<<<<<<<<<
  *     self = super(local, cls).__new__(cls)
  *     # We get the cls in *args for some reason
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_local_3__new__, 0, __pyx_n_s_new, NULL, __pyx_n_s_gevent__local, __pyx_d, ((PyObject *)__pyx_codeobj__11)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 564, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_6_local_3__new__, 0, __pyx_n_s_new, NULL, __pyx_n_s_gevent__local, __pyx_d, ((PyObject *)__pyx_codeobj__11)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 574, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_new, __pyx_t_2) < 0) __PYX_ERR(0, 564, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_new, __pyx_t_2) < 0) __PYX_ERR(0, 574, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "src/gevent/local.py":572
+  /* "src/gevent/local.py":582
  *     return self
  * 
  * try:             # <<<<<<<<<<<<<<
@@ -9560,16 +9695,16 @@ if (!__Pyx_RefNanny) {
     __Pyx_XGOTREF(__pyx_t_5);
     /*try:*/ {
 
-      /* "src/gevent/local.py":577
+      /* "src/gevent/local.py":587
  *     # in PyPy2, it must not. In either case, the args that get passed to
  *     # it are stil wrong.
  *     local.__new__ = 'None'             # <<<<<<<<<<<<<<
  * except TypeError: # pragma: no cover
  *     # Must be compiled
  */
-      if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_ptype_6gevent_6_local_local), __pyx_n_s_new, __pyx_n_s_None) < 0) __PYX_ERR(0, 577, __pyx_L2_error)
+      if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_ptype_6gevent_6_local_local), __pyx_n_s_new, __pyx_n_s_None) < 0) __PYX_ERR(0, 587, __pyx_L2_error)
 
-      /* "src/gevent/local.py":572
+      /* "src/gevent/local.py":582
  *     return self
  * 
  * try:             # <<<<<<<<<<<<<<
@@ -9578,7 +9713,7 @@ if (!__Pyx_RefNanny) {
  */
     }
 
-    /* "src/gevent/local.py":582
+    /* "src/gevent/local.py":592
  *     pass
  * else:
  *     from gevent._compat import PYPY             # <<<<<<<<<<<<<<
@@ -9586,78 +9721,78 @@ if (!__Pyx_RefNanny) {
  *     if PYPY and PY2:
  */
     /*else:*/ {
-      __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 582, __pyx_L4_except_error)
+      __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 592, __pyx_L4_except_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_INCREF(__pyx_n_s_PYPY_2);
       __Pyx_GIVEREF(__pyx_n_s_PYPY_2);
       PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_PYPY_2);
-      __pyx_t_1 = __Pyx_Import(__pyx_n_s_gevent__compat, __pyx_t_2, -1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 582, __pyx_L4_except_error)
+      __pyx_t_1 = __Pyx_Import(__pyx_n_s_gevent__compat, __pyx_t_2, -1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 592, __pyx_L4_except_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_PYPY_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 582, __pyx_L4_except_error)
+      __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_PYPY_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 592, __pyx_L4_except_error)
       __Pyx_GOTREF(__pyx_t_2);
-      if (PyDict_SetItem(__pyx_d, __pyx_n_s_PYPY_2, __pyx_t_2) < 0) __PYX_ERR(0, 582, __pyx_L4_except_error)
+      if (PyDict_SetItem(__pyx_d, __pyx_n_s_PYPY_2, __pyx_t_2) < 0) __PYX_ERR(0, 592, __pyx_L4_except_error)
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "src/gevent/local.py":583
+      /* "src/gevent/local.py":593
  * else:
  *     from gevent._compat import PYPY
  *     from gevent._compat import PY2             # <<<<<<<<<<<<<<
  *     if PYPY and PY2:
  *         local.__new__ = __new__
  */
-      __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 583, __pyx_L4_except_error)
+      __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 593, __pyx_L4_except_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_INCREF(__pyx_n_s_PY2);
       __Pyx_GIVEREF(__pyx_n_s_PY2);
       PyList_SET_ITEM(__pyx_t_1, 0, __pyx_n_s_PY2);
-      __pyx_t_2 = __Pyx_Import(__pyx_n_s_gevent__compat, __pyx_t_1, -1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 583, __pyx_L4_except_error)
+      __pyx_t_2 = __Pyx_Import(__pyx_n_s_gevent__compat, __pyx_t_1, -1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 593, __pyx_L4_except_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_PY2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 583, __pyx_L4_except_error)
+      __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_PY2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 593, __pyx_L4_except_error)
       __Pyx_GOTREF(__pyx_t_1);
-      if (PyDict_SetItem(__pyx_d, __pyx_n_s_PY2, __pyx_t_1) < 0) __PYX_ERR(0, 583, __pyx_L4_except_error)
+      if (PyDict_SetItem(__pyx_d, __pyx_n_s_PY2, __pyx_t_1) < 0) __PYX_ERR(0, 593, __pyx_L4_except_error)
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-      /* "src/gevent/local.py":584
+      /* "src/gevent/local.py":594
  *     from gevent._compat import PYPY
  *     from gevent._compat import PY2
  *     if PYPY and PY2:             # <<<<<<<<<<<<<<
  *         local.__new__ = __new__
  *     else:
  */
-      __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_PYPY_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 584, __pyx_L4_except_error)
+      __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_PYPY_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 594, __pyx_L4_except_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 584, __pyx_L4_except_error)
+      __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 594, __pyx_L4_except_error)
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       if (__pyx_t_7) {
       } else {
         __pyx_t_6 = __pyx_t_7;
         goto __pyx_L9_bool_binop_done;
       }
-      __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_PY2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 584, __pyx_L4_except_error)
+      __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_PY2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 594, __pyx_L4_except_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 584, __pyx_L4_except_error)
+      __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 594, __pyx_L4_except_error)
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __pyx_t_6 = __pyx_t_7;
       __pyx_L9_bool_binop_done:;
       if (__pyx_t_6) {
 
-        /* "src/gevent/local.py":585
+        /* "src/gevent/local.py":595
  *     from gevent._compat import PY2
  *     if PYPY and PY2:
  *         local.__new__ = __new__             # <<<<<<<<<<<<<<
  *     else:
  *         local.__new__ = classmethod(__new__)
  */
-        __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_new); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 585, __pyx_L4_except_error)
+        __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_new); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 595, __pyx_L4_except_error)
         __Pyx_GOTREF(__pyx_t_2);
-        if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_ptype_6gevent_6_local_local), __pyx_n_s_new, __pyx_t_2) < 0) __PYX_ERR(0, 585, __pyx_L4_except_error)
+        if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_ptype_6gevent_6_local_local), __pyx_n_s_new, __pyx_t_2) < 0) __PYX_ERR(0, 595, __pyx_L4_except_error)
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-        /* "src/gevent/local.py":584
+        /* "src/gevent/local.py":594
  *     from gevent._compat import PYPY
  *     from gevent._compat import PY2
  *     if PYPY and PY2:             # <<<<<<<<<<<<<<
@@ -9667,7 +9802,7 @@ if (!__Pyx_RefNanny) {
         goto __pyx_L8;
       }
 
-      /* "src/gevent/local.py":587
+      /* "src/gevent/local.py":597
  *         local.__new__ = __new__
  *     else:
  *         local.__new__ = classmethod(__new__)             # <<<<<<<<<<<<<<
@@ -9675,33 +9810,33 @@ if (!__Pyx_RefNanny) {
  *     del PYPY
  */
       /*else*/ {
-        __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_new); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 587, __pyx_L4_except_error)
+        __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_new); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 597, __pyx_L4_except_error)
         __Pyx_GOTREF(__pyx_t_2);
-        __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_builtin_classmethod, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 587, __pyx_L4_except_error)
+        __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_builtin_classmethod, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 597, __pyx_L4_except_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-        if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_ptype_6gevent_6_local_local), __pyx_n_s_new, __pyx_t_1) < 0) __PYX_ERR(0, 587, __pyx_L4_except_error)
+        if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_ptype_6gevent_6_local_local), __pyx_n_s_new, __pyx_t_1) < 0) __PYX_ERR(0, 597, __pyx_L4_except_error)
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       }
       __pyx_L8:;
 
-      /* "src/gevent/local.py":589
+      /* "src/gevent/local.py":599
  *         local.__new__ = classmethod(__new__)
  * 
  *     del PYPY             # <<<<<<<<<<<<<<
  *     del PY2
  * 
  */
-      if (__Pyx_PyObject_DelAttrStr(__pyx_m, __pyx_n_s_PYPY_2) < 0) __PYX_ERR(0, 589, __pyx_L4_except_error)
+      if (__Pyx_PyObject_DelAttrStr(__pyx_m, __pyx_n_s_PYPY_2) < 0) __PYX_ERR(0, 599, __pyx_L4_except_error)
 
-      /* "src/gevent/local.py":590
+      /* "src/gevent/local.py":600
  * 
  *     del PYPY
  *     del PY2             # <<<<<<<<<<<<<<
  * 
  * _init()
  */
-      if (__Pyx_PyObject_DelAttrStr(__pyx_m, __pyx_n_s_PY2) < 0) __PYX_ERR(0, 590, __pyx_L4_except_error)
+      if (__Pyx_PyObject_DelAttrStr(__pyx_m, __pyx_n_s_PY2) < 0) __PYX_ERR(0, 600, __pyx_L4_except_error)
     }
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -9711,7 +9846,7 @@ if (!__Pyx_RefNanny) {
     __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "src/gevent/local.py":578
+    /* "src/gevent/local.py":588
  *     # it are stil wrong.
  *     local.__new__ = 'None'
  * except TypeError: # pragma: no cover             # <<<<<<<<<<<<<<
@@ -9726,7 +9861,7 @@ if (!__Pyx_RefNanny) {
     goto __pyx_L4_except_error;
     __pyx_L4_except_error:;
 
-    /* "src/gevent/local.py":572
+    /* "src/gevent/local.py":582
  *     return self
  * 
  * try:             # <<<<<<<<<<<<<<
@@ -9746,7 +9881,7 @@ if (!__Pyx_RefNanny) {
     __pyx_L7_try_end:;
   }
 
-  /* "src/gevent/local.py":592
+  /* "src/gevent/local.py":602
  *     del PY2
  * 
  * _init()             # <<<<<<<<<<<<<<
@@ -9755,36 +9890,36 @@ if (!__Pyx_RefNanny) {
  */
   __pyx_f_6gevent_6_local__init();
 
-  /* "src/gevent/local.py":594
+  /* "src/gevent/local.py":604
  * _init()
  * 
  * from gevent._util import import_c_accel             # <<<<<<<<<<<<<<
  * import_c_accel(globals(), 'gevent._local')
  */
-  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 594, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 604, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_n_s_import_c_accel);
   __Pyx_GIVEREF(__pyx_n_s_import_c_accel);
   PyList_SET_ITEM(__pyx_t_1, 0, __pyx_n_s_import_c_accel);
-  __pyx_t_2 = __Pyx_Import(__pyx_n_s_gevent__util, __pyx_t_1, -1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 594, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_Import(__pyx_n_s_gevent__util, __pyx_t_1, -1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 604, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_import_c_accel); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 594, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_import_c_accel); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 604, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_import_c_accel, __pyx_t_1) < 0) __PYX_ERR(0, 594, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_import_c_accel, __pyx_t_1) < 0) __PYX_ERR(0, 604, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "src/gevent/local.py":595
+  /* "src/gevent/local.py":605
  * 
  * from gevent._util import import_c_accel
  * import_c_accel(globals(), 'gevent._local')             # <<<<<<<<<<<<<<
  */
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_import_c_accel); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 595, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_import_c_accel); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 605, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_Globals(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 595, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_Globals(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 605, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_9 = PyTuple_New(2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 595, __pyx_L1_error)
+  __pyx_t_9 = PyTuple_New(2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 605, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_9, 0, __pyx_t_1);
@@ -9792,7 +9927,7 @@ if (!__Pyx_RefNanny) {
   __Pyx_GIVEREF(__pyx_n_s_gevent__local);
   PyTuple_SET_ITEM(__pyx_t_9, 1, __pyx_n_s_gevent__local);
   __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_9, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 595, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_9, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 605, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
@@ -11276,24 +11411,6 @@ return_ne:
 #endif
 }
 
-/* HasAttr */
-    static CYTHON_INLINE int __Pyx_HasAttr(PyObject *o, PyObject *n) {
-    PyObject *r;
-    if (unlikely(!__Pyx_PyBaseString_Check(n))) {
-        PyErr_SetString(PyExc_TypeError,
-                        "hasattr(): attribute name must be string");
-        return -1;
-    }
-    r = __Pyx_GetAttr(o, n);
-    if (unlikely(!r)) {
-        PyErr_Clear();
-        return 0;
-    } else {
-        Py_DECREF(r);
-        return 1;
-    }
-}
-
 /* GetItemInt */
     static PyObject *__Pyx_GetItemInt_Generic(PyObject *o, PyObject* j) {
     PyObject *r;
@@ -11409,6 +11526,24 @@ static PyObject *__Pyx_PyObject_GetItem(PyObject *obj, PyObject* key) {
     return __Pyx_PyObject_GetIndex(obj, key);
 }
 #endif
+
+/* HasAttr */
+    static CYTHON_INLINE int __Pyx_HasAttr(PyObject *o, PyObject *n) {
+    PyObject *r;
+    if (unlikely(!__Pyx_PyBaseString_Check(n))) {
+        PyErr_SetString(PyExc_TypeError,
+                        "hasattr(): attribute name must be string");
+        return -1;
+    }
+    r = __Pyx_GetAttr(o, n);
+    if (unlikely(!r)) {
+        PyErr_Clear();
+        return 0;
+    } else {
+        Py_DECREF(r);
+        return 1;
+    }
+}
 
 /* SliceTupleAndList */
     #if CYTHON_COMPILING_IN_CPYTHON

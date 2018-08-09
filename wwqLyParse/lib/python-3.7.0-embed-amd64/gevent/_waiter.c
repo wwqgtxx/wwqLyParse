@@ -8,7 +8,7 @@
             "src\\gevent\\__waiter.pxd"
         ],
         "include_dirs": [
-            "X:\\Python36\\Include",
+            "d:\\python37\\Include",
             "deps"
         ],
         "name": "gevent.__waiter",

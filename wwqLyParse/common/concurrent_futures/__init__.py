@@ -2,16 +2,16 @@
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
 
-from concurrent.futures import (FIRST_COMPLETED,
-                                FIRST_EXCEPTION,
-                                ALL_COMPLETED,
-                                CancelledError,
-                                TimeoutError,
-                                BrokenExecutor,
-                                Future,
-                                Executor,
-                                wait,
-                                as_completed)
+from .base import (FIRST_COMPLETED,
+                   FIRST_EXCEPTION,
+                   ALL_COMPLETED,
+                   CancelledError,
+                   TimeoutError,
+                   BrokenExecutor,
+                   Future,
+                   Executor,
+                   wait,
+                   as_completed)
 
 __all__ = (
     'FIRST_COMPLETED',

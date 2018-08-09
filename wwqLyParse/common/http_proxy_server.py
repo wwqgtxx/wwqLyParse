@@ -198,13 +198,13 @@ class ProxyHandler(http.server.BaseHTTPRequestHandler):
         body = self.body
 
         try:
-            resp: GetUrlResponse = get_url(url,
-                                           method=method,
-                                           headers=headers,
-                                           data=body,
-                                           cookies=EMPTY_COOKIES,
-                                           stream=True,
-                                           allow_cache=False)
+            resp = get_url(url,
+                           method=method,
+                           headers=headers,
+                           data=body,
+                           cookies=EMPTY_COOKIES,
+                           stream=True,
+                           allow_cache=False)  # type:GetUrlResponse
             status = resp.status_code
             content = resp.content
             headers = resp.headers

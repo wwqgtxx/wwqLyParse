@@ -14,7 +14,7 @@ import requests.adapters
 class RequestsGetUrlStreamReader(GetUrlStreamReader):
     def __init__(self, resp: requests.Response):
         self.resp = resp
-        self.raw: urllib3.HTTPResponse = self.resp.raw
+        self.raw = self.resp.raw  # type:urllib3.HTTPResponse
 
     def _read(self, size):
         return self.raw.read(size, decode_content=True)

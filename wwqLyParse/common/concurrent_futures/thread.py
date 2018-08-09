@@ -13,7 +13,7 @@ import threading
 import logging
 from queue import Queue, Empty
 import time
-import concurrent.futures
+from .base import *
 
 LOGGER = logging.getLogger("concurrent.futures")
 
@@ -90,13 +90,13 @@ def _worker(executor_reference, work_queue: Queue, initializer, initargs, timeou
         pass
 
 
-class BrokenThreadPool(concurrent.futures.BrokenExecutor):
+class BrokenThreadPool(BrokenExecutor):
     """
     Raised when a worker thread in a ThreadPoolExecutor failed initializing.
     """
 
 
-class ThreadPoolExecutor(concurrent.futures.Executor):
+class ThreadPoolExecutor(Executor):
     _counter_dict = collections.defaultdict(lambda: itertools.count().__next__)
 
     def __init__(self, max_workers=None, thread_name_prefix='',
@@ -131,14 +131,14 @@ class ThreadPoolExecutor(concurrent.futures.Executor):
                 raise RuntimeError('cannot schedule new futures after'
                                    'interpreter shutdown')
 
-            f = concurrent.futures.Future()
+            f = Future()
             w = _WorkItem(f, fn, args, kwargs)
 
             self._work_queue.put(w)
             self._adjust_thread_count()
             return f
 
-    submit.__doc__ = concurrent.futures.Executor.submit.__doc__
+    submit.__doc__ = Executor.submit.__doc__
 
     def _adjust_thread_count(self):
         time.sleep(0.01)
@@ -192,7 +192,7 @@ class ThreadPoolExecutor(concurrent.futures.Executor):
             for t in self._threads:
                 t.join()
 
-    shutdown.__doc__ = concurrent.futures.Executor.shutdown.__doc__
+    shutdown.__doc__ = Executor.shutdown.__doc__
 
 
 __all__ = ["ThreadPoolExecutor"]

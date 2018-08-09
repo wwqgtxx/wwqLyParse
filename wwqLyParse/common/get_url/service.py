@@ -22,7 +22,7 @@ class GetUrlService(object):
         self.fake_headers = FAKE_HEADERS.copy()
         self.ssl_verify = True
         self.http_proxy = None
-        self.impl: GetUrlImpl = None
+        self.impl = None  # type:GetUrlImpl
         self.inited = False
 
     def init(self):

@@ -11,13 +11,6 @@ if __name__ == "__main__":
 
         monkey.patch_all()
         del monkey
-        try:
-            import queue
-
-            queue.SimpleQueue = queue._PySimpleQueue
-            del queue
-        except Exception:
-            pass
     except Exception:
         pass
     import os

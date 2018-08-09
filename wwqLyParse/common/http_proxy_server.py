@@ -216,14 +216,19 @@ class ProxyHandler(http.server.BaseHTTPRequestHandler):
             content = format_exception(e).encode()
             return self.do_mock(status, headers, content)
 
-        self.close_connection = not headers.get('Content-Length')
+        # self.close_connection = not headers.get('Content-Length')
         self.send_response_only(status)
+        pop_headers = ['Transfer-Encoding', 'Connection']
         if isinstance(content, GetUrlStreamReader):
-            pop_headers = []
+            if headers.get('Content-Encoding') in content.decoded_encoding:
+                pop_headers.append('Content-Length')
+                pop_headers.append('Content-Encoding')
         else:
-            pop_headers = ['Transfer-Encoding', 'Content-Length', 'Content-Encoding']
-            pop_headers = [k.lower() for k in pop_headers]
+            pop_headers.append('Content-Length')
+            pop_headers.append('Content-Encoding')
             self.send_header('Content-Length', len(content))
+        self.send_header('Connection', 'close')
+        pop_headers = [k.lower() for k in pop_headers]
         for key, value in headers.items():
             if key.lower() in pop_headers:
                 continue

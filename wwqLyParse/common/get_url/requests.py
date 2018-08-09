@@ -17,7 +17,7 @@ class RequestsGetUrlStreamReader(GetUrlStreamReader):
         self.raw: urllib3.HTTPResponse = self.resp.raw
 
     def _read(self, size):
-        return self.raw.read(size)
+        return self.raw.read(size, decode_content=True)
 
     def __enter__(self):
         self.resp.__enter__()

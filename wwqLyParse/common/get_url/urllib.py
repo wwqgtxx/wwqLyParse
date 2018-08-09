@@ -14,6 +14,8 @@ import urllib.error
 
 
 class UrlLibGetUrlStreamReader(GetUrlStreamReader):
+    decoded_encoding = []
+
     def __init__(self, resp: http.client.HTTPResponse):
         self.resp = resp
 

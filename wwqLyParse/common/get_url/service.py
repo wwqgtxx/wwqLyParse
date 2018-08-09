@@ -92,9 +92,12 @@ class GetUrlService(object):
                 logging.debug(callmethod + "force_flush_cache get:" + url_json)
             if allow_cache:
                 if url_json in self.url_cache:
-                    html_text = self.url_cache[url_json]
+                    result = self.url_cache[url_json]
                     logging.debug(callmethod + "cache get:" + url_json)
-                    return html_text
+                    if only_content:
+                        return result.content
+                    else:
+                        return result
                 logging.debug(callmethod + "normal get:" + url_json)
             else:
                 logging.debug(callmethod + "nocache get:" + url_json)

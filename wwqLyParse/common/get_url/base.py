@@ -30,6 +30,8 @@ class GetUrlImpl(object):
 
 
 class GetUrlStreamReader(object):
+    decoded_encoding = ['gzip', 'deflate']
+
     def read(self, size=4096):
         try:
             return self._read(size)

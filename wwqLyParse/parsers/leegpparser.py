@@ -23,23 +23,27 @@ class LeEGPParser(Parser):
     un_supports = []
     types = ["formats"]
 
-    stream_types = [
-        {'id': '54', 'container': 'm3u8', 'video_profile': '(9)4K'},
-        {'id': '53', 'container': 'm3u8', 'video_profile': '(8)1080P高码'},
-        {'id': '52', 'container': 'm3u8', 'video_profile': '(7)1080P'},
-        {'id': '51', 'container': 'm3u8', 'video_profile': '(6)720P高码'},
-        {'id': '22', 'container': 'm3u8', 'video_profile': '(5)720P'},
-        {'id': '13', 'container': 'm3u8', 'video_profile': '(4)540P'},
-        {'id': '21', 'container': 'm3u8', 'video_profile': '(3)360P'},
-        {'id': '58', 'container': 'm3u8', 'video_profile': '(2)320P'},
-        {'id': '9', 'container': 'm3u8', 'video_profile': '(1)280P'},
-    ]
+    # stream_types = [
+    #     {'id': '54', 'container': 'm3u8', 'video_profile': '(9)4K'},
+    #     {'id': '53', 'container': 'm3u8', 'video_profile': '(8)1080P高码'},
+    #     {'id': '52', 'container': 'm3u8', 'video_profile': '(7)1080P'},
+    #     {'id': '51', 'container': 'm3u8', 'video_profile': '(6)720P高码'},
+    #     {'id': '22', 'container': 'm3u8', 'video_profile': '(5)720P'},
+    #     {'id': '13', 'container': 'm3u8', 'video_profile': '(4)540P'},
+    #     {'id': '21', 'container': 'm3u8', 'video_profile': '(3)360P'},
+    #     {'id': '58', 'container': 'm3u8', 'video_profile': '(2)320P'},
+    #     {'id': '9', 'container': 'm3u8', 'video_profile': '(1)280P'},
+    # ]
+
+    stream_ids = [str(i) for i in range(250)]
 
     def get_vid(self, url):
         return match1(url, 'vplay/(\d+).html', '#record/(\d+)')
 
     def get_first_json(self, vid, q):
         # normal process
+        if type(q) == list:
+            q = ','.join(q)
         url = 'http://tvepg.letv.com/apk/data/common/security/playurl/geturl/byvid.shtml?vid=%s&key=&vtype=%s' % (
             vid, q)
         r = get_url(url, allow_cache=False)
@@ -61,37 +65,38 @@ class LeEGPParser(Parser):
         html = get_url(input_text)
         info['name'] = match1(html, r'title:"(.+?)",')
         vid = self.get_vid(input_text)
-        dj = dict()
-        # for q in range(100):  # ["52", "22", "13", "21"]:
-        for stream_type in self.stream_types:
-            q = stream_type["id"]
-            data = self.get_first_json(vid, q)
-            logging.debug(data)
-            if data["statusCode"] != 1001:
-                return None
-            if not data["data"]:
-                continue
-            infos = data["data"][0]["infos"][0]
-            try:
-                infos["encodeId"]
-            except KeyError:
-                continue
-            dj[q] = infos
+        data = self.get_first_json(vid, self.stream_ids)
+        debug(json.dumps(data))
+        if data["statusCode"] != 1001:
+            return
+        if not data["data"]:
+            return
+        data_infos = data["data"][0]["infos"]
+        for data_info in data_infos:
+            # if "encodeId" not in data_info:
+            #     continue
+            q = data_info["vtype"]
             info['data'].append({
-                "label": "%s-%s-%sx%s-%skbps" % (
+                "label": "%s-%s-%s-%sx%s-%skbps-%skbps" % (
                     # q,
-                    stream_type['video_profile'],
-                    infos["vfmt"], infos["vwidth"], infos["vheight"], infos["vbr"]),
+                    # self.get_stream_type(q)["video_profile"],
+                    data_info["gfmt"].lower(),
+                    data_info["vfmt"].upper(),
+                    data_info["afmt"].replace(' ', '').replace('-', ''),
+                    data_info["vwidth"],
+                    data_info["vheight"],
+                    data_info["vbr"],
+                    data_info["abr"]),
                 "code": q,
-                "ext": infos["gfmt"],
-                "size": byte2size(infos["gsize"]),
+                "ext": data_info["gfmt"],
+                "size": byte2size(data_info["gsize"]),
                 "type": "",
                 "download": [{
                     "protocol": "m3u8",
-                    "urls": infos["mainUrl"],
+                    "urls": data_info["mainUrl"],
                     # "maxDown" : 1,
                     "unfixIp": True
                 }]
             })
-        debug(json.dumps(dj))
+
         return info

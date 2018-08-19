@@ -261,8 +261,9 @@ def parse(input_text, types=None, parsers_name=None, url_handles_name=None,
     for t_result in t_results:
         data = t_result["result"]
         try:
-            if "sorted" not in data or data["sorted"] != 1:
+            if "sorted" not in data or data["sorted"] != True:
                 data["data"] = sorted(data["data"], key=lambda d: d["label"], reverse=True)
+                data["sorted"] = True
                 logging.info("sorted the " + str(t_result["parser"]) + "'s data['data']")
         except:
             pass

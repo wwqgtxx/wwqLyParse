@@ -387,10 +387,26 @@ def _handle(data):
     return byte_str
 
 
-def run(pipe):
+def run(pipe, force_start=False):
     address = r'\\.\pipe\%s@%s' % (pipe, version['version'])
     logging.info("listen address:'%s'" % address)
-    ConnectionServer(address, _handle, get_uuid()).run()
+    for _ in range(3 if force_start else 1):
+        try:
+            ConnectionServer(address, _handle, get_uuid()).run()
+        except PermissionError:
+            if force_start:
+                try:
+                    for _ in range(3):
+                        with multiprocessing_connection.Client(address, authkey=get_uuid()) as conn:
+                            req = {"type": "get", "url": 'close', "data": {}}
+                            req = json.dumps(req)
+                            req = req.encode("utf-8")
+                            req = lib_parse(req)
+                            conn.send_bytes(req)
+                except EOFError:
+                    pass
+            else:
+                raise
 
 
 def arg_parser():
@@ -399,9 +415,11 @@ def arg_parser():
     # parser.add_argument('--host', type=str, default='127.0.0.1', help="set listening ip")
     # parser.add_argument('-p', '--port', type=int, default=5000, help="set listening port")
     parser.add_argument('-t', '--timeout', type=int, default=PARSE_TIMEOUT,
-                        help="set parse timeout seconds, default 60s")
+                        help="set parse timeout seconds, default %ds" % PARSE_TIMEOUT)
     parser.add_argument('--close_timeout', type=int, default=CLOSE_TIMEOUT,
-                        help="set close timeout seconds, default 10s")
+                        help="set close timeout seconds, default %ds" % CLOSE_TIMEOUT)
+    parser.add_argument('--force_start', type=bool, default=False,
+                        help="force start server")
 
     parser.add_argument('-d', '--debug', type=str, default=None, help="debug a url")
     parser.add_argument('-f', '--format', type=str, default=None,
@@ -417,7 +435,7 @@ def arg_parser():
     return args
 
 
-def main(debugstr=None, parsers_name=None, types=None, label=None, pipe="wwqLyParse", timeout=PARSE_TIMEOUT,
+def main(debugstr=None, parsers_name=None, types=None, label=None, pipe=None, timeout=PARSE_TIMEOUT,
          close_timeout=CLOSE_TIMEOUT):
     logging.debug("\n------------------------------------------------------------\n")
     global PARSE_TIMEOUT
@@ -430,7 +448,9 @@ def main(debugstr=None, parsers_name=None, types=None, label=None, pipe="wwqLyPa
         else:
             debug(parse_url(debugstr, label))
     else:
-        run(pipe)
+        if not pipe:
+            pipe = args.pipe
+        run(pipe, args.force_start)
 
 
 if __name__ == '__main__':

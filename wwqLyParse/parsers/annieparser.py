@@ -19,6 +19,7 @@ class AnnieParser(Parser):
     un_supports = ["www.iqiyi.com", "www.iqiyi.com/a_", 'www.iqiyi.com/lib/m', 'list.iqiyi.com', 'list.youku.com',
                    'www.le.com', 'www.mgtv.com', 'yinyuetai.com', 'pptv.com',
                    r'^(http|https)://cache.',
+                   r'^(http|https)://defaultts.tc.qq.com.',
                    r'^(http|https)://\d+\.\d+\.\d+\.\d+']
     name = "Annie解析"
 

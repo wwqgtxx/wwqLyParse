@@ -88,7 +88,7 @@ class LeEGPParser(Parser):
                     data_info["vbr"],
                     data_info["abr"]),
                 "code": q,
-                "ext": data_info["gfmt"],
+                "ext": 'ts',  # data_info["gfmt"],
                 "size": byte2size(data_info["gsize"]),
                 "type": "",
                 "download": [{

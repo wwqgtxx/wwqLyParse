@@ -288,6 +288,9 @@ class BaseRequest(object):
             def my_wsgi_app(request):
                 return Response('Hello World!')
 
+        As of Werkzeug 0.14 HTTP exceptions are automatically caught and
+        converted to responses instead of failing.
+
         :param f: the WSGI callable to decorate
         :return: a new WSGI callable
         """
@@ -296,10 +299,17 @@ class BaseRequest(object):
         #: the request.  The return value is then called with the latest
         #: two arguments.  This makes it possible to use this decorator for
         #: both methods and standalone WSGI functions.
+        from werkzeug.exceptions import HTTPException
+
         def application(*args):
             request = cls(args[-2])
             with request:
-                return f(*args[:-2] + (request,))(*args[-2:])
+                try:
+                    resp = f(*args[:-2] + (request,))
+                except HTTPException as e:
+                    resp = e.get_response(args[-2])
+                return resp(*args[-2:])
+
         return update_wrapper(application, f)
 
     def _get_file_stream(self, total_content_length, content_type, filename=None,
@@ -1063,7 +1073,8 @@ class BaseResponse(object):
         return _iter_encoded(self.response, self.charset)
 
     def set_cookie(self, key, value='', max_age=None, expires=None,
-                   path='/', domain=None, secure=False, httponly=False):
+                   path='/', domain=None, secure=False, httponly=False,
+                   samesite=None):
         """Sets a cookie. The parameters are the same as in the cookie `Morsel`
         object in the Python standard library but it accepts unicode data, too.
 
@@ -1087,6 +1098,9 @@ class BaseResponse(object):
         :param httponly: disallow JavaScript to access the cookie.  This is an
                          extension to the cookie standard and probably not
                          supported by all browsers.
+        :param samesite: Limits the scope of the cookie such that it will only
+                         be attached to requests if those requests are
+                         "same-site".
         """
         self.headers.add('Set-Cookie', dump_cookie(
             key,
@@ -1098,7 +1112,8 @@ class BaseResponse(object):
             secure=secure,
             httponly=httponly,
             charset=self.charset,
-            max_size=self.max_cookie_size
+            max_size=self.max_cookie_size,
+            samesite=samesite
         ))
 
     def delete_cookie(self, key, path='/', domain=None):
@@ -1232,13 +1247,7 @@ class BaseResponse(object):
            isinstance(content_location, text_type):
             headers['Content-Location'] = iri_to_uri(content_location)
 
-        # remove entity headers and set content length to zero if needed.
-        # Also update content_length accordingly so that the automatic
-        # content length detection does not trigger in the following
-        # code.
-        if 100 <= status < 200 or status == 204:
-            headers['Content-Length'] = content_length = u'0'
-        elif status == 304:
+        if status in (304, 412):
             remove_entity_headers(headers)
 
         # if we can determine the content length automatically, we
@@ -1247,7 +1256,9 @@ class BaseResponse(object):
         # the response.  We however should not do that if we have a 304
         # response.
         if self.automatically_set_content_length and \
-           self.is_sequence and content_length is None and status != 304:
+           self.is_sequence and content_length is None and \
+           status not in (204, 304) and \
+           not (100 <= status < 200):
             try:
                 content_length = sum(len(to_bytes(x, 'ascii'))
                                      for x in self.response)
@@ -1276,7 +1287,7 @@ class BaseResponse(object):
         """
         status = self.status_code
         if environ['REQUEST_METHOD'] == 'HEAD' or \
-           100 <= status < 200 or status in (204, 304):
+           100 <= status < 200 or status in (204, 304, 412):
             iterable = ()
         elif self.direct_passthrough:
             if __debug__:
@@ -1593,9 +1604,13 @@ class ETagResponseMixin(object):
             accept_ranges = _clean_accept_ranges(accept_ranges)
             is206 = self._process_range_request(environ, complete_length, accept_ranges)
             if not is206 and not is_resource_modified(
-                environ, self.headers.get('etag'), None, self.headers.get('last-modified')
+                environ, self.headers.get('etag'), None,
+                self.headers.get('last-modified')
             ):
-                self.status_code = 304
+                if parse_etags(environ.get('HTTP_IF_MATCH')):
+                    self.status_code = 412
+                else:
+                    self.status_code = 304
             if self.automatically_set_content_length and 'content-length' not in self.headers:
                 length = self.calculate_content_length()
                 if length is not None:

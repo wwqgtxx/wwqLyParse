@@ -5,9 +5,13 @@
 
     Various helpers to make the development experience better.
 
-    :copyright: (c) 2015 by Armin Ronacher.
+    :copyright: © 2010 by the Pallets team.
     :license: BSD, see LICENSE for more details.
 """
+
+import os
+from warnings import warn
+
 from ._compat import implements_to_string, text_type
 from .app import Flask
 from .blueprints import Blueprint
@@ -153,3 +157,12 @@ def explain_template_loading_attempts(app, template, attempts):
         info.append('  See http://flask.pocoo.org/docs/blueprints/#templates')
 
     app.logger.info('\n'.join(info))
+
+
+def explain_ignored_app_run():
+    if os.environ.get('WERKZEUG_RUN_MAIN') != 'true':
+        warn(Warning('Silently ignoring app.run() because the '
+                     'application is run from the flask command line '
+                     'executable.  Consider putting app.run() behind an '
+                     'if __name__ == "__main__" guard to silence this '
+                     'warning.'), stacklevel=3)

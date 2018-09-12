@@ -5,7 +5,7 @@
 
     Implements the objects required to keep the context.
 
-    :copyright: (c) 2015 by Armin Ronacher.
+    :copyright: © 2010 by the Pallets team.
     :license: BSD, see LICENSE for more details.
 """
 
@@ -24,18 +24,60 @@ _sentinel = object()
 
 
 class _AppCtxGlobals(object):
-    """A plain object."""
+    """A plain object. Used as a namespace for storing data during an
+    application context.
+
+    Creating an app context automatically creates this object, which is
+    made available as the :data:`g` proxy.
+
+    .. describe:: 'key' in g
+
+        Check whether an attribute is present.
+
+        .. versionadded:: 0.10
+
+    .. describe:: iter(g)
+
+        Return an iterator over the attribute names.
+
+        .. versionadded:: 0.10
+    """
 
     def get(self, name, default=None):
+        """Get an attribute by name, or a default value. Like
+        :meth:`dict.get`.
+
+        :param name: Name of attribute to get.
+        :param default: Value to return if the attribute is not present.
+
+        .. versionadded:: 0.10
+        """
         return self.__dict__.get(name, default)
 
     def pop(self, name, default=_sentinel):
+        """Get and remove an attribute by name. Like :meth:`dict.pop`.
+
+        :param name: Name of attribute to pop.
+        :param default: Value to return if the attribute is not present,
+            instead of raise a ``KeyError``.
+
+        .. versionadded:: 0.11
+        """
         if default is _sentinel:
             return self.__dict__.pop(name)
         else:
             return self.__dict__.pop(name, default)
 
     def setdefault(self, name, default=None):
+        """Get the value of an attribute if it is present, otherwise
+        set and return a default value. Like :meth:`dict.setdefault`.
+
+        :param name: Name of attribute to get.
+        :param: default: Value to set and return if the attribute is not
+            present.
+
+        .. versionadded:: 0.11
+        """
         return self.__dict__.setdefault(name, default)
 
     def __contains__(self, item):
@@ -325,13 +367,18 @@ class RequestContext(object):
 
         _request_ctx_stack.push(self)
 
-        # Open the session at the moment that the request context is
-        # available. This allows a custom open_session method to use the
-        # request context (e.g. code that access database information
-        # stored on `g` instead of the appcontext).
-        self.session = self.app.open_session(self.request)
+        # Open the session at the moment that the request context is available.
+        # This allows a custom open_session method to use the request context.
+        # Only open a new session if this is the first time the request was
+        # pushed, otherwise stream_with_context loses the session.
         if self.session is None:
-            self.session = self.app.make_null_session()
+            session_interface = self.app.session_interface
+            self.session = session_interface.open_session(
+                self.app, self.request
+            )
+
+            if self.session is None:
+                self.session = session_interface.make_null_session(self.app)
 
     def pop(self, exc=_sentinel):
         """Pops the request context and unbinds it by doing that.  This will

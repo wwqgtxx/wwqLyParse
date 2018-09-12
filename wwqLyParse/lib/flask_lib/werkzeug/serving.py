@@ -220,13 +220,16 @@ class WSGIRequestHandler(BaseHTTPRequestHandler, object):
                     code, msg = status.split(None, 1)
                 except ValueError:
                     code, msg = status, ""
-                self.send_response(int(code), msg)
+                code = int(code)
+                self.send_response(code, msg)
                 header_keys = set()
                 for key, value in response_headers:
                     self.send_header(key, value)
                     key = key.lower()
                     header_keys.add(key)
-                if 'content-length' not in header_keys:
+                if not ('content-length' in header_keys or
+                        environ['REQUEST_METHOD'] == 'HEAD' or
+                        code < 200 or code in (204, 304)):
                     self.close_connection = True
                     self.send_header('Connection', 'close')
                 if 'server' not in header_keys:
@@ -414,7 +417,6 @@ def generate_adhoc_ssl_pair(cn=None):
     return cert, pkey
 
 
-# noinspection PyUnresolvedReferences
 def make_ssl_devcert(base_path, host=None, cn=None):
     """Creates an SSL key for development.  This should be used instead of
     the ``'adhoc'`` key which generates a new cert on each server start.
@@ -542,6 +544,17 @@ def select_ip_version(host, port):
     return socket.AF_INET
 
 
+def get_sockaddr(host, port, family):
+    """Returns a fully qualified socket address, that can properly used by
+    socket.bind"""
+    try:
+        res = socket.getaddrinfo(host, port, family,
+                                 socket.SOCK_STREAM, socket.SOL_TCP)
+    except socket.gaierror:
+        return (host, port)
+    return res[0][4]
+
+
 class BaseWSGIServer(HTTPServer, object):
 
     """Simple single-threaded, single-process WSGI server."""
@@ -560,7 +573,8 @@ class BaseWSGIServer(HTTPServer, object):
             real_sock = socket.fromfd(fd, self.address_family,
                                       socket.SOCK_STREAM)
             port = 0
-        HTTPServer.__init__(self, (host, int(port)), handler)
+        HTTPServer.__init__(self, get_sockaddr(host, int(port),
+                                               self.address_family), handler)
         self.app = app
         self.passthrough_errors = passthrough_errors
         self.shutdown_signal = False
@@ -602,9 +616,8 @@ class BaseWSGIServer(HTTPServer, object):
             self.server_close()
 
     def handle_error(self, request, client_address):
-        # if self.passthrough_errors:
-        #     # noinspection Annotator
-        #     raise
+        if self.passthrough_errors:
+            raise
         return HTTPServer.handle_error(self, request, client_address)
 
     def get_request(self):
@@ -779,7 +792,7 @@ def run_simple(hostname, port, application, use_reloader=False,
             address_family = select_ip_version(hostname, port)
             s = socket.socket(address_family, socket.SOCK_STREAM)
             s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            s.bind((hostname, port))
+            s.bind(get_sockaddr(hostname, port, address_family))
             if hasattr(s, 'set_inheritable'):
                 s.set_inheritable(True)
 

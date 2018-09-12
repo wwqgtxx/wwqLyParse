@@ -1,10 +1,13 @@
 import ssl
+import sys
 
 import idna
 
-__version__ = '1.0.1'
+__version__ = '1.1.0'
 
 real_match_hostname = ssl.match_hostname
+
+PY_370 = sys.version_info >= (3, 7, 0)
 
 
 def patched_match_hostname(cert, hostname):
@@ -17,6 +20,9 @@ def patched_match_hostname(cert, hostname):
 
 
 def patch_match_hostname():
+    if PY_370:
+        return
+
     if hasattr(ssl.match_hostname, 'patched'):
         return
 
@@ -25,6 +31,9 @@ def patch_match_hostname():
 
 
 def reset_match_hostname():
+    if PY_370:
+        return
+
     if not hasattr(ssl.match_hostname, 'patched'):
         return
 

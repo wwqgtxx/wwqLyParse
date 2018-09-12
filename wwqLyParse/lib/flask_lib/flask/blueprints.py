@@ -6,10 +6,11 @@
     Blueprints are the recommended way to implement larger or more
     pluggable applications in Flask 0.7 and later.
 
-    :copyright: (c) 2015 by Armin Ronacher.
+    :copyright: © 2010 by the Pallets team.
     :license: BSD, see LICENSE for more details.
 """
 from functools import update_wrapper
+from werkzeug.urls import url_join
 
 from .helpers import _PackageBoundObject, _endpoint_from_view_func
 
@@ -49,7 +50,6 @@ class BlueprintSetupState(object):
         url_prefix = self.options.get('url_prefix')
         if url_prefix is None:
             url_prefix = self.blueprint.url_prefix
-
         #: The prefix that should be used for all URLs defined on the
         #: blueprint.
         self.url_prefix = url_prefix
@@ -64,8 +64,12 @@ class BlueprintSetupState(object):
         to the application.  The endpoint is automatically prefixed with the
         blueprint's name.
         """
-        if self.url_prefix:
-            rule = self.url_prefix + rule
+        if self.url_prefix is not None:
+            if rule:
+                rule = '/'.join((
+                    self.url_prefix.rstrip('/'), rule.lstrip('/')))
+            else:
+                rule = self.url_prefix
         options.setdefault('subdomain', self.subdomain)
         if endpoint is None:
             endpoint = _endpoint_from_view_func(view_func)
@@ -88,6 +92,28 @@ class Blueprint(_PackageBoundObject):
 
     warn_on_modifications = False
     _got_registered_once = False
+
+    #: Blueprint local JSON decoder class to use.
+    #: Set to ``None`` to use the app's :class:`~flask.app.Flask.json_encoder`.
+    json_encoder = None
+    #: Blueprint local JSON decoder class to use.
+    #: Set to ``None`` to use the app's :class:`~flask.app.Flask.json_decoder`.
+    json_decoder = None
+
+    # TODO remove the next three attrs when Sphinx :inherited-members: works
+    # https://github.com/sphinx-doc/sphinx/issues/741
+
+    #: The name of the package or module that this app belongs to. Do not
+    #: change this once it is set by the constructor.
+    import_name = None
+
+    #: Location of the template files to be added to the template lookup.
+    #: ``None`` if templates should not be added.
+    template_folder = None
+
+    #: Absolute path to the package on the filesystem. Used to look up
+    #: resources contained in the package.
+    root_path = None
 
     def __init__(self, name, import_name, static_folder=None,
                  static_url_path=None, template_folder=None,
@@ -137,18 +163,25 @@ class Blueprint(_PackageBoundObject):
         return BlueprintSetupState(self, app, options, first_registration)
 
     def register(self, app, options, first_registration=False):
-        """Called by :meth:`Flask.register_blueprint` to register a blueprint
-        on the application.  This can be overridden to customize the register
-        behavior.  Keyword arguments from
-        :func:`~flask.Flask.register_blueprint` are directly forwarded to this
-        method in the `options` dictionary.
+        """Called by :meth:`Flask.register_blueprint` to register all views
+        and callbacks registered on the blueprint with the application. Creates
+        a :class:`.BlueprintSetupState` and calls each :meth:`record` callback
+        with it.
+
+        :param app: The application this blueprint is being registered with.
+        :param options: Keyword arguments forwarded from
+            :meth:`~Flask.register_blueprint`.
+        :param first_registration: Whether this is the first time this
+            blueprint has been registered on the application.
         """
         self._got_registered_once = True
         state = self.make_setup_state(app, options, first_registration)
+
         if self.has_static_folder:
-            state.add_url_rule(self.static_url_path + '/<path:filename>',
-                               view_func=self.send_static_file,
-                               endpoint='static')
+            state.add_url_rule(
+                self.static_url_path + '/<path:filename>',
+                view_func=self.send_static_file, endpoint='static'
+            )
 
         for deferred in self.deferred_functions:
             deferred(state)
@@ -169,6 +202,8 @@ class Blueprint(_PackageBoundObject):
         """
         if endpoint:
             assert '.' not in endpoint, "Blueprint endpoints should not contain dots"
+        if view_func and hasattr(view_func, '__name__'):
+            assert '.' not in view_func.__name__, "Blueprint view function name should not contain dots"
         self.record(lambda s:
             s.add_url_rule(rule, endpoint, view_func, **options))
 

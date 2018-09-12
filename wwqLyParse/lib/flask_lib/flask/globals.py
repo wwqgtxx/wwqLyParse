@@ -6,7 +6,7 @@
     Defines all the global objects that are proxies to the current
     active context.
 
-    :copyright: (c) 2015 by Armin Ronacher.
+    :copyright: © 2010 by the Pallets team.
     :license: BSD, see LICENSE for more details.
 """
 
@@ -25,8 +25,8 @@ _app_ctx_err_msg = '''\
 Working outside of application context.
 
 This typically means that you attempted to use functionality that needed
-to interface with the current application object in a way.  To solve
-this set up an application context with app.app_context().  See the
+to interface with the current application object in some way. To solve
+this, set up an application context with app.app_context().  See the
 documentation for more information.\
 '''
 

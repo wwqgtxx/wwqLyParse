@@ -198,7 +198,7 @@ class MultiDict(_Base, MutableMultiMapping):
 
     def _key(self, key):
         if isinstance(key, str):
-            return str(key)
+            return key
         else:
             raise TypeError("MultiDict keys should be either str "
                             "or subclasses of str")
@@ -226,11 +226,14 @@ class MultiDict(_Base, MutableMultiMapping):
                             " ({} given)".format(name, len(args)))
         if args:
             arg = args[0]
-            if isinstance(args[0], (MultiDict, MultiDictProxy)):
+            if isinstance(args[0], (MultiDict, MultiDictProxy)) and not kwargs:
                 items = arg._impl._items
             else:
                 if hasattr(arg, 'items'):
                     arg = arg.items()
+                if kwargs:
+                    arg = list(arg)
+                    arg.extend(list(kwargs.items()))
                 items = []
                 for item in arg:
                     if not len(item) == 2:
@@ -242,9 +245,9 @@ class MultiDict(_Base, MutableMultiMapping):
                                   item[1]))
 
             method(items)
-
-        method([(self._title(key), self._key(key), value)
-               for key, value in kwargs.items()])
+        else:
+            method([(self._title(key), self._key(key), value)
+                    for key, value in kwargs.items()])
 
     def _extend_items(self, items):
         for identity, key, value in items:
@@ -380,7 +383,7 @@ class MultiDict(_Base, MutableMultiMapping):
         identity = self._title(key)
         items = self._impl._items
 
-        for i in range(len(items)-1, -1, -1):
+        for i in range(len(items)):
             item = items[i]
             if item[0] == identity:
                 items[i] = (identity, key, value)
@@ -393,13 +396,12 @@ class MultiDict(_Base, MutableMultiMapping):
             self._impl.incr_version()
             return
 
-        # remove all precending items
-        i = 0
-        while i < rgt:
+        # remove all tail items
+        i = rgt + 1
+        while i < len(items):
             item = items[i]
             if item[0] == identity:
                 del items[i]
-                rgt -= 1
             else:
                 i += 1
 

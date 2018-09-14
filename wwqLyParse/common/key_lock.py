@@ -10,17 +10,21 @@ __all__ = ["KeyLockDict", "KeyLockWrapper", "KeyLockFuck", "FUCK_KEY_LOCK"]
 
 
 class KeyLockDict(dict):
+    @staticmethod
+    def _get_new_lock():
+        return threading.RLock()
+
     def __missing__(self, key):
-        self[key] = value = KeyLockWrapper(key, self)
+        self[key] = value = KeyLockWrapper(key, self, self._get_new_lock)
         return value
 
 
 class KeyLockWrapper(object):
-    def __init__(self, _key, _dict):
+    def __init__(self, _key, _dict, _get_new_lock):
         self._key = _key
         self._dict = _dict
-        self._lock = threading.Lock()
-        self._inner_lock = threading.Lock()
+        self._lock = _get_new_lock()
+        self._inner_lock = _get_new_lock()
         self._count = 0
 
     def __enter__(self):

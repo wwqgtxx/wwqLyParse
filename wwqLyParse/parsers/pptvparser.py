@@ -241,15 +241,17 @@ class PPTVParser(Parser):
             "data": []
         }
 
-        html = get_url(input_text)
-        for _ in range(3):
+        vid = None
+        for i in range(3):
+            html = get_url(input_text, force_flush_cache=(i != 0))
             if """document.write('<meta http-equiv="Refresh" Content="0; Url='+u+'">')""" in html:
                 logging.debug(html)
-                html = get_url(input_text, force_flush_cache=True)
-            else:
+                continue
+            vid = match1(html, 'webcfg\s*=\s*{"id":\s*(\d+)')
+            if vid:
                 break
         # logging.debug(html)
-        vid = match1(html, 'webcfg\s*=\s*{"id":\s*(\d+)')
+
         xml = get_url(
             'http://web-play.pptv.com/webplay3-0-{}.xml?zone=8&version=4&username=&ppi=302c3333&type=ppbox.launcher&pageUrl=http%3A%2F%2Fv.pptv.com&o=0&referrer=&kk=&scver=1&appplt=flp&appid=pptv.flashplayer.vod&appver=3.4.3.3&nddp=1'.format(
                 vid), allow_cache=False)

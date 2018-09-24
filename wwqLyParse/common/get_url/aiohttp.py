@@ -55,7 +55,11 @@ class AioHttpGetUrlImpl(GetUrlImpl):
 
     def _get_async_loop(self):
         loop = asyncio.SelectorEventLoop(DefaultSelector())
-        loop.set_default_executor(ThreadPoolExecutor())
+        executor = ThreadPoolExecutor()
+        import concurrent.futures
+        assert isinstance(executor, concurrent.futures.ThreadPoolExecutor)
+        loop.set_default_executor(executor)
+        logging.debug("set %s for %s" % (executor, loop))
 
         def _run_forever():
             logging.debug("start loop %s", loop)

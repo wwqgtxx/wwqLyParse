@@ -93,7 +93,7 @@ class LeEGPParser(Parser):
                 "type": "",
                 "download": [{
                     "protocol": "m3u8",
-                    "urls": data_info["mainUrl"],
+                    "urls": [data_info["mainUrl"], data_info["backUrl0"], data_info["backUrl1"], data_info["backUrl2"]],
                     # "maxDown" : 1,
                     "unfixIp": True
                 }]

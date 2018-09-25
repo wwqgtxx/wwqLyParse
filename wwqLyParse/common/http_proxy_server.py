@@ -319,10 +319,8 @@ class HttpProxyServer(socketserver.TCPServer):
         exc_info = sys.exc_info()
         error = exc_info and len(exc_info) and exc_info[1]
         if isinstance(error, NetWorkIOError) and len(error.args) > 1 and 'bad write retry' in error.args[1]:
-            exc_info = error = None
-        else:
-            del exc_info, error
-            socketserver.ThreadingTCPServer.handle_error(self, *args)
+            return
+        super().handle_error(self, *args)
 
     def serve_forever(self, poll_interval=0.5):
         logging.info("listen address:'http://%s:%s'" % self.server_address)

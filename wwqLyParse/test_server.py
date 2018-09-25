@@ -29,5 +29,5 @@ from main import *
 get_url_service.init()
 
 if __name__ == "__main__":
-    with HttpProxyServer(port=1082) as hps:
+    with HttpProxyServer(host='localhost', port=1082) as hps:
         hps.join()

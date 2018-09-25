@@ -274,10 +274,15 @@ class HttpProxyServer(socketserver.TCPServer):
     common_worker_pool = WorkerPool(thread_name_prefix="HPSPool")
 
     def __init__(self, host="localhost", port=0):
-        super().__init__((host, port), ProxyHandler)
         self.is_start = False
         self._threads = []
         self._serve_thread = None
+        super().__init__((host, port), ProxyHandler)
+
+    def server_bind(self):
+        if hasattr(socket, "SO_EXCLUSIVEADDRUSE"):
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_EXCLUSIVEADDRUSE, 1)
+        super().server_bind()
 
     def process_request_thread(self, request, client_address):
         try:

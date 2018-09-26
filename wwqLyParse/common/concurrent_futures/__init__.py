@@ -7,15 +7,17 @@ def green_base():
     import concurrent.futures
     from . import _base
     from ..green_target import green_target
-    green_target("FIRST_COMPLETED", _base, concurrent.futures)
-    green_target("FIRST_EXCEPTION", _base, concurrent.futures)
-    green_target("ALL_COMPLETED", _base, concurrent.futures)
-    green_target("CancelledError", _base, concurrent.futures)
-    green_target("TimeoutError", _base, concurrent.futures)
-    green_target("InvalidStateError", _base, concurrent.futures)
-    green_target("BrokenExecutor", _base, concurrent.futures)
-    green_target("Future", _base, concurrent.futures)
-    green_target("Executor", _base, concurrent.futures)
+    green_target([
+        "FIRST_COMPLETED",
+        "FIRST_COMPLETED",
+        "ALL_COMPLETED",
+        "CancelledError",
+        "TimeoutError",
+        "InvalidStateError",
+        "BrokenExecutor",
+        "Future",
+        "Executor",
+    ], _base, concurrent.futures)
 
 
 def green_thread():

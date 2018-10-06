@@ -57,7 +57,7 @@ class AnnieParser(Parser):
     def _try_parse_json(self, raw_text):
         if "annie doesn't support this URL right now, but it will try to download it directly" in raw_text:
             return {}
-        return try_parse_json(raw_text)
+        return IgnoreCaseDict(try_parse_json(raw_text))
 
     def _try_parse_info(self, raw_text):
         """

@@ -34,6 +34,46 @@ class LeListParser2(Parser):
     def parse(self, input_text, *k, **kk):
         html2 = get_url(input_text)
         html2 = PyQuery(html2)
+        title = html2("div.top_tit > h2").text()
+        try:
+            pid = match1(input_text, r'http://www.le.com/tv/(\w+).html')
+            api_url = "http://d.api.m.le.com/detail/episode?pid={}&platform=pc&page=1&pagesize=1000&type=1".format(pid)
+            api_data = get_url(api_url)
+            debug(api_data)
+            api_json = json.loads(api_data)
+            assert api_json["code"] == "200"
+            api_json_data = api_json["data"]
+            total = api_json_data["total"]
+            data = {
+                "data": [],
+                "more": False,
+                "title": title,
+                "total": total,
+                "type": "list",
+                "caption": "乐视视频全集"
+            }
+            for item in api_json_data["list"]:
+                if item.get("isyugao", 0) != 0:
+                    continue
+                item_title = item["title"]
+                info = {
+                    "name": item_title,
+                    "no": item_title,
+                    "subtitle": item["sub_title"],
+                    "url": "http://www.le.com/ptv/vplay/{}.html".format(item["vid"]),
+                    "icon": item["pic"]
+                }
+                data["data"].append(info)
+            return data
+        except GreenletExit:
+            raise
+        except:
+            logging.exception("parse error rollback to old function")
+            return self.old_parse(input_text, *k, **kk)
+
+    def old_parse(self, input_text, *k, **kk):
+        html2 = get_url(input_text)
+        html2 = PyQuery(html2)
         show_cnt = html2("div#first_videolist div.show_cnt > div")
         title = html2("div.top_tit > h2").text()
         total = len(show_cnt)

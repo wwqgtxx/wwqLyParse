@@ -80,8 +80,23 @@ class GetUrlService(object):
         if stream:
             allow_cache = False
             only_content = False
-        url_json_dict = {"o_url": o_url, "encoding": encoding, "headers": headers, "method": method, "cookies": cookies}
-        url_json = json.dumps(url_json_dict, sort_keys=False, ensure_ascii=False)
+        url_json_dict = {"o_url": o_url}
+        if encoding is not None:
+            url_json_dict["encoding"] = encoding
+        if headers is not None:
+            url_json_dict["headers"] = headers
+        if method is not None:
+            url_json_dict["method"] = method
+        if cookies is not None:
+            url_json_dict["cookies"] = cookies
+        if len(url_json_dict) == 1:
+            url_json = o_url
+        else:
+            url_json = json.dumps(url_json_dict, sort_keys=False, ensure_ascii=False)
+        url_json_dict["encoding"] = encoding
+        url_json_dict["headers"] = headers
+        url_json_dict["method"] = method
+        url_json_dict["cookies"] = cookies
         url_json_dict["data"] = data
         url_json_dict["verify"] = verify
         url_json_dict["stream"] = stream

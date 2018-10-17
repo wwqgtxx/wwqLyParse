@@ -3,7 +3,7 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 
 
-import urllib.request, io, os, sys, json, re, threading, queue, logging
+import urllib.request, io, os, sys, json, re, threading, logging
 
 from pyquery.pyquery import PyQuery
 
@@ -249,7 +249,7 @@ class IQiYiAListParser(Parser):
             "type": "list",
             "caption": "271视频全集"
         }
-        q_results = queue.Queue()
+        q_results = SimpleQueue()
         try:
             with WorkerPool() as pool:
                 pool.spawn(call_method_and_save_to_queue, queue=q_results, method=get_list_info_api1, args=(html_text,),

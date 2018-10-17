@@ -7,10 +7,10 @@ import itertools
 import weakref
 import threading
 import logging
-from queue import Queue, Empty
 import time
+import queue
 from .concurrent_futures import ThreadPoolExecutor
-from .concurrent_futures import wait as _wait
+from .concurrent_futures import wait
 
 
 class GreenletExit(Exception):

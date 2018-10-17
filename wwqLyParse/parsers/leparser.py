@@ -3,7 +3,7 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 
 
-import urllib, io, os, sys, json, re, math, subprocess, time, binascii, math, logging, random, queue
+import urllib, io, os, sys, json, re, math, subprocess, time, binascii, math, logging, random
 
 from uuid import uuid4
 from math import floor
@@ -153,7 +153,7 @@ class LeParser(Parser):
         data = data['msgs']
         available_stream_id = self.get_available_stream_id(data)
         with WorkerPool() as pool:
-            result_queue = queue.Queue()
+            result_queue = SimpleQueue()
             location_list = list()
             if label in available_stream_id:
                 stream = label

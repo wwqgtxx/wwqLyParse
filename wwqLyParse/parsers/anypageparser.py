@@ -108,7 +108,7 @@ class AnyPageParser(Parser):
             parser_threads = []
             parse_urls = []
             t_results = []
-            q_results = Queue()
+            q_results = SimpleQueue()
             with WorkerPool() as pool:
                 for url in urls:
                     pool.spawn(runlist_parser, q_results, url, pool)

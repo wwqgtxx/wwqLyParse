@@ -246,7 +246,7 @@ def parse(input_text, types=None, parsers_name=None, url_handles_name=None,
                 results.append(_inside_pool.spawn(run, _inside_queue, parser, input_text, _inside_pool, *k, **kk))
         return results
     t_results = []
-    q_results = Queue()
+    q_results = SimpleQueue()
     with WorkerPool() as pool:
         for parser in parsers:
             if parser.check_support(input_text, types):
@@ -298,7 +298,7 @@ def parse_url(input_text, label, min=None, max=None, url_handles_name=None, *k, 
     if not input_text:
         return None
     parser = parsers[0]
-    q_results = Queue(1)
+    q_results = SimpleQueue()
     with WorkerPool() as pool:
         pool.spawn(run, q_results, parser, input_text, label, min, max, *k, **kk)
         pool.join(timeout=PARSE_TIMEOUT)

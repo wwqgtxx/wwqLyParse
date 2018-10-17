@@ -188,17 +188,23 @@ class IQiYiParser(Parser):
         return data
 
     def parse_url(self, input_text, label, min=None, max=None, *k, **kk):
-        def _worker(url, url_list):
+        def _worker(url, url_list, in_pool):
             try:
                 if len(url_list) > 5:
                     return
-                json_data = json.loads(get_url(url, allow_cache=False))
+                json_data = get_url(url, allow_cache=False)
+                if not json_data:
+                    return
+                json_data = json.loads(json_data)
                 logging.debug(json_data)
                 down_url = json_data['l']
                 # url_head = r1(r'https?://([^/]*)', down_url)
                 if down_url not in url_list:
                     url_list.append(down_url)
             except GreenletExit:
+                if not in_pool:
+                    raise
+            except:
                 pass
 
         use_pool = True
@@ -231,20 +237,23 @@ class IQiYiParser(Parser):
                         "unfixIp": True
                     }
                     data.append(info)
-                if use_pool:
-                    with WorkerPool(10) as pool:
-                        for _ in range(10):
-                            for seg_info in fs_array:
-                                url = url_prefix + seg_info['l']
-                                url_list = url_dict[url]
-                                pool.spawn(_worker, url, url_list)
-                        pool.join(timeout=self.parse_timeout)
+                try:
+                    if use_pool:
+                        with WorkerPool(10) as pool:
+                            for _ in range(10):
+                                for seg_info in fs_array:
+                                    url = url_prefix + seg_info['l']
+                                    url_list = url_dict[url]
+                                    pool.spawn(_worker, url, url_list, True)
+                            pool.join(timeout=self.parse_timeout)
 
-                for seg_info in fs_array:
-                    url = url_prefix + seg_info['l']
-                    url_list = url_dict[url]
-                    if len(url_list) == 0:
-                        _worker(url, url_list)
-
-                return data
+                    for seg_info in fs_array:
+                        url = url_prefix + seg_info['l']
+                        url_list = url_dict[url]
+                        if len(url_list) == 0:
+                            _worker(url, url_list, False)
+                except GreenletExit:
+                    pass
+                finally:
+                    return data
         return []

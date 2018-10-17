@@ -250,25 +250,29 @@ class IQiYiAListParser(Parser):
             "caption": "271视频全集"
         }
         q_results = queue.Queue()
-        with WorkerPool() as pool:
-            pool.spawn(call_method_and_save_to_queue, queue=q_results, method=get_list_info_api1, args=(html_text,),
-                       allow_none=False)
-            pool.spawn(call_method_and_save_to_queue, queue=q_results, method=get_list_info_api2, args=(html_text,),
-                       allow_none=False)
-            pool.join()
-        while not q_results.empty():
-            data["data"] = q_results.get()
-            break
-        if not data["data"]:
-            try:
-                data["data"] = get_list_info_html(html)
-            except Exception:
-                # import traceback
-                # traceback.print_exc()
-                logging.exception(str(get_list_info_html))
+        try:
+            with WorkerPool() as pool:
+                pool.spawn(call_method_and_save_to_queue, queue=q_results, method=get_list_info_api1, args=(html_text,),
+                           allow_none=False)
+                pool.spawn(call_method_and_save_to_queue, queue=q_results, method=get_list_info_api2, args=(html_text,),
+                           allow_none=False)
+                pool.join()
+        except GreenletExit:
+            pass
+        finally:
+            while not q_results.empty():
+                data["data"] = q_results.get()
+                break
+            if not data["data"]:
+                try:
+                    data["data"] = get_list_info_html(html)
+                except Exception:
+                    # import traceback
+                    # traceback.print_exc()
+                    logging.exception(str(get_list_info_html))
 
-        data["total"] = len(data["data"])
-        return data
+            data["total"] = len(data["data"])
+            return data
 
 
 class IQiYiLibMListParser(Parser):

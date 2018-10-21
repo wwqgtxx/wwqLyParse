@@ -135,6 +135,8 @@ Streams:   # All available quality
 
     # parse for parse_url
     def _parse_parse_url(self, raw, _format):
+        if raw.get('streams'):
+            raw['Formats'] = raw['streams']
         stream = raw['Formats'].get(_format, None)
         if stream is None:
             for item in raw['Formats'].keys():
@@ -150,6 +152,8 @@ Streams:   # All available quality
     def _parse_parse(self, raw):
         out = {'type': 'formats', 'name': raw['Title'] + '_' + raw['Site'], 'data': []}
         stream = []
+        if raw.get('streams'):
+            raw['Formats'] = raw['streams']
         for _format, s in raw['Formats'].items():
             s['_format'] = _format
             stream.append(s)

@@ -202,7 +202,8 @@ Streams:   # All available quality
                 try:
                     info = self._try_parse_json(stdout)
                 except json.decoder.JSONDecodeError:
-                    info = self._try_parse_info(stdout)
+                    raise
+                    # info = self._try_parse_info(stdout)
             except Exception as e:
                 err = e
         if not info:

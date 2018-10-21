@@ -11,6 +11,8 @@
       <excludeFolder url="file://$MODULE_DIR$/wwqLyParse/lib/python-3.6.5-embed-win32" />
       <excludeFolder url="file://$MODULE_DIR$/wwqLyParse/lib/python-3.7.0-embed-amd64" />
       <excludeFolder url="file://$MODULE_DIR$/wwqLyParse/lib/python-3.7.0-embed-win32" />
+      <excludeFolder url="file://$MODULE_DIR$/wwqLyParse/lib/python-3.7.1-embed-amd64" />
+      <excludeFolder url="file://$MODULE_DIR$/wwqLyParse/lib/python-3.7.1-embed-win32" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.7" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

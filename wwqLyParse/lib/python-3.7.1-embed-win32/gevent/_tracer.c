@@ -8,7 +8,7 @@
             "src\\gevent\\__tracer.pxd"
         ],
         "include_dirs": [
-            "D:\\Python37\\Include",
+            "D:\\Python37-32\\Include",
             "deps"
         ],
         "name": "gevent.__tracer",

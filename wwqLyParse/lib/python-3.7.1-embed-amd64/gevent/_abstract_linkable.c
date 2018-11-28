@@ -1436,6 +1436,8 @@ static PyObject *__pyx_f_6gevent_19__abstract_linkable_16AbstractLinkable__wait(
 static PyTypeObject *__pyx_ptype_6gevent_21__greenlet_primitives_greenlet = 0;
 static PyTypeObject *__pyx_ptype_6gevent_21__greenlet_primitives_TrackedRawGreenlet = 0;
 static PyTypeObject *__pyx_ptype_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop = 0;
+static PyObject **__pyx_vp_6gevent_21__greenlet_primitives_get_objects = 0;
+#define __pyx_v_6gevent_21__greenlet_primitives_get_objects (*__pyx_vp_6gevent_21__greenlet_primitives_get_objects)
 static PyObject **__pyx_vp_6gevent_21__greenlet_primitives_wref = 0;
 #define __pyx_v_6gevent_21__greenlet_primitives_wref (*__pyx_vp_6gevent_21__greenlet_primitives_wref)
 static PyObject **__pyx_vp_6gevent_21__greenlet_primitives_BlockingSwitchOutError = 0;
@@ -3839,7 +3841,7 @@ static PyObject *__pyx_f_6gevent_19__abstract_linkable_16AbstractLinkable__wait_
  * 
  *     def _wait_return_value(self, waited, wait_success):             # <<<<<<<<<<<<<<
  *         # pylint:disable=unused-argument
- *         return None
+ *         # Subclasses should override this to return a value from _wait.
  */
 
 static PyObject *__pyx_f_6gevent_19__abstract_linkable_16AbstractLinkable__wait_return_value(CYTHON_UNUSED struct __pyx_obj_6gevent_19__abstract_linkable_AbstractLinkable *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v_waited, CYTHON_UNUSED PyObject *__pyx_v_wait_success) {
@@ -3847,10 +3849,10 @@ static PyObject *__pyx_f_6gevent_19__abstract_linkable_16AbstractLinkable__wait_
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("_wait_return_value", 0);
 
-  /* "src/gevent/_abstract_linkable.py":184
- *     def _wait_return_value(self, waited, wait_success):
- *         # pylint:disable=unused-argument
- *         return None             # <<<<<<<<<<<<<<
+  /* "src/gevent/_abstract_linkable.py":186
+ *         # Subclasses should override this to return a value from _wait.
+ *         # By default we return None.
+ *         return None # pragma: no cover all extent subclasses override             # <<<<<<<<<<<<<<
  * 
  *     def _wait(self, timeout=None):
  */
@@ -3863,7 +3865,7 @@ static PyObject *__pyx_f_6gevent_19__abstract_linkable_16AbstractLinkable__wait_
  * 
  *     def _wait_return_value(self, waited, wait_success):             # <<<<<<<<<<<<<<
  *         # pylint:disable=unused-argument
- *         return None
+ *         # Subclasses should override this to return a value from _wait.
  */
 
   /* function exit code */
@@ -3873,8 +3875,8 @@ static PyObject *__pyx_f_6gevent_19__abstract_linkable_16AbstractLinkable__wait_
   return __pyx_r;
 }
 
-/* "src/gevent/_abstract_linkable.py":186
- *         return None
+/* "src/gevent/_abstract_linkable.py":188
+ *         return None # pragma: no cover all extent subclasses override
  * 
  *     def _wait(self, timeout=None):             # <<<<<<<<<<<<<<
  *         if self.ready():
@@ -3895,7 +3897,7 @@ static PyObject *__pyx_f_6gevent_19__abstract_linkable_16AbstractLinkable__wait(
     }
   }
 
-  /* "src/gevent/_abstract_linkable.py":187
+  /* "src/gevent/_abstract_linkable.py":189
  * 
  *     def _wait(self, timeout=None):
  *         if self.ready():             # <<<<<<<<<<<<<<
@@ -3905,7 +3907,7 @@ static PyObject *__pyx_f_6gevent_19__abstract_linkable_16AbstractLinkable__wait(
   __pyx_t_1 = (((struct __pyx_vtabstruct_6gevent_19__abstract_linkable_AbstractLinkable *)__pyx_v_self->__pyx_vtab)->ready(__pyx_v_self, 0) != 0);
   if (__pyx_t_1) {
 
-    /* "src/gevent/_abstract_linkable.py":188
+    /* "src/gevent/_abstract_linkable.py":190
  *     def _wait(self, timeout=None):
  *         if self.ready():
  *             return self._wait_return_value(False, False)             # <<<<<<<<<<<<<<
@@ -3913,13 +3915,13 @@ static PyObject *__pyx_f_6gevent_19__abstract_linkable_16AbstractLinkable__wait(
  *         gotit = self._wait_core(timeout)
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_2 = ((struct __pyx_vtabstruct_6gevent_19__abstract_linkable_AbstractLinkable *)__pyx_v_self->__pyx_vtab)->_wait_return_value(__pyx_v_self, Py_False, Py_False); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 188, __pyx_L1_error)
+    __pyx_t_2 = ((struct __pyx_vtabstruct_6gevent_19__abstract_linkable_AbstractLinkable *)__pyx_v_self->__pyx_vtab)->_wait_return_value(__pyx_v_self, Py_False, Py_False); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 190, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_r = __pyx_t_2;
     __pyx_t_2 = 0;
     goto __pyx_L0;
 
-    /* "src/gevent/_abstract_linkable.py":187
+    /* "src/gevent/_abstract_linkable.py":189
  * 
  *     def _wait(self, timeout=None):
  *         if self.ready():             # <<<<<<<<<<<<<<
@@ -3928,19 +3930,19 @@ static PyObject *__pyx_f_6gevent_19__abstract_linkable_16AbstractLinkable__wait(
  */
   }
 
-  /* "src/gevent/_abstract_linkable.py":190
+  /* "src/gevent/_abstract_linkable.py":192
  *             return self._wait_return_value(False, False)
  * 
  *         gotit = self._wait_core(timeout)             # <<<<<<<<<<<<<<
  *         return self._wait_return_value(True, gotit)
  * 
  */
-  __pyx_t_2 = ((struct __pyx_vtabstruct_6gevent_19__abstract_linkable_AbstractLinkable *)__pyx_v_self->__pyx_vtab)->_wait_core(__pyx_v_self, __pyx_v_timeout, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 190, __pyx_L1_error)
+  __pyx_t_2 = ((struct __pyx_vtabstruct_6gevent_19__abstract_linkable_AbstractLinkable *)__pyx_v_self->__pyx_vtab)->_wait_core(__pyx_v_self, __pyx_v_timeout, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 192, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_v_gotit = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "src/gevent/_abstract_linkable.py":191
+  /* "src/gevent/_abstract_linkable.py":193
  * 
  *         gotit = self._wait_core(timeout)
  *         return self._wait_return_value(True, gotit)             # <<<<<<<<<<<<<<
@@ -3948,14 +3950,14 @@ static PyObject *__pyx_f_6gevent_19__abstract_linkable_16AbstractLinkable__wait(
  * def _init():
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = ((struct __pyx_vtabstruct_6gevent_19__abstract_linkable_AbstractLinkable *)__pyx_v_self->__pyx_vtab)->_wait_return_value(__pyx_v_self, Py_True, __pyx_v_gotit); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 191, __pyx_L1_error)
+  __pyx_t_2 = ((struct __pyx_vtabstruct_6gevent_19__abstract_linkable_AbstractLinkable *)__pyx_v_self->__pyx_vtab)->_wait_return_value(__pyx_v_self, Py_True, __pyx_v_gotit); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 193, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "src/gevent/_abstract_linkable.py":186
- *         return None
+  /* "src/gevent/_abstract_linkable.py":188
+ *         return None # pragma: no cover all extent subclasses override
  * 
  *     def _wait(self, timeout=None):             # <<<<<<<<<<<<<<
  *         if self.ready():
@@ -4011,7 +4013,7 @@ static PyObject *__pyx_pf_6gevent_19__abstract_linkable_16AbstractLinkable_3hub_
   return __pyx_r;
 }
 
-/* "src/gevent/_abstract_linkable.py":193
+/* "src/gevent/_abstract_linkable.py":195
  *         return self._wait_return_value(True, gotit)
  * 
  * def _init():             # <<<<<<<<<<<<<<
@@ -4023,7 +4025,7 @@ static void __pyx_f_6gevent_19__abstract_linkable__init(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("_init", 0);
 
-  /* "src/gevent/_abstract_linkable.py":194
+  /* "src/gevent/_abstract_linkable.py":196
  * 
  * def _init():
  *     greenlet_init() # pylint:disable=undefined-variable             # <<<<<<<<<<<<<<
@@ -4032,7 +4034,7 @@ static void __pyx_f_6gevent_19__abstract_linkable__init(void) {
  */
   __pyx_f_6gevent_19__abstract_linkable_greenlet_init();
 
-  /* "src/gevent/_abstract_linkable.py":193
+  /* "src/gevent/_abstract_linkable.py":195
  *         return self._wait_return_value(True, gotit)
  * 
  * def _init():             # <<<<<<<<<<<<<<
@@ -4785,6 +4787,7 @@ static int __Pyx_modinit_variable_import_code(void) {
   __Pyx_RefNannySetupContext("__Pyx_modinit_variable_import_code", 0);
   /*--- Variable import code ---*/
   __pyx_t_1 = PyImport_ImportModule("gevent.__greenlet_primitives"); if (!__pyx_t_1) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ImportVoidPtr(__pyx_t_1, "get_objects", (void **)&__pyx_vp_6gevent_21__greenlet_primitives_get_objects, "PyObject *") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ImportVoidPtr(__pyx_t_1, "wref", (void **)&__pyx_vp_6gevent_21__greenlet_primitives_wref, "PyObject *") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ImportVoidPtr(__pyx_t_1, "BlockingSwitchOutError", (void **)&__pyx_vp_6gevent_21__greenlet_primitives_BlockingSwitchOutError, "PyObject *") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ImportVoidPtr(__pyx_t_1, "_greenlet_imported", (void **)&__pyx_vp_6gevent_21__greenlet_primitives__greenlet_imported, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
@@ -5230,7 +5233,7 @@ if (!__Pyx_RefNanny) {
   __pyx_k_ = __pyx_v_6gevent_19__abstract_linkable_Timeout;
   __Pyx_GIVEREF(__pyx_v_6gevent_19__abstract_linkable_Timeout);
 
-  /* "src/gevent/_abstract_linkable.py":196
+  /* "src/gevent/_abstract_linkable.py":198
  *     greenlet_init() # pylint:disable=undefined-variable
  * 
  * _init()             # <<<<<<<<<<<<<<
@@ -5239,36 +5242,36 @@ if (!__Pyx_RefNanny) {
  */
   __pyx_f_6gevent_19__abstract_linkable__init();
 
-  /* "src/gevent/_abstract_linkable.py":199
+  /* "src/gevent/_abstract_linkable.py":201
  * 
  * 
  * from gevent._util import import_c_accel             # <<<<<<<<<<<<<<
  * import_c_accel(globals(), 'gevent.__abstract_linkable')
  */
-  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 199, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 201, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_n_s_import_c_accel);
   __Pyx_GIVEREF(__pyx_n_s_import_c_accel);
   PyList_SET_ITEM(__pyx_t_1, 0, __pyx_n_s_import_c_accel);
-  __pyx_t_2 = __Pyx_Import(__pyx_n_s_gevent__util, __pyx_t_1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 199, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_Import(__pyx_n_s_gevent__util, __pyx_t_1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 201, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_import_c_accel); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 199, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_import_c_accel); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 201, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_import_c_accel, __pyx_t_1) < 0) __PYX_ERR(0, 199, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_import_c_accel, __pyx_t_1) < 0) __PYX_ERR(0, 201, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "src/gevent/_abstract_linkable.py":200
+  /* "src/gevent/_abstract_linkable.py":202
  * 
  * from gevent._util import import_c_accel
  * import_c_accel(globals(), 'gevent.__abstract_linkable')             # <<<<<<<<<<<<<<
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_import_c_accel); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 200, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_import_c_accel); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 202, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_Globals(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 200, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_Globals(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 202, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 200, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 202, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1);
@@ -5276,7 +5279,7 @@ if (!__Pyx_RefNanny) {
   __Pyx_GIVEREF(__pyx_n_s_gevent___abstract_linkable);
   PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_n_s_gevent___abstract_linkable);
   __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 200, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 202, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;

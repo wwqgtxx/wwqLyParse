@@ -80,7 +80,7 @@
         "include_dirs": [
             "src/gevent/libev",
             "D:\\Python37-32\\lib\\site-packages\\gevent\\libev",
-            "E:\\QQDownloads\\gevent-master\\gevent-master\\deps\\libev"
+            "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pip-install-6_5hu6_l\\gevent\\deps\\libev"
         ],
         "libraries": [
             "ws2_32"

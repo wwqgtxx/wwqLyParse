@@ -12,7 +12,7 @@
             "src\\gevent\\_ident.py"
         ],
         "include_dirs": [
-            "D:\\Python37\\Include",
+            "D:\\Python37-32\\Include",
             "deps"
         ],
         "name": "gevent._greenlet",
@@ -1177,7 +1177,7 @@ struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet {
 static struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *__pyx_vtabptr_6gevent_9_greenlet_Greenlet;
 
 
-/* "src/gevent/greenlet.py":858
+/* "src/gevent/greenlet.py":870
  * 
  * 
  * class _dummy_event(object):             # <<<<<<<<<<<<<<
@@ -1504,6 +1504,12 @@ static CYTHON_INLINE int __Pyx_PyList_Extend(PyObject* L, PyObject* v) {
 static void __Pyx_WriteUnraisable(const char *name, int clineno,
                                   int lineno, const char *filename,
                                   int full_traceback, int nogil);
+
+/* PySequenceContains.proto */
+static CYTHON_INLINE int __Pyx_PySequence_ContainsTF(PyObject* item, PyObject* seq, int eq) {
+    int result = PySequence_Contains(seq, item);
+    return unlikely(result < 0) ? result : (result == (eq == Py_EQ));
+}
 
 /* ListCompAppend.proto */
 #if CYTHON_USE_PYLIST_INTERNALS && CYTHON_ASSUME_SAFE_MACROS
@@ -1908,6 +1914,8 @@ static PyObject **__pyx_vp_6gevent_7__ident_WeakKeyDictionary = 0;
 static PyTypeObject *__pyx_ptype_6gevent_21__greenlet_primitives_greenlet = 0;
 static PyTypeObject *__pyx_ptype_6gevent_21__greenlet_primitives_TrackedRawGreenlet = 0;
 static PyTypeObject *__pyx_ptype_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop = 0;
+static PyObject **__pyx_vp_6gevent_21__greenlet_primitives_get_objects = 0;
+#define __pyx_v_6gevent_21__greenlet_primitives_get_objects (*__pyx_vp_6gevent_21__greenlet_primitives_get_objects)
 static PyObject **__pyx_vp_6gevent_21__greenlet_primitives_wref = 0;
 #define __pyx_v_6gevent_21__greenlet_primitives_wref (*__pyx_vp_6gevent_21__greenlet_primitives_wref)
 static PyObject **__pyx_vp_6gevent_21__greenlet_primitives_BlockingSwitchOutError = 0;
@@ -1994,13 +2002,15 @@ static PyObject *__pyx_builtin_hex;
 static PyObject *__pyx_builtin_id;
 static PyObject *__pyx_builtin_AssertionError;
 static const char __pyx_k_g[] = "g";
+static const char __pyx_k_s[] = " \"%s\" ";
 static const char __pyx_k_t[] = "t";
-static const char __pyx_k__2[] = ": ";
-static const char __pyx_k__3[] = ">";
-static const char __pyx_k__4[] = "";
-static const char __pyx_k__5[] = "(";
-static const char __pyx_k__6[] = ", ";
-static const char __pyx_k__7[] = ")";
+static const char __pyx_k__2[] = " ";
+static const char __pyx_k__3[] = ": ";
+static const char __pyx_k__4[] = ">";
+static const char __pyx_k__5[] = "";
+static const char __pyx_k__6[] = "(";
+static const char __pyx_k__7[] = ", ";
+static const char __pyx_k__8[] = ")";
 static const char __pyx_k_cb[] = "cb";
 static const char __pyx_k_id[] = "id";
 static const char __pyx_k_all[] = "__all__";
@@ -2077,6 +2087,7 @@ static const char __pyx_k_nonzero[] = "__nonzero__";
 static const char __pyx_k_pending[] = "pending";
 static const char __pyx_k_rawlink[] = "rawlink";
 static const char __pyx_k_reraise[] = "reraise";
+static const char __pyx_k_s_sat_s[] = "<%s%sat %s";
 static const char __pyx_k_seconds[] = "seconds";
 static const char __pyx_k_timeout[] = "timeout";
 static const char __pyx_k_weakref[] = "weakref";
@@ -2088,7 +2099,6 @@ static const char __pyx_k_getframe[] = "_getframe";
 static const char __pyx_k_greenlet[] = "greenlet";
 static const char __pyx_k_pyx_capi[] = "__pyx_capi__";
 static const char __pyx_k_reversed[] = "reversed";
-static const char __pyx_k_s_s_at_s[] = "<%s \"%s\" at %s";
 static const char __pyx_k_waiter_2[] = "_waiter";
 static const char __pyx_k_NameError[] = "NameError";
 static const char __pyx_k_TypeError[] = "TypeError";
@@ -2258,6 +2268,7 @@ static PyObject *__pyx_kp_s__4;
 static PyObject *__pyx_kp_s__5;
 static PyObject *__pyx_kp_s__6;
 static PyObject *__pyx_kp_s__7;
+static PyObject *__pyx_kp_s__8;
 static PyObject *__pyx_n_s_active;
 static PyObject *__pyx_n_s_add_spawn_callback;
 static PyObject *__pyx_n_s_alive;
@@ -2364,8 +2375,9 @@ static PyObject *__pyx_n_s_reversed;
 static PyObject *__pyx_n_s_run;
 static PyObject *__pyx_n_s_run_2;
 static PyObject *__pyx_n_s_run_callback;
+static PyObject *__pyx_kp_s_s;
 static PyObject *__pyx_kp_s_s_s;
-static PyObject *__pyx_kp_s_s_s_at_s;
+static PyObject *__pyx_kp_s_s_sat_s;
 static PyObject *__pyx_n_s_seconds;
 static PyObject *__pyx_n_s_self;
 static PyObject *__pyx_n_s_self_2;
@@ -2490,86 +2502,86 @@ static PyObject *__pyx_tp_new___pyx_scope_struct____Pyx_CFunc_object____list____
 static PyObject *__pyx_tp_new___pyx_scope_struct____Pyx_CFunc_object____list____object___to_py(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_int_0;
 static PyObject *__pyx_int_10;
-static PyObject *__pyx_k__9;
-static PyObject *__pyx_k__12;
+static PyObject *__pyx_k__10;
 static PyObject *__pyx_k__13;
 static PyObject *__pyx_k__14;
+static PyObject *__pyx_k__15;
 static PyObject *__pyx_tuple_;
-static PyObject *__pyx_tuple__8;
-static PyObject *__pyx_tuple__10;
+static PyObject *__pyx_tuple__9;
 static PyObject *__pyx_tuple__11;
-static PyObject *__pyx_tuple__15;
+static PyObject *__pyx_tuple__12;
 static PyObject *__pyx_tuple__16;
-static PyObject *__pyx_tuple__18;
-static PyObject *__pyx_tuple__20;
+static PyObject *__pyx_tuple__17;
+static PyObject *__pyx_tuple__19;
 static PyObject *__pyx_tuple__21;
 static PyObject *__pyx_tuple__22;
-static PyObject *__pyx_tuple__24;
-static PyObject *__pyx_tuple__26;
-static PyObject *__pyx_tuple__28;
-static PyObject *__pyx_tuple__30;
-static PyObject *__pyx_tuple__32;
-static PyObject *__pyx_tuple__34;
-static PyObject *__pyx_tuple__36;
-static PyObject *__pyx_tuple__38;
-static PyObject *__pyx_tuple__40;
-static PyObject *__pyx_tuple__42;
-static PyObject *__pyx_tuple__44;
-static PyObject *__pyx_tuple__46;
-static PyObject *__pyx_tuple__48;
-static PyObject *__pyx_tuple__50;
-static PyObject *__pyx_tuple__52;
-static PyObject *__pyx_tuple__54;
-static PyObject *__pyx_tuple__56;
-static PyObject *__pyx_tuple__58;
-static PyObject *__pyx_tuple__60;
-static PyObject *__pyx_tuple__62;
-static PyObject *__pyx_tuple__64;
-static PyObject *__pyx_tuple__66;
-static PyObject *__pyx_tuple__68;
-static PyObject *__pyx_tuple__70;
-static PyObject *__pyx_tuple__72;
-static PyObject *__pyx_tuple__74;
+static PyObject *__pyx_tuple__23;
+static PyObject *__pyx_tuple__25;
+static PyObject *__pyx_tuple__27;
+static PyObject *__pyx_tuple__29;
+static PyObject *__pyx_tuple__31;
+static PyObject *__pyx_tuple__33;
+static PyObject *__pyx_tuple__35;
+static PyObject *__pyx_tuple__37;
+static PyObject *__pyx_tuple__39;
+static PyObject *__pyx_tuple__41;
+static PyObject *__pyx_tuple__43;
+static PyObject *__pyx_tuple__45;
+static PyObject *__pyx_tuple__47;
+static PyObject *__pyx_tuple__49;
+static PyObject *__pyx_tuple__51;
+static PyObject *__pyx_tuple__53;
+static PyObject *__pyx_tuple__55;
+static PyObject *__pyx_tuple__57;
+static PyObject *__pyx_tuple__59;
+static PyObject *__pyx_tuple__61;
+static PyObject *__pyx_tuple__63;
+static PyObject *__pyx_tuple__65;
+static PyObject *__pyx_tuple__67;
+static PyObject *__pyx_tuple__69;
+static PyObject *__pyx_tuple__71;
+static PyObject *__pyx_tuple__73;
 static PyObject *__pyx_tuple__75;
-static PyObject *__pyx_tuple__77;
-static PyObject *__pyx_tuple__79;
-static PyObject *__pyx_tuple__81;
-static PyObject *__pyx_tuple__83;
-static PyObject *__pyx_tuple__85;
-static PyObject *__pyx_codeobj__17;
-static PyObject *__pyx_codeobj__19;
-static PyObject *__pyx_codeobj__23;
-static PyObject *__pyx_codeobj__25;
-static PyObject *__pyx_codeobj__27;
-static PyObject *__pyx_codeobj__29;
-static PyObject *__pyx_codeobj__31;
-static PyObject *__pyx_codeobj__33;
-static PyObject *__pyx_codeobj__35;
-static PyObject *__pyx_codeobj__37;
-static PyObject *__pyx_codeobj__39;
-static PyObject *__pyx_codeobj__41;
-static PyObject *__pyx_codeobj__43;
-static PyObject *__pyx_codeobj__45;
-static PyObject *__pyx_codeobj__47;
-static PyObject *__pyx_codeobj__49;
-static PyObject *__pyx_codeobj__51;
-static PyObject *__pyx_codeobj__53;
-static PyObject *__pyx_codeobj__55;
-static PyObject *__pyx_codeobj__57;
-static PyObject *__pyx_codeobj__59;
-static PyObject *__pyx_codeobj__61;
-static PyObject *__pyx_codeobj__63;
-static PyObject *__pyx_codeobj__65;
-static PyObject *__pyx_codeobj__67;
-static PyObject *__pyx_codeobj__69;
-static PyObject *__pyx_codeobj__71;
-static PyObject *__pyx_codeobj__73;
-static PyObject *__pyx_codeobj__76;
-static PyObject *__pyx_codeobj__78;
-static PyObject *__pyx_codeobj__80;
-static PyObject *__pyx_codeobj__82;
-static PyObject *__pyx_codeobj__84;
-static PyObject *__pyx_codeobj__86;
+static PyObject *__pyx_tuple__76;
+static PyObject *__pyx_tuple__78;
+static PyObject *__pyx_tuple__80;
+static PyObject *__pyx_tuple__82;
+static PyObject *__pyx_tuple__84;
+static PyObject *__pyx_tuple__86;
+static PyObject *__pyx_codeobj__18;
+static PyObject *__pyx_codeobj__20;
+static PyObject *__pyx_codeobj__24;
+static PyObject *__pyx_codeobj__26;
+static PyObject *__pyx_codeobj__28;
+static PyObject *__pyx_codeobj__30;
+static PyObject *__pyx_codeobj__32;
+static PyObject *__pyx_codeobj__34;
+static PyObject *__pyx_codeobj__36;
+static PyObject *__pyx_codeobj__38;
+static PyObject *__pyx_codeobj__40;
+static PyObject *__pyx_codeobj__42;
+static PyObject *__pyx_codeobj__44;
+static PyObject *__pyx_codeobj__46;
+static PyObject *__pyx_codeobj__48;
+static PyObject *__pyx_codeobj__50;
+static PyObject *__pyx_codeobj__52;
+static PyObject *__pyx_codeobj__54;
+static PyObject *__pyx_codeobj__56;
+static PyObject *__pyx_codeobj__58;
+static PyObject *__pyx_codeobj__60;
+static PyObject *__pyx_codeobj__62;
+static PyObject *__pyx_codeobj__64;
+static PyObject *__pyx_codeobj__66;
+static PyObject *__pyx_codeobj__68;
+static PyObject *__pyx_codeobj__70;
+static PyObject *__pyx_codeobj__72;
+static PyObject *__pyx_codeobj__74;
+static PyObject *__pyx_codeobj__77;
+static PyObject *__pyx_codeobj__79;
+static PyObject *__pyx_codeobj__81;
+static PyObject *__pyx_codeobj__83;
+static PyObject *__pyx_codeobj__85;
+static PyObject *__pyx_codeobj__87;
 /* Late includes */
 
 /* "src/gevent/greenlet.py":46
@@ -5329,7 +5341,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_13minimal_ident___get__(s
 
 /* Python wrapper */
 static PyObject *__pyx_pw_6gevent_9_greenlet_8Greenlet_5name(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static char __pyx_doc_6gevent_9_greenlet_8Greenlet_4name[] = "Greenlet.name(self)\n\n        The greenlet name. By default, a unique name is constructed using\n        the :attr:`minimal_ident`. You can assign a string to this\n        value to change it. It is shown in the `repr` of this object.\n\n        .. versionadded:: 1.3a2\n        ";
+static char __pyx_doc_6gevent_9_greenlet_8Greenlet_4name[] = "Greenlet.name(self)\n\n        The greenlet name. By default, a unique name is constructed using\n        the :attr:`minimal_ident`. You can assign a string to this\n        value to change it. It is shown in the `repr` of this object if it\n        has been assigned to or if the `minimal_ident` has already been generated.\n\n        .. versionadded:: 1.3a2\n        .. versionchanged:: 1.4\n           Stop showing generated names in the `repr` when the ``minimal_ident``\n           hasn't been requested. This reduces overhead and may be less confusing,\n           since ``minimal_ident`` can get reused.\n        ";
 static PyMethodDef __pyx_mdef_6gevent_9_greenlet_8Greenlet_5name = {"name", (PyCFunction)__pyx_pw_6gevent_9_greenlet_8Greenlet_5name, METH_NOARGS, __pyx_doc_6gevent_9_greenlet_8Greenlet_4name};
 static PyObject *__pyx_pw_6gevent_9_greenlet_8Greenlet_5name(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
@@ -5349,21 +5361,26 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_4name(struct __pyx_obj_6g
   PyObject *__pyx_t_2 = NULL;
   __Pyx_RefNannySetupContext("name", 0);
 
-  /* "src/gevent/greenlet.py":309
- *         .. versionadded:: 1.3a2
+  /* "src/gevent/greenlet.py":314
+ *            since ``minimal_ident`` can get reused.
  *         """
- *         return 'Greenlet-%d' % (self.minimal_ident)             # <<<<<<<<<<<<<<
+ *         return 'Greenlet-%d' % (self.minimal_ident,)             # <<<<<<<<<<<<<<
  * 
  *     def _raise_exception(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_minimal_ident); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 309, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_minimal_ident); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 314, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyString_FormatSafe(__pyx_kp_s_Greenlet_d, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 309, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 314, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_r = __pyx_t_2;
-  __pyx_t_2 = 0;
+  __Pyx_GIVEREF(__pyx_t_1);
+  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1);
+  __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_PyString_Format(__pyx_kp_s_Greenlet_d, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 314, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
   goto __pyx_L0;
 
   /* "src/gevent/greenlet.py":301
@@ -5386,8 +5403,8 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_4name(struct __pyx_obj_6g
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":311
- *         return 'Greenlet-%d' % (self.minimal_ident)
+/* "src/gevent/greenlet.py":316
+ *         return 'Greenlet-%d' % (self.minimal_ident,)
  * 
  *     def _raise_exception(self):             # <<<<<<<<<<<<<<
  *         reraise(*self.exc_info)
@@ -5416,25 +5433,25 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_6_raise_exception(struct 
   PyObject *__pyx_t_2 = NULL;
   __Pyx_RefNannySetupContext("_raise_exception", 0);
 
-  /* "src/gevent/greenlet.py":312
+  /* "src/gevent/greenlet.py":317
  * 
  *     def _raise_exception(self):
  *         reraise(*self.exc_info)             # <<<<<<<<<<<<<<
  * 
  *     @property
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_exc_info); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 312, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_exc_info); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 317, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PySequence_Tuple(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 312, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PySequence_Tuple(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 317, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_v_6gevent_9_greenlet_reraise, __pyx_t_2, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 312, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_v_6gevent_9_greenlet_reraise, __pyx_t_2, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 317, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/gevent/greenlet.py":311
- *         return 'Greenlet-%d' % (self.minimal_ident)
+  /* "src/gevent/greenlet.py":316
+ *         return 'Greenlet-%d' % (self.minimal_ident,)
  * 
  *     def _raise_exception(self):             # <<<<<<<<<<<<<<
  *         reraise(*self.exc_info)
@@ -5455,7 +5472,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_6_raise_exception(struct 
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":315
+/* "src/gevent/greenlet.py":320
  * 
  *     @property
  *     def loop(self):             # <<<<<<<<<<<<<<
@@ -5483,7 +5500,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_4loop___get__(struct __py
   PyObject *__pyx_t_2 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "src/gevent/greenlet.py":317
+  /* "src/gevent/greenlet.py":322
  *     def loop(self):
  *         # needed by killall
  *         return self.parent.loop             # <<<<<<<<<<<<<<
@@ -5491,16 +5508,16 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_4loop___get__(struct __py
  *     def __nonzero__(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_parent); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 317, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_parent); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 322, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_loop); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 317, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_loop); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 322, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "src/gevent/greenlet.py":315
+  /* "src/gevent/greenlet.py":320
  * 
  *     @property
  *     def loop(self):             # <<<<<<<<<<<<<<
@@ -5520,7 +5537,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_4loop___get__(struct __py
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":319
+/* "src/gevent/greenlet.py":324
  *         return self.parent.loop
  * 
  *     def __nonzero__(self):             # <<<<<<<<<<<<<<
@@ -5548,7 +5565,7 @@ static int __pyx_pf_6gevent_9_greenlet_8Greenlet_8__nonzero__(struct __pyx_obj_6
   int __pyx_t_2;
   __Pyx_RefNannySetupContext("__nonzero__", 0);
 
-  /* "src/gevent/greenlet.py":320
+  /* "src/gevent/greenlet.py":325
  * 
  *     def __nonzero__(self):
  *         return self._start_event is not None and self._exc_info is None             # <<<<<<<<<<<<<<
@@ -5567,7 +5584,7 @@ static int __pyx_pf_6gevent_9_greenlet_8Greenlet_8__nonzero__(struct __pyx_obj_6
   __pyx_r = __pyx_t_1;
   goto __pyx_L0;
 
-  /* "src/gevent/greenlet.py":319
+  /* "src/gevent/greenlet.py":324
  *         return self.parent.loop
  * 
  *     def __nonzero__(self):             # <<<<<<<<<<<<<<
@@ -5581,7 +5598,7 @@ static int __pyx_pf_6gevent_9_greenlet_8Greenlet_8__nonzero__(struct __pyx_obj_6
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":343
+/* "src/gevent/greenlet.py":348
  *     else:
  *         @property
  *         def dead(self):             # <<<<<<<<<<<<<<
@@ -5612,7 +5629,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_4dead___get__(struct __py
   PyObject *__pyx_t_5 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "src/gevent/greenlet.py":345
+  /* "src/gevent/greenlet.py":350
  *         def dead(self):
  *             "Boolean indicating that the greenlet is dead and will not run again."
  *             return self.__start_cancelled_by_kill() or self.__started_but_aborted() or greenlet.dead.__get__(self)             # <<<<<<<<<<<<<<
@@ -5623,7 +5640,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_4dead___get__(struct __py
   __pyx_t_2 = ((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->__pyx___start_cancelled_by_kill(__pyx_v_self);
   if (!__pyx_t_2) {
   } else {
-    __pyx_t_3 = __Pyx_PyBool_FromLong(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 345, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyBool_FromLong(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 350, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_t_1 = __pyx_t_3;
     __pyx_t_3 = 0;
@@ -5632,15 +5649,15 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_4dead___get__(struct __py
   __pyx_t_2 = ((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->__pyx___started_but_aborted(__pyx_v_self);
   if (!__pyx_t_2) {
   } else {
-    __pyx_t_3 = __Pyx_PyBool_FromLong(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 345, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyBool_FromLong(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 350, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_t_1 = __pyx_t_3;
     __pyx_t_3 = 0;
     goto __pyx_L3_bool_binop_done;
   }
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_ptype_6gevent_9_greenlet_greenlet), __pyx_n_s_dead); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 345, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_ptype_6gevent_9_greenlet_greenlet), __pyx_n_s_dead); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 350, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_get); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 345, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_get); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 350, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_4 = NULL;
@@ -5655,7 +5672,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_4dead___get__(struct __py
   }
   __pyx_t_3 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_5, __pyx_t_4, ((PyObject *)__pyx_v_self)) : __Pyx_PyObject_CallOneArg(__pyx_t_5, ((PyObject *)__pyx_v_self));
   __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 345, __pyx_L1_error)
+  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 350, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_INCREF(__pyx_t_3);
@@ -5666,7 +5683,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_4dead___get__(struct __py
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "src/gevent/greenlet.py":343
+  /* "src/gevent/greenlet.py":348
  *     else:
  *         @property
  *         def dead(self):             # <<<<<<<<<<<<<<
@@ -5688,7 +5705,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_4dead___get__(struct __py
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":347
+/* "src/gevent/greenlet.py":352
  *             return self.__start_cancelled_by_kill() or self.__started_but_aborted() or greenlet.dead.__get__(self)
  * 
  *     def __never_started_or_killed(self):             # <<<<<<<<<<<<<<
@@ -5702,7 +5719,7 @@ static int __pyx_f_6gevent_9_greenlet_8Greenlet___never_started_or_killed(struct
   int __pyx_t_1;
   __Pyx_RefNannySetupContext("__never_started_or_killed", 0);
 
-  /* "src/gevent/greenlet.py":348
+  /* "src/gevent/greenlet.py":353
  * 
  *     def __never_started_or_killed(self):
  *         return self._start_event is None             # <<<<<<<<<<<<<<
@@ -5713,7 +5730,7 @@ static int __pyx_f_6gevent_9_greenlet_8Greenlet___never_started_or_killed(struct
   __pyx_r = __pyx_t_1;
   goto __pyx_L0;
 
-  /* "src/gevent/greenlet.py":347
+  /* "src/gevent/greenlet.py":352
  *             return self.__start_cancelled_by_kill() or self.__started_but_aborted() or greenlet.dead.__get__(self)
  * 
  *     def __never_started_or_killed(self):             # <<<<<<<<<<<<<<
@@ -5727,7 +5744,7 @@ static int __pyx_f_6gevent_9_greenlet_8Greenlet___never_started_or_killed(struct
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":350
+/* "src/gevent/greenlet.py":355
  *         return self._start_event is None
  * 
  *     def __start_pending(self):             # <<<<<<<<<<<<<<
@@ -5745,7 +5762,7 @@ static int __pyx_f_6gevent_9_greenlet_8Greenlet___start_pending(struct __pyx_obj
   PyObject *__pyx_t_5 = NULL;
   __Pyx_RefNannySetupContext("__start_pending", 0);
 
-  /* "src/gevent/greenlet.py":351
+  /* "src/gevent/greenlet.py":356
  * 
  *     def __start_pending(self):
  *         return (self._start_event is not None             # <<<<<<<<<<<<<<
@@ -5760,16 +5777,16 @@ static int __pyx_f_6gevent_9_greenlet_8Greenlet___start_pending(struct __pyx_obj
     goto __pyx_L3_bool_binop_done;
   }
 
-  /* "src/gevent/greenlet.py":352
+  /* "src/gevent/greenlet.py":357
  *     def __start_pending(self):
  *         return (self._start_event is not None
  *                 and (self._start_event.pending or getattr(self._start_event, 'active', False)))             # <<<<<<<<<<<<<<
  * 
  *     def __start_cancelled_by_kill(self):
  */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->_start_event, __pyx_n_s_pending); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 352, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->_start_event, __pyx_n_s_pending); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 357, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 352, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 357, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   if (!__pyx_t_3) {
   } else {
@@ -5778,17 +5795,17 @@ static int __pyx_f_6gevent_9_greenlet_8Greenlet___start_pending(struct __pyx_obj
   }
   __pyx_t_4 = __pyx_v_self->_start_event;
   __Pyx_INCREF(__pyx_t_4);
-  __pyx_t_5 = __Pyx_GetAttr3(__pyx_t_4, __pyx_n_s_active, Py_False); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 352, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_GetAttr3(__pyx_t_4, __pyx_n_s_active, Py_False); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 357, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_5); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 352, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_5); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 357, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_1 = __pyx_t_3;
   __pyx_L3_bool_binop_done:;
   __pyx_r = __pyx_t_1;
   goto __pyx_L0;
 
-  /* "src/gevent/greenlet.py":350
+  /* "src/gevent/greenlet.py":355
  *         return self._start_event is None
  * 
  *     def __start_pending(self):             # <<<<<<<<<<<<<<
@@ -5807,7 +5824,7 @@ static int __pyx_f_6gevent_9_greenlet_8Greenlet___start_pending(struct __pyx_obj
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":354
+/* "src/gevent/greenlet.py":359
  *                 and (self._start_event.pending or getattr(self._start_event, 'active', False)))
  * 
  *     def __start_cancelled_by_kill(self):             # <<<<<<<<<<<<<<
@@ -5821,7 +5838,7 @@ static int __pyx_f_6gevent_9_greenlet_8Greenlet___start_cancelled_by_kill(struct
   int __pyx_t_1;
   __Pyx_RefNannySetupContext("__start_cancelled_by_kill", 0);
 
-  /* "src/gevent/greenlet.py":355
+  /* "src/gevent/greenlet.py":360
  * 
  *     def __start_cancelled_by_kill(self):
  *         return self._start_event is _cancelled_start_event             # <<<<<<<<<<<<<<
@@ -5832,7 +5849,7 @@ static int __pyx_f_6gevent_9_greenlet_8Greenlet___start_cancelled_by_kill(struct
   __pyx_r = __pyx_t_1;
   goto __pyx_L0;
 
-  /* "src/gevent/greenlet.py":354
+  /* "src/gevent/greenlet.py":359
  *                 and (self._start_event.pending or getattr(self._start_event, 'active', False)))
  * 
  *     def __start_cancelled_by_kill(self):             # <<<<<<<<<<<<<<
@@ -5846,7 +5863,7 @@ static int __pyx_f_6gevent_9_greenlet_8Greenlet___start_cancelled_by_kill(struct
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":357
+/* "src/gevent/greenlet.py":362
  *         return self._start_event is _cancelled_start_event
  * 
  *     def __start_completed(self):             # <<<<<<<<<<<<<<
@@ -5860,7 +5877,7 @@ static int __pyx_f_6gevent_9_greenlet_8Greenlet___start_completed(struct __pyx_o
   int __pyx_t_1;
   __Pyx_RefNannySetupContext("__start_completed", 0);
 
-  /* "src/gevent/greenlet.py":358
+  /* "src/gevent/greenlet.py":363
  * 
  *     def __start_completed(self):
  *         return self._start_event is _start_completed_event             # <<<<<<<<<<<<<<
@@ -5871,7 +5888,7 @@ static int __pyx_f_6gevent_9_greenlet_8Greenlet___start_completed(struct __pyx_o
   __pyx_r = __pyx_t_1;
   goto __pyx_L0;
 
-  /* "src/gevent/greenlet.py":357
+  /* "src/gevent/greenlet.py":362
  *         return self._start_event is _cancelled_start_event
  * 
  *     def __start_completed(self):             # <<<<<<<<<<<<<<
@@ -5885,7 +5902,7 @@ static int __pyx_f_6gevent_9_greenlet_8Greenlet___start_completed(struct __pyx_o
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":360
+/* "src/gevent/greenlet.py":365
  *         return self._start_event is _start_completed_event
  * 
  *     def __started_but_aborted(self):             # <<<<<<<<<<<<<<
@@ -5900,7 +5917,7 @@ static int __pyx_f_6gevent_9_greenlet_8Greenlet___started_but_aborted(struct __p
   int __pyx_t_2;
   __Pyx_RefNannySetupContext("__started_but_aborted", 0);
 
-  /* "src/gevent/greenlet.py":361
+  /* "src/gevent/greenlet.py":366
  * 
  *     def __started_but_aborted(self):
  *         return (not self.__never_started_or_killed() # we have been started or killed             # <<<<<<<<<<<<<<
@@ -5914,7 +5931,7 @@ static int __pyx_f_6gevent_9_greenlet_8Greenlet___started_but_aborted(struct __p
     goto __pyx_L3_bool_binop_done;
   }
 
-  /* "src/gevent/greenlet.py":362
+  /* "src/gevent/greenlet.py":367
  *     def __started_but_aborted(self):
  *         return (not self.__never_started_or_killed() # we have been started or killed
  *                 and not self.__start_cancelled_by_kill() # we weren't killed, so we must have been started             # <<<<<<<<<<<<<<
@@ -5928,7 +5945,7 @@ static int __pyx_f_6gevent_9_greenlet_8Greenlet___started_but_aborted(struct __p
     goto __pyx_L3_bool_binop_done;
   }
 
-  /* "src/gevent/greenlet.py":363
+  /* "src/gevent/greenlet.py":368
  *         return (not self.__never_started_or_killed() # we have been started or killed
  *                 and not self.__start_cancelled_by_kill() # we weren't killed, so we must have been started
  *                 and not self.__start_completed() # the start never completed             # <<<<<<<<<<<<<<
@@ -5942,7 +5959,7 @@ static int __pyx_f_6gevent_9_greenlet_8Greenlet___started_but_aborted(struct __p
     goto __pyx_L3_bool_binop_done;
   }
 
-  /* "src/gevent/greenlet.py":364
+  /* "src/gevent/greenlet.py":369
  *                 and not self.__start_cancelled_by_kill() # we weren't killed, so we must have been started
  *                 and not self.__start_completed() # the start never completed
  *                 and not self.__start_pending()) # and we're not pending, so we must have been aborted             # <<<<<<<<<<<<<<
@@ -5955,7 +5972,7 @@ static int __pyx_f_6gevent_9_greenlet_8Greenlet___started_but_aborted(struct __p
   __pyx_r = __pyx_t_1;
   goto __pyx_L0;
 
-  /* "src/gevent/greenlet.py":360
+  /* "src/gevent/greenlet.py":365
  *         return self._start_event is _start_completed_event
  * 
  *     def __started_but_aborted(self):             # <<<<<<<<<<<<<<
@@ -5969,7 +5986,7 @@ static int __pyx_f_6gevent_9_greenlet_8Greenlet___started_but_aborted(struct __p
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":366
+/* "src/gevent/greenlet.py":371
  *                 and not self.__start_pending()) # and we're not pending, so we must have been aborted
  * 
  *     def __cancel_start(self):             # <<<<<<<<<<<<<<
@@ -5987,7 +6004,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet___cancel_start(struct __py
   PyObject *__pyx_t_5 = NULL;
   __Pyx_RefNannySetupContext("__cancel_start", 0);
 
-  /* "src/gevent/greenlet.py":367
+  /* "src/gevent/greenlet.py":372
  * 
  *     def __cancel_start(self):
  *         if self._start_event is None:             # <<<<<<<<<<<<<<
@@ -5998,7 +6015,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet___cancel_start(struct __py
   __pyx_t_2 = (__pyx_t_1 != 0);
   if (__pyx_t_2) {
 
-    /* "src/gevent/greenlet.py":369
+    /* "src/gevent/greenlet.py":374
  *         if self._start_event is None:
  *             # prevent self from ever being started in the future
  *             self._start_event = _cancelled_start_event             # <<<<<<<<<<<<<<
@@ -6011,7 +6028,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet___cancel_start(struct __py
     __Pyx_DECREF(__pyx_v_self->_start_event);
     __pyx_v_self->_start_event = ((PyObject *)__pyx_v_6gevent_9_greenlet__cancelled_start_event);
 
-    /* "src/gevent/greenlet.py":367
+    /* "src/gevent/greenlet.py":372
  * 
  *     def __cancel_start(self):
  *         if self._start_event is None:             # <<<<<<<<<<<<<<
@@ -6020,14 +6037,14 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet___cancel_start(struct __py
  */
   }
 
-  /* "src/gevent/greenlet.py":376
+  /* "src/gevent/greenlet.py":381
  *         # variable copy of that list (in _run_callbacks). This isn't a problem,
  *         # except for the leak-tests.
  *         self._start_event.stop()             # <<<<<<<<<<<<<<
  *         self._start_event.close()
  * 
  */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->_start_event, __pyx_n_s_stop); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 376, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->_start_event, __pyx_n_s_stop); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 381, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_5 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
@@ -6041,19 +6058,19 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet___cancel_start(struct __py
   }
   __pyx_t_3 = (__pyx_t_5) ? __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5) : __Pyx_PyObject_CallNoArg(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 376, __pyx_L1_error)
+  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 381, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "src/gevent/greenlet.py":377
+  /* "src/gevent/greenlet.py":382
  *         # except for the leak-tests.
  *         self._start_event.stop()
  *         self._start_event.close()             # <<<<<<<<<<<<<<
  * 
  *     def __handle_death_before_start(self, args):
  */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->_start_event, __pyx_n_s_close); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 377, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->_start_event, __pyx_n_s_close); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 382, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_5 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
@@ -6067,12 +6084,12 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet___cancel_start(struct __py
   }
   __pyx_t_3 = (__pyx_t_5) ? __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5) : __Pyx_PyObject_CallNoArg(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 377, __pyx_L1_error)
+  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 382, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "src/gevent/greenlet.py":366
+  /* "src/gevent/greenlet.py":371
  *                 and not self.__start_pending()) # and we're not pending, so we must have been aborted
  * 
  *     def __cancel_start(self):             # <<<<<<<<<<<<<<
@@ -6095,7 +6112,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet___cancel_start(struct __py
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":379
+/* "src/gevent/greenlet.py":384
  *         self._start_event.close()
  * 
  *     def __handle_death_before_start(self, args):             # <<<<<<<<<<<<<<
@@ -6117,7 +6134,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet___handle_death_before_star
   __Pyx_RefNannySetupContext("__handle_death_before_start", 0);
   __Pyx_INCREF(__pyx_v_args);
 
-  /* "src/gevent/greenlet.py":381
+  /* "src/gevent/greenlet.py":386
  *     def __handle_death_before_start(self, args):
  *         # args is (t, v, tb) or simply t or v
  *         if self._exc_info is None and self.dead:             # <<<<<<<<<<<<<<
@@ -6131,15 +6148,15 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet___handle_death_before_star
     __pyx_t_1 = __pyx_t_3;
     goto __pyx_L4_bool_binop_done;
   }
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_dead); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 381, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_dead); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 386, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 381, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 386, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_1 = __pyx_t_3;
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "src/gevent/greenlet.py":386
+    /* "src/gevent/greenlet.py":391
  *             # checking that self.dead is true is essential, because throw() does not necessarily kill the greenlet
  *             # (if the exception raised by throw() is caught somewhere inside the greenlet).
  *             if len(args) == 1:             # <<<<<<<<<<<<<<
@@ -6148,13 +6165,13 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet___handle_death_before_star
  */
     if (unlikely(__pyx_v_args == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-      __PYX_ERR(0, 386, __pyx_L1_error)
+      __PYX_ERR(0, 391, __pyx_L1_error)
     }
-    __pyx_t_5 = PyTuple_GET_SIZE(__pyx_v_args); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(0, 386, __pyx_L1_error)
+    __pyx_t_5 = PyTuple_GET_SIZE(__pyx_v_args); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(0, 391, __pyx_L1_error)
     __pyx_t_1 = ((__pyx_t_5 == 1) != 0);
     if (__pyx_t_1) {
 
-      /* "src/gevent/greenlet.py":387
+      /* "src/gevent/greenlet.py":392
  *             # (if the exception raised by throw() is caught somewhere inside the greenlet).
  *             if len(args) == 1:
  *                 arg = args[0]             # <<<<<<<<<<<<<<
@@ -6163,14 +6180,14 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet___handle_death_before_star
  */
       if (unlikely(__pyx_v_args == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 387, __pyx_L1_error)
+        __PYX_ERR(0, 392, __pyx_L1_error)
       }
-      __pyx_t_4 = __Pyx_GetItemInt_Tuple(__pyx_v_args, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 387, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_GetItemInt_Tuple(__pyx_v_args, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 392, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __pyx_v_arg = __pyx_t_4;
       __pyx_t_4 = 0;
 
-      /* "src/gevent/greenlet.py":389
+      /* "src/gevent/greenlet.py":394
  *                 arg = args[0]
  *                 #if isinstance(arg, type):
  *                 if type(arg) is type(Exception):             # <<<<<<<<<<<<<<
@@ -6181,7 +6198,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet___handle_death_before_star
       __pyx_t_3 = (__pyx_t_1 != 0);
       if (__pyx_t_3) {
 
-        /* "src/gevent/greenlet.py":390
+        /* "src/gevent/greenlet.py":395
  *                 #if isinstance(arg, type):
  *                 if type(arg) is type(Exception):
  *                     args = (arg, arg(), None)             # <<<<<<<<<<<<<<
@@ -6201,10 +6218,10 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet___handle_death_before_star
         }
         __pyx_t_4 = (__pyx_t_7) ? __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_7) : __Pyx_PyObject_CallNoArg(__pyx_t_6);
         __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-        if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 390, __pyx_L1_error)
+        if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 395, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-        __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 390, __pyx_L1_error)
+        __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 395, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
         __Pyx_INCREF(__pyx_v_arg);
         __Pyx_GIVEREF(__pyx_v_arg);
@@ -6218,7 +6235,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet___handle_death_before_star
         __Pyx_DECREF_SET(__pyx_v_args, ((PyObject*)__pyx_t_6));
         __pyx_t_6 = 0;
 
-        /* "src/gevent/greenlet.py":389
+        /* "src/gevent/greenlet.py":394
  *                 arg = args[0]
  *                 #if isinstance(arg, type):
  *                 if type(arg) is type(Exception):             # <<<<<<<<<<<<<<
@@ -6228,7 +6245,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet___handle_death_before_star
         goto __pyx_L7;
       }
 
-      /* "src/gevent/greenlet.py":392
+      /* "src/gevent/greenlet.py":397
  *                     args = (arg, arg(), None)
  *                 else:
  *                     args = (type(arg), arg, None)             # <<<<<<<<<<<<<<
@@ -6236,7 +6253,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet___handle_death_before_star
  *                 args = (GreenletExit, GreenletExit(), None)
  */
       /*else*/ {
-        __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 392, __pyx_L1_error)
+        __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 397, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
         __Pyx_INCREF(((PyObject *)Py_TYPE(__pyx_v_arg)));
         __Pyx_GIVEREF(((PyObject *)Py_TYPE(__pyx_v_arg)));
@@ -6252,7 +6269,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet___handle_death_before_star
       }
       __pyx_L7:;
 
-      /* "src/gevent/greenlet.py":386
+      /* "src/gevent/greenlet.py":391
  *             # checking that self.dead is true is essential, because throw() does not necessarily kill the greenlet
  *             # (if the exception raised by throw() is caught somewhere inside the greenlet).
  *             if len(args) == 1:             # <<<<<<<<<<<<<<
@@ -6262,7 +6279,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet___handle_death_before_star
       goto __pyx_L6;
     }
 
-    /* "src/gevent/greenlet.py":393
+    /* "src/gevent/greenlet.py":398
  *                 else:
  *                     args = (type(arg), arg, None)
  *             elif not args:             # <<<<<<<<<<<<<<
@@ -6273,7 +6290,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet___handle_death_before_star
     __pyx_t_1 = ((!__pyx_t_3) != 0);
     if (__pyx_t_1) {
 
-      /* "src/gevent/greenlet.py":394
+      /* "src/gevent/greenlet.py":399
  *                     args = (type(arg), arg, None)
  *             elif not args:
  *                 args = (GreenletExit, GreenletExit(), None)             # <<<<<<<<<<<<<<
@@ -6293,10 +6310,10 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet___handle_death_before_star
       }
       __pyx_t_6 = (__pyx_t_7) ? __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_7) : __Pyx_PyObject_CallNoArg(__pyx_t_4);
       __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 394, __pyx_L1_error)
+      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 399, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 394, __pyx_L1_error)
+      __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 399, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_INCREF(__pyx_v_6gevent_9_greenlet_GreenletExit);
       __Pyx_GIVEREF(__pyx_v_6gevent_9_greenlet_GreenletExit);
@@ -6310,7 +6327,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet___handle_death_before_star
       __Pyx_DECREF_SET(__pyx_v_args, ((PyObject*)__pyx_t_4));
       __pyx_t_4 = 0;
 
-      /* "src/gevent/greenlet.py":393
+      /* "src/gevent/greenlet.py":398
  *                 else:
  *                     args = (type(arg), arg, None)
  *             elif not args:             # <<<<<<<<<<<<<<
@@ -6320,18 +6337,18 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet___handle_death_before_star
     }
     __pyx_L6:;
 
-    /* "src/gevent/greenlet.py":395
+    /* "src/gevent/greenlet.py":400
  *             elif not args:
  *                 args = (GreenletExit, GreenletExit(), None)
  *             self._report_error(args)             # <<<<<<<<<<<<<<
  * 
  *     @property
  */
-    __pyx_t_4 = ((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->_report_error(__pyx_v_self, __pyx_v_args); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 395, __pyx_L1_error)
+    __pyx_t_4 = ((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->_report_error(__pyx_v_self, __pyx_v_args); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 400, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "src/gevent/greenlet.py":381
+    /* "src/gevent/greenlet.py":386
  *     def __handle_death_before_start(self, args):
  *         # args is (t, v, tb) or simply t or v
  *         if self._exc_info is None and self.dead:             # <<<<<<<<<<<<<<
@@ -6340,7 +6357,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet___handle_death_before_star
  */
   }
 
-  /* "src/gevent/greenlet.py":379
+  /* "src/gevent/greenlet.py":384
  *         self._start_event.close()
  * 
  *     def __handle_death_before_start(self, args):             # <<<<<<<<<<<<<<
@@ -6365,7 +6382,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet___handle_death_before_star
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":398
+/* "src/gevent/greenlet.py":403
  * 
  *     @property
  *     def started(self):             # <<<<<<<<<<<<<<
@@ -6393,7 +6410,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_7started___get__(struct _
   PyObject *__pyx_t_2 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "src/gevent/greenlet.py":400
+  /* "src/gevent/greenlet.py":405
  *     def started(self):
  *         # DEPRECATED
  *         return bool(self)             # <<<<<<<<<<<<<<
@@ -6401,14 +6418,14 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_7started___get__(struct _
  *     def ready(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(((PyObject *)__pyx_v_self)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 400, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyBool_FromLong((!(!__pyx_t_1))); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 400, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(((PyObject *)__pyx_v_self)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 405, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyBool_FromLong((!(!__pyx_t_1))); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 405, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "src/gevent/greenlet.py":398
+  /* "src/gevent/greenlet.py":403
  * 
  *     @property
  *     def started(self):             # <<<<<<<<<<<<<<
@@ -6427,7 +6444,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_7started___get__(struct _
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":402
+/* "src/gevent/greenlet.py":407
  *         return bool(self)
  * 
  *     def ready(self):             # <<<<<<<<<<<<<<
@@ -6457,7 +6474,7 @@ static int __pyx_f_6gevent_9_greenlet_8Greenlet_ready(struct __pyx_obj_6gevent_9
     else {
       PY_UINT64_T type_dict_guard = (likely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dict)) ? __PYX_GET_DICT_VERSION(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dict) : 0;
       #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_ready); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 402, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_ready); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 407, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)(void*)__pyx_pw_6gevent_9_greenlet_8Greenlet_11ready)) {
         __Pyx_INCREF(__pyx_t_1);
@@ -6473,10 +6490,10 @@ static int __pyx_f_6gevent_9_greenlet_8Greenlet_ready(struct __pyx_obj_6gevent_9
         }
         __pyx_t_2 = (__pyx_t_4) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 402, __pyx_L1_error)
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 407, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 402, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 407, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __pyx_r = __pyx_t_5;
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -6495,16 +6512,16 @@ static int __pyx_f_6gevent_9_greenlet_8Greenlet_ready(struct __pyx_obj_6gevent_9
     #endif
   }
 
-  /* "src/gevent/greenlet.py":411
+  /* "src/gevent/greenlet.py":416
  *             necessarily the literal constants ``True`` or ``False``.
  *         """
  *         return self.dead or self._exc_info is not None             # <<<<<<<<<<<<<<
  * 
  *     def successful(self):
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_dead); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 411, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_dead); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 416, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 411, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 416, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   if (!__pyx_t_6) {
   } else {
@@ -6518,7 +6535,7 @@ static int __pyx_f_6gevent_9_greenlet_8Greenlet_ready(struct __pyx_obj_6gevent_9
   __pyx_r = __pyx_t_5;
   goto __pyx_L0;
 
-  /* "src/gevent/greenlet.py":402
+  /* "src/gevent/greenlet.py":407
  *         return bool(self)
  * 
  *     def ready(self):             # <<<<<<<<<<<<<<
@@ -6560,7 +6577,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_10ready(struct __pyx_obj_
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("ready", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyBool_FromLong(__pyx_f_6gevent_9_greenlet_8Greenlet_ready(__pyx_v_self, 1)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 402, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyBool_FromLong(__pyx_f_6gevent_9_greenlet_8Greenlet_ready(__pyx_v_self, 1)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 407, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -6577,7 +6594,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_10ready(struct __pyx_obj_
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":413
+/* "src/gevent/greenlet.py":418
  *         return self.dead or self._exc_info is not None
  * 
  *     def successful(self):             # <<<<<<<<<<<<<<
@@ -6607,7 +6624,7 @@ static int __pyx_f_6gevent_9_greenlet_8Greenlet_successful(struct __pyx_obj_6gev
     else {
       PY_UINT64_T type_dict_guard = (likely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dict)) ? __PYX_GET_DICT_VERSION(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dict) : 0;
       #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_successful); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 413, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_successful); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 418, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)(void*)__pyx_pw_6gevent_9_greenlet_8Greenlet_13successful)) {
         __Pyx_INCREF(__pyx_t_1);
@@ -6623,10 +6640,10 @@ static int __pyx_f_6gevent_9_greenlet_8Greenlet_successful(struct __pyx_obj_6gev
         }
         __pyx_t_2 = (__pyx_t_4) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 413, __pyx_L1_error)
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 418, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 413, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 418, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __pyx_r = __pyx_t_5;
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -6645,7 +6662,7 @@ static int __pyx_f_6gevent_9_greenlet_8Greenlet_successful(struct __pyx_obj_6gev
     #endif
   }
 
-  /* "src/gevent/greenlet.py":425
+  /* "src/gevent/greenlet.py":430
  *               not necessarily the literal constants ``True`` or ``False``.
  *         """
  *         return self._exc_info is not None and self._exc_info[1] is None             # <<<<<<<<<<<<<<
@@ -6661,9 +6678,9 @@ static int __pyx_f_6gevent_9_greenlet_8Greenlet_successful(struct __pyx_obj_6gev
   }
   if (unlikely(__pyx_v_self->_exc_info == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 425, __pyx_L1_error)
+    __PYX_ERR(0, 430, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v_self->_exc_info, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 425, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v_self->_exc_info, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 430, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_7 = (__pyx_t_1 == Py_None);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -6673,7 +6690,7 @@ static int __pyx_f_6gevent_9_greenlet_8Greenlet_successful(struct __pyx_obj_6gev
   __pyx_r = __pyx_t_5;
   goto __pyx_L0;
 
-  /* "src/gevent/greenlet.py":413
+  /* "src/gevent/greenlet.py":418
  *         return self.dead or self._exc_info is not None
  * 
  *     def successful(self):             # <<<<<<<<<<<<<<
@@ -6715,7 +6732,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_12successful(struct __pyx
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("successful", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyBool_FromLong(__pyx_f_6gevent_9_greenlet_8Greenlet_successful(__pyx_v_self, 1)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 413, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyBool_FromLong(__pyx_f_6gevent_9_greenlet_8Greenlet_successful(__pyx_v_self, 1)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 418, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -6732,12 +6749,12 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_12successful(struct __pyx
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":427
+/* "src/gevent/greenlet.py":432
  *         return self._exc_info is not None and self._exc_info[1] is None
  * 
  *     def __repr__(self):             # <<<<<<<<<<<<<<
  *         classname = self.__class__.__name__
- *         result = '<%s "%s" at %s' % (classname, self.name, hex(id(self)))
+ *         # If no name has been assigned, don't generate one, including a minimal_ident,
  */
 
 /* Python wrapper */
@@ -6755,101 +6772,167 @@ static PyObject *__pyx_pw_6gevent_9_greenlet_8Greenlet_15__repr__(PyObject *__py
 
 static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_14__repr__(struct __pyx_obj_6gevent_9_greenlet_Greenlet *__pyx_v_self) {
   PyObject *__pyx_v_classname = NULL;
+  PyObject *__pyx_v_name = NULL;
   PyObject *__pyx_v_result = NULL;
   PyObject *__pyx_v_formatted = NULL;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
+  int __pyx_t_3;
   int __pyx_t_4;
+  int __pyx_t_5;
   __Pyx_RefNannySetupContext("__repr__", 0);
 
-  /* "src/gevent/greenlet.py":428
+  /* "src/gevent/greenlet.py":433
  * 
  *     def __repr__(self):
  *         classname = self.__class__.__name__             # <<<<<<<<<<<<<<
- *         result = '<%s "%s" at %s' % (classname, self.name, hex(id(self)))
- *         formatted = self._formatinfo()
+ *         # If no name has been assigned, don't generate one, including a minimal_ident,
+ *         # if not necessary. This reduces the use of weak references and associated
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_class); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 428, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_class); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 433, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_name); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 428, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_name); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 433, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_classname = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "src/gevent/greenlet.py":429
- *     def __repr__(self):
- *         classname = self.__class__.__name__
- *         result = '<%s "%s" at %s' % (classname, self.name, hex(id(self)))             # <<<<<<<<<<<<<<
+  /* "src/gevent/greenlet.py":437
+ *         # if not necessary. This reduces the use of weak references and associated
+ *         # overhead.
+ *         if 'name' not in self.__dict__ and self._ident is None:             # <<<<<<<<<<<<<<
+ *             name = ' '
+ *         else:
+ */
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_dict); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 437, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_4 = (__Pyx_PySequence_ContainsTF(__pyx_n_s_name_2, __pyx_t_2, Py_NE)); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 437, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_5 = (__pyx_t_4 != 0);
+  if (__pyx_t_5) {
+  } else {
+    __pyx_t_3 = __pyx_t_5;
+    goto __pyx_L4_bool_binop_done;
+  }
+  __pyx_t_5 = (__pyx_v_self->_ident == Py_None);
+  __pyx_t_4 = (__pyx_t_5 != 0);
+  __pyx_t_3 = __pyx_t_4;
+  __pyx_L4_bool_binop_done:;
+  if (__pyx_t_3) {
+
+    /* "src/gevent/greenlet.py":438
+ *         # overhead.
+ *         if 'name' not in self.__dict__ and self._ident is None:
+ *             name = ' '             # <<<<<<<<<<<<<<
+ *         else:
+ *             name = ' "%s" ' % (self.name,)
+ */
+    __Pyx_INCREF(__pyx_kp_s__2);
+    __pyx_v_name = __pyx_kp_s__2;
+
+    /* "src/gevent/greenlet.py":437
+ *         # if not necessary. This reduces the use of weak references and associated
+ *         # overhead.
+ *         if 'name' not in self.__dict__ and self._ident is None:             # <<<<<<<<<<<<<<
+ *             name = ' '
+ *         else:
+ */
+    goto __pyx_L3;
+  }
+
+  /* "src/gevent/greenlet.py":440
+ *             name = ' '
+ *         else:
+ *             name = ' "%s" ' % (self.name,)             # <<<<<<<<<<<<<<
+ *         result = '<%s%sat %s' % (classname, name, hex(id(self)))
+ *         formatted = self._formatinfo()
+ */
+  /*else*/ {
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_name_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 440, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 440, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_GIVEREF(__pyx_t_2);
+    PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_2);
+    __pyx_t_2 = 0;
+    __pyx_t_2 = __Pyx_PyString_Format(__pyx_kp_s_s, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 440, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __pyx_v_name = __pyx_t_2;
+    __pyx_t_2 = 0;
+  }
+  __pyx_L3:;
+
+  /* "src/gevent/greenlet.py":441
+ *         else:
+ *             name = ' "%s" ' % (self.name,)
+ *         result = '<%s%sat %s' % (classname, name, hex(id(self)))             # <<<<<<<<<<<<<<
  *         formatted = self._formatinfo()
  *         if formatted:
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_name_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 429, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_id, ((PyObject *)__pyx_v_self)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 441, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_builtin_id, ((PyObject *)__pyx_v_self)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 429, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_builtin_hex, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 441, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_builtin_hex, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 429, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyTuple_New(3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 429, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = PyTuple_New(3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 441, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_v_classname);
   __Pyx_GIVEREF(__pyx_v_classname);
-  PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_v_classname);
-  __Pyx_GIVEREF(__pyx_t_2);
-  PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_t_2);
-  __Pyx_GIVEREF(__pyx_t_3);
-  PyTuple_SET_ITEM(__pyx_t_1, 2, __pyx_t_3);
-  __pyx_t_2 = 0;
-  __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyString_Format(__pyx_kp_s_s_s_at_s, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 429, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_v_result = ((PyObject*)__pyx_t_3);
-  __pyx_t_3 = 0;
+  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_v_classname);
+  __Pyx_INCREF(__pyx_v_name);
+  __Pyx_GIVEREF(__pyx_v_name);
+  PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_v_name);
+  __Pyx_GIVEREF(__pyx_t_1);
+  PyTuple_SET_ITEM(__pyx_t_2, 2, __pyx_t_1);
+  __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_PyString_Format(__pyx_kp_s_s_sat_s, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 441, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_v_result = ((PyObject*)__pyx_t_1);
+  __pyx_t_1 = 0;
 
-  /* "src/gevent/greenlet.py":430
- *         classname = self.__class__.__name__
- *         result = '<%s "%s" at %s' % (classname, self.name, hex(id(self)))
+  /* "src/gevent/greenlet.py":442
+ *             name = ' "%s" ' % (self.name,)
+ *         result = '<%s%sat %s' % (classname, name, hex(id(self)))
  *         formatted = self._formatinfo()             # <<<<<<<<<<<<<<
  *         if formatted:
  *             result += ': ' + formatted
  */
-  __pyx_t_3 = ((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->_formatinfo(__pyx_v_self, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 430, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_v_formatted = ((PyObject*)__pyx_t_3);
-  __pyx_t_3 = 0;
+  __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->_formatinfo(__pyx_v_self, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 442, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_v_formatted = ((PyObject*)__pyx_t_1);
+  __pyx_t_1 = 0;
 
-  /* "src/gevent/greenlet.py":431
- *         result = '<%s "%s" at %s' % (classname, self.name, hex(id(self)))
+  /* "src/gevent/greenlet.py":443
+ *         result = '<%s%sat %s' % (classname, name, hex(id(self)))
  *         formatted = self._formatinfo()
  *         if formatted:             # <<<<<<<<<<<<<<
  *             result += ': ' + formatted
  *         return result + '>'
  */
-  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_v_formatted); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 431, __pyx_L1_error)
-  if (__pyx_t_4) {
+  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_v_formatted); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 443, __pyx_L1_error)
+  if (__pyx_t_3) {
 
-    /* "src/gevent/greenlet.py":432
+    /* "src/gevent/greenlet.py":444
  *         formatted = self._formatinfo()
  *         if formatted:
  *             result += ': ' + formatted             # <<<<<<<<<<<<<<
  *         return result + '>'
  * 
  */
-    __pyx_t_3 = PyNumber_Add(__pyx_kp_s__2, __pyx_v_formatted); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 432, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_1 = PyNumber_InPlaceAdd(__pyx_v_result, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 432, __pyx_L1_error)
+    __pyx_t_1 = PyNumber_Add(__pyx_kp_s__3, __pyx_v_formatted); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 444, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __Pyx_DECREF_SET(__pyx_v_result, ((PyObject*)__pyx_t_1));
-    __pyx_t_1 = 0;
+    __pyx_t_2 = PyNumber_InPlaceAdd(__pyx_v_result, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 444, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __Pyx_DECREF_SET(__pyx_v_result, ((PyObject*)__pyx_t_2));
+    __pyx_t_2 = 0;
 
-    /* "src/gevent/greenlet.py":431
- *         result = '<%s "%s" at %s' % (classname, self.name, hex(id(self)))
+    /* "src/gevent/greenlet.py":443
+ *         result = '<%s%sat %s' % (classname, name, hex(id(self)))
  *         formatted = self._formatinfo()
  *         if formatted:             # <<<<<<<<<<<<<<
  *             result += ': ' + formatted
@@ -6857,7 +6940,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_14__repr__(struct __pyx_o
  */
   }
 
-  /* "src/gevent/greenlet.py":433
+  /* "src/gevent/greenlet.py":445
  *         if formatted:
  *             result += ': ' + formatted
  *         return result + '>'             # <<<<<<<<<<<<<<
@@ -6865,29 +6948,29 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_14__repr__(struct __pyx_o
  * 
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyNumber_Add(__pyx_v_result, __pyx_kp_s__3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 433, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
+  __pyx_t_2 = PyNumber_Add(__pyx_v_result, __pyx_kp_s__4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 445, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_r = __pyx_t_2;
+  __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "src/gevent/greenlet.py":427
+  /* "src/gevent/greenlet.py":432
  *         return self._exc_info is not None and self._exc_info[1] is None
  * 
  *     def __repr__(self):             # <<<<<<<<<<<<<<
  *         classname = self.__class__.__name__
- *         result = '<%s "%s" at %s' % (classname, self.name, hex(id(self)))
+ *         # If no name has been assigned, don't generate one, including a minimal_ident,
  */
 
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
   __Pyx_AddTraceback("gevent._greenlet.Greenlet.__repr__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_classname);
+  __Pyx_XDECREF(__pyx_v_name);
   __Pyx_XDECREF(__pyx_v_result);
   __Pyx_XDECREF(__pyx_v_formatted);
   __Pyx_XGIVEREF(__pyx_r);
@@ -6895,7 +6978,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_14__repr__(struct __pyx_o
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":436
+/* "src/gevent/greenlet.py":448
  * 
  * 
  *     def _formatinfo(self):             # <<<<<<<<<<<<<<
@@ -6938,7 +7021,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__formatinfo(struct __pyx_o
     else {
       PY_UINT64_T type_dict_guard = (likely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dict)) ? __PYX_GET_DICT_VERSION(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dict) : 0;
       #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_formatinfo); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 436, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_formatinfo); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 448, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)(void*)__pyx_pw_6gevent_9_greenlet_8Greenlet_17_formatinfo)) {
         __Pyx_XDECREF(__pyx_r);
@@ -6955,10 +7038,10 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__formatinfo(struct __pyx_o
         }
         __pyx_t_2 = (__pyx_t_4) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 436, __pyx_L1_error)
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 448, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        if (!(likely(PyString_CheckExact(__pyx_t_2))||((__pyx_t_2) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_2)->tp_name), 0))) __PYX_ERR(0, 436, __pyx_L1_error)
+        if (!(likely(PyString_CheckExact(__pyx_t_2))||((__pyx_t_2) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_2)->tp_name), 0))) __PYX_ERR(0, 448, __pyx_L1_error)
         __pyx_r = ((PyObject*)__pyx_t_2);
         __pyx_t_2 = 0;
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -6977,7 +7060,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__formatinfo(struct __pyx_o
     #endif
   }
 
-  /* "src/gevent/greenlet.py":437
+  /* "src/gevent/greenlet.py":449
  * 
  *     def _formatinfo(self):
  *         info = self._formatted_info             # <<<<<<<<<<<<<<
@@ -6989,7 +7072,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__formatinfo(struct __pyx_o
   __pyx_v_info = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/gevent/greenlet.py":438
+  /* "src/gevent/greenlet.py":450
  *     def _formatinfo(self):
  *         info = self._formatted_info
  *         if info is not None:             # <<<<<<<<<<<<<<
@@ -7000,7 +7083,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__formatinfo(struct __pyx_o
   __pyx_t_6 = (__pyx_t_5 != 0);
   if (__pyx_t_6) {
 
-    /* "src/gevent/greenlet.py":439
+    /* "src/gevent/greenlet.py":451
  *         info = self._formatted_info
  *         if info is not None:
  *             return info             # <<<<<<<<<<<<<<
@@ -7012,7 +7095,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__formatinfo(struct __pyx_o
     __pyx_r = __pyx_v_info;
     goto __pyx_L0;
 
-    /* "src/gevent/greenlet.py":438
+    /* "src/gevent/greenlet.py":450
  *     def _formatinfo(self):
  *         info = self._formatted_info
  *         if info is not None:             # <<<<<<<<<<<<<<
@@ -7021,31 +7104,31 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__formatinfo(struct __pyx_o
  */
   }
 
-  /* "src/gevent/greenlet.py":443
+  /* "src/gevent/greenlet.py":455
  *         # Are we running an arbitrary function provided to the constructor,
  *         # or did a subclass override _run?
  *         func = self._run             # <<<<<<<<<<<<<<
  *         im_self = getattr(func, '__self__', None)
  *         if im_self is self:
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_run_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 443, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_run_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 455, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_func = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "src/gevent/greenlet.py":444
+  /* "src/gevent/greenlet.py":456
  *         # or did a subclass override _run?
  *         func = self._run
  *         im_self = getattr(func, '__self__', None)             # <<<<<<<<<<<<<<
  *         if im_self is self:
  *             funcname = '_run'
  */
-  __pyx_t_1 = __Pyx_GetAttr3(__pyx_v_func, __pyx_n_s_self, Py_None); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 444, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetAttr3(__pyx_v_func, __pyx_n_s_self, Py_None); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 456, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_im_self = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "src/gevent/greenlet.py":445
+  /* "src/gevent/greenlet.py":457
  *         func = self._run
  *         im_self = getattr(func, '__self__', None)
  *         if im_self is self:             # <<<<<<<<<<<<<<
@@ -7056,7 +7139,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__formatinfo(struct __pyx_o
   __pyx_t_5 = (__pyx_t_6 != 0);
   if (__pyx_t_5) {
 
-    /* "src/gevent/greenlet.py":446
+    /* "src/gevent/greenlet.py":458
  *         im_self = getattr(func, '__self__', None)
  *         if im_self is self:
  *             funcname = '_run'             # <<<<<<<<<<<<<<
@@ -7066,7 +7149,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__formatinfo(struct __pyx_o
     __Pyx_INCREF(__pyx_n_s_run_2);
     __pyx_v_funcname = __pyx_n_s_run_2;
 
-    /* "src/gevent/greenlet.py":445
+    /* "src/gevent/greenlet.py":457
  *         func = self._run
  *         im_self = getattr(func, '__self__', None)
  *         if im_self is self:             # <<<<<<<<<<<<<<
@@ -7076,7 +7159,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__formatinfo(struct __pyx_o
     goto __pyx_L4;
   }
 
-  /* "src/gevent/greenlet.py":447
+  /* "src/gevent/greenlet.py":459
  *         if im_self is self:
  *             funcname = '_run'
  *         elif im_self is not None:             # <<<<<<<<<<<<<<
@@ -7087,19 +7170,19 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__formatinfo(struct __pyx_o
   __pyx_t_6 = (__pyx_t_5 != 0);
   if (__pyx_t_6) {
 
-    /* "src/gevent/greenlet.py":448
+    /* "src/gevent/greenlet.py":460
  *             funcname = '_run'
  *         elif im_self is not None:
  *             funcname = repr(func)             # <<<<<<<<<<<<<<
  *         else:
  *             funcname = getattr(func, '__name__', '') or repr(func)
  */
-    __pyx_t_1 = PyObject_Repr(__pyx_v_func); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 448, __pyx_L1_error)
+    __pyx_t_1 = PyObject_Repr(__pyx_v_func); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 460, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_v_funcname = __pyx_t_1;
     __pyx_t_1 = 0;
 
-    /* "src/gevent/greenlet.py":447
+    /* "src/gevent/greenlet.py":459
  *         if im_self is self:
  *             funcname = '_run'
  *         elif im_self is not None:             # <<<<<<<<<<<<<<
@@ -7109,7 +7192,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__formatinfo(struct __pyx_o
     goto __pyx_L4;
   }
 
-  /* "src/gevent/greenlet.py":450
+  /* "src/gevent/greenlet.py":462
  *             funcname = repr(func)
  *         else:
  *             funcname = getattr(func, '__name__', '') or repr(func)             # <<<<<<<<<<<<<<
@@ -7117,9 +7200,9 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__formatinfo(struct __pyx_o
  *         result = funcname
  */
   /*else*/ {
-    __pyx_t_2 = __Pyx_GetAttr3(__pyx_v_func, __pyx_n_s_name, __pyx_kp_s__4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 450, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_GetAttr3(__pyx_v_func, __pyx_n_s_name, __pyx_kp_s__5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 462, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 450, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 462, __pyx_L1_error)
     if (!__pyx_t_6) {
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     } else {
@@ -7128,7 +7211,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__formatinfo(struct __pyx_o
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       goto __pyx_L5_bool_binop_done;
     }
-    __pyx_t_2 = PyObject_Repr(__pyx_v_func); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 450, __pyx_L1_error)
+    __pyx_t_2 = PyObject_Repr(__pyx_v_func); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 462, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_INCREF(__pyx_t_2);
     __pyx_t_1 = __pyx_t_2;
@@ -7139,7 +7222,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__formatinfo(struct __pyx_o
   }
   __pyx_L4:;
 
-  /* "src/gevent/greenlet.py":452
+  /* "src/gevent/greenlet.py":464
  *             funcname = getattr(func, '__name__', '') or repr(func)
  * 
  *         result = funcname             # <<<<<<<<<<<<<<
@@ -7149,19 +7232,19 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__formatinfo(struct __pyx_o
   __Pyx_INCREF(__pyx_v_funcname);
   __pyx_v_result = __pyx_v_funcname;
 
-  /* "src/gevent/greenlet.py":453
+  /* "src/gevent/greenlet.py":465
  * 
  *         result = funcname
  *         args = []             # <<<<<<<<<<<<<<
  *         if self.args:
  *             args = [repr(x)[:50] for x in self.args]
  */
-  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 453, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 465, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_args = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/gevent/greenlet.py":454
+  /* "src/gevent/greenlet.py":466
  *         result = funcname
  *         args = []
  *         if self.args:             # <<<<<<<<<<<<<<
@@ -7171,7 +7254,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__formatinfo(struct __pyx_o
   __pyx_t_6 = (__pyx_v_self->args != Py_None)&&(PyTuple_GET_SIZE(__pyx_v_self->args) != 0);
   if (__pyx_t_6) {
 
-    /* "src/gevent/greenlet.py":455
+    /* "src/gevent/greenlet.py":467
  *         args = []
  *         if self.args:
  *             args = [repr(x)[:50] for x in self.args]             # <<<<<<<<<<<<<<
@@ -7179,33 +7262,33 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__formatinfo(struct __pyx_o
  *             args.extend(['%s=%s' % (key, repr(value)[:50]) for (key, value) in self.kwargs.items()])
  */
     { /* enter inner scope */
-      __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 455, __pyx_L10_error)
+      __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 467, __pyx_L10_error)
       __Pyx_GOTREF(__pyx_t_1);
       if (unlikely(__pyx_v_self->args == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-        __PYX_ERR(0, 455, __pyx_L10_error)
+        __PYX_ERR(0, 467, __pyx_L10_error)
       }
       __pyx_t_2 = __pyx_v_self->args; __Pyx_INCREF(__pyx_t_2); __pyx_t_7 = 0;
       for (;;) {
         if (__pyx_t_7 >= PyTuple_GET_SIZE(__pyx_t_2)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_3 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_7); __Pyx_INCREF(__pyx_t_3); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 455, __pyx_L10_error)
+        __pyx_t_3 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_7); __Pyx_INCREF(__pyx_t_3); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 467, __pyx_L10_error)
         #else
-        __pyx_t_3 = PySequence_ITEM(__pyx_t_2, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 455, __pyx_L10_error)
+        __pyx_t_3 = PySequence_ITEM(__pyx_t_2, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 467, __pyx_L10_error)
         __Pyx_GOTREF(__pyx_t_3);
         #endif
         __Pyx_XDECREF_SET(__pyx_7genexpr__pyx_v_x, __pyx_t_3);
         __pyx_t_3 = 0;
-        __pyx_t_3 = PyObject_Repr(__pyx_7genexpr__pyx_v_x); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 455, __pyx_L10_error)
+        __pyx_t_3 = PyObject_Repr(__pyx_7genexpr__pyx_v_x); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 467, __pyx_L10_error)
         __Pyx_GOTREF(__pyx_t_3);
         if (unlikely(__pyx_t_3 == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-          __PYX_ERR(0, 455, __pyx_L10_error)
+          __PYX_ERR(0, 467, __pyx_L10_error)
         }
-        __pyx_t_4 = PySequence_GetSlice(__pyx_t_3, 0, 50); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 455, __pyx_L10_error)
+        __pyx_t_4 = PySequence_GetSlice(__pyx_t_3, 0, 50); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 467, __pyx_L10_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_4))) __PYX_ERR(0, 455, __pyx_L10_error)
+        if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_4))) __PYX_ERR(0, 467, __pyx_L10_error)
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       }
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -7219,7 +7302,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__formatinfo(struct __pyx_o
     __Pyx_DECREF_SET(__pyx_v_args, ((PyObject*)__pyx_t_1));
     __pyx_t_1 = 0;
 
-    /* "src/gevent/greenlet.py":454
+    /* "src/gevent/greenlet.py":466
  *         result = funcname
  *         args = []
  *         if self.args:             # <<<<<<<<<<<<<<
@@ -7228,17 +7311,17 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__formatinfo(struct __pyx_o
  */
   }
 
-  /* "src/gevent/greenlet.py":456
+  /* "src/gevent/greenlet.py":468
  *         if self.args:
  *             args = [repr(x)[:50] for x in self.args]
  *         if self.kwargs:             # <<<<<<<<<<<<<<
  *             args.extend(['%s=%s' % (key, repr(value)[:50]) for (key, value) in self.kwargs.items()])
  *         if args:
  */
-  __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_v_self->kwargs); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 456, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_v_self->kwargs); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 468, __pyx_L1_error)
   if (__pyx_t_6) {
 
-    /* "src/gevent/greenlet.py":457
+    /* "src/gevent/greenlet.py":469
  *             args = [repr(x)[:50] for x in self.args]
  *         if self.kwargs:
  *             args.extend(['%s=%s' % (key, repr(value)[:50]) for (key, value) in self.kwargs.items()])             # <<<<<<<<<<<<<<
@@ -7246,14 +7329,14 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__formatinfo(struct __pyx_o
  *             result += '(' + ', '.join(args) + ')'
  */
     { /* enter inner scope */
-      __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 457, __pyx_L17_error)
+      __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 469, __pyx_L17_error)
       __Pyx_GOTREF(__pyx_t_1);
       __pyx_t_7 = 0;
       if (unlikely(__pyx_v_self->kwargs == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "items");
-        __PYX_ERR(0, 457, __pyx_L17_error)
+        __PYX_ERR(0, 469, __pyx_L17_error)
       }
-      __pyx_t_4 = __Pyx_dict_iterator(__pyx_v_self->kwargs, 1, __pyx_n_s_items, (&__pyx_t_8), (&__pyx_t_9)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 457, __pyx_L17_error)
+      __pyx_t_4 = __Pyx_dict_iterator(__pyx_v_self->kwargs, 1, __pyx_n_s_items, (&__pyx_t_8), (&__pyx_t_9)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 469, __pyx_L17_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_XDECREF(__pyx_t_2);
       __pyx_t_2 = __pyx_t_4;
@@ -7261,23 +7344,23 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__formatinfo(struct __pyx_o
       while (1) {
         __pyx_t_10 = __Pyx_dict_iter_next(__pyx_t_2, __pyx_t_8, &__pyx_t_7, &__pyx_t_4, &__pyx_t_3, NULL, __pyx_t_9);
         if (unlikely(__pyx_t_10 == 0)) break;
-        if (unlikely(__pyx_t_10 == -1)) __PYX_ERR(0, 457, __pyx_L17_error)
+        if (unlikely(__pyx_t_10 == -1)) __PYX_ERR(0, 469, __pyx_L17_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_XDECREF_SET(__pyx_8genexpr1__pyx_v_key, __pyx_t_4);
         __pyx_t_4 = 0;
         __Pyx_XDECREF_SET(__pyx_8genexpr1__pyx_v_value, __pyx_t_3);
         __pyx_t_3 = 0;
-        __pyx_t_3 = PyObject_Repr(__pyx_8genexpr1__pyx_v_value); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 457, __pyx_L17_error)
+        __pyx_t_3 = PyObject_Repr(__pyx_8genexpr1__pyx_v_value); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 469, __pyx_L17_error)
         __Pyx_GOTREF(__pyx_t_3);
         if (unlikely(__pyx_t_3 == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-          __PYX_ERR(0, 457, __pyx_L17_error)
+          __PYX_ERR(0, 469, __pyx_L17_error)
         }
-        __pyx_t_4 = PySequence_GetSlice(__pyx_t_3, 0, 50); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 457, __pyx_L17_error)
+        __pyx_t_4 = PySequence_GetSlice(__pyx_t_3, 0, 50); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 469, __pyx_L17_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 457, __pyx_L17_error)
+        __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 469, __pyx_L17_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_INCREF(__pyx_8genexpr1__pyx_v_key);
         __Pyx_GIVEREF(__pyx_8genexpr1__pyx_v_key);
@@ -7285,10 +7368,10 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__formatinfo(struct __pyx_o
         __Pyx_GIVEREF(__pyx_t_4);
         PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_4);
         __pyx_t_4 = 0;
-        __pyx_t_4 = __Pyx_PyString_Format(__pyx_kp_s_s_s, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 457, __pyx_L17_error)
+        __pyx_t_4 = __Pyx_PyString_Format(__pyx_kp_s_s_s, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 469, __pyx_L17_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_4))) __PYX_ERR(0, 457, __pyx_L17_error)
+        if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_4))) __PYX_ERR(0, 469, __pyx_L17_error)
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       }
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -7301,10 +7384,10 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__formatinfo(struct __pyx_o
       goto __pyx_L1_error;
       __pyx_L20_exit_scope:;
     } /* exit inner scope */
-    __pyx_t_11 = __Pyx_PyList_Extend(__pyx_v_args, __pyx_t_1); if (unlikely(__pyx_t_11 == ((int)-1))) __PYX_ERR(0, 457, __pyx_L1_error)
+    __pyx_t_11 = __Pyx_PyList_Extend(__pyx_v_args, __pyx_t_1); if (unlikely(__pyx_t_11 == ((int)-1))) __PYX_ERR(0, 469, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "src/gevent/greenlet.py":456
+    /* "src/gevent/greenlet.py":468
  *         if self.args:
  *             args = [repr(x)[:50] for x in self.args]
  *         if self.kwargs:             # <<<<<<<<<<<<<<
@@ -7313,7 +7396,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__formatinfo(struct __pyx_o
  */
   }
 
-  /* "src/gevent/greenlet.py":458
+  /* "src/gevent/greenlet.py":470
  *         if self.kwargs:
  *             args.extend(['%s=%s' % (key, repr(value)[:50]) for (key, value) in self.kwargs.items()])
  *         if args:             # <<<<<<<<<<<<<<
@@ -7323,28 +7406,28 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__formatinfo(struct __pyx_o
   __pyx_t_6 = (PyList_GET_SIZE(__pyx_v_args) != 0);
   if (__pyx_t_6) {
 
-    /* "src/gevent/greenlet.py":459
+    /* "src/gevent/greenlet.py":471
  *             args.extend(['%s=%s' % (key, repr(value)[:50]) for (key, value) in self.kwargs.items()])
  *         if args:
  *             result += '(' + ', '.join(args) + ')'             # <<<<<<<<<<<<<<
  *         # it is important to save the result here, because once the greenlet exits '_run' attribute will be removed
  *         self._formatted_info = result
  */
-    __pyx_t_1 = __Pyx_PyString_Join(__pyx_kp_s__6, __pyx_v_args); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 459, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyString_Join(__pyx_kp_s__7, __pyx_v_args); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 471, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_2 = PyNumber_Add(__pyx_kp_s__5, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 459, __pyx_L1_error)
+    __pyx_t_2 = PyNumber_Add(__pyx_kp_s__6, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 471, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = PyNumber_Add(__pyx_t_2, __pyx_kp_s__7); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 459, __pyx_L1_error)
+    __pyx_t_1 = PyNumber_Add(__pyx_t_2, __pyx_kp_s__8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 471, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = PyNumber_InPlaceAdd(__pyx_v_result, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 459, __pyx_L1_error)
+    __pyx_t_2 = PyNumber_InPlaceAdd(__pyx_v_result, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 471, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF_SET(__pyx_v_result, __pyx_t_2);
     __pyx_t_2 = 0;
 
-    /* "src/gevent/greenlet.py":458
+    /* "src/gevent/greenlet.py":470
  *         if self.kwargs:
  *             args.extend(['%s=%s' % (key, repr(value)[:50]) for (key, value) in self.kwargs.items()])
  *         if args:             # <<<<<<<<<<<<<<
@@ -7353,14 +7436,14 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__formatinfo(struct __pyx_o
  */
   }
 
-  /* "src/gevent/greenlet.py":461
+  /* "src/gevent/greenlet.py":473
  *             result += '(' + ', '.join(args) + ')'
  *         # it is important to save the result here, because once the greenlet exits '_run' attribute will be removed
  *         self._formatted_info = result             # <<<<<<<<<<<<<<
  *         return result
  * 
  */
-  if (!(likely(PyString_CheckExact(__pyx_v_result))||((__pyx_v_result) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_v_result)->tp_name), 0))) __PYX_ERR(0, 461, __pyx_L1_error)
+  if (!(likely(PyString_CheckExact(__pyx_v_result))||((__pyx_v_result) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_v_result)->tp_name), 0))) __PYX_ERR(0, 473, __pyx_L1_error)
   __pyx_t_2 = __pyx_v_result;
   __Pyx_INCREF(__pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_2);
@@ -7369,7 +7452,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__formatinfo(struct __pyx_o
   __pyx_v_self->_formatted_info = ((PyObject*)__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "src/gevent/greenlet.py":462
+  /* "src/gevent/greenlet.py":474
  *         # it is important to save the result here, because once the greenlet exits '_run' attribute will be removed
  *         self._formatted_info = result
  *         return result             # <<<<<<<<<<<<<<
@@ -7377,12 +7460,12 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__formatinfo(struct __pyx_o
  *     @property
  */
   __Pyx_XDECREF(__pyx_r);
-  if (!(likely(PyString_CheckExact(__pyx_v_result))||((__pyx_v_result) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_v_result)->tp_name), 0))) __PYX_ERR(0, 462, __pyx_L1_error)
+  if (!(likely(PyString_CheckExact(__pyx_v_result))||((__pyx_v_result) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_v_result)->tp_name), 0))) __PYX_ERR(0, 474, __pyx_L1_error)
   __Pyx_INCREF(__pyx_v_result);
   __pyx_r = ((PyObject*)__pyx_v_result);
   goto __pyx_L0;
 
-  /* "src/gevent/greenlet.py":436
+  /* "src/gevent/greenlet.py":448
  * 
  * 
  *     def _formatinfo(self):             # <<<<<<<<<<<<<<
@@ -7434,7 +7517,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_16_formatinfo(struct __py
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("_formatinfo", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_6gevent_9_greenlet_8Greenlet__formatinfo(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 436, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_6gevent_9_greenlet_8Greenlet__formatinfo(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 448, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -7451,7 +7534,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_16_formatinfo(struct __py
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":465
+/* "src/gevent/greenlet.py":477
  * 
  *     @property
  *     def exception(self):             # <<<<<<<<<<<<<<
@@ -7480,7 +7563,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_9exception___get__(struct
   PyObject *__pyx_t_3 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "src/gevent/greenlet.py":470
+  /* "src/gevent/greenlet.py":482
  *         greenlet has finished with an error. Otherwise ``None``.
  *         """
  *         return self._exc_info[1] if self._exc_info is not None else None             # <<<<<<<<<<<<<<
@@ -7492,9 +7575,9 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_9exception___get__(struct
   if ((__pyx_t_2 != 0)) {
     if (unlikely(__pyx_v_self->_exc_info == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 470, __pyx_L1_error)
+      __PYX_ERR(0, 482, __pyx_L1_error)
     }
-    __pyx_t_3 = __Pyx_GetItemInt_Tuple(__pyx_v_self->_exc_info, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 470, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_GetItemInt_Tuple(__pyx_v_self->_exc_info, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 482, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_t_1 = __pyx_t_3;
     __pyx_t_3 = 0;
@@ -7506,7 +7589,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_9exception___get__(struct
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "src/gevent/greenlet.py":465
+  /* "src/gevent/greenlet.py":477
  * 
  *     @property
  *     def exception(self):             # <<<<<<<<<<<<<<
@@ -7526,7 +7609,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_9exception___get__(struct
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":473
+/* "src/gevent/greenlet.py":485
  * 
  *     @property
  *     def exc_info(self):             # <<<<<<<<<<<<<<
@@ -7562,7 +7645,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_8exc_info___get__(struct 
   PyObject *__pyx_t_9 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "src/gevent/greenlet.py":482
+  /* "src/gevent/greenlet.py":494
  *         .. versionadded:: 1.1
  *         """
  *         ei = self._exc_info             # <<<<<<<<<<<<<<
@@ -7574,7 +7657,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_8exc_info___get__(struct 
   __pyx_v_ei = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/gevent/greenlet.py":483
+  /* "src/gevent/greenlet.py":495
  *         """
  *         ei = self._exc_info
  *         if ei is not None and ei[0] is not None:             # <<<<<<<<<<<<<<
@@ -7590,9 +7673,9 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_8exc_info___get__(struct 
   }
   if (unlikely(__pyx_v_ei == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 483, __pyx_L1_error)
+    __PYX_ERR(0, 495, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v_ei, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 483, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v_ei, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 495, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_4 = (__pyx_t_1 != Py_None);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -7601,7 +7684,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_8exc_info___get__(struct 
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_2) {
 
-    /* "src/gevent/greenlet.py":484
+    /* "src/gevent/greenlet.py":496
  *         ei = self._exc_info
  *         if ei is not None and ei[0] is not None:
  *             return (ei[0], ei[1], load_traceback(ei[2]))             # <<<<<<<<<<<<<<
@@ -7611,21 +7694,21 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_8exc_info___get__(struct 
     __Pyx_XDECREF(__pyx_r);
     if (unlikely(__pyx_v_ei == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 484, __pyx_L1_error)
+      __PYX_ERR(0, 496, __pyx_L1_error)
     }
-    __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v_ei, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 484, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v_ei, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 496, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     if (unlikely(__pyx_v_ei == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 484, __pyx_L1_error)
+      __PYX_ERR(0, 496, __pyx_L1_error)
     }
-    __pyx_t_5 = __Pyx_GetItemInt_Tuple(__pyx_v_ei, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 484, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_GetItemInt_Tuple(__pyx_v_ei, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 496, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     if (unlikely(__pyx_v_ei == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 484, __pyx_L1_error)
+      __PYX_ERR(0, 496, __pyx_L1_error)
     }
-    __pyx_t_7 = __Pyx_GetItemInt_Tuple(__pyx_v_ei, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 484, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_GetItemInt_Tuple(__pyx_v_ei, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 496, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     __Pyx_INCREF(__pyx_v_6gevent_9_greenlet_load_traceback);
     __pyx_t_8 = __pyx_v_6gevent_9_greenlet_load_traceback; __pyx_t_9 = NULL;
@@ -7641,10 +7724,10 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_8exc_info___get__(struct 
     __pyx_t_6 = (__pyx_t_9) ? __Pyx_PyObject_Call2Args(__pyx_t_8, __pyx_t_9, __pyx_t_7) : __Pyx_PyObject_CallOneArg(__pyx_t_8, __pyx_t_7);
     __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 484, __pyx_L1_error)
+    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 496, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __pyx_t_8 = PyTuple_New(3); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 484, __pyx_L1_error)
+    __pyx_t_8 = PyTuple_New(3); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 496, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
     __Pyx_GIVEREF(__pyx_t_1);
     PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_1);
@@ -7659,7 +7742,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_8exc_info___get__(struct 
     __pyx_t_8 = 0;
     goto __pyx_L0;
 
-    /* "src/gevent/greenlet.py":483
+    /* "src/gevent/greenlet.py":495
  *         """
  *         ei = self._exc_info
  *         if ei is not None and ei[0] is not None:             # <<<<<<<<<<<<<<
@@ -7668,7 +7751,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_8exc_info___get__(struct 
  */
   }
 
-  /* "src/gevent/greenlet.py":473
+  /* "src/gevent/greenlet.py":485
  * 
  *     @property
  *     def exc_info(self):             # <<<<<<<<<<<<<<
@@ -7695,7 +7778,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_8exc_info___get__(struct 
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":486
+/* "src/gevent/greenlet.py":498
  *             return (ei[0], ei[1], load_traceback(ei[2]))
  * 
  *     def throw(self, *args):             # <<<<<<<<<<<<<<
@@ -7742,18 +7825,18 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_18throw(struct __pyx_obj_
   PyObject *__pyx_t_14 = NULL;
   __Pyx_RefNannySetupContext("throw", 0);
 
-  /* "src/gevent/greenlet.py":496
+  /* "src/gevent/greenlet.py":508
  *         b) fire the notifications as if an exception was raised in a greenlet
  *         """
  *         self.__cancel_start()             # <<<<<<<<<<<<<<
  * 
  *         try:
  */
-  __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->__pyx___cancel_start(__pyx_v_self); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 496, __pyx_L1_error)
+  __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->__pyx___cancel_start(__pyx_v_self); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 508, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/gevent/greenlet.py":498
+  /* "src/gevent/greenlet.py":510
  *         self.__cancel_start()
  * 
  *         try:             # <<<<<<<<<<<<<<
@@ -7762,44 +7845,44 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_18throw(struct __pyx_obj_
  */
   /*try:*/ {
 
-    /* "src/gevent/greenlet.py":499
+    /* "src/gevent/greenlet.py":511
  * 
  *         try:
  *             if not self.dead:             # <<<<<<<<<<<<<<
  *                 # Prevent switching into a greenlet *at all* if we had never
  *                 # started it. Usually this is the same thing that happens by throwing,
  */
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_dead); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 499, __pyx_L4_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_dead); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 511, __pyx_L4_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 499, __pyx_L4_error)
+    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 511, __pyx_L4_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_t_3 = ((!__pyx_t_2) != 0);
     if (__pyx_t_3) {
 
-      /* "src/gevent/greenlet.py":504
+      /* "src/gevent/greenlet.py":516
  *                 # but if this is done from the hub with nothing else running, prevents a
  *                 # LoopExit.
  *                 greenlet.throw(self, *args)             # <<<<<<<<<<<<<<
  *         finally:
  *             self.__handle_death_before_start(args)
  */
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_ptype_6gevent_9_greenlet_greenlet), __pyx_n_s_throw); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 504, __pyx_L4_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_ptype_6gevent_9_greenlet_greenlet), __pyx_n_s_throw); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 516, __pyx_L4_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 504, __pyx_L4_error)
+      __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 516, __pyx_L4_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_INCREF(((PyObject *)__pyx_v_self));
       __Pyx_GIVEREF(((PyObject *)__pyx_v_self));
       PyTuple_SET_ITEM(__pyx_t_4, 0, ((PyObject *)__pyx_v_self));
-      __pyx_t_5 = PyNumber_Add(__pyx_t_4, __pyx_v_args); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 504, __pyx_L4_error)
+      __pyx_t_5 = PyNumber_Add(__pyx_t_4, __pyx_v_args); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 516, __pyx_L4_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_5, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 504, __pyx_L4_error)
+      __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_5, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 516, __pyx_L4_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-      /* "src/gevent/greenlet.py":499
+      /* "src/gevent/greenlet.py":511
  * 
  *         try:
  *             if not self.dead:             # <<<<<<<<<<<<<<
@@ -7809,7 +7892,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_18throw(struct __pyx_obj_
     }
   }
 
-  /* "src/gevent/greenlet.py":506
+  /* "src/gevent/greenlet.py":518
  *                 greenlet.throw(self, *args)
  *         finally:
  *             self.__handle_death_before_start(args)             # <<<<<<<<<<<<<<
@@ -7818,7 +7901,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_18throw(struct __pyx_obj_
  */
   /*finally:*/ {
     /*normal exit:*/{
-      __pyx_t_4 = ((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->__pyx___handle_death_before_start(__pyx_v_self, __pyx_v_args); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 506, __pyx_L1_error)
+      __pyx_t_4 = ((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->__pyx___handle_death_before_start(__pyx_v_self, __pyx_v_args); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 518, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       goto __pyx_L5;
@@ -7841,7 +7924,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_18throw(struct __pyx_obj_
       __Pyx_XGOTREF(__pyx_t_14);
       __pyx_t_6 = __pyx_lineno; __pyx_t_7 = __pyx_clineno; __pyx_t_8 = __pyx_filename;
       {
-        __pyx_t_4 = ((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->__pyx___handle_death_before_start(__pyx_v_self, __pyx_v_args); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 506, __pyx_L8_error)
+        __pyx_t_4 = ((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->__pyx___handle_death_before_start(__pyx_v_self, __pyx_v_args); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 518, __pyx_L8_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       }
@@ -7874,7 +7957,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_18throw(struct __pyx_obj_
     __pyx_L5:;
   }
 
-  /* "src/gevent/greenlet.py":486
+  /* "src/gevent/greenlet.py":498
  *             return (ei[0], ei[1], load_traceback(ei[2]))
  * 
  *     def throw(self, *args):             # <<<<<<<<<<<<<<
@@ -7897,7 +7980,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_18throw(struct __pyx_obj_
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":508
+/* "src/gevent/greenlet.py":520
  *             self.__handle_death_before_start(args)
  * 
  *     def start(self):             # <<<<<<<<<<<<<<
@@ -7931,7 +8014,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_20start(struct __pyx_obj_
   PyObject *__pyx_t_6 = NULL;
   __Pyx_RefNannySetupContext("start", 0);
 
-  /* "src/gevent/greenlet.py":510
+  /* "src/gevent/greenlet.py":522
  *     def start(self):
  *         """Schedule the greenlet to run in this loop iteration"""
  *         if self._start_event is None:             # <<<<<<<<<<<<<<
@@ -7942,31 +8025,31 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_20start(struct __pyx_obj_
   __pyx_t_2 = (__pyx_t_1 != 0);
   if (__pyx_t_2) {
 
-    /* "src/gevent/greenlet.py":511
+    /* "src/gevent/greenlet.py":523
  *         """Schedule the greenlet to run in this loop iteration"""
  *         if self._start_event is None:
  *             _call_spawn_callbacks(self)             # <<<<<<<<<<<<<<
  *             self._start_event = self.parent.loop.run_callback(self.switch)
  * 
  */
-    __pyx_f_6gevent_9_greenlet__call_spawn_callbacks(__pyx_v_self); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 511, __pyx_L1_error)
+    __pyx_f_6gevent_9_greenlet__call_spawn_callbacks(__pyx_v_self); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 523, __pyx_L1_error)
 
-    /* "src/gevent/greenlet.py":512
+    /* "src/gevent/greenlet.py":524
  *         if self._start_event is None:
  *             _call_spawn_callbacks(self)
  *             self._start_event = self.parent.loop.run_callback(self.switch)             # <<<<<<<<<<<<<<
  * 
  *     def start_later(self, seconds):
  */
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_parent); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 512, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_parent); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 524, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_loop); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 512, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_loop); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 524, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_run_callback); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 512, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_run_callback); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 524, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_switch); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 512, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_switch); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 524, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __pyx_t_6 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
@@ -7981,7 +8064,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_20start(struct __pyx_obj_
     __pyx_t_3 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_6, __pyx_t_5) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 512, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 524, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_GIVEREF(__pyx_t_3);
@@ -7990,7 +8073,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_20start(struct __pyx_obj_
     __pyx_v_self->_start_event = __pyx_t_3;
     __pyx_t_3 = 0;
 
-    /* "src/gevent/greenlet.py":510
+    /* "src/gevent/greenlet.py":522
  *     def start(self):
  *         """Schedule the greenlet to run in this loop iteration"""
  *         if self._start_event is None:             # <<<<<<<<<<<<<<
@@ -7999,7 +8082,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_20start(struct __pyx_obj_
  */
   }
 
-  /* "src/gevent/greenlet.py":508
+  /* "src/gevent/greenlet.py":520
  *             self.__handle_death_before_start(args)
  * 
  *     def start(self):             # <<<<<<<<<<<<<<
@@ -8023,7 +8106,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_20start(struct __pyx_obj_
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":514
+/* "src/gevent/greenlet.py":526
  *             self._start_event = self.parent.loop.run_callback(self.switch)
  * 
  *     def start_later(self, seconds):             # <<<<<<<<<<<<<<
@@ -8057,7 +8140,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_22start_later(struct __py
   PyObject *__pyx_t_6 = NULL;
   __Pyx_RefNannySetupContext("start_later", 0);
 
-  /* "src/gevent/greenlet.py":521
+  /* "src/gevent/greenlet.py":533
  *         *seconds* later
  *         """
  *         if self._start_event is None:             # <<<<<<<<<<<<<<
@@ -8068,28 +8151,28 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_22start_later(struct __py
   __pyx_t_2 = (__pyx_t_1 != 0);
   if (__pyx_t_2) {
 
-    /* "src/gevent/greenlet.py":522
+    /* "src/gevent/greenlet.py":534
  *         """
  *         if self._start_event is None:
  *             _call_spawn_callbacks(self)             # <<<<<<<<<<<<<<
  *             self._start_event = self.parent.loop.timer(seconds)
  *             self._start_event.start(self.switch)
  */
-    __pyx_f_6gevent_9_greenlet__call_spawn_callbacks(__pyx_v_self); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 522, __pyx_L1_error)
+    __pyx_f_6gevent_9_greenlet__call_spawn_callbacks(__pyx_v_self); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 534, __pyx_L1_error)
 
-    /* "src/gevent/greenlet.py":523
+    /* "src/gevent/greenlet.py":535
  *         if self._start_event is None:
  *             _call_spawn_callbacks(self)
  *             self._start_event = self.parent.loop.timer(seconds)             # <<<<<<<<<<<<<<
  *             self._start_event.start(self.switch)
  * 
  */
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_parent); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 523, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_parent); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 535, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_loop); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 523, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_loop); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 535, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_timer); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 523, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_timer); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 535, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __pyx_t_5 = NULL;
@@ -8104,7 +8187,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_22start_later(struct __py
     }
     __pyx_t_3 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_5, __pyx_v_seconds) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_v_seconds);
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 523, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 535, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_GIVEREF(__pyx_t_3);
@@ -8113,16 +8196,16 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_22start_later(struct __py
     __pyx_v_self->_start_event = __pyx_t_3;
     __pyx_t_3 = 0;
 
-    /* "src/gevent/greenlet.py":524
+    /* "src/gevent/greenlet.py":536
  *             _call_spawn_callbacks(self)
  *             self._start_event = self.parent.loop.timer(seconds)
  *             self._start_event.start(self.switch)             # <<<<<<<<<<<<<<
  * 
  *     @staticmethod
  */
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->_start_event, __pyx_n_s_start); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 524, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->_start_event, __pyx_n_s_start); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 536, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_switch); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 524, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_switch); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 536, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __pyx_t_6 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
@@ -8137,12 +8220,12 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_22start_later(struct __py
     __pyx_t_3 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_6, __pyx_t_5) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 524, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 536, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "src/gevent/greenlet.py":521
+    /* "src/gevent/greenlet.py":533
  *         *seconds* later
  *         """
  *         if self._start_event is None:             # <<<<<<<<<<<<<<
@@ -8151,7 +8234,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_22start_later(struct __py
  */
   }
 
-  /* "src/gevent/greenlet.py":514
+  /* "src/gevent/greenlet.py":526
  *             self._start_event = self.parent.loop.run_callback(self.switch)
  * 
  *     def start_later(self, seconds):             # <<<<<<<<<<<<<<
@@ -8175,7 +8258,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_22start_later(struct __py
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":527
+/* "src/gevent/greenlet.py":539
  * 
  *     @staticmethod
  *     def add_spawn_callback(callback):             # <<<<<<<<<<<<<<
@@ -8211,7 +8294,7 @@ static PyObject *__pyx_pw_6gevent_9_greenlet_8Greenlet_25add_spawn_callback(CYTH
         else goto __pyx_L5_argtuple_error;
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "add_spawn_callback") < 0)) __PYX_ERR(0, 527, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "add_spawn_callback") < 0)) __PYX_ERR(0, 539, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 1) {
       goto __pyx_L5_argtuple_error;
@@ -8222,7 +8305,7 @@ static PyObject *__pyx_pw_6gevent_9_greenlet_8Greenlet_25add_spawn_callback(CYTH
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("add_spawn_callback", 1, 1, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 527, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("add_spawn_callback", 1, 1, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 539, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gevent._greenlet.Greenlet.add_spawn_callback", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -8244,7 +8327,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_24add_spawn_callback(PyOb
   int __pyx_t_4;
   __Pyx_RefNannySetupContext("add_spawn_callback", 0);
 
-  /* "src/gevent/greenlet.py":541
+  /* "src/gevent/greenlet.py":553
  *         """
  *         global _spawn_callbacks
  *         if _spawn_callbacks is None:  # pylint:disable=used-before-assignment             # <<<<<<<<<<<<<<
@@ -8255,21 +8338,21 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_24add_spawn_callback(PyOb
   __pyx_t_2 = (__pyx_t_1 != 0);
   if (__pyx_t_2) {
 
-    /* "src/gevent/greenlet.py":542
+    /* "src/gevent/greenlet.py":554
  *         global _spawn_callbacks
  *         if _spawn_callbacks is None:  # pylint:disable=used-before-assignment
  *             _spawn_callbacks = set()             # <<<<<<<<<<<<<<
  *         _spawn_callbacks.add(callback)
  * 
  */
-    __pyx_t_3 = PySet_New(0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 542, __pyx_L1_error)
+    __pyx_t_3 = PySet_New(0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 554, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_XGOTREF(__pyx_v_6gevent_9_greenlet__spawn_callbacks);
     __Pyx_DECREF_SET(__pyx_v_6gevent_9_greenlet__spawn_callbacks, ((PyObject*)__pyx_t_3));
     __Pyx_GIVEREF(__pyx_t_3);
     __pyx_t_3 = 0;
 
-    /* "src/gevent/greenlet.py":541
+    /* "src/gevent/greenlet.py":553
  *         """
  *         global _spawn_callbacks
  *         if _spawn_callbacks is None:  # pylint:disable=used-before-assignment             # <<<<<<<<<<<<<<
@@ -8278,7 +8361,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_24add_spawn_callback(PyOb
  */
   }
 
-  /* "src/gevent/greenlet.py":543
+  /* "src/gevent/greenlet.py":555
  *         if _spawn_callbacks is None:  # pylint:disable=used-before-assignment
  *             _spawn_callbacks = set()
  *         _spawn_callbacks.add(callback)             # <<<<<<<<<<<<<<
@@ -8287,11 +8370,11 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_24add_spawn_callback(PyOb
  */
   if (unlikely(__pyx_v_6gevent_9_greenlet__spawn_callbacks == Py_None)) {
     PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "add");
-    __PYX_ERR(0, 543, __pyx_L1_error)
+    __PYX_ERR(0, 555, __pyx_L1_error)
   }
-  __pyx_t_4 = PySet_Add(__pyx_v_6gevent_9_greenlet__spawn_callbacks, __pyx_v_callback); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(0, 543, __pyx_L1_error)
+  __pyx_t_4 = PySet_Add(__pyx_v_6gevent_9_greenlet__spawn_callbacks, __pyx_v_callback); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(0, 555, __pyx_L1_error)
 
-  /* "src/gevent/greenlet.py":527
+  /* "src/gevent/greenlet.py":539
  * 
  *     @staticmethod
  *     def add_spawn_callback(callback):             # <<<<<<<<<<<<<<
@@ -8312,7 +8395,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_24add_spawn_callback(PyOb
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":546
+/* "src/gevent/greenlet.py":558
  * 
  *     @staticmethod
  *     def remove_spawn_callback(callback):             # <<<<<<<<<<<<<<
@@ -8348,7 +8431,7 @@ static PyObject *__pyx_pw_6gevent_9_greenlet_8Greenlet_27remove_spawn_callback(C
         else goto __pyx_L5_argtuple_error;
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "remove_spawn_callback") < 0)) __PYX_ERR(0, 546, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "remove_spawn_callback") < 0)) __PYX_ERR(0, 558, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 1) {
       goto __pyx_L5_argtuple_error;
@@ -8359,7 +8442,7 @@ static PyObject *__pyx_pw_6gevent_9_greenlet_8Greenlet_27remove_spawn_callback(C
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("remove_spawn_callback", 1, 1, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 546, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("remove_spawn_callback", 1, 1, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 558, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gevent._greenlet.Greenlet.remove_spawn_callback", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -8380,7 +8463,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_26remove_spawn_callback(P
   int __pyx_t_3;
   __Pyx_RefNannySetupContext("remove_spawn_callback", 0);
 
-  /* "src/gevent/greenlet.py":557
+  /* "src/gevent/greenlet.py":569
  *         """
  *         global _spawn_callbacks
  *         if _spawn_callbacks is not None:             # <<<<<<<<<<<<<<
@@ -8391,7 +8474,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_26remove_spawn_callback(P
   __pyx_t_2 = (__pyx_t_1 != 0);
   if (__pyx_t_2) {
 
-    /* "src/gevent/greenlet.py":558
+    /* "src/gevent/greenlet.py":570
  *         global _spawn_callbacks
  *         if _spawn_callbacks is not None:
  *             _spawn_callbacks.discard(callback)             # <<<<<<<<<<<<<<
@@ -8400,11 +8483,11 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_26remove_spawn_callback(P
  */
     if (unlikely(__pyx_v_6gevent_9_greenlet__spawn_callbacks == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "discard");
-      __PYX_ERR(0, 558, __pyx_L1_error)
+      __PYX_ERR(0, 570, __pyx_L1_error)
     }
-    __pyx_t_3 = __Pyx_PySet_Discard(__pyx_v_6gevent_9_greenlet__spawn_callbacks, __pyx_v_callback); if (unlikely(__pyx_t_3 == ((int)-1))) __PYX_ERR(0, 558, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PySet_Discard(__pyx_v_6gevent_9_greenlet__spawn_callbacks, __pyx_v_callback); if (unlikely(__pyx_t_3 == ((int)-1))) __PYX_ERR(0, 570, __pyx_L1_error)
 
-    /* "src/gevent/greenlet.py":559
+    /* "src/gevent/greenlet.py":571
  *         if _spawn_callbacks is not None:
  *             _spawn_callbacks.discard(callback)
  *             if not _spawn_callbacks:             # <<<<<<<<<<<<<<
@@ -8415,7 +8498,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_26remove_spawn_callback(P
     __pyx_t_1 = ((!__pyx_t_2) != 0);
     if (__pyx_t_1) {
 
-      /* "src/gevent/greenlet.py":560
+      /* "src/gevent/greenlet.py":572
  *             _spawn_callbacks.discard(callback)
  *             if not _spawn_callbacks:
  *                 _spawn_callbacks = None             # <<<<<<<<<<<<<<
@@ -8427,7 +8510,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_26remove_spawn_callback(P
       __Pyx_DECREF_SET(__pyx_v_6gevent_9_greenlet__spawn_callbacks, ((PyObject*)Py_None));
       __Pyx_GIVEREF(Py_None);
 
-      /* "src/gevent/greenlet.py":559
+      /* "src/gevent/greenlet.py":571
  *         if _spawn_callbacks is not None:
  *             _spawn_callbacks.discard(callback)
  *             if not _spawn_callbacks:             # <<<<<<<<<<<<<<
@@ -8436,7 +8519,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_26remove_spawn_callback(P
  */
     }
 
-    /* "src/gevent/greenlet.py":557
+    /* "src/gevent/greenlet.py":569
  *         """
  *         global _spawn_callbacks
  *         if _spawn_callbacks is not None:             # <<<<<<<<<<<<<<
@@ -8445,7 +8528,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_26remove_spawn_callback(P
  */
   }
 
-  /* "src/gevent/greenlet.py":546
+  /* "src/gevent/greenlet.py":558
  * 
  *     @staticmethod
  *     def remove_spawn_callback(callback):             # <<<<<<<<<<<<<<
@@ -8465,7 +8548,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_26remove_spawn_callback(P
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":563
+/* "src/gevent/greenlet.py":575
  * 
  *     @classmethod
  *     def spawn(cls, *args, **kwargs):             # <<<<<<<<<<<<<<
@@ -8510,26 +8593,26 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_28spawn(PyTypeObject *__p
   PyObject *__pyx_t_3 = NULL;
   __Pyx_RefNannySetupContext("spawn", 0);
 
-  /* "src/gevent/greenlet.py":576
+  /* "src/gevent/greenlet.py":588
  *             instead of spawning a greenlet that will raise an uncaught TypeError.
  *         """
  *         g = cls(*args, **kwargs)             # <<<<<<<<<<<<<<
  *         g.start()
  *         return g
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_v_cls), __pyx_v_args, __pyx_v_kwargs); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 576, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_v_cls), __pyx_v_args, __pyx_v_kwargs); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 588, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_g = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "src/gevent/greenlet.py":577
+  /* "src/gevent/greenlet.py":589
  *         """
  *         g = cls(*args, **kwargs)
  *         g.start()             # <<<<<<<<<<<<<<
  *         return g
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_g, __pyx_n_s_start); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 577, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_g, __pyx_n_s_start); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 589, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -8543,12 +8626,12 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_28spawn(PyTypeObject *__p
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 577, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 589, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/gevent/greenlet.py":578
+  /* "src/gevent/greenlet.py":590
  *         g = cls(*args, **kwargs)
  *         g.start()
  *         return g             # <<<<<<<<<<<<<<
@@ -8560,7 +8643,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_28spawn(PyTypeObject *__p
   __pyx_r = __pyx_v_g;
   goto __pyx_L0;
 
-  /* "src/gevent/greenlet.py":563
+  /* "src/gevent/greenlet.py":575
  * 
  *     @classmethod
  *     def spawn(cls, *args, **kwargs):             # <<<<<<<<<<<<<<
@@ -8582,7 +8665,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_28spawn(PyTypeObject *__p
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":581
+/* "src/gevent/greenlet.py":593
  * 
  *     @classmethod
  *     def spawn_later(cls, seconds, *args, **kwargs):             # <<<<<<<<<<<<<<
@@ -8634,7 +8717,7 @@ static PyObject *__pyx_pw_6gevent_9_greenlet_8Greenlet_31spawn_later(PyObject *_
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t used_pos_args = (pos_args < 1) ? pos_args : 1;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, __pyx_v_kwargs, values, used_pos_args, "spawn_later") < 0)) __PYX_ERR(0, 581, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, __pyx_v_kwargs, values, used_pos_args, "spawn_later") < 0)) __PYX_ERR(0, 593, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) < 1) {
       goto __pyx_L5_argtuple_error;
@@ -8645,7 +8728,7 @@ static PyObject *__pyx_pw_6gevent_9_greenlet_8Greenlet_31spawn_later(PyObject *_
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("spawn_later", 0, 1, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 581, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("spawn_later", 0, 1, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 593, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_DECREF(__pyx_v_args); __pyx_v_args = 0;
   __Pyx_DECREF(__pyx_v_kwargs); __pyx_v_kwargs = 0;
@@ -8674,7 +8757,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_30spawn_later(PyTypeObjec
   PyObject *__pyx_t_6 = NULL;
   __Pyx_RefNannySetupContext("spawn_later", 0);
 
-  /* "src/gevent/greenlet.py":597
+  /* "src/gevent/greenlet.py":609
  *            when it started running.
  *         """
  *         if cls is Greenlet and not args and 'run' not in kwargs:             # <<<<<<<<<<<<<<
@@ -8695,26 +8778,26 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_30spawn_later(PyTypeObjec
     __pyx_t_1 = __pyx_t_2;
     goto __pyx_L4_bool_binop_done;
   }
-  __pyx_t_2 = (__Pyx_PyDict_ContainsTF(__pyx_n_s_run, __pyx_v_kwargs, Py_NE)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 597, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PyDict_ContainsTF(__pyx_n_s_run, __pyx_v_kwargs, Py_NE)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 609, __pyx_L1_error)
   __pyx_t_3 = (__pyx_t_2 != 0);
   __pyx_t_1 = __pyx_t_3;
   __pyx_L4_bool_binop_done:;
   if (unlikely(__pyx_t_1)) {
 
-    /* "src/gevent/greenlet.py":598
+    /* "src/gevent/greenlet.py":610
  *         """
  *         if cls is Greenlet and not args and 'run' not in kwargs:
  *             raise TypeError("")             # <<<<<<<<<<<<<<
  *         g = cls(*args, **kwargs)
  *         g.start_later(seconds)
  */
-    __pyx_t_4 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__8, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 598, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__9, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 610, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_Raise(__pyx_t_4, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __PYX_ERR(0, 598, __pyx_L1_error)
+    __PYX_ERR(0, 610, __pyx_L1_error)
 
-    /* "src/gevent/greenlet.py":597
+    /* "src/gevent/greenlet.py":609
  *            when it started running.
  *         """
  *         if cls is Greenlet and not args and 'run' not in kwargs:             # <<<<<<<<<<<<<<
@@ -8723,26 +8806,26 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_30spawn_later(PyTypeObjec
  */
   }
 
-  /* "src/gevent/greenlet.py":599
+  /* "src/gevent/greenlet.py":611
  *         if cls is Greenlet and not args and 'run' not in kwargs:
  *             raise TypeError("")
  *         g = cls(*args, **kwargs)             # <<<<<<<<<<<<<<
  *         g.start_later(seconds)
  *         return g
  */
-  __pyx_t_4 = __Pyx_PyObject_Call(((PyObject *)__pyx_v_cls), __pyx_v_args, __pyx_v_kwargs); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 599, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(((PyObject *)__pyx_v_cls), __pyx_v_args, __pyx_v_kwargs); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 611, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_v_g = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "src/gevent/greenlet.py":600
+  /* "src/gevent/greenlet.py":612
  *             raise TypeError("")
  *         g = cls(*args, **kwargs)
  *         g.start_later(seconds)             # <<<<<<<<<<<<<<
  *         return g
  * 
  */
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_g, __pyx_n_s_start_later); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 600, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_g, __pyx_n_s_start_later); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 612, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __pyx_t_6 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
@@ -8756,12 +8839,12 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_30spawn_later(PyTypeObjec
   }
   __pyx_t_4 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_5, __pyx_t_6, __pyx_v_seconds) : __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_v_seconds);
   __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-  if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 600, __pyx_L1_error)
+  if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 612, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "src/gevent/greenlet.py":601
+  /* "src/gevent/greenlet.py":613
  *         g = cls(*args, **kwargs)
  *         g.start_later(seconds)
  *         return g             # <<<<<<<<<<<<<<
@@ -8773,7 +8856,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_30spawn_later(PyTypeObjec
   __pyx_r = __pyx_v_g;
   goto __pyx_L0;
 
-  /* "src/gevent/greenlet.py":581
+  /* "src/gevent/greenlet.py":593
  * 
  *     @classmethod
  *     def spawn_later(cls, seconds, *args, **kwargs):             # <<<<<<<<<<<<<<
@@ -8795,7 +8878,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_30spawn_later(PyTypeObjec
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":603
+/* "src/gevent/greenlet.py":615
  *         return g
  * 
  *     def kill(self, exception=GreenletExit, block=True, timeout=None):             # <<<<<<<<<<<<<<
@@ -8817,7 +8900,7 @@ static PyObject *__pyx_pw_6gevent_9_greenlet_8Greenlet_33kill(PyObject *__pyx_v_
   {
     static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_exception,&__pyx_n_s_block,&__pyx_n_s_timeout,0};
     PyObject* values[3] = {0,0,0};
-    values[0] = __pyx_k__9;
+    values[0] = __pyx_k__10;
     values[1] = ((PyObject *)Py_True);
     values[2] = ((PyObject *)Py_None);
     if (unlikely(__pyx_kwds)) {
@@ -8854,7 +8937,7 @@ static PyObject *__pyx_pw_6gevent_9_greenlet_8Greenlet_33kill(PyObject *__pyx_v_
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "kill") < 0)) __PYX_ERR(0, 603, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "kill") < 0)) __PYX_ERR(0, 615, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -8874,7 +8957,7 @@ static PyObject *__pyx_pw_6gevent_9_greenlet_8Greenlet_33kill(PyObject *__pyx_v_
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("kill", 0, 0, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 603, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("kill", 0, 0, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 615, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gevent._greenlet.Greenlet.kill", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -8901,48 +8984,48 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_32kill(struct __pyx_obj_6
   struct __pyx_opt_args_6gevent_9_greenlet_8Greenlet_join __pyx_t_8;
   __Pyx_RefNannySetupContext("kill", 0);
 
-  /* "src/gevent/greenlet.py":642
+  /* "src/gevent/greenlet.py":654
  *             If this greenlet had never been switched to, killing it will prevent it from ever being switched to.
  *         """
  *         self.__cancel_start()             # <<<<<<<<<<<<<<
  * 
  *         if self.dead:
  */
-  __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->__pyx___cancel_start(__pyx_v_self); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 642, __pyx_L1_error)
+  __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->__pyx___cancel_start(__pyx_v_self); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 654, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/gevent/greenlet.py":644
+  /* "src/gevent/greenlet.py":656
  *         self.__cancel_start()
  * 
  *         if self.dead:             # <<<<<<<<<<<<<<
  *             self.__handle_death_before_start((exception,))
  *         else:
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_dead); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 644, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_dead); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 656, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 644, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 656, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   if (__pyx_t_2) {
 
-    /* "src/gevent/greenlet.py":645
+    /* "src/gevent/greenlet.py":657
  * 
  *         if self.dead:
  *             self.__handle_death_before_start((exception,))             # <<<<<<<<<<<<<<
  *         else:
  *             waiter = Waiter() if block else None # pylint:disable=undefined-variable
  */
-    __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 645, __pyx_L1_error)
+    __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 657, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_INCREF(__pyx_v_exception);
     __Pyx_GIVEREF(__pyx_v_exception);
     PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_v_exception);
-    __pyx_t_3 = ((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->__pyx___handle_death_before_start(__pyx_v_self, ((PyObject*)__pyx_t_1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 645, __pyx_L1_error)
+    __pyx_t_3 = ((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->__pyx___handle_death_before_start(__pyx_v_self, ((PyObject*)__pyx_t_1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 657, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "src/gevent/greenlet.py":644
+    /* "src/gevent/greenlet.py":656
  *         self.__cancel_start()
  * 
  *         if self.dead:             # <<<<<<<<<<<<<<
@@ -8952,7 +9035,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_32kill(struct __pyx_obj_6
     goto __pyx_L3;
   }
 
-  /* "src/gevent/greenlet.py":647
+  /* "src/gevent/greenlet.py":659
  *             self.__handle_death_before_start((exception,))
  *         else:
  *             waiter = Waiter() if block else None # pylint:disable=undefined-variable             # <<<<<<<<<<<<<<
@@ -8960,9 +9043,9 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_32kill(struct __pyx_obj_6
  *             if block:
  */
   /*else*/ {
-    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_block); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 647, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_block); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 659, __pyx_L1_error)
     if (__pyx_t_2) {
-      __pyx_t_1 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_6gevent_8__waiter_Waiter)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 647, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_6gevent_8__waiter_Waiter)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 659, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __pyx_t_3 = __pyx_t_1;
       __pyx_t_1 = 0;
@@ -8973,22 +9056,22 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_32kill(struct __pyx_obj_6
     __pyx_v_waiter = __pyx_t_3;
     __pyx_t_3 = 0;
 
-    /* "src/gevent/greenlet.py":648
+    /* "src/gevent/greenlet.py":660
  *         else:
  *             waiter = Waiter() if block else None # pylint:disable=undefined-variable
  *             self.parent.loop.run_callback(_kill, self, exception, waiter)             # <<<<<<<<<<<<<<
  *             if block:
  *                 waiter.get()
  */
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_parent); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 648, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_parent); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 660, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_loop); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 648, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_loop); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 660, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_run_callback); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 648, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_run_callback); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 660, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_kill); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 648, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_kill); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 660, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_5 = NULL;
     __pyx_t_6 = 0;
@@ -9005,7 +9088,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_32kill(struct __pyx_obj_6
     #if CYTHON_FAST_PYCALL
     if (PyFunction_Check(__pyx_t_1)) {
       PyObject *__pyx_temp[5] = {__pyx_t_5, __pyx_t_4, ((PyObject *)__pyx_v_self), __pyx_v_exception, __pyx_v_waiter};
-      __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_6, 4+__pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 648, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_6, 4+__pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 660, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -9014,14 +9097,14 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_32kill(struct __pyx_obj_6
     #if CYTHON_FAST_PYCCALL
     if (__Pyx_PyFastCFunction_Check(__pyx_t_1)) {
       PyObject *__pyx_temp[5] = {__pyx_t_5, __pyx_t_4, ((PyObject *)__pyx_v_self), __pyx_v_exception, __pyx_v_waiter};
-      __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_6, 4+__pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 648, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_6, 4+__pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 660, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     } else
     #endif
     {
-      __pyx_t_7 = PyTuple_New(4+__pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 648, __pyx_L1_error)
+      __pyx_t_7 = PyTuple_New(4+__pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 660, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       if (__pyx_t_5) {
         __Pyx_GIVEREF(__pyx_t_5); PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_5); __pyx_t_5 = NULL;
@@ -9038,31 +9121,31 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_32kill(struct __pyx_obj_6
       __Pyx_GIVEREF(__pyx_v_waiter);
       PyTuple_SET_ITEM(__pyx_t_7, 3+__pyx_t_6, __pyx_v_waiter);
       __pyx_t_4 = 0;
-      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_7, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 648, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_7, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 660, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     }
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "src/gevent/greenlet.py":649
+    /* "src/gevent/greenlet.py":661
  *             waiter = Waiter() if block else None # pylint:disable=undefined-variable
  *             self.parent.loop.run_callback(_kill, self, exception, waiter)
  *             if block:             # <<<<<<<<<<<<<<
  *                 waiter.get()
  *                 self.join(timeout)
  */
-    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_block); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 649, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_block); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 661, __pyx_L1_error)
     if (__pyx_t_2) {
 
-      /* "src/gevent/greenlet.py":650
+      /* "src/gevent/greenlet.py":662
  *             self.parent.loop.run_callback(_kill, self, exception, waiter)
  *             if block:
  *                 waiter.get()             # <<<<<<<<<<<<<<
  *                 self.join(timeout)
  *         # it should be OK to use kill() in finally or kill a greenlet from more than one place;
  */
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_waiter, __pyx_n_s_get_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 650, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_waiter, __pyx_n_s_get_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 662, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __pyx_t_7 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_1))) {
@@ -9076,12 +9159,12 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_32kill(struct __pyx_obj_6
       }
       __pyx_t_3 = (__pyx_t_7) ? __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_7) : __Pyx_PyObject_CallNoArg(__pyx_t_1);
       __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 650, __pyx_L1_error)
+      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 662, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-      /* "src/gevent/greenlet.py":651
+      /* "src/gevent/greenlet.py":663
  *             if block:
  *                 waiter.get()
  *                 self.join(timeout)             # <<<<<<<<<<<<<<
@@ -9090,11 +9173,11 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_32kill(struct __pyx_obj_6
  */
       __pyx_t_8.__pyx_n = 1;
       __pyx_t_8.timeout = __pyx_v_timeout;
-      __pyx_t_3 = ((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->join(__pyx_v_self, 0, &__pyx_t_8); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 651, __pyx_L1_error)
+      __pyx_t_3 = ((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->join(__pyx_v_self, 0, &__pyx_t_8); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 663, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-      /* "src/gevent/greenlet.py":649
+      /* "src/gevent/greenlet.py":661
  *             waiter = Waiter() if block else None # pylint:disable=undefined-variable
  *             self.parent.loop.run_callback(_kill, self, exception, waiter)
  *             if block:             # <<<<<<<<<<<<<<
@@ -9105,7 +9188,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_32kill(struct __pyx_obj_6
   }
   __pyx_L3:;
 
-  /* "src/gevent/greenlet.py":603
+  /* "src/gevent/greenlet.py":615
  *         return g
  * 
  *     def kill(self, exception=GreenletExit, block=True, timeout=None):             # <<<<<<<<<<<<<<
@@ -9131,7 +9214,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_32kill(struct __pyx_obj_6
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":655
+/* "src/gevent/greenlet.py":667
  *         # thus it should not raise when the greenlet is already killed (= not started)
  * 
  *     def get(self, block=True, timeout=None):             # <<<<<<<<<<<<<<
@@ -9180,7 +9263,7 @@ static PyObject *__pyx_pw_6gevent_9_greenlet_8Greenlet_35get(PyObject *__pyx_v_s
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "get") < 0)) __PYX_ERR(0, 655, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "get") < 0)) __PYX_ERR(0, 667, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -9197,7 +9280,7 @@ static PyObject *__pyx_pw_6gevent_9_greenlet_8Greenlet_35get(PyObject *__pyx_v_s
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("get", 0, 0, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 655, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("get", 0, 0, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 667, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gevent._greenlet.Greenlet.get", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -9238,7 +9321,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_34get(struct __pyx_obj_6g
   PyObject *__pyx_t_20 = NULL;
   __Pyx_RefNannySetupContext("get", 0);
 
-  /* "src/gevent/greenlet.py":668
+  /* "src/gevent/greenlet.py":680
  *         raised.
  *         """
  *         if self.ready():             # <<<<<<<<<<<<<<
@@ -9248,7 +9331,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_34get(struct __pyx_obj_6g
   __pyx_t_1 = (((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->ready(__pyx_v_self, 0) != 0);
   if (__pyx_t_1) {
 
-    /* "src/gevent/greenlet.py":669
+    /* "src/gevent/greenlet.py":681
  *         """
  *         if self.ready():
  *             if self.successful():             # <<<<<<<<<<<<<<
@@ -9258,7 +9341,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_34get(struct __pyx_obj_6g
     __pyx_t_1 = (((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->successful(__pyx_v_self, 0) != 0);
     if (__pyx_t_1) {
 
-      /* "src/gevent/greenlet.py":670
+      /* "src/gevent/greenlet.py":682
  *         if self.ready():
  *             if self.successful():
  *                 return self.value             # <<<<<<<<<<<<<<
@@ -9270,7 +9353,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_34get(struct __pyx_obj_6g
       __pyx_r = __pyx_v_self->value;
       goto __pyx_L0;
 
-      /* "src/gevent/greenlet.py":669
+      /* "src/gevent/greenlet.py":681
  *         """
  *         if self.ready():
  *             if self.successful():             # <<<<<<<<<<<<<<
@@ -9279,14 +9362,14 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_34get(struct __pyx_obj_6g
  */
     }
 
-    /* "src/gevent/greenlet.py":671
+    /* "src/gevent/greenlet.py":683
  *             if self.successful():
  *                 return self.value
  *             self._raise_exception()             # <<<<<<<<<<<<<<
  *         if not block:
  *             raise Timeout()
  */
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_raise_exception); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 671, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_raise_exception); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 683, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_t_4 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
@@ -9300,12 +9383,12 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_34get(struct __pyx_obj_6g
     }
     __pyx_t_2 = (__pyx_t_4) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 671, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 683, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "src/gevent/greenlet.py":668
+    /* "src/gevent/greenlet.py":680
  *         raised.
  *         """
  *         if self.ready():             # <<<<<<<<<<<<<<
@@ -9314,18 +9397,18 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_34get(struct __pyx_obj_6g
  */
   }
 
-  /* "src/gevent/greenlet.py":672
+  /* "src/gevent/greenlet.py":684
  *                 return self.value
  *             self._raise_exception()
  *         if not block:             # <<<<<<<<<<<<<<
  *             raise Timeout()
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_block); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 672, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_block); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 684, __pyx_L1_error)
   __pyx_t_5 = ((!__pyx_t_1) != 0);
   if (unlikely(__pyx_t_5)) {
 
-    /* "src/gevent/greenlet.py":673
+    /* "src/gevent/greenlet.py":685
  *             self._raise_exception()
  *         if not block:
  *             raise Timeout()             # <<<<<<<<<<<<<<
@@ -9345,14 +9428,14 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_34get(struct __pyx_obj_6g
     }
     __pyx_t_2 = (__pyx_t_4) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 673, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 685, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_ERR(0, 673, __pyx_L1_error)
+    __PYX_ERR(0, 685, __pyx_L1_error)
 
-    /* "src/gevent/greenlet.py":672
+    /* "src/gevent/greenlet.py":684
  *                 return self.value
  *             self._raise_exception()
  *         if not block:             # <<<<<<<<<<<<<<
@@ -9361,33 +9444,33 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_34get(struct __pyx_obj_6g
  */
   }
 
-  /* "src/gevent/greenlet.py":675
+  /* "src/gevent/greenlet.py":687
  *             raise Timeout()
  * 
  *         switch = getcurrent().switch # pylint:disable=undefined-variable             # <<<<<<<<<<<<<<
  *         self.rawlink(switch)
  *         try:
  */
-  __pyx_t_2 = ((PyObject *)__pyx_f_6gevent_9_greenlet_getcurrent()); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 675, __pyx_L1_error)
+  __pyx_t_2 = ((PyObject *)__pyx_f_6gevent_9_greenlet_getcurrent()); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 687, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_switch); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 675, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_switch); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 687, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_switch = __pyx_t_3;
   __pyx_t_3 = 0;
 
-  /* "src/gevent/greenlet.py":676
+  /* "src/gevent/greenlet.py":688
  * 
  *         switch = getcurrent().switch # pylint:disable=undefined-variable
  *         self.rawlink(switch)             # <<<<<<<<<<<<<<
  *         try:
  *             t = Timeout._start_new_or_dummy(timeout)
  */
-  __pyx_t_3 = ((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->rawlink(__pyx_v_self, __pyx_v_switch, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 676, __pyx_L1_error)
+  __pyx_t_3 = ((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->rawlink(__pyx_v_self, __pyx_v_switch, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 688, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "src/gevent/greenlet.py":677
+  /* "src/gevent/greenlet.py":689
  *         switch = getcurrent().switch # pylint:disable=undefined-variable
  *         self.rawlink(switch)
  *         try:             # <<<<<<<<<<<<<<
@@ -9403,14 +9486,14 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_34get(struct __pyx_obj_6g
     __Pyx_XGOTREF(__pyx_t_8);
     /*try:*/ {
 
-      /* "src/gevent/greenlet.py":678
+      /* "src/gevent/greenlet.py":690
  *         self.rawlink(switch)
  *         try:
  *             t = Timeout._start_new_or_dummy(timeout)             # <<<<<<<<<<<<<<
  *             try:
  *                 result = self.parent.switch()
  */
-      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_6gevent_9_greenlet_Timeout, __pyx_n_s_start_new_or_dummy); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 678, __pyx_L6_error)
+      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_6gevent_9_greenlet_Timeout, __pyx_n_s_start_new_or_dummy); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 690, __pyx_L6_error)
       __Pyx_GOTREF(__pyx_t_2);
       __pyx_t_4 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -9424,13 +9507,13 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_34get(struct __pyx_obj_6g
       }
       __pyx_t_3 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_4, __pyx_v_timeout) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_timeout);
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 678, __pyx_L6_error)
+      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 690, __pyx_L6_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __pyx_v_t = __pyx_t_3;
       __pyx_t_3 = 0;
 
-      /* "src/gevent/greenlet.py":679
+      /* "src/gevent/greenlet.py":691
  *         try:
  *             t = Timeout._start_new_or_dummy(timeout)
  *             try:             # <<<<<<<<<<<<<<
@@ -9439,16 +9522,16 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_34get(struct __pyx_obj_6g
  */
       /*try:*/ {
 
-        /* "src/gevent/greenlet.py":680
+        /* "src/gevent/greenlet.py":692
  *             t = Timeout._start_new_or_dummy(timeout)
  *             try:
  *                 result = self.parent.switch()             # <<<<<<<<<<<<<<
  *                 if result is not self:
  *                     raise InvalidSwitchError('Invalid switch into Greenlet.get(): %r' % (result, ))
  */
-        __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_parent); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 680, __pyx_L13_error)
+        __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_parent); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 692, __pyx_L13_error)
         __Pyx_GOTREF(__pyx_t_2);
-        __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_switch); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 680, __pyx_L13_error)
+        __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_switch); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 692, __pyx_L13_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __pyx_t_2 = NULL;
@@ -9463,13 +9546,13 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_34get(struct __pyx_obj_6g
         }
         __pyx_t_3 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_4);
         __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-        if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 680, __pyx_L13_error)
+        if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 692, __pyx_L13_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
         __pyx_v_result = __pyx_t_3;
         __pyx_t_3 = 0;
 
-        /* "src/gevent/greenlet.py":681
+        /* "src/gevent/greenlet.py":693
  *             try:
  *                 result = self.parent.switch()
  *                 if result is not self:             # <<<<<<<<<<<<<<
@@ -9480,19 +9563,19 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_34get(struct __pyx_obj_6g
         __pyx_t_1 = (__pyx_t_5 != 0);
         if (unlikely(__pyx_t_1)) {
 
-          /* "src/gevent/greenlet.py":682
+          /* "src/gevent/greenlet.py":694
  *                 result = self.parent.switch()
  *                 if result is not self:
  *                     raise InvalidSwitchError('Invalid switch into Greenlet.get(): %r' % (result, ))             # <<<<<<<<<<<<<<
  *             finally:
  *                 t.cancel()
  */
-          __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 682, __pyx_L13_error)
+          __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 694, __pyx_L13_error)
           __Pyx_GOTREF(__pyx_t_4);
           __Pyx_INCREF(__pyx_v_result);
           __Pyx_GIVEREF(__pyx_v_result);
           PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_v_result);
-          __pyx_t_2 = __Pyx_PyString_Format(__pyx_kp_s_Invalid_switch_into_Greenlet_get, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 682, __pyx_L13_error)
+          __pyx_t_2 = __Pyx_PyString_Format(__pyx_kp_s_Invalid_switch_into_Greenlet_get, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 694, __pyx_L13_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_INCREF(__pyx_v_6gevent_9_greenlet_InvalidSwitchError);
@@ -9509,14 +9592,14 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_34get(struct __pyx_obj_6g
           __pyx_t_3 = (__pyx_t_9) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_9, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_2);
           __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-          if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 682, __pyx_L13_error)
+          if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 694, __pyx_L13_error)
           __Pyx_GOTREF(__pyx_t_3);
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_Raise(__pyx_t_3, 0, 0, 0);
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-          __PYX_ERR(0, 682, __pyx_L13_error)
+          __PYX_ERR(0, 694, __pyx_L13_error)
 
-          /* "src/gevent/greenlet.py":681
+          /* "src/gevent/greenlet.py":693
  *             try:
  *                 result = self.parent.switch()
  *                 if result is not self:             # <<<<<<<<<<<<<<
@@ -9526,7 +9609,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_34get(struct __pyx_obj_6g
         }
       }
 
-      /* "src/gevent/greenlet.py":684
+      /* "src/gevent/greenlet.py":696
  *                     raise InvalidSwitchError('Invalid switch into Greenlet.get(): %r' % (result, ))
  *             finally:
  *                 t.cancel()             # <<<<<<<<<<<<<<
@@ -9535,7 +9618,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_34get(struct __pyx_obj_6g
  */
       /*finally:*/ {
         /*normal exit:*/{
-          __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_t, __pyx_n_s_cancel); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 684, __pyx_L6_error)
+          __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_t, __pyx_n_s_cancel); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 696, __pyx_L6_error)
           __Pyx_GOTREF(__pyx_t_4);
           __pyx_t_2 = NULL;
           if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
@@ -9549,7 +9632,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_34get(struct __pyx_obj_6g
           }
           __pyx_t_3 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_4);
           __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-          if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 684, __pyx_L6_error)
+          if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 696, __pyx_L6_error)
           __Pyx_GOTREF(__pyx_t_3);
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -9574,7 +9657,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_34get(struct __pyx_obj_6g
           __Pyx_XGOTREF(__pyx_t_18);
           __pyx_t_10 = __pyx_lineno; __pyx_t_11 = __pyx_clineno; __pyx_t_12 = __pyx_filename;
           {
-            __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_t, __pyx_n_s_cancel); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 684, __pyx_L17_error)
+            __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_t, __pyx_n_s_cancel); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 696, __pyx_L17_error)
             __Pyx_GOTREF(__pyx_t_4);
             __pyx_t_2 = NULL;
             if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
@@ -9588,7 +9671,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_34get(struct __pyx_obj_6g
             }
             __pyx_t_3 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_4);
             __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-            if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 684, __pyx_L17_error)
+            if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 696, __pyx_L17_error)
             __Pyx_GOTREF(__pyx_t_3);
             __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
             __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -9622,7 +9705,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_34get(struct __pyx_obj_6g
         __pyx_L14:;
       }
 
-      /* "src/gevent/greenlet.py":677
+      /* "src/gevent/greenlet.py":689
  *         switch = getcurrent().switch # pylint:disable=undefined-variable
  *         self.rawlink(switch)
  *         try:             # <<<<<<<<<<<<<<
@@ -9640,7 +9723,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_34get(struct __pyx_obj_6g
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "src/gevent/greenlet.py":685
+    /* "src/gevent/greenlet.py":697
  *             finally:
  *                 t.cancel()
  *         except:             # <<<<<<<<<<<<<<
@@ -9649,19 +9732,19 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_34get(struct __pyx_obj_6g
  */
     /*except:*/ {
       __Pyx_AddTraceback("gevent._greenlet.Greenlet.get", __pyx_clineno, __pyx_lineno, __pyx_filename);
-      if (__Pyx_GetException(&__pyx_t_3, &__pyx_t_4, &__pyx_t_2) < 0) __PYX_ERR(0, 685, __pyx_L8_except_error)
+      if (__Pyx_GetException(&__pyx_t_3, &__pyx_t_4, &__pyx_t_2) < 0) __PYX_ERR(0, 697, __pyx_L8_except_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_GOTREF(__pyx_t_2);
 
-      /* "src/gevent/greenlet.py":691
+      /* "src/gevent/greenlet.py":703
  *             # Note, however, that if "Invalid switch" assert was removed and invalid switch
  *             # did happen, the link would remain, causing another invalid switch later in this greenlet.
  *             self.unlink(switch)             # <<<<<<<<<<<<<<
  *             raise
  * 
  */
-      __pyx_t_19 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_unlink); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 691, __pyx_L8_except_error)
+      __pyx_t_19 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_unlink); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 703, __pyx_L8_except_error)
       __Pyx_GOTREF(__pyx_t_19);
       __pyx_t_20 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_19))) {
@@ -9675,12 +9758,12 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_34get(struct __pyx_obj_6g
       }
       __pyx_t_9 = (__pyx_t_20) ? __Pyx_PyObject_Call2Args(__pyx_t_19, __pyx_t_20, __pyx_v_switch) : __Pyx_PyObject_CallOneArg(__pyx_t_19, __pyx_v_switch);
       __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
-      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 691, __pyx_L8_except_error)
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 703, __pyx_L8_except_error)
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-      /* "src/gevent/greenlet.py":692
+      /* "src/gevent/greenlet.py":704
  *             # did happen, the link would remain, causing another invalid switch later in this greenlet.
  *             self.unlink(switch)
  *             raise             # <<<<<<<<<<<<<<
@@ -9692,11 +9775,11 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_34get(struct __pyx_obj_6g
       __Pyx_XGIVEREF(__pyx_t_2);
       __Pyx_ErrRestoreWithState(__pyx_t_3, __pyx_t_4, __pyx_t_2);
       __pyx_t_3 = 0; __pyx_t_4 = 0; __pyx_t_2 = 0; 
-      __PYX_ERR(0, 692, __pyx_L8_except_error)
+      __PYX_ERR(0, 704, __pyx_L8_except_error)
     }
     __pyx_L8_except_error:;
 
-    /* "src/gevent/greenlet.py":677
+    /* "src/gevent/greenlet.py":689
  *         switch = getcurrent().switch # pylint:disable=undefined-variable
  *         self.rawlink(switch)
  *         try:             # <<<<<<<<<<<<<<
@@ -9711,7 +9794,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_34get(struct __pyx_obj_6g
     __pyx_L11_try_end:;
   }
 
-  /* "src/gevent/greenlet.py":694
+  /* "src/gevent/greenlet.py":706
  *             raise
  * 
  *         if self.ready():             # <<<<<<<<<<<<<<
@@ -9721,7 +9804,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_34get(struct __pyx_obj_6g
   __pyx_t_1 = (((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->ready(__pyx_v_self, 0) != 0);
   if (__pyx_t_1) {
 
-    /* "src/gevent/greenlet.py":695
+    /* "src/gevent/greenlet.py":707
  * 
  *         if self.ready():
  *             if self.successful():             # <<<<<<<<<<<<<<
@@ -9731,7 +9814,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_34get(struct __pyx_obj_6g
     __pyx_t_1 = (((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->successful(__pyx_v_self, 0) != 0);
     if (__pyx_t_1) {
 
-      /* "src/gevent/greenlet.py":696
+      /* "src/gevent/greenlet.py":708
  *         if self.ready():
  *             if self.successful():
  *                 return self.value             # <<<<<<<<<<<<<<
@@ -9743,7 +9826,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_34get(struct __pyx_obj_6g
       __pyx_r = __pyx_v_self->value;
       goto __pyx_L0;
 
-      /* "src/gevent/greenlet.py":695
+      /* "src/gevent/greenlet.py":707
  * 
  *         if self.ready():
  *             if self.successful():             # <<<<<<<<<<<<<<
@@ -9752,14 +9835,14 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_34get(struct __pyx_obj_6g
  */
     }
 
-    /* "src/gevent/greenlet.py":697
+    /* "src/gevent/greenlet.py":709
  *             if self.successful():
  *                 return self.value
  *             self._raise_exception()             # <<<<<<<<<<<<<<
  * 
  *     def join(self, timeout=None):
  */
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_raise_exception); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 697, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_raise_exception); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 709, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_3 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
@@ -9773,12 +9856,12 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_34get(struct __pyx_obj_6g
     }
     __pyx_t_2 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_4);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 697, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 709, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "src/gevent/greenlet.py":694
+    /* "src/gevent/greenlet.py":706
  *             raise
  * 
  *         if self.ready():             # <<<<<<<<<<<<<<
@@ -9787,7 +9870,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_34get(struct __pyx_obj_6g
  */
   }
 
-  /* "src/gevent/greenlet.py":655
+  /* "src/gevent/greenlet.py":667
  *         # thus it should not raise when the greenlet is already killed (= not started)
  * 
  *     def get(self, block=True, timeout=None):             # <<<<<<<<<<<<<<
@@ -9816,7 +9899,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_34get(struct __pyx_obj_6g
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":699
+/* "src/gevent/greenlet.py":711
  *             self._raise_exception()
  * 
  *     def join(self, timeout=None):             # <<<<<<<<<<<<<<
@@ -9870,7 +9953,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_join(struct __pyx_obj_6gev
     else {
       PY_UINT64_T type_dict_guard = (likely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dict)) ? __PYX_GET_DICT_VERSION(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dict) : 0;
       #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_join); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 699, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_join); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 711, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)(void*)__pyx_pw_6gevent_9_greenlet_8Greenlet_37join)) {
         __Pyx_XDECREF(__pyx_r);
@@ -9887,7 +9970,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_join(struct __pyx_obj_6gev
         }
         __pyx_t_2 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_4, __pyx_v_timeout) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_timeout);
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 699, __pyx_L1_error)
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 711, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
         __pyx_r = __pyx_t_2;
@@ -9908,7 +9991,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_join(struct __pyx_obj_6gev
     #endif
   }
 
-  /* "src/gevent/greenlet.py":706
+  /* "src/gevent/greenlet.py":718
  *         ``None`` regardless.
  *         """
  *         if self.ready():             # <<<<<<<<<<<<<<
@@ -9918,7 +10001,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_join(struct __pyx_obj_6gev
   __pyx_t_5 = (((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->ready(__pyx_v_self, 0) != 0);
   if (__pyx_t_5) {
 
-    /* "src/gevent/greenlet.py":707
+    /* "src/gevent/greenlet.py":719
  *         """
  *         if self.ready():
  *             return             # <<<<<<<<<<<<<<
@@ -9929,7 +10012,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_join(struct __pyx_obj_6gev
     __pyx_r = Py_None; __Pyx_INCREF(Py_None);
     goto __pyx_L0;
 
-    /* "src/gevent/greenlet.py":706
+    /* "src/gevent/greenlet.py":718
  *         ``None`` regardless.
  *         """
  *         if self.ready():             # <<<<<<<<<<<<<<
@@ -9938,33 +10021,33 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_join(struct __pyx_obj_6gev
  */
   }
 
-  /* "src/gevent/greenlet.py":709
+  /* "src/gevent/greenlet.py":721
  *             return
  * 
  *         switch = getcurrent().switch # pylint:disable=undefined-variable             # <<<<<<<<<<<<<<
  *         self.rawlink(switch)
  *         try:
  */
-  __pyx_t_1 = ((PyObject *)__pyx_f_6gevent_9_greenlet_getcurrent()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 709, __pyx_L1_error)
+  __pyx_t_1 = ((PyObject *)__pyx_f_6gevent_9_greenlet_getcurrent()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 721, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_switch); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 709, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_switch); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 721, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_switch = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "src/gevent/greenlet.py":710
+  /* "src/gevent/greenlet.py":722
  * 
  *         switch = getcurrent().switch # pylint:disable=undefined-variable
  *         self.rawlink(switch)             # <<<<<<<<<<<<<<
  *         try:
  *             t = Timeout._start_new_or_dummy(timeout)
  */
-  __pyx_t_2 = ((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->rawlink(__pyx_v_self, __pyx_v_switch, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 710, __pyx_L1_error)
+  __pyx_t_2 = ((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->rawlink(__pyx_v_self, __pyx_v_switch, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 722, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "src/gevent/greenlet.py":711
+  /* "src/gevent/greenlet.py":723
  *         switch = getcurrent().switch # pylint:disable=undefined-variable
  *         self.rawlink(switch)
  *         try:             # <<<<<<<<<<<<<<
@@ -9980,14 +10063,14 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_join(struct __pyx_obj_6gev
     __Pyx_XGOTREF(__pyx_t_8);
     /*try:*/ {
 
-      /* "src/gevent/greenlet.py":712
+      /* "src/gevent/greenlet.py":724
  *         self.rawlink(switch)
  *         try:
  *             t = Timeout._start_new_or_dummy(timeout)             # <<<<<<<<<<<<<<
  *             try:
  *                 result = self.parent.switch()
  */
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_6gevent_9_greenlet_Timeout, __pyx_n_s_start_new_or_dummy); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 712, __pyx_L4_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_6gevent_9_greenlet_Timeout, __pyx_n_s_start_new_or_dummy); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 724, __pyx_L4_error)
       __Pyx_GOTREF(__pyx_t_1);
       __pyx_t_3 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_1))) {
@@ -10001,13 +10084,13 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_join(struct __pyx_obj_6gev
       }
       __pyx_t_2 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_1, __pyx_t_3, __pyx_v_timeout) : __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_v_timeout);
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 712, __pyx_L4_error)
+      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 724, __pyx_L4_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __pyx_v_t = __pyx_t_2;
       __pyx_t_2 = 0;
 
-      /* "src/gevent/greenlet.py":713
+      /* "src/gevent/greenlet.py":725
  *         try:
  *             t = Timeout._start_new_or_dummy(timeout)
  *             try:             # <<<<<<<<<<<<<<
@@ -10016,16 +10099,16 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_join(struct __pyx_obj_6gev
  */
       /*try:*/ {
 
-        /* "src/gevent/greenlet.py":714
+        /* "src/gevent/greenlet.py":726
  *             t = Timeout._start_new_or_dummy(timeout)
  *             try:
  *                 result = self.parent.switch()             # <<<<<<<<<<<<<<
  *                 if result is not self:
  *                     raise InvalidSwitchError('Invalid switch into Greenlet.join(): %r' % (result, ))
  */
-        __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_parent); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 714, __pyx_L11_error)
+        __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_parent); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 726, __pyx_L11_error)
         __Pyx_GOTREF(__pyx_t_1);
-        __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_switch); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 714, __pyx_L11_error)
+        __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_switch); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 726, __pyx_L11_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
         __pyx_t_1 = NULL;
@@ -10040,13 +10123,13 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_join(struct __pyx_obj_6gev
         }
         __pyx_t_2 = (__pyx_t_1) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_1) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
         __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 714, __pyx_L11_error)
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 726, __pyx_L11_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
         __pyx_v_result = __pyx_t_2;
         __pyx_t_2 = 0;
 
-        /* "src/gevent/greenlet.py":715
+        /* "src/gevent/greenlet.py":727
  *             try:
  *                 result = self.parent.switch()
  *                 if result is not self:             # <<<<<<<<<<<<<<
@@ -10057,19 +10140,19 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_join(struct __pyx_obj_6gev
         __pyx_t_9 = (__pyx_t_5 != 0);
         if (unlikely(__pyx_t_9)) {
 
-          /* "src/gevent/greenlet.py":716
+          /* "src/gevent/greenlet.py":728
  *                 result = self.parent.switch()
  *                 if result is not self:
  *                     raise InvalidSwitchError('Invalid switch into Greenlet.join(): %r' % (result, ))             # <<<<<<<<<<<<<<
  *             finally:
  *                 t.cancel()
  */
-          __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 716, __pyx_L11_error)
+          __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 728, __pyx_L11_error)
           __Pyx_GOTREF(__pyx_t_3);
           __Pyx_INCREF(__pyx_v_result);
           __Pyx_GIVEREF(__pyx_v_result);
           PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_v_result);
-          __pyx_t_1 = __Pyx_PyString_Format(__pyx_kp_s_Invalid_switch_into_Greenlet_joi, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 716, __pyx_L11_error)
+          __pyx_t_1 = __Pyx_PyString_Format(__pyx_kp_s_Invalid_switch_into_Greenlet_joi, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 728, __pyx_L11_error)
           __Pyx_GOTREF(__pyx_t_1);
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
           __Pyx_INCREF(__pyx_v_6gevent_9_greenlet_InvalidSwitchError);
@@ -10086,14 +10169,14 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_join(struct __pyx_obj_6gev
           __pyx_t_2 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_4, __pyx_t_1) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_1);
           __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 716, __pyx_L11_error)
+          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 728, __pyx_L11_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
           __Pyx_Raise(__pyx_t_2, 0, 0, 0);
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-          __PYX_ERR(0, 716, __pyx_L11_error)
+          __PYX_ERR(0, 728, __pyx_L11_error)
 
-          /* "src/gevent/greenlet.py":715
+          /* "src/gevent/greenlet.py":727
  *             try:
  *                 result = self.parent.switch()
  *                 if result is not self:             # <<<<<<<<<<<<<<
@@ -10103,7 +10186,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_join(struct __pyx_obj_6gev
         }
       }
 
-      /* "src/gevent/greenlet.py":718
+      /* "src/gevent/greenlet.py":730
  *                     raise InvalidSwitchError('Invalid switch into Greenlet.join(): %r' % (result, ))
  *             finally:
  *                 t.cancel()             # <<<<<<<<<<<<<<
@@ -10112,7 +10195,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_join(struct __pyx_obj_6gev
  */
       /*finally:*/ {
         /*normal exit:*/{
-          __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_t, __pyx_n_s_cancel); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 718, __pyx_L4_error)
+          __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_t, __pyx_n_s_cancel); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 730, __pyx_L4_error)
           __Pyx_GOTREF(__pyx_t_3);
           __pyx_t_1 = NULL;
           if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
@@ -10126,7 +10209,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_join(struct __pyx_obj_6gev
           }
           __pyx_t_2 = (__pyx_t_1) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_1) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
           __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 718, __pyx_L4_error)
+          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 730, __pyx_L4_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -10151,7 +10234,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_join(struct __pyx_obj_6gev
           __Pyx_XGOTREF(__pyx_t_18);
           __pyx_t_10 = __pyx_lineno; __pyx_t_11 = __pyx_clineno; __pyx_t_12 = __pyx_filename;
           {
-            __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_t, __pyx_n_s_cancel); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 718, __pyx_L15_error)
+            __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_t, __pyx_n_s_cancel); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 730, __pyx_L15_error)
             __Pyx_GOTREF(__pyx_t_3);
             __pyx_t_1 = NULL;
             if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
@@ -10165,7 +10248,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_join(struct __pyx_obj_6gev
             }
             __pyx_t_2 = (__pyx_t_1) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_1) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
             __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-            if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 718, __pyx_L15_error)
+            if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 730, __pyx_L15_error)
             __Pyx_GOTREF(__pyx_t_2);
             __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
             __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -10199,7 +10282,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_join(struct __pyx_obj_6gev
         __pyx_L12:;
       }
 
-      /* "src/gevent/greenlet.py":711
+      /* "src/gevent/greenlet.py":723
  *         switch = getcurrent().switch # pylint:disable=undefined-variable
  *         self.rawlink(switch)
  *         try:             # <<<<<<<<<<<<<<
@@ -10217,7 +10300,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_join(struct __pyx_obj_6gev
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "src/gevent/greenlet.py":719
+    /* "src/gevent/greenlet.py":731
  *             finally:
  *                 t.cancel()
  *         except Timeout as ex:             # <<<<<<<<<<<<<<
@@ -10227,7 +10310,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_join(struct __pyx_obj_6gev
     __pyx_t_11 = __Pyx_PyErr_ExceptionMatches(__pyx_v_6gevent_9_greenlet_Timeout);
     if (__pyx_t_11) {
       __Pyx_AddTraceback("gevent._greenlet.Greenlet.join", __pyx_clineno, __pyx_lineno, __pyx_filename);
-      if (__Pyx_GetException(&__pyx_t_2, &__pyx_t_3, &__pyx_t_1) < 0) __PYX_ERR(0, 719, __pyx_L6_except_error)
+      if (__Pyx_GetException(&__pyx_t_2, &__pyx_t_3, &__pyx_t_1) < 0) __PYX_ERR(0, 731, __pyx_L6_except_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_GOTREF(__pyx_t_1);
@@ -10235,14 +10318,14 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_join(struct __pyx_obj_6gev
       __pyx_v_ex = __pyx_t_3;
       /*try:*/ {
 
-        /* "src/gevent/greenlet.py":720
+        /* "src/gevent/greenlet.py":732
  *                 t.cancel()
  *         except Timeout as ex:
  *             self.unlink(switch)             # <<<<<<<<<<<<<<
  *             if ex is not t:
  *                 raise
  */
-        __pyx_t_19 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_unlink); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 720, __pyx_L21_error)
+        __pyx_t_19 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_unlink); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 732, __pyx_L21_error)
         __Pyx_GOTREF(__pyx_t_19);
         __pyx_t_20 = NULL;
         if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_19))) {
@@ -10256,24 +10339,24 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_join(struct __pyx_obj_6gev
         }
         __pyx_t_4 = (__pyx_t_20) ? __Pyx_PyObject_Call2Args(__pyx_t_19, __pyx_t_20, __pyx_v_switch) : __Pyx_PyObject_CallOneArg(__pyx_t_19, __pyx_v_switch);
         __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
-        if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 720, __pyx_L21_error)
+        if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 732, __pyx_L21_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-        /* "src/gevent/greenlet.py":721
+        /* "src/gevent/greenlet.py":733
  *         except Timeout as ex:
  *             self.unlink(switch)
  *             if ex is not t:             # <<<<<<<<<<<<<<
  *                 raise
  *         except:
  */
-        if (unlikely(!__pyx_v_t)) { __Pyx_RaiseUnboundLocalError("t"); __PYX_ERR(0, 721, __pyx_L21_error) }
+        if (unlikely(!__pyx_v_t)) { __Pyx_RaiseUnboundLocalError("t"); __PYX_ERR(0, 733, __pyx_L21_error) }
         __pyx_t_9 = (__pyx_v_ex != __pyx_v_t);
         __pyx_t_5 = (__pyx_t_9 != 0);
         if (unlikely(__pyx_t_5)) {
 
-          /* "src/gevent/greenlet.py":722
+          /* "src/gevent/greenlet.py":734
  *             self.unlink(switch)
  *             if ex is not t:
  *                 raise             # <<<<<<<<<<<<<<
@@ -10285,9 +10368,9 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_join(struct __pyx_obj_6gev
           __Pyx_XGIVEREF(__pyx_t_1);
           __Pyx_ErrRestoreWithState(__pyx_t_2, __pyx_t_3, __pyx_t_1);
           __pyx_t_2 = 0; __pyx_t_3 = 0; __pyx_t_1 = 0; 
-          __PYX_ERR(0, 722, __pyx_L21_error)
+          __PYX_ERR(0, 734, __pyx_L21_error)
 
-          /* "src/gevent/greenlet.py":721
+          /* "src/gevent/greenlet.py":733
  *         except Timeout as ex:
  *             self.unlink(switch)
  *             if ex is not t:             # <<<<<<<<<<<<<<
@@ -10297,7 +10380,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_join(struct __pyx_obj_6gev
         }
       }
 
-      /* "src/gevent/greenlet.py":719
+      /* "src/gevent/greenlet.py":731
  *             finally:
  *                 t.cancel()
  *         except Timeout as ex:             # <<<<<<<<<<<<<<
@@ -10353,7 +10436,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_join(struct __pyx_obj_6gev
       goto __pyx_L5_exception_handled;
     }
 
-    /* "src/gevent/greenlet.py":723
+    /* "src/gevent/greenlet.py":735
  *             if ex is not t:
  *                 raise
  *         except:             # <<<<<<<<<<<<<<
@@ -10362,19 +10445,19 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_join(struct __pyx_obj_6gev
  */
     /*except:*/ {
       __Pyx_AddTraceback("gevent._greenlet.Greenlet.join", __pyx_clineno, __pyx_lineno, __pyx_filename);
-      if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_3, &__pyx_t_2) < 0) __PYX_ERR(0, 723, __pyx_L6_except_error)
+      if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_3, &__pyx_t_2) < 0) __PYX_ERR(0, 735, __pyx_L6_except_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_GOTREF(__pyx_t_2);
 
-      /* "src/gevent/greenlet.py":724
+      /* "src/gevent/greenlet.py":736
  *                 raise
  *         except:
  *             self.unlink(switch)             # <<<<<<<<<<<<<<
  *             raise
  * 
  */
-      __pyx_t_19 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_unlink); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 724, __pyx_L6_except_error)
+      __pyx_t_19 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_unlink); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 736, __pyx_L6_except_error)
       __Pyx_GOTREF(__pyx_t_19);
       __pyx_t_20 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_19))) {
@@ -10388,12 +10471,12 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_join(struct __pyx_obj_6gev
       }
       __pyx_t_4 = (__pyx_t_20) ? __Pyx_PyObject_Call2Args(__pyx_t_19, __pyx_t_20, __pyx_v_switch) : __Pyx_PyObject_CallOneArg(__pyx_t_19, __pyx_v_switch);
       __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 724, __pyx_L6_except_error)
+      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 736, __pyx_L6_except_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-      /* "src/gevent/greenlet.py":725
+      /* "src/gevent/greenlet.py":737
  *         except:
  *             self.unlink(switch)
  *             raise             # <<<<<<<<<<<<<<
@@ -10405,11 +10488,11 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_join(struct __pyx_obj_6gev
       __Pyx_XGIVEREF(__pyx_t_2);
       __Pyx_ErrRestoreWithState(__pyx_t_1, __pyx_t_3, __pyx_t_2);
       __pyx_t_1 = 0; __pyx_t_3 = 0; __pyx_t_2 = 0; 
-      __PYX_ERR(0, 725, __pyx_L6_except_error)
+      __PYX_ERR(0, 737, __pyx_L6_except_error)
     }
     __pyx_L6_except_error:;
 
-    /* "src/gevent/greenlet.py":711
+    /* "src/gevent/greenlet.py":723
  *         switch = getcurrent().switch # pylint:disable=undefined-variable
  *         self.rawlink(switch)
  *         try:             # <<<<<<<<<<<<<<
@@ -10429,7 +10512,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_join(struct __pyx_obj_6gev
     __pyx_L9_try_end:;
   }
 
-  /* "src/gevent/greenlet.py":699
+  /* "src/gevent/greenlet.py":711
  *             self._raise_exception()
  * 
  *     def join(self, timeout=None):             # <<<<<<<<<<<<<<
@@ -10490,7 +10573,7 @@ static PyObject *__pyx_pw_6gevent_9_greenlet_8Greenlet_37join(PyObject *__pyx_v_
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "join") < 0)) __PYX_ERR(0, 699, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "join") < 0)) __PYX_ERR(0, 711, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -10504,7 +10587,7 @@ static PyObject *__pyx_pw_6gevent_9_greenlet_8Greenlet_37join(PyObject *__pyx_v_
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("join", 0, 0, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 699, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("join", 0, 0, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 711, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gevent._greenlet.Greenlet.join", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -10526,7 +10609,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_36join(struct __pyx_obj_6
   __Pyx_XDECREF(__pyx_r);
   __pyx_t_2.__pyx_n = 1;
   __pyx_t_2.timeout = __pyx_v_timeout;
-  __pyx_t_1 = __pyx_vtabptr_6gevent_9_greenlet_Greenlet->join(__pyx_v_self, 1, &__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 699, __pyx_L1_error)
+  __pyx_t_1 = __pyx_vtabptr_6gevent_9_greenlet_Greenlet->join(__pyx_v_self, 1, &__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 711, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -10543,7 +10626,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_36join(struct __pyx_obj_6
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":727
+/* "src/gevent/greenlet.py":739
  *             raise
  * 
  *     def _report_result(self, result):             # <<<<<<<<<<<<<<
@@ -10563,20 +10646,20 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__report_result(struct __py
   PyObject *__pyx_t_7 = NULL;
   __Pyx_RefNannySetupContext("_report_result", 0);
 
-  /* "src/gevent/greenlet.py":728
+  /* "src/gevent/greenlet.py":740
  * 
  *     def _report_result(self, result):
  *         self._exc_info = (None, None, None)             # <<<<<<<<<<<<<<
  *         self.value = result
  *         if self._links and not self._notifier:
  */
-  __Pyx_INCREF(__pyx_tuple__10);
-  __Pyx_GIVEREF(__pyx_tuple__10);
+  __Pyx_INCREF(__pyx_tuple__11);
+  __Pyx_GIVEREF(__pyx_tuple__11);
   __Pyx_GOTREF(__pyx_v_self->_exc_info);
   __Pyx_DECREF(__pyx_v_self->_exc_info);
-  __pyx_v_self->_exc_info = __pyx_tuple__10;
+  __pyx_v_self->_exc_info = __pyx_tuple__11;
 
-  /* "src/gevent/greenlet.py":729
+  /* "src/gevent/greenlet.py":741
  *     def _report_result(self, result):
  *         self._exc_info = (None, None, None)
  *         self.value = result             # <<<<<<<<<<<<<<
@@ -10589,7 +10672,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__report_result(struct __py
   __Pyx_DECREF(__pyx_v_self->value);
   __pyx_v_self->value = __pyx_v_result;
 
-  /* "src/gevent/greenlet.py":730
+  /* "src/gevent/greenlet.py":742
  *         self._exc_info = (None, None, None)
  *         self.value = result
  *         if self._links and not self._notifier:             # <<<<<<<<<<<<<<
@@ -10602,28 +10685,28 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__report_result(struct __py
     __pyx_t_1 = __pyx_t_2;
     goto __pyx_L4_bool_binop_done;
   }
-  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_self->_notifier); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 730, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_self->_notifier); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 742, __pyx_L1_error)
   __pyx_t_3 = ((!__pyx_t_2) != 0);
   __pyx_t_1 = __pyx_t_3;
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "src/gevent/greenlet.py":731
+    /* "src/gevent/greenlet.py":743
  *         self.value = result
  *         if self._links and not self._notifier:
  *             self._notifier = self.parent.loop.run_callback(self._notify_links)             # <<<<<<<<<<<<<<
  * 
  *     def _report_error(self, exc_info):
  */
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_parent); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 731, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_parent); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 743, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_loop); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 731, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_loop); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 743, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_run_callback); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 731, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_run_callback); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 743, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_notify_links); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 731, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_notify_links); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 743, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __pyx_t_7 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
@@ -10638,7 +10721,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__report_result(struct __py
     __pyx_t_4 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_5, __pyx_t_7, __pyx_t_6) : __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_6);
     __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 731, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 743, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_GIVEREF(__pyx_t_4);
@@ -10647,7 +10730,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__report_result(struct __py
     __pyx_v_self->_notifier = __pyx_t_4;
     __pyx_t_4 = 0;
 
-    /* "src/gevent/greenlet.py":730
+    /* "src/gevent/greenlet.py":742
  *         self._exc_info = (None, None, None)
  *         self.value = result
  *         if self._links and not self._notifier:             # <<<<<<<<<<<<<<
@@ -10656,7 +10739,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__report_result(struct __py
  */
   }
 
-  /* "src/gevent/greenlet.py":727
+  /* "src/gevent/greenlet.py":739
  *             raise
  * 
  *     def _report_result(self, result):             # <<<<<<<<<<<<<<
@@ -10680,7 +10763,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__report_result(struct __py
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":733
+/* "src/gevent/greenlet.py":745
  *             self._notifier = self.parent.loop.run_callback(self._notify_links)
  * 
  *     def _report_error(self, exc_info):             # <<<<<<<<<<<<<<
@@ -10712,7 +10795,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__report_error(struct __pyx
   __Pyx_RefNannySetupContext("_report_error", 0);
   __Pyx_INCREF(__pyx_v_exc_info);
 
-  /* "src/gevent/greenlet.py":734
+  /* "src/gevent/greenlet.py":746
  * 
  *     def _report_error(self, exc_info):
  *         if isinstance(exc_info[1], GreenletExit):             # <<<<<<<<<<<<<<
@@ -10721,19 +10804,19 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__report_error(struct __pyx
  */
   if (unlikely(__pyx_v_exc_info == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 734, __pyx_L1_error)
+    __PYX_ERR(0, 746, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v_exc_info, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 734, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v_exc_info, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 746, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_2 = __pyx_v_6gevent_9_greenlet_GreenletExit;
   __Pyx_INCREF(__pyx_t_2);
-  __pyx_t_3 = PyObject_IsInstance(__pyx_t_1, __pyx_t_2); if (unlikely(__pyx_t_3 == ((int)-1))) __PYX_ERR(0, 734, __pyx_L1_error)
+  __pyx_t_3 = PyObject_IsInstance(__pyx_t_1, __pyx_t_2); if (unlikely(__pyx_t_3 == ((int)-1))) __PYX_ERR(0, 746, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_4 = (__pyx_t_3 != 0);
   if (__pyx_t_4) {
 
-    /* "src/gevent/greenlet.py":735
+    /* "src/gevent/greenlet.py":747
  *     def _report_error(self, exc_info):
  *         if isinstance(exc_info[1], GreenletExit):
  *             self._report_result(exc_info[1])             # <<<<<<<<<<<<<<
@@ -10742,16 +10825,16 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__report_error(struct __pyx
  */
     if (unlikely(__pyx_v_exc_info == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 735, __pyx_L1_error)
+      __PYX_ERR(0, 747, __pyx_L1_error)
     }
-    __pyx_t_2 = __Pyx_GetItemInt_Tuple(__pyx_v_exc_info, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 735, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_GetItemInt_Tuple(__pyx_v_exc_info, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 747, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->_report_result(__pyx_v_self, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 735, __pyx_L1_error)
+    __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->_report_result(__pyx_v_self, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 747, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "src/gevent/greenlet.py":736
+    /* "src/gevent/greenlet.py":748
  *         if isinstance(exc_info[1], GreenletExit):
  *             self._report_result(exc_info[1])
  *             return             # <<<<<<<<<<<<<<
@@ -10762,7 +10845,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__report_error(struct __pyx
     __pyx_r = Py_None; __Pyx_INCREF(Py_None);
     goto __pyx_L0;
 
-    /* "src/gevent/greenlet.py":734
+    /* "src/gevent/greenlet.py":746
  * 
  *     def _report_error(self, exc_info):
  *         if isinstance(exc_info[1], GreenletExit):             # <<<<<<<<<<<<<<
@@ -10771,7 +10854,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__report_error(struct __pyx
  */
   }
 
-  /* "src/gevent/greenlet.py":738
+  /* "src/gevent/greenlet.py":750
  *             return
  * 
  *         self._exc_info = exc_info[0], exc_info[1], dump_traceback(exc_info[2])             # <<<<<<<<<<<<<<
@@ -10780,21 +10863,21 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__report_error(struct __pyx
  */
   if (unlikely(__pyx_v_exc_info == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 738, __pyx_L1_error)
+    __PYX_ERR(0, 750, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v_exc_info, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 738, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v_exc_info, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 750, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (unlikely(__pyx_v_exc_info == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 738, __pyx_L1_error)
+    __PYX_ERR(0, 750, __pyx_L1_error)
   }
-  __pyx_t_2 = __Pyx_GetItemInt_Tuple(__pyx_v_exc_info, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 738, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt_Tuple(__pyx_v_exc_info, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 750, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   if (unlikely(__pyx_v_exc_info == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 738, __pyx_L1_error)
+    __PYX_ERR(0, 750, __pyx_L1_error)
   }
-  __pyx_t_6 = __Pyx_GetItemInt_Tuple(__pyx_v_exc_info, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 738, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_GetItemInt_Tuple(__pyx_v_exc_info, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 750, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_INCREF(__pyx_v_6gevent_9_greenlet_dump_traceback);
   __pyx_t_7 = __pyx_v_6gevent_9_greenlet_dump_traceback; __pyx_t_8 = NULL;
@@ -10810,10 +10893,10 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__report_error(struct __pyx
   __pyx_t_5 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_7, __pyx_t_8, __pyx_t_6) : __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_t_6);
   __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 738, __pyx_L1_error)
+  if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 750, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_7 = PyTuple_New(3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 738, __pyx_L1_error)
+  __pyx_t_7 = PyTuple_New(3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 750, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_1);
@@ -10830,7 +10913,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__report_error(struct __pyx
   __pyx_v_self->_exc_info = ((PyObject*)__pyx_t_7);
   __pyx_t_7 = 0;
 
-  /* "src/gevent/greenlet.py":740
+  /* "src/gevent/greenlet.py":752
  *         self._exc_info = exc_info[0], exc_info[1], dump_traceback(exc_info[2])
  * 
  *         if self._links and not self._notifier:             # <<<<<<<<<<<<<<
@@ -10843,28 +10926,28 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__report_error(struct __pyx
     __pyx_t_4 = __pyx_t_3;
     goto __pyx_L5_bool_binop_done;
   }
-  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_v_self->_notifier); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 740, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_v_self->_notifier); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 752, __pyx_L1_error)
   __pyx_t_9 = ((!__pyx_t_3) != 0);
   __pyx_t_4 = __pyx_t_9;
   __pyx_L5_bool_binop_done:;
   if (__pyx_t_4) {
 
-    /* "src/gevent/greenlet.py":741
+    /* "src/gevent/greenlet.py":753
  * 
  *         if self._links and not self._notifier:
  *             self._notifier = self.parent.loop.run_callback(self._notify_links)             # <<<<<<<<<<<<<<
  * 
  *         try:
  */
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_parent); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 741, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_parent); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 753, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_loop); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 741, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_loop); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 753, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_run_callback); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 741, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_run_callback); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 753, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_notify_links); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 741, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_notify_links); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 753, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_1 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
@@ -10879,7 +10962,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__report_error(struct __pyx
     __pyx_t_7 = (__pyx_t_1) ? __Pyx_PyObject_Call2Args(__pyx_t_5, __pyx_t_1, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_2);
     __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 741, __pyx_L1_error)
+    if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 753, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_GIVEREF(__pyx_t_7);
@@ -10888,7 +10971,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__report_error(struct __pyx
     __pyx_v_self->_notifier = __pyx_t_7;
     __pyx_t_7 = 0;
 
-    /* "src/gevent/greenlet.py":740
+    /* "src/gevent/greenlet.py":752
  *         self._exc_info = exc_info[0], exc_info[1], dump_traceback(exc_info[2])
  * 
  *         if self._links and not self._notifier:             # <<<<<<<<<<<<<<
@@ -10897,7 +10980,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__report_error(struct __pyx
  */
   }
 
-  /* "src/gevent/greenlet.py":743
+  /* "src/gevent/greenlet.py":755
  *             self._notifier = self.parent.loop.run_callback(self._notify_links)
  * 
  *         try:             # <<<<<<<<<<<<<<
@@ -10906,38 +10989,38 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__report_error(struct __pyx
  */
   /*try:*/ {
 
-    /* "src/gevent/greenlet.py":744
+    /* "src/gevent/greenlet.py":756
  * 
  *         try:
  *             self.parent.handle_error(self, *exc_info)             # <<<<<<<<<<<<<<
  *         finally:
  *             del exc_info
  */
-    __pyx_t_7 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_parent); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 744, __pyx_L8_error)
+    __pyx_t_7 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_parent); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 756, __pyx_L8_error)
     __Pyx_GOTREF(__pyx_t_7);
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_handle_error); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 744, __pyx_L8_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_handle_error); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 756, __pyx_L8_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __pyx_t_7 = PyTuple_New(1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 744, __pyx_L8_error)
+    __pyx_t_7 = PyTuple_New(1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 756, __pyx_L8_error)
     __Pyx_GOTREF(__pyx_t_7);
     __Pyx_INCREF(((PyObject *)__pyx_v_self));
     __Pyx_GIVEREF(((PyObject *)__pyx_v_self));
     PyTuple_SET_ITEM(__pyx_t_7, 0, ((PyObject *)__pyx_v_self));
     if (unlikely(__pyx_v_exc_info == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-      __PYX_ERR(0, 744, __pyx_L8_error)
+      __PYX_ERR(0, 756, __pyx_L8_error)
     }
-    __pyx_t_2 = PyNumber_Add(__pyx_t_7, __pyx_v_exc_info); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 744, __pyx_L8_error)
+    __pyx_t_2 = PyNumber_Add(__pyx_t_7, __pyx_v_exc_info); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 756, __pyx_L8_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __pyx_t_7 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_2, NULL); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 744, __pyx_L8_error)
+    __pyx_t_7 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_2, NULL); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 756, __pyx_L8_error)
     __Pyx_GOTREF(__pyx_t_7);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   }
 
-  /* "src/gevent/greenlet.py":746
+  /* "src/gevent/greenlet.py":758
  *             self.parent.handle_error(self, *exc_info)
  *         finally:
  *             del exc_info             # <<<<<<<<<<<<<<
@@ -10991,7 +11074,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__report_error(struct __pyx
     __pyx_L9:;
   }
 
-  /* "src/gevent/greenlet.py":733
+  /* "src/gevent/greenlet.py":745
  *             self._notifier = self.parent.loop.run_callback(self._notify_links)
  * 
  *     def _report_error(self, exc_info):             # <<<<<<<<<<<<<<
@@ -11018,7 +11101,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__report_error(struct __pyx
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":748
+/* "src/gevent/greenlet.py":760
  *             del exc_info
  * 
  *     def run(self):             # <<<<<<<<<<<<<<
@@ -11063,7 +11146,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_38run(struct __pyx_obj_6g
   PyObject *__pyx_t_16 = NULL;
   __Pyx_RefNannySetupContext("run", 0);
 
-  /* "src/gevent/greenlet.py":749
+  /* "src/gevent/greenlet.py":761
  * 
  *     def run(self):
  *         try:             # <<<<<<<<<<<<<<
@@ -11072,18 +11155,18 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_38run(struct __pyx_obj_6g
  */
   /*try:*/ {
 
-    /* "src/gevent/greenlet.py":750
+    /* "src/gevent/greenlet.py":762
  *     def run(self):
  *         try:
  *             self.__cancel_start()             # <<<<<<<<<<<<<<
  *             self._start_event = _start_completed_event
  * 
  */
-    __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->__pyx___cancel_start(__pyx_v_self); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 750, __pyx_L4_error)
+    __pyx_t_1 = ((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->__pyx___cancel_start(__pyx_v_self); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 762, __pyx_L4_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "src/gevent/greenlet.py":751
+    /* "src/gevent/greenlet.py":763
  *         try:
  *             self.__cancel_start()
  *             self._start_event = _start_completed_event             # <<<<<<<<<<<<<<
@@ -11096,7 +11179,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_38run(struct __pyx_obj_6g
     __Pyx_DECREF(__pyx_v_self->_start_event);
     __pyx_v_self->_start_event = ((PyObject *)__pyx_v_6gevent_9_greenlet__start_completed_event);
 
-    /* "src/gevent/greenlet.py":753
+    /* "src/gevent/greenlet.py":765
  *             self._start_event = _start_completed_event
  * 
  *             try:             # <<<<<<<<<<<<<<
@@ -11112,30 +11195,30 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_38run(struct __pyx_obj_6g
       __Pyx_XGOTREF(__pyx_t_4);
       /*try:*/ {
 
-        /* "src/gevent/greenlet.py":754
+        /* "src/gevent/greenlet.py":766
  * 
  *             try:
  *                 result = self._run(*self.args, **self.kwargs)             # <<<<<<<<<<<<<<
  *             except: # pylint:disable=bare-except
  *                 self._report_error(sys_exc_info())
  */
-        __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_run_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 754, __pyx_L6_error)
+        __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_run_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 766, __pyx_L6_error)
         __Pyx_GOTREF(__pyx_t_1);
         if (unlikely(__pyx_v_self->args == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-          __PYX_ERR(0, 754, __pyx_L6_error)
+          __PYX_ERR(0, 766, __pyx_L6_error)
         }
         if (unlikely(__pyx_v_self->kwargs == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "argument after ** must be a mapping, not NoneType");
-          __PYX_ERR(0, 754, __pyx_L6_error)
+          __PYX_ERR(0, 766, __pyx_L6_error)
         }
-        __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_v_self->args, __pyx_v_self->kwargs); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 754, __pyx_L6_error)
+        __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_v_self->args, __pyx_v_self->kwargs); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 766, __pyx_L6_error)
         __Pyx_GOTREF(__pyx_t_5);
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
         __pyx_v_result = __pyx_t_5;
         __pyx_t_5 = 0;
 
-        /* "src/gevent/greenlet.py":753
+        /* "src/gevent/greenlet.py":765
  *             self._start_event = _start_completed_event
  * 
  *             try:             # <<<<<<<<<<<<<<
@@ -11151,7 +11234,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_38run(struct __pyx_obj_6g
       __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
       __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-      /* "src/gevent/greenlet.py":755
+      /* "src/gevent/greenlet.py":767
  *             try:
  *                 result = self._run(*self.args, **self.kwargs)
  *             except: # pylint:disable=bare-except             # <<<<<<<<<<<<<<
@@ -11160,12 +11243,12 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_38run(struct __pyx_obj_6g
  */
       /*except:*/ {
         __Pyx_AddTraceback("gevent._greenlet.Greenlet.run", __pyx_clineno, __pyx_lineno, __pyx_filename);
-        if (__Pyx_GetException(&__pyx_t_5, &__pyx_t_1, &__pyx_t_6) < 0) __PYX_ERR(0, 755, __pyx_L8_except_error)
+        if (__Pyx_GetException(&__pyx_t_5, &__pyx_t_1, &__pyx_t_6) < 0) __PYX_ERR(0, 767, __pyx_L8_except_error)
         __Pyx_GOTREF(__pyx_t_5);
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_GOTREF(__pyx_t_6);
 
-        /* "src/gevent/greenlet.py":756
+        /* "src/gevent/greenlet.py":768
  *                 result = self._run(*self.args, **self.kwargs)
  *             except: # pylint:disable=bare-except
  *                 self._report_error(sys_exc_info())             # <<<<<<<<<<<<<<
@@ -11185,16 +11268,16 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_38run(struct __pyx_obj_6g
         }
         __pyx_t_7 = (__pyx_t_9) ? __Pyx_PyObject_CallOneArg(__pyx_t_8, __pyx_t_9) : __Pyx_PyObject_CallNoArg(__pyx_t_8);
         __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
-        if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 756, __pyx_L8_except_error)
+        if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 768, __pyx_L8_except_error)
         __Pyx_GOTREF(__pyx_t_7);
         __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-        if (!(likely(PyTuple_CheckExact(__pyx_t_7))||((__pyx_t_7) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "tuple", Py_TYPE(__pyx_t_7)->tp_name), 0))) __PYX_ERR(0, 756, __pyx_L8_except_error)
-        __pyx_t_8 = ((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->_report_error(__pyx_v_self, ((PyObject*)__pyx_t_7)); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 756, __pyx_L8_except_error)
+        if (!(likely(PyTuple_CheckExact(__pyx_t_7))||((__pyx_t_7) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "tuple", Py_TYPE(__pyx_t_7)->tp_name), 0))) __PYX_ERR(0, 768, __pyx_L8_except_error)
+        __pyx_t_8 = ((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->_report_error(__pyx_v_self, ((PyObject*)__pyx_t_7)); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 768, __pyx_L8_except_error)
         __Pyx_GOTREF(__pyx_t_8);
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
         __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
 
-        /* "src/gevent/greenlet.py":757
+        /* "src/gevent/greenlet.py":769
  *             except: # pylint:disable=bare-except
  *                 self._report_error(sys_exc_info())
  *                 return             # <<<<<<<<<<<<<<
@@ -11210,7 +11293,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_38run(struct __pyx_obj_6g
       }
       __pyx_L8_except_error:;
 
-      /* "src/gevent/greenlet.py":753
+      /* "src/gevent/greenlet.py":765
  *             self._start_event = _start_completed_event
  * 
  *             try:             # <<<<<<<<<<<<<<
@@ -11231,19 +11314,19 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_38run(struct __pyx_obj_6g
       __pyx_L11_try_end:;
     }
 
-    /* "src/gevent/greenlet.py":758
+    /* "src/gevent/greenlet.py":770
  *                 self._report_error(sys_exc_info())
  *                 return
  *             self._report_result(result)             # <<<<<<<<<<<<<<
  *         finally:
  *             self.__dict__.pop('_run', None)
  */
-    __pyx_t_6 = ((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->_report_result(__pyx_v_self, __pyx_v_result); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 758, __pyx_L4_error)
+    __pyx_t_6 = ((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->_report_result(__pyx_v_self, __pyx_v_result); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 770, __pyx_L4_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   }
 
-  /* "src/gevent/greenlet.py":760
+  /* "src/gevent/greenlet.py":772
  *             self._report_result(result)
  *         finally:
  *             self.__dict__.pop('_run', None)             # <<<<<<<<<<<<<<
@@ -11252,17 +11335,17 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_38run(struct __pyx_obj_6g
  */
   /*finally:*/ {
     /*normal exit:*/{
-      __pyx_t_6 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_dict); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 760, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_dict); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 772, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_pop); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 760, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_pop); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 772, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_tuple__11, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 760, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_tuple__12, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 772, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-      /* "src/gevent/greenlet.py":761
+      /* "src/gevent/greenlet.py":773
  *         finally:
  *             self.__dict__.pop('_run', None)
  *             self.args = ()             # <<<<<<<<<<<<<<
@@ -11275,7 +11358,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_38run(struct __pyx_obj_6g
       __Pyx_DECREF(__pyx_v_self->args);
       __pyx_v_self->args = __pyx_empty_tuple;
 
-      /* "src/gevent/greenlet.py":762
+      /* "src/gevent/greenlet.py":774
  *             self.__dict__.pop('_run', None)
  *             self.args = ()
  *             self.kwargs.clear()             # <<<<<<<<<<<<<<
@@ -11284,9 +11367,9 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_38run(struct __pyx_obj_6g
  */
       if (unlikely(__pyx_v_self->kwargs == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "clear");
-        __PYX_ERR(0, 762, __pyx_L1_error)
+        __PYX_ERR(0, 774, __pyx_L1_error)
       }
-      __pyx_t_10 = __Pyx_PyDict_Clear(__pyx_v_self->kwargs); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 762, __pyx_L1_error)
+      __pyx_t_10 = __Pyx_PyDict_Clear(__pyx_v_self->kwargs); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 774, __pyx_L1_error)
       goto __pyx_L5;
     }
     __pyx_L4_error:;
@@ -11311,24 +11394,24 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_38run(struct __pyx_obj_6g
       __pyx_t_11 = __pyx_lineno; __pyx_t_12 = __pyx_clineno; __pyx_t_13 = __pyx_filename;
       {
 
-        /* "src/gevent/greenlet.py":760
+        /* "src/gevent/greenlet.py":772
  *             self._report_result(result)
  *         finally:
  *             self.__dict__.pop('_run', None)             # <<<<<<<<<<<<<<
  *             self.args = ()
  *             self.kwargs.clear()
  */
-        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_dict); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 760, __pyx_L15_error)
+        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_dict); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 772, __pyx_L15_error)
         __Pyx_GOTREF(__pyx_t_6);
-        __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_pop); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 760, __pyx_L15_error)
+        __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_pop); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 772, __pyx_L15_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-        __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_tuple__11, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 760, __pyx_L15_error)
+        __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_tuple__12, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 772, __pyx_L15_error)
         __Pyx_GOTREF(__pyx_t_6);
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-        /* "src/gevent/greenlet.py":761
+        /* "src/gevent/greenlet.py":773
  *         finally:
  *             self.__dict__.pop('_run', None)
  *             self.args = ()             # <<<<<<<<<<<<<<
@@ -11341,7 +11424,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_38run(struct __pyx_obj_6g
         __Pyx_DECREF(__pyx_v_self->args);
         __pyx_v_self->args = __pyx_empty_tuple;
 
-        /* "src/gevent/greenlet.py":762
+        /* "src/gevent/greenlet.py":774
  *             self.__dict__.pop('_run', None)
  *             self.args = ()
  *             self.kwargs.clear()             # <<<<<<<<<<<<<<
@@ -11350,9 +11433,9 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_38run(struct __pyx_obj_6g
  */
         if (unlikely(__pyx_v_self->kwargs == Py_None)) {
           PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "clear");
-          __PYX_ERR(0, 762, __pyx_L15_error)
+          __PYX_ERR(0, 774, __pyx_L15_error)
         }
-        __pyx_t_10 = __Pyx_PyDict_Clear(__pyx_v_self->kwargs); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 762, __pyx_L15_error)
+        __pyx_t_10 = __Pyx_PyDict_Clear(__pyx_v_self->kwargs); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 774, __pyx_L15_error)
       }
       if (PY_MAJOR_VERSION >= 3) {
         __Pyx_XGIVEREF(__pyx_t_14);
@@ -11384,24 +11467,24 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_38run(struct __pyx_obj_6g
       __pyx_t_16 = __pyx_r;
       __pyx_r = 0;
 
-      /* "src/gevent/greenlet.py":760
+      /* "src/gevent/greenlet.py":772
  *             self._report_result(result)
  *         finally:
  *             self.__dict__.pop('_run', None)             # <<<<<<<<<<<<<<
  *             self.args = ()
  *             self.kwargs.clear()
  */
-      __pyx_t_6 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_dict); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 760, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_dict); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 772, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_pop); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 760, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_pop); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 772, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_tuple__11, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 760, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_tuple__12, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 772, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-      /* "src/gevent/greenlet.py":761
+      /* "src/gevent/greenlet.py":773
  *         finally:
  *             self.__dict__.pop('_run', None)
  *             self.args = ()             # <<<<<<<<<<<<<<
@@ -11414,7 +11497,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_38run(struct __pyx_obj_6g
       __Pyx_DECREF(__pyx_v_self->args);
       __pyx_v_self->args = __pyx_empty_tuple;
 
-      /* "src/gevent/greenlet.py":762
+      /* "src/gevent/greenlet.py":774
  *             self.__dict__.pop('_run', None)
  *             self.args = ()
  *             self.kwargs.clear()             # <<<<<<<<<<<<<<
@@ -11423,9 +11506,9 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_38run(struct __pyx_obj_6g
  */
       if (unlikely(__pyx_v_self->kwargs == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "clear");
-        __PYX_ERR(0, 762, __pyx_L1_error)
+        __PYX_ERR(0, 774, __pyx_L1_error)
       }
-      __pyx_t_10 = __Pyx_PyDict_Clear(__pyx_v_self->kwargs); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 762, __pyx_L1_error)
+      __pyx_t_10 = __Pyx_PyDict_Clear(__pyx_v_self->kwargs); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 774, __pyx_L1_error)
       __pyx_r = __pyx_t_16;
       __pyx_t_16 = 0;
       goto __pyx_L0;
@@ -11433,7 +11516,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_38run(struct __pyx_obj_6g
     __pyx_L5:;
   }
 
-  /* "src/gevent/greenlet.py":748
+  /* "src/gevent/greenlet.py":760
  *             del exc_info
  * 
  *     def run(self):             # <<<<<<<<<<<<<<
@@ -11460,7 +11543,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_38run(struct __pyx_obj_6g
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":764
+/* "src/gevent/greenlet.py":776
  *             self.kwargs.clear()
  * 
  *     def _run(self):             # <<<<<<<<<<<<<<
@@ -11488,7 +11571,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_40_run(CYTHON_UNUSED stru
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("_run", 0);
 
-  /* "src/gevent/greenlet.py":776
+  /* "src/gevent/greenlet.py":788
  *         # We usually override this in __init__
  *         # pylint: disable=method-hidden
  *         return             # <<<<<<<<<<<<<<
@@ -11499,7 +11582,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_40_run(CYTHON_UNUSED stru
   __pyx_r = Py_None; __Pyx_INCREF(Py_None);
   goto __pyx_L0;
 
-  /* "src/gevent/greenlet.py":764
+  /* "src/gevent/greenlet.py":776
  *             self.kwargs.clear()
  * 
  *     def _run(self):             # <<<<<<<<<<<<<<
@@ -11514,7 +11597,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_40_run(CYTHON_UNUSED stru
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":778
+/* "src/gevent/greenlet.py":790
  *         return
  * 
  *     def has_links(self):             # <<<<<<<<<<<<<<
@@ -11543,7 +11626,7 @@ static int __pyx_f_6gevent_9_greenlet_8Greenlet_has_links(struct __pyx_obj_6geve
     else {
       PY_UINT64_T type_dict_guard = (likely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dict)) ? __PYX_GET_DICT_VERSION(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dict) : 0;
       #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_has_links); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 778, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_has_links); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 790, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)(void*)__pyx_pw_6gevent_9_greenlet_8Greenlet_43has_links)) {
         __Pyx_INCREF(__pyx_t_1);
@@ -11559,10 +11642,10 @@ static int __pyx_f_6gevent_9_greenlet_8Greenlet_has_links(struct __pyx_obj_6geve
         }
         __pyx_t_2 = (__pyx_t_4) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 778, __pyx_L1_error)
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 790, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 778, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 790, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __pyx_r = __pyx_t_5;
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -11581,7 +11664,7 @@ static int __pyx_f_6gevent_9_greenlet_8Greenlet_has_links(struct __pyx_obj_6geve
     #endif
   }
 
-  /* "src/gevent/greenlet.py":779
+  /* "src/gevent/greenlet.py":791
  * 
  *     def has_links(self):
  *         return len(self._links)             # <<<<<<<<<<<<<<
@@ -11592,14 +11675,14 @@ static int __pyx_f_6gevent_9_greenlet_8Greenlet_has_links(struct __pyx_obj_6geve
   __Pyx_INCREF(__pyx_t_1);
   if (unlikely(__pyx_t_1 == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-    __PYX_ERR(0, 779, __pyx_L1_error)
+    __PYX_ERR(0, 791, __pyx_L1_error)
   }
-  __pyx_t_6 = PyList_GET_SIZE(__pyx_t_1); if (unlikely(__pyx_t_6 == ((Py_ssize_t)-1))) __PYX_ERR(0, 779, __pyx_L1_error)
+  __pyx_t_6 = PyList_GET_SIZE(__pyx_t_1); if (unlikely(__pyx_t_6 == ((Py_ssize_t)-1))) __PYX_ERR(0, 791, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_r = __pyx_t_6;
   goto __pyx_L0;
 
-  /* "src/gevent/greenlet.py":778
+  /* "src/gevent/greenlet.py":790
  *         return
  * 
  *     def has_links(self):             # <<<<<<<<<<<<<<
@@ -11641,7 +11724,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_42has_links(struct __pyx_
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("has_links", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyBool_FromLong(__pyx_f_6gevent_9_greenlet_8Greenlet_has_links(__pyx_v_self, 1)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 778, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyBool_FromLong(__pyx_f_6gevent_9_greenlet_8Greenlet_has_links(__pyx_v_self, 1)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 790, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -11658,7 +11741,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_42has_links(struct __pyx_
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":781
+/* "src/gevent/greenlet.py":793
  *         return len(self._links)
  * 
  *     def rawlink(self, callback):             # <<<<<<<<<<<<<<
@@ -11689,7 +11772,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_rawlink(struct __pyx_obj_6
     else {
       PY_UINT64_T type_dict_guard = (likely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dict)) ? __PYX_GET_DICT_VERSION(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dict) : 0;
       #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_rawlink); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 781, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_rawlink); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 793, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)(void*)__pyx_pw_6gevent_9_greenlet_8Greenlet_45rawlink)) {
         __Pyx_XDECREF(__pyx_r);
@@ -11706,7 +11789,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_rawlink(struct __pyx_obj_6
         }
         __pyx_t_2 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_4, __pyx_v_callback) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_callback);
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 781, __pyx_L1_error)
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 793, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
         __pyx_r = __pyx_t_2;
@@ -11727,40 +11810,40 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_rawlink(struct __pyx_obj_6
     #endif
   }
 
-  /* "src/gevent/greenlet.py":791
+  /* "src/gevent/greenlet.py":803
  *         .. caution:: The callable will be called in the HUB greenlet.
  *         """
  *         if not callable(callback):             # <<<<<<<<<<<<<<
  *             raise TypeError('Expected callable: %r' % (callback, ))
  *         self._links.append(callback) # pylint:disable=no-member
  */
-  __pyx_t_5 = __Pyx_PyCallable_Check(__pyx_v_callback); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 791, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyCallable_Check(__pyx_v_callback); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 803, __pyx_L1_error)
   __pyx_t_6 = ((!(__pyx_t_5 != 0)) != 0);
   if (unlikely(__pyx_t_6)) {
 
-    /* "src/gevent/greenlet.py":792
+    /* "src/gevent/greenlet.py":804
  *         """
  *         if not callable(callback):
  *             raise TypeError('Expected callable: %r' % (callback, ))             # <<<<<<<<<<<<<<
  *         self._links.append(callback) # pylint:disable=no-member
  *         if self.ready() and self._links and not self._notifier:
  */
-    __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 792, __pyx_L1_error)
+    __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 804, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_INCREF(__pyx_v_callback);
     __Pyx_GIVEREF(__pyx_v_callback);
     PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_v_callback);
-    __pyx_t_2 = __Pyx_PyString_Format(__pyx_kp_s_Expected_callable_r, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 792, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyString_Format(__pyx_kp_s_Expected_callable_r, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 804, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_builtin_TypeError, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 792, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_builtin_TypeError, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 804, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_Raise(__pyx_t_1, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __PYX_ERR(0, 792, __pyx_L1_error)
+    __PYX_ERR(0, 804, __pyx_L1_error)
 
-    /* "src/gevent/greenlet.py":791
+    /* "src/gevent/greenlet.py":803
  *         .. caution:: The callable will be called in the HUB greenlet.
  *         """
  *         if not callable(callback):             # <<<<<<<<<<<<<<
@@ -11769,7 +11852,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_rawlink(struct __pyx_obj_6
  */
   }
 
-  /* "src/gevent/greenlet.py":793
+  /* "src/gevent/greenlet.py":805
  *         if not callable(callback):
  *             raise TypeError('Expected callable: %r' % (callback, ))
  *         self._links.append(callback) # pylint:disable=no-member             # <<<<<<<<<<<<<<
@@ -11778,11 +11861,11 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_rawlink(struct __pyx_obj_6
  */
   if (unlikely(__pyx_v_self->_links == Py_None)) {
     PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-    __PYX_ERR(0, 793, __pyx_L1_error)
+    __PYX_ERR(0, 805, __pyx_L1_error)
   }
-  __pyx_t_7 = __Pyx_PyList_Append(__pyx_v_self->_links, __pyx_v_callback); if (unlikely(__pyx_t_7 == ((int)-1))) __PYX_ERR(0, 793, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyList_Append(__pyx_v_self->_links, __pyx_v_callback); if (unlikely(__pyx_t_7 == ((int)-1))) __PYX_ERR(0, 805, __pyx_L1_error)
 
-  /* "src/gevent/greenlet.py":794
+  /* "src/gevent/greenlet.py":806
  *             raise TypeError('Expected callable: %r' % (callback, ))
  *         self._links.append(callback) # pylint:disable=no-member
  *         if self.ready() and self._links and not self._notifier:             # <<<<<<<<<<<<<<
@@ -11801,28 +11884,28 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_rawlink(struct __pyx_obj_6
     __pyx_t_6 = __pyx_t_5;
     goto __pyx_L5_bool_binop_done;
   }
-  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_v_self->_notifier); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 794, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_v_self->_notifier); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 806, __pyx_L1_error)
   __pyx_t_8 = ((!__pyx_t_5) != 0);
   __pyx_t_6 = __pyx_t_8;
   __pyx_L5_bool_binop_done:;
   if (__pyx_t_6) {
 
-    /* "src/gevent/greenlet.py":795
+    /* "src/gevent/greenlet.py":807
  *         self._links.append(callback) # pylint:disable=no-member
  *         if self.ready() and self._links and not self._notifier:
  *             self._notifier = self.parent.loop.run_callback(self._notify_links)             # <<<<<<<<<<<<<<
  * 
  *     def link(self, callback, SpawnedLink=SpawnedLink):
  */
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_parent); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 795, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_parent); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 807, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_loop); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 795, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_loop); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 807, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_run_callback); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 795, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_run_callback); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 807, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_notify_links); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 795, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_notify_links); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 807, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_t_4 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -11837,7 +11920,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_rawlink(struct __pyx_obj_6
     __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_4, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 795, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 807, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_GIVEREF(__pyx_t_1);
@@ -11846,7 +11929,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_rawlink(struct __pyx_obj_6
     __pyx_v_self->_notifier = __pyx_t_1;
     __pyx_t_1 = 0;
 
-    /* "src/gevent/greenlet.py":794
+    /* "src/gevent/greenlet.py":806
  *             raise TypeError('Expected callable: %r' % (callback, ))
  *         self._links.append(callback) # pylint:disable=no-member
  *         if self.ready() and self._links and not self._notifier:             # <<<<<<<<<<<<<<
@@ -11855,7 +11938,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet_rawlink(struct __pyx_obj_6
  */
   }
 
-  /* "src/gevent/greenlet.py":781
+  /* "src/gevent/greenlet.py":793
  *         return len(self._links)
  * 
  *     def rawlink(self, callback):             # <<<<<<<<<<<<<<
@@ -11900,7 +11983,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_44rawlink(struct __pyx_ob
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("rawlink", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_6gevent_9_greenlet_8Greenlet_rawlink(__pyx_v_self, __pyx_v_callback, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 781, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_6gevent_9_greenlet_8Greenlet_rawlink(__pyx_v_self, __pyx_v_callback, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 793, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -11917,7 +12000,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_44rawlink(struct __pyx_ob
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":797
+/* "src/gevent/greenlet.py":809
  *             self._notifier = self.parent.loop.run_callback(self._notify_links)
  * 
  *     def link(self, callback, SpawnedLink=SpawnedLink):             # <<<<<<<<<<<<<<
@@ -11938,7 +12021,7 @@ static PyObject *__pyx_pw_6gevent_9_greenlet_8Greenlet_47link(PyObject *__pyx_v_
   {
     static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_callback,&__pyx_n_s_SpawnedLink,0};
     PyObject* values[2] = {0,0};
-    values[1] = __pyx_k__12;
+    values[1] = __pyx_k__13;
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
       const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
@@ -11963,7 +12046,7 @@ static PyObject *__pyx_pw_6gevent_9_greenlet_8Greenlet_47link(PyObject *__pyx_v_
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "link") < 0)) __PYX_ERR(0, 797, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "link") < 0)) __PYX_ERR(0, 809, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -11979,7 +12062,7 @@ static PyObject *__pyx_pw_6gevent_9_greenlet_8Greenlet_47link(PyObject *__pyx_v_
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("link", 0, 1, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 797, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("link", 0, 1, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 809, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gevent._greenlet.Greenlet.link", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -12000,7 +12083,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_46link(struct __pyx_obj_6
   PyObject *__pyx_t_3 = NULL;
   __Pyx_RefNannySetupContext("link", 0);
 
-  /* "src/gevent/greenlet.py":809
+  /* "src/gevent/greenlet.py":821
  *         # optimization, or do people use it? It's not documented
  *         # pylint:disable=redefined-outer-name
  *         self.rawlink(SpawnedLink(callback))             # <<<<<<<<<<<<<<
@@ -12020,15 +12103,15 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_46link(struct __pyx_obj_6
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_3, __pyx_v_callback) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_callback);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 809, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 821, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = ((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->rawlink(__pyx_v_self, __pyx_t_1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 809, __pyx_L1_error)
+  __pyx_t_2 = ((struct __pyx_vtabstruct_6gevent_9_greenlet_Greenlet *)__pyx_v_self->__pyx_vtab)->rawlink(__pyx_v_self, __pyx_t_1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 821, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "src/gevent/greenlet.py":797
+  /* "src/gevent/greenlet.py":809
  *             self._notifier = self.parent.loop.run_callback(self._notify_links)
  * 
  *     def link(self, callback, SpawnedLink=SpawnedLink):             # <<<<<<<<<<<<<<
@@ -12051,7 +12134,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_46link(struct __pyx_obj_6
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":811
+/* "src/gevent/greenlet.py":823
  *         self.rawlink(SpawnedLink(callback))
  * 
  *     def unlink(self, callback):             # <<<<<<<<<<<<<<
@@ -12086,7 +12169,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_48unlink(struct __pyx_obj
   int __pyx_t_7;
   __Pyx_RefNannySetupContext("unlink", 0);
 
-  /* "src/gevent/greenlet.py":813
+  /* "src/gevent/greenlet.py":825
  *     def unlink(self, callback):
  *         """Remove the callback set by :meth:`link` or :meth:`rawlink`"""
  *         try:             # <<<<<<<<<<<<<<
@@ -12102,14 +12185,14 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_48unlink(struct __pyx_obj
     __Pyx_XGOTREF(__pyx_t_3);
     /*try:*/ {
 
-      /* "src/gevent/greenlet.py":814
+      /* "src/gevent/greenlet.py":826
  *         """Remove the callback set by :meth:`link` or :meth:`rawlink`"""
  *         try:
  *             self._links.remove(callback) # pylint:disable=no-member             # <<<<<<<<<<<<<<
  *         except ValueError:
  *             pass
  */
-      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->_links, __pyx_n_s_remove); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 814, __pyx_L3_error)
+      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->_links, __pyx_n_s_remove); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 826, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_5);
       __pyx_t_6 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
@@ -12123,12 +12206,12 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_48unlink(struct __pyx_obj
       }
       __pyx_t_4 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_5, __pyx_t_6, __pyx_v_callback) : __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_v_callback);
       __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 814, __pyx_L3_error)
+      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 826, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-      /* "src/gevent/greenlet.py":813
+      /* "src/gevent/greenlet.py":825
  *     def unlink(self, callback):
  *         """Remove the callback set by :meth:`link` or :meth:`rawlink`"""
  *         try:             # <<<<<<<<<<<<<<
@@ -12145,7 +12228,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_48unlink(struct __pyx_obj
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "src/gevent/greenlet.py":815
+    /* "src/gevent/greenlet.py":827
  *         try:
  *             self._links.remove(callback) # pylint:disable=no-member
  *         except ValueError:             # <<<<<<<<<<<<<<
@@ -12160,7 +12243,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_48unlink(struct __pyx_obj
     goto __pyx_L5_except_error;
     __pyx_L5_except_error:;
 
-    /* "src/gevent/greenlet.py":813
+    /* "src/gevent/greenlet.py":825
  *     def unlink(self, callback):
  *         """Remove the callback set by :meth:`link` or :meth:`rawlink`"""
  *         try:             # <<<<<<<<<<<<<<
@@ -12180,7 +12263,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_48unlink(struct __pyx_obj
     __pyx_L8_try_end:;
   }
 
-  /* "src/gevent/greenlet.py":811
+  /* "src/gevent/greenlet.py":823
  *         self.rawlink(SpawnedLink(callback))
  * 
  *     def unlink(self, callback):             # <<<<<<<<<<<<<<
@@ -12203,7 +12286,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_48unlink(struct __pyx_obj
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":818
+/* "src/gevent/greenlet.py":830
  *             pass
  * 
  *     def unlink_all(self):             # <<<<<<<<<<<<<<
@@ -12231,7 +12314,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_50unlink_all(struct __pyx
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("unlink_all", 0);
 
-  /* "src/gevent/greenlet.py":824
+  /* "src/gevent/greenlet.py":836
  *         .. versionadded:: 1.3a2
  *         """
  *         del self._links[:]             # <<<<<<<<<<<<<<
@@ -12240,11 +12323,11 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_50unlink_all(struct __pyx
  */
   if (unlikely(__pyx_v_self->_links == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 824, __pyx_L1_error)
+    __PYX_ERR(0, 836, __pyx_L1_error)
   }
-  if (__Pyx_PyObject_DelSlice(__pyx_v_self->_links, 0, 0, NULL, NULL, NULL, 0, 0, 1) < 0) __PYX_ERR(0, 824, __pyx_L1_error)
+  if (__Pyx_PyObject_DelSlice(__pyx_v_self->_links, 0, 0, NULL, NULL, NULL, 0, 0, 1) < 0) __PYX_ERR(0, 836, __pyx_L1_error)
 
-  /* "src/gevent/greenlet.py":818
+  /* "src/gevent/greenlet.py":830
  *             pass
  * 
  *     def unlink_all(self):             # <<<<<<<<<<<<<<
@@ -12264,7 +12347,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_50unlink_all(struct __pyx
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":826
+/* "src/gevent/greenlet.py":838
  *         del self._links[:]
  * 
  *     def link_value(self, callback, SpawnedLink=SuccessSpawnedLink):             # <<<<<<<<<<<<<<
@@ -12282,138 +12365,6 @@ static PyObject *__pyx_pw_6gevent_9_greenlet_8Greenlet_53link_value(PyObject *__
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("link_value (wrapper)", 0);
-  {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_callback,&__pyx_n_s_SpawnedLink,0};
-    PyObject* values[2] = {0,0};
-    values[1] = __pyx_k__13;
-    if (unlikely(__pyx_kwds)) {
-      Py_ssize_t kw_args;
-      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
-      switch (pos_args) {
-        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-        CYTHON_FALLTHROUGH;
-        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-        CYTHON_FALLTHROUGH;
-        case  0: break;
-        default: goto __pyx_L5_argtuple_error;
-      }
-      kw_args = PyDict_Size(__pyx_kwds);
-      switch (pos_args) {
-        case  0:
-        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_callback)) != 0)) kw_args--;
-        else goto __pyx_L5_argtuple_error;
-        CYTHON_FALLTHROUGH;
-        case  1:
-        if (kw_args > 0) {
-          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_SpawnedLink);
-          if (value) { values[1] = value; kw_args--; }
-        }
-      }
-      if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "link_value") < 0)) __PYX_ERR(0, 826, __pyx_L3_error)
-      }
-    } else {
-      switch (PyTuple_GET_SIZE(__pyx_args)) {
-        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-        CYTHON_FALLTHROUGH;
-        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-        break;
-        default: goto __pyx_L5_argtuple_error;
-      }
-    }
-    __pyx_v_callback = values[0];
-    __pyx_v_SpawnedLink = values[1];
-  }
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("link_value", 0, 1, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 826, __pyx_L3_error)
-  __pyx_L3_error:;
-  __Pyx_AddTraceback("gevent._greenlet.Greenlet.link_value", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_6gevent_9_greenlet_8Greenlet_52link_value(((struct __pyx_obj_6gevent_9_greenlet_Greenlet *)__pyx_v_self), __pyx_v_callback, __pyx_v_SpawnedLink);
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_52link_value(struct __pyx_obj_6gevent_9_greenlet_Greenlet *__pyx_v_self, PyObject *__pyx_v_callback, PyObject *__pyx_v_SpawnedLink) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  PyObject *__pyx_t_4 = NULL;
-  __Pyx_RefNannySetupContext("link_value", 0);
-
-  /* "src/gevent/greenlet.py":832
- *         """
- *         # pylint:disable=redefined-outer-name
- *         self.link(callback, SpawnedLink=SpawnedLink)             # <<<<<<<<<<<<<<
- * 
- *     def link_exception(self, callback, SpawnedLink=FailureSpawnedLink):
- */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_link); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 832, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 832, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_INCREF(__pyx_v_callback);
-  __Pyx_GIVEREF(__pyx_v_callback);
-  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_v_callback);
-  __pyx_t_3 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 832, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_SpawnedLink, __pyx_v_SpawnedLink) < 0) __PYX_ERR(0, 832, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 832, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-
-  /* "src/gevent/greenlet.py":826
- *         del self._links[:]
- * 
- *     def link_value(self, callback, SpawnedLink=SuccessSpawnedLink):             # <<<<<<<<<<<<<<
- *         """
- *         Like :meth:`link` but *callback* is only notified when the greenlet
- */
-
-  /* function exit code */
-  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_AddTraceback("gevent._greenlet.Greenlet.link_value", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "src/gevent/greenlet.py":834
- *         self.link(callback, SpawnedLink=SpawnedLink)
- * 
- *     def link_exception(self, callback, SpawnedLink=FailureSpawnedLink):             # <<<<<<<<<<<<<<
- *         """
- *         Like :meth:`link` but *callback* is only notified when the
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_6gevent_9_greenlet_8Greenlet_55link_exception(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_6gevent_9_greenlet_8Greenlet_54link_exception[] = "Greenlet.link_exception(self, callback, SpawnedLink=FailureSpawnedLink)\n\n        Like :meth:`link` but *callback* is only notified when the\n        greenlet dies because of an unhandled exception.\n        ";
-static PyMethodDef __pyx_mdef_6gevent_9_greenlet_8Greenlet_55link_exception = {"link_exception", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_6gevent_9_greenlet_8Greenlet_55link_exception, METH_VARARGS|METH_KEYWORDS, __pyx_doc_6gevent_9_greenlet_8Greenlet_54link_exception};
-static PyObject *__pyx_pw_6gevent_9_greenlet_8Greenlet_55link_exception(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  PyObject *__pyx_v_callback = 0;
-  PyObject *__pyx_v_SpawnedLink = 0;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("link_exception (wrapper)", 0);
   {
     static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_callback,&__pyx_n_s_SpawnedLink,0};
     PyObject* values[2] = {0,0};
@@ -12442,7 +12393,7 @@ static PyObject *__pyx_pw_6gevent_9_greenlet_8Greenlet_55link_exception(PyObject
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "link_exception") < 0)) __PYX_ERR(0, 834, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "link_value") < 0)) __PYX_ERR(0, 838, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -12458,7 +12409,139 @@ static PyObject *__pyx_pw_6gevent_9_greenlet_8Greenlet_55link_exception(PyObject
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("link_exception", 0, 1, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 834, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("link_value", 0, 1, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 838, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("gevent._greenlet.Greenlet.link_value", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_6gevent_9_greenlet_8Greenlet_52link_value(((struct __pyx_obj_6gevent_9_greenlet_Greenlet *)__pyx_v_self), __pyx_v_callback, __pyx_v_SpawnedLink);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_52link_value(struct __pyx_obj_6gevent_9_greenlet_Greenlet *__pyx_v_self, PyObject *__pyx_v_callback, PyObject *__pyx_v_SpawnedLink) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  PyObject *__pyx_t_4 = NULL;
+  __Pyx_RefNannySetupContext("link_value", 0);
+
+  /* "src/gevent/greenlet.py":844
+ *         """
+ *         # pylint:disable=redefined-outer-name
+ *         self.link(callback, SpawnedLink=SpawnedLink)             # <<<<<<<<<<<<<<
+ * 
+ *     def link_exception(self, callback, SpawnedLink=FailureSpawnedLink):
+ */
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_link); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 844, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 844, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_INCREF(__pyx_v_callback);
+  __Pyx_GIVEREF(__pyx_v_callback);
+  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_v_callback);
+  __pyx_t_3 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 844, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_SpawnedLink, __pyx_v_SpawnedLink) < 0) __PYX_ERR(0, 844, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 844, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+
+  /* "src/gevent/greenlet.py":838
+ *         del self._links[:]
+ * 
+ *     def link_value(self, callback, SpawnedLink=SuccessSpawnedLink):             # <<<<<<<<<<<<<<
+ *         """
+ *         Like :meth:`link` but *callback* is only notified when the greenlet
+ */
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_AddTraceback("gevent._greenlet.Greenlet.link_value", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "src/gevent/greenlet.py":846
+ *         self.link(callback, SpawnedLink=SpawnedLink)
+ * 
+ *     def link_exception(self, callback, SpawnedLink=FailureSpawnedLink):             # <<<<<<<<<<<<<<
+ *         """
+ *         Like :meth:`link` but *callback* is only notified when the
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_6gevent_9_greenlet_8Greenlet_55link_exception(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static char __pyx_doc_6gevent_9_greenlet_8Greenlet_54link_exception[] = "Greenlet.link_exception(self, callback, SpawnedLink=FailureSpawnedLink)\n\n        Like :meth:`link` but *callback* is only notified when the\n        greenlet dies because of an unhandled exception.\n        ";
+static PyMethodDef __pyx_mdef_6gevent_9_greenlet_8Greenlet_55link_exception = {"link_exception", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_6gevent_9_greenlet_8Greenlet_55link_exception, METH_VARARGS|METH_KEYWORDS, __pyx_doc_6gevent_9_greenlet_8Greenlet_54link_exception};
+static PyObject *__pyx_pw_6gevent_9_greenlet_8Greenlet_55link_exception(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyObject *__pyx_v_callback = 0;
+  PyObject *__pyx_v_SpawnedLink = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("link_exception (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_callback,&__pyx_n_s_SpawnedLink,0};
+    PyObject* values[2] = {0,0};
+    values[1] = __pyx_k__15;
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_callback)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (kw_args > 0) {
+          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_SpawnedLink);
+          if (value) { values[1] = value; kw_args--; }
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "link_exception") < 0)) __PYX_ERR(0, 846, __pyx_L3_error)
+      }
+    } else {
+      switch (PyTuple_GET_SIZE(__pyx_args)) {
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+    }
+    __pyx_v_callback = values[0];
+    __pyx_v_SpawnedLink = values[1];
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("link_exception", 0, 1, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 846, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gevent._greenlet.Greenlet.link_exception", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -12480,31 +12563,31 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_54link_exception(struct _
   PyObject *__pyx_t_4 = NULL;
   __Pyx_RefNannySetupContext("link_exception", 0);
 
-  /* "src/gevent/greenlet.py":840
+  /* "src/gevent/greenlet.py":852
  *         """
  *         # pylint:disable=redefined-outer-name
  *         self.link(callback, SpawnedLink=SpawnedLink)             # <<<<<<<<<<<<<<
  * 
  *     def _notify_links(self):
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_link); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 840, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_link); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 852, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 840, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 852, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_v_callback);
   __Pyx_GIVEREF(__pyx_v_callback);
   PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_v_callback);
-  __pyx_t_3 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 840, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 852, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_SpawnedLink, __pyx_v_SpawnedLink) < 0) __PYX_ERR(0, 840, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 840, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_SpawnedLink, __pyx_v_SpawnedLink) < 0) __PYX_ERR(0, 852, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 852, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "src/gevent/greenlet.py":834
+  /* "src/gevent/greenlet.py":846
  *         self.link(callback, SpawnedLink=SpawnedLink)
  * 
  *     def link_exception(self, callback, SpawnedLink=FailureSpawnedLink):             # <<<<<<<<<<<<<<
@@ -12528,7 +12611,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_54link_exception(struct _
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":842
+/* "src/gevent/greenlet.py":854
  *         self.link(callback, SpawnedLink=SpawnedLink)
  * 
  *     def _notify_links(self):             # <<<<<<<<<<<<<<
@@ -12564,7 +12647,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__notify_links(struct __pyx
     else {
       PY_UINT64_T type_dict_guard = (likely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dict)) ? __PYX_GET_DICT_VERSION(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dict) : 0;
       #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_notify_links); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 842, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_notify_links); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 854, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)(void*)__pyx_pw_6gevent_9_greenlet_8Greenlet_57_notify_links)) {
         __Pyx_XDECREF(__pyx_r);
@@ -12581,7 +12664,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__notify_links(struct __pyx
         }
         __pyx_t_2 = (__pyx_t_4) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 842, __pyx_L1_error)
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 854, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
         __pyx_r = __pyx_t_2;
@@ -12602,7 +12685,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__notify_links(struct __pyx
     #endif
   }
 
-  /* "src/gevent/greenlet.py":843
+  /* "src/gevent/greenlet.py":855
  * 
  *     def _notify_links(self):
  *         while self._links:             # <<<<<<<<<<<<<<
@@ -12613,7 +12696,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__notify_links(struct __pyx
     __pyx_t_5 = (__pyx_v_self->_links != Py_None)&&(PyList_GET_SIZE(__pyx_v_self->_links) != 0);
     if (!__pyx_t_5) break;
 
-    /* "src/gevent/greenlet.py":851
+    /* "src/gevent/greenlet.py":863
  *             # manipulating it should be small. a deque is probably not justified.
  *             # Cython has optimizations to transform this into a memmove anyway.
  *             link = self._links.pop(0)             # <<<<<<<<<<<<<<
@@ -12622,14 +12705,14 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__notify_links(struct __pyx
  */
     if (unlikely(__pyx_v_self->_links == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "pop");
-      __PYX_ERR(0, 851, __pyx_L1_error)
+      __PYX_ERR(0, 863, __pyx_L1_error)
     }
-    __pyx_t_1 = __Pyx_PyList_PopIndex(__pyx_v_self->_links, __pyx_int_0, 0, 1, Py_ssize_t, PyInt_FromSsize_t); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 851, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyList_PopIndex(__pyx_v_self->_links, __pyx_int_0, 0, 1, Py_ssize_t, PyInt_FromSsize_t); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 863, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_XDECREF_SET(__pyx_v_link, __pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "src/gevent/greenlet.py":852
+    /* "src/gevent/greenlet.py":864
  *             # Cython has optimizations to transform this into a memmove anyway.
  *             link = self._links.pop(0)
  *             try:             # <<<<<<<<<<<<<<
@@ -12645,7 +12728,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__notify_links(struct __pyx
       __Pyx_XGOTREF(__pyx_t_8);
       /*try:*/ {
 
-        /* "src/gevent/greenlet.py":853
+        /* "src/gevent/greenlet.py":865
  *             link = self._links.pop(0)
  *             try:
  *                 link(self)             # <<<<<<<<<<<<<<
@@ -12665,12 +12748,12 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__notify_links(struct __pyx
         }
         __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_3, ((PyObject *)__pyx_v_self)) : __Pyx_PyObject_CallOneArg(__pyx_t_2, ((PyObject *)__pyx_v_self));
         __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 853, __pyx_L5_error)
+        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 865, __pyx_L5_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-        /* "src/gevent/greenlet.py":852
+        /* "src/gevent/greenlet.py":864
  *             # Cython has optimizations to transform this into a memmove anyway.
  *             link = self._links.pop(0)
  *             try:             # <<<<<<<<<<<<<<
@@ -12688,7 +12771,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__notify_links(struct __pyx
       __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "src/gevent/greenlet.py":854
+      /* "src/gevent/greenlet.py":866
  *             try:
  *                 link(self)
  *             except: # pylint:disable=bare-except             # <<<<<<<<<<<<<<
@@ -12697,24 +12780,24 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__notify_links(struct __pyx
  */
       /*except:*/ {
         __Pyx_AddTraceback("gevent._greenlet.Greenlet._notify_links", __pyx_clineno, __pyx_lineno, __pyx_filename);
-        if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_2, &__pyx_t_3) < 0) __PYX_ERR(0, 854, __pyx_L7_except_error)
+        if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_2, &__pyx_t_3) < 0) __PYX_ERR(0, 866, __pyx_L7_except_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_GOTREF(__pyx_t_3);
 
-        /* "src/gevent/greenlet.py":855
+        /* "src/gevent/greenlet.py":867
  *                 link(self)
  *             except: # pylint:disable=bare-except
  *                 self.parent.handle_error((link, self), *sys_exc_info())             # <<<<<<<<<<<<<<
  * 
  * 
  */
-        __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_parent); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 855, __pyx_L7_except_error)
+        __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_parent); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 867, __pyx_L7_except_error)
         __Pyx_GOTREF(__pyx_t_4);
-        __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_handle_error); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 855, __pyx_L7_except_error)
+        __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_handle_error); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 867, __pyx_L7_except_error)
         __Pyx_GOTREF(__pyx_t_9);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-        __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 855, __pyx_L7_except_error)
+        __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 867, __pyx_L7_except_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_INCREF(__pyx_v_link);
         __Pyx_GIVEREF(__pyx_v_link);
@@ -12722,7 +12805,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__notify_links(struct __pyx
         __Pyx_INCREF(((PyObject *)__pyx_v_self));
         __Pyx_GIVEREF(((PyObject *)__pyx_v_self));
         PyTuple_SET_ITEM(__pyx_t_4, 1, ((PyObject *)__pyx_v_self));
-        __pyx_t_10 = PyTuple_New(1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 855, __pyx_L7_except_error)
+        __pyx_t_10 = PyTuple_New(1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 867, __pyx_L7_except_error)
         __Pyx_GOTREF(__pyx_t_10);
         __Pyx_GIVEREF(__pyx_t_4);
         PyTuple_SET_ITEM(__pyx_t_10, 0, __pyx_t_4);
@@ -12740,17 +12823,17 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__notify_links(struct __pyx
         }
         __pyx_t_4 = (__pyx_t_12) ? __Pyx_PyObject_CallOneArg(__pyx_t_11, __pyx_t_12) : __Pyx_PyObject_CallNoArg(__pyx_t_11);
         __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
-        if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 855, __pyx_L7_except_error)
+        if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 867, __pyx_L7_except_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-        __pyx_t_11 = __Pyx_PySequence_Tuple(__pyx_t_4); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 855, __pyx_L7_except_error)
+        __pyx_t_11 = __Pyx_PySequence_Tuple(__pyx_t_4); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 867, __pyx_L7_except_error)
         __Pyx_GOTREF(__pyx_t_11);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-        __pyx_t_4 = PyNumber_Add(__pyx_t_10, __pyx_t_11); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 855, __pyx_L7_except_error)
+        __pyx_t_4 = PyNumber_Add(__pyx_t_10, __pyx_t_11); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 867, __pyx_L7_except_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
         __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-        __pyx_t_11 = __Pyx_PyObject_Call(__pyx_t_9, __pyx_t_4, NULL); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 855, __pyx_L7_except_error)
+        __pyx_t_11 = __Pyx_PyObject_Call(__pyx_t_9, __pyx_t_4, NULL); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 867, __pyx_L7_except_error)
         __Pyx_GOTREF(__pyx_t_11);
         __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -12762,7 +12845,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__notify_links(struct __pyx
       }
       __pyx_L7_except_error:;
 
-      /* "src/gevent/greenlet.py":852
+      /* "src/gevent/greenlet.py":864
  *             # Cython has optimizations to transform this into a memmove anyway.
  *             link = self._links.pop(0)
  *             try:             # <<<<<<<<<<<<<<
@@ -12783,7 +12866,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_8Greenlet__notify_links(struct __pyx
     }
   }
 
-  /* "src/gevent/greenlet.py":842
+  /* "src/gevent/greenlet.py":854
  *         self.link(callback, SpawnedLink=SpawnedLink)
  * 
  *     def _notify_links(self):             # <<<<<<<<<<<<<<
@@ -12833,7 +12916,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_56_notify_links(struct __
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("_notify_links", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_6gevent_9_greenlet_8Greenlet__notify_links(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 842, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_6gevent_9_greenlet_8Greenlet__notify_links(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 854, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -13140,7 +13223,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_8Greenlet_22_spawning_stack_frames_
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":861
+/* "src/gevent/greenlet.py":873
  *     __slots__ = ('pending', 'active')
  * 
  *     def __init__(self):             # <<<<<<<<<<<<<<
@@ -13169,7 +13252,7 @@ static int __pyx_pf_6gevent_9_greenlet_12_dummy_event___init__(struct __pyx_obj_
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__init__", 0);
 
-  /* "src/gevent/greenlet.py":862
+  /* "src/gevent/greenlet.py":874
  * 
  *     def __init__(self):
  *         self.pending = self.active = False             # <<<<<<<<<<<<<<
@@ -13179,7 +13262,7 @@ static int __pyx_pf_6gevent_9_greenlet_12_dummy_event___init__(struct __pyx_obj_
   __pyx_v_self->pending = 0;
   __pyx_v_self->active = 0;
 
-  /* "src/gevent/greenlet.py":861
+  /* "src/gevent/greenlet.py":873
  *     __slots__ = ('pending', 'active')
  * 
  *     def __init__(self):             # <<<<<<<<<<<<<<
@@ -13193,7 +13276,7 @@ static int __pyx_pf_6gevent_9_greenlet_12_dummy_event___init__(struct __pyx_obj_
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":864
+/* "src/gevent/greenlet.py":876
  *         self.pending = self.active = False
  * 
  *     def stop(self):             # <<<<<<<<<<<<<<
@@ -13235,7 +13318,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_12_dummy_event_2stop(struct __pyx_o
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("stop", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_6gevent_9_greenlet_12_dummy_event_stop(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 864, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_6gevent_9_greenlet_12_dummy_event_stop(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 876, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -13252,7 +13335,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_12_dummy_event_2stop(struct __pyx_o
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":867
+/* "src/gevent/greenlet.py":879
  *         pass
  * 
  *     def start(self, cb): # pylint:disable=unused-argument             # <<<<<<<<<<<<<<
@@ -13267,20 +13350,20 @@ static PyObject *__pyx_f_6gevent_9_greenlet_12_dummy_event_start(CYTHON_UNUSED s
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("start", 0);
 
-  /* "src/gevent/greenlet.py":868
+  /* "src/gevent/greenlet.py":880
  * 
  *     def start(self, cb): # pylint:disable=unused-argument
  *         raise AssertionError("Cannot start the dummy event")             # <<<<<<<<<<<<<<
  * 
  *     def close(self):
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_AssertionError, __pyx_tuple__15, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 868, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_AssertionError, __pyx_tuple__16, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 880, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_Raise(__pyx_t_1, 0, 0, 0);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __PYX_ERR(0, 868, __pyx_L1_error)
+  __PYX_ERR(0, 880, __pyx_L1_error)
 
-  /* "src/gevent/greenlet.py":867
+  /* "src/gevent/greenlet.py":879
  *         pass
  * 
  *     def start(self, cb): # pylint:disable=unused-argument             # <<<<<<<<<<<<<<
@@ -13319,7 +13402,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_12_dummy_event_4start(struct __pyx_
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("start", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_6gevent_9_greenlet_12_dummy_event_start(__pyx_v_self, __pyx_v_cb, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 867, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_6gevent_9_greenlet_12_dummy_event_start(__pyx_v_self, __pyx_v_cb, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 879, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -13336,7 +13419,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_12_dummy_event_4start(struct __pyx_
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":870
+/* "src/gevent/greenlet.py":882
  *         raise AssertionError("Cannot start the dummy event")
  * 
  *     def close(self):             # <<<<<<<<<<<<<<
@@ -13378,7 +13461,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_12_dummy_event_6close(struct __pyx_
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("close", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_6gevent_9_greenlet_12_dummy_event_close(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 870, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_6gevent_9_greenlet_12_dummy_event_close(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 882, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -13483,7 +13566,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_12_dummy_event_6active___get__(stru
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":877
+/* "src/gevent/greenlet.py":889
  * 
  * 
  * def _kill(glet, exception, waiter):             # <<<<<<<<<<<<<<
@@ -13527,17 +13610,17 @@ static PyObject *__pyx_pw_6gevent_9_greenlet_1_kill(PyObject *__pyx_self, PyObje
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_exception)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("_kill", 1, 3, 3, 1); __PYX_ERR(0, 877, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("_kill", 1, 3, 3, 1); __PYX_ERR(0, 889, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_waiter)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("_kill", 1, 3, 3, 2); __PYX_ERR(0, 877, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("_kill", 1, 3, 3, 2); __PYX_ERR(0, 889, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_kill") < 0)) __PYX_ERR(0, 877, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_kill") < 0)) __PYX_ERR(0, 889, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
       goto __pyx_L5_argtuple_error;
@@ -13552,7 +13635,7 @@ static PyObject *__pyx_pw_6gevent_9_greenlet_1_kill(PyObject *__pyx_self, PyObje
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("_kill", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 877, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("_kill", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 889, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gevent._greenlet._kill", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -13583,7 +13666,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet__kill(CYTHON_UNUSED PyObject *__pyx
   int __pyx_t_13;
   __Pyx_RefNannySetupContext("_kill", 0);
 
-  /* "src/gevent/greenlet.py":878
+  /* "src/gevent/greenlet.py":890
  * 
  * def _kill(glet, exception, waiter):
  *     try:             # <<<<<<<<<<<<<<
@@ -13599,14 +13682,14 @@ static PyObject *__pyx_pf_6gevent_9_greenlet__kill(CYTHON_UNUSED PyObject *__pyx
     __Pyx_XGOTREF(__pyx_t_3);
     /*try:*/ {
 
-      /* "src/gevent/greenlet.py":879
+      /* "src/gevent/greenlet.py":891
  * def _kill(glet, exception, waiter):
  *     try:
  *         glet.throw(exception)             # <<<<<<<<<<<<<<
  *     except: # pylint:disable=bare-except
  *         # XXX do we need this here?
  */
-      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_glet, __pyx_n_s_throw); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 879, __pyx_L3_error)
+      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_glet, __pyx_n_s_throw); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 891, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_5);
       __pyx_t_6 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
@@ -13620,12 +13703,12 @@ static PyObject *__pyx_pf_6gevent_9_greenlet__kill(CYTHON_UNUSED PyObject *__pyx
       }
       __pyx_t_4 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_5, __pyx_t_6, __pyx_v_exception) : __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_v_exception);
       __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 879, __pyx_L3_error)
+      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 891, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-      /* "src/gevent/greenlet.py":878
+      /* "src/gevent/greenlet.py":890
  * 
  * def _kill(glet, exception, waiter):
  *     try:             # <<<<<<<<<<<<<<
@@ -13642,7 +13725,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet__kill(CYTHON_UNUSED PyObject *__pyx
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "src/gevent/greenlet.py":880
+    /* "src/gevent/greenlet.py":892
  *     try:
  *         glet.throw(exception)
  *     except: # pylint:disable=bare-except             # <<<<<<<<<<<<<<
@@ -13651,24 +13734,24 @@ static PyObject *__pyx_pf_6gevent_9_greenlet__kill(CYTHON_UNUSED PyObject *__pyx
  */
     /*except:*/ {
       __Pyx_AddTraceback("gevent._greenlet._kill", __pyx_clineno, __pyx_lineno, __pyx_filename);
-      if (__Pyx_GetException(&__pyx_t_4, &__pyx_t_5, &__pyx_t_6) < 0) __PYX_ERR(0, 880, __pyx_L5_except_error)
+      if (__Pyx_GetException(&__pyx_t_4, &__pyx_t_5, &__pyx_t_6) < 0) __PYX_ERR(0, 892, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_GOTREF(__pyx_t_6);
 
-      /* "src/gevent/greenlet.py":882
+      /* "src/gevent/greenlet.py":894
  *     except: # pylint:disable=bare-except
  *         # XXX do we need this here?
  *         glet.parent.handle_error(glet, *sys_exc_info())             # <<<<<<<<<<<<<<
  *     if waiter is not None:
  *         waiter.switch(None)
  */
-      __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_v_glet, __pyx_n_s_parent); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 882, __pyx_L5_except_error)
+      __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_v_glet, __pyx_n_s_parent); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 894, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_7);
-      __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_handle_error); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 882, __pyx_L5_except_error)
+      __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_handle_error); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 894, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-      __pyx_t_7 = PyTuple_New(1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 882, __pyx_L5_except_error)
+      __pyx_t_7 = PyTuple_New(1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 894, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_INCREF(__pyx_v_glet);
       __Pyx_GIVEREF(__pyx_v_glet);
@@ -13686,17 +13769,17 @@ static PyObject *__pyx_pf_6gevent_9_greenlet__kill(CYTHON_UNUSED PyObject *__pyx
       }
       __pyx_t_9 = (__pyx_t_11) ? __Pyx_PyObject_CallOneArg(__pyx_t_10, __pyx_t_11) : __Pyx_PyObject_CallNoArg(__pyx_t_10);
       __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
-      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 882, __pyx_L5_except_error)
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 894, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-      __pyx_t_10 = __Pyx_PySequence_Tuple(__pyx_t_9); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 882, __pyx_L5_except_error)
+      __pyx_t_10 = __Pyx_PySequence_Tuple(__pyx_t_9); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 894, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_10);
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-      __pyx_t_9 = PyNumber_Add(__pyx_t_7, __pyx_t_10); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 882, __pyx_L5_except_error)
+      __pyx_t_9 = PyNumber_Add(__pyx_t_7, __pyx_t_10); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 894, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-      __pyx_t_10 = __Pyx_PyObject_Call(__pyx_t_8, __pyx_t_9, NULL); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 882, __pyx_L5_except_error)
+      __pyx_t_10 = __Pyx_PyObject_Call(__pyx_t_8, __pyx_t_9, NULL); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 894, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_10);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
@@ -13708,7 +13791,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet__kill(CYTHON_UNUSED PyObject *__pyx
     }
     __pyx_L5_except_error:;
 
-    /* "src/gevent/greenlet.py":878
+    /* "src/gevent/greenlet.py":890
  * 
  * def _kill(glet, exception, waiter):
  *     try:             # <<<<<<<<<<<<<<
@@ -13728,7 +13811,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet__kill(CYTHON_UNUSED PyObject *__pyx
     __pyx_L8_try_end:;
   }
 
-  /* "src/gevent/greenlet.py":883
+  /* "src/gevent/greenlet.py":895
  *         # XXX do we need this here?
  *         glet.parent.handle_error(glet, *sys_exc_info())
  *     if waiter is not None:             # <<<<<<<<<<<<<<
@@ -13739,14 +13822,14 @@ static PyObject *__pyx_pf_6gevent_9_greenlet__kill(CYTHON_UNUSED PyObject *__pyx
   __pyx_t_13 = (__pyx_t_12 != 0);
   if (__pyx_t_13) {
 
-    /* "src/gevent/greenlet.py":884
+    /* "src/gevent/greenlet.py":896
  *         glet.parent.handle_error(glet, *sys_exc_info())
  *     if waiter is not None:
  *         waiter.switch(None)             # <<<<<<<<<<<<<<
  * 
  * 
  */
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_waiter, __pyx_n_s_switch); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 884, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_waiter, __pyx_n_s_switch); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 896, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __pyx_t_4 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
@@ -13760,12 +13843,12 @@ static PyObject *__pyx_pf_6gevent_9_greenlet__kill(CYTHON_UNUSED PyObject *__pyx
     }
     __pyx_t_6 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_5, __pyx_t_4, Py_None) : __Pyx_PyObject_CallOneArg(__pyx_t_5, Py_None);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 884, __pyx_L1_error)
+    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 896, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-    /* "src/gevent/greenlet.py":883
+    /* "src/gevent/greenlet.py":895
  *         # XXX do we need this here?
  *         glet.parent.handle_error(glet, *sys_exc_info())
  *     if waiter is not None:             # <<<<<<<<<<<<<<
@@ -13774,7 +13857,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet__kill(CYTHON_UNUSED PyObject *__pyx
  */
   }
 
-  /* "src/gevent/greenlet.py":877
+  /* "src/gevent/greenlet.py":889
  * 
  * 
  * def _kill(glet, exception, waiter):             # <<<<<<<<<<<<<<
@@ -13802,7 +13885,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet__kill(CYTHON_UNUSED PyObject *__pyx
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":887
+/* "src/gevent/greenlet.py":899
  * 
  * 
  * def joinall(greenlets, timeout=None, raise_error=False, count=None):             # <<<<<<<<<<<<<<
@@ -13841,18 +13924,18 @@ static PyObject *__pyx_f_6gevent_9_greenlet_joinall(PyObject *__pyx_v_greenlets,
     }
   }
 
-  /* "src/gevent/greenlet.py":896
+  /* "src/gevent/greenlet.py":908
  *         expired.
  *     """
  *     if not raise_error:             # <<<<<<<<<<<<<<
  *         return wait(greenlets, timeout=timeout, count=count)
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_raise_error); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 896, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_raise_error); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 908, __pyx_L1_error)
   __pyx_t_2 = ((!__pyx_t_1) != 0);
   if (__pyx_t_2) {
 
-    /* "src/gevent/greenlet.py":897
+    /* "src/gevent/greenlet.py":909
  *     """
  *     if not raise_error:
  *         return wait(greenlets, timeout=timeout, count=count)             # <<<<<<<<<<<<<<
@@ -13860,16 +13943,16 @@ static PyObject *__pyx_f_6gevent_9_greenlet_joinall(PyObject *__pyx_v_greenlets,
  *     done = []
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 897, __pyx_L1_error)
+    __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 909, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_INCREF(__pyx_v_greenlets);
     __Pyx_GIVEREF(__pyx_v_greenlets);
     PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_v_greenlets);
-    __pyx_t_4 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 897, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 909, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_timeout, __pyx_v_timeout) < 0) __PYX_ERR(0, 897, __pyx_L1_error)
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_count, __pyx_v_count) < 0) __PYX_ERR(0, 897, __pyx_L1_error)
-    __pyx_t_5 = __Pyx_PyObject_Call(__pyx_v_6gevent_9_greenlet_wait, __pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 897, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_timeout, __pyx_v_timeout) < 0) __PYX_ERR(0, 909, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_count, __pyx_v_count) < 0) __PYX_ERR(0, 909, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_Call(__pyx_v_6gevent_9_greenlet_wait, __pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 909, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -13877,7 +13960,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_joinall(PyObject *__pyx_v_greenlets,
     __pyx_t_5 = 0;
     goto __pyx_L0;
 
-    /* "src/gevent/greenlet.py":896
+    /* "src/gevent/greenlet.py":908
  *         expired.
  *     """
  *     if not raise_error:             # <<<<<<<<<<<<<<
@@ -13886,35 +13969,35 @@ static PyObject *__pyx_f_6gevent_9_greenlet_joinall(PyObject *__pyx_v_greenlets,
  */
   }
 
-  /* "src/gevent/greenlet.py":899
+  /* "src/gevent/greenlet.py":911
  *         return wait(greenlets, timeout=timeout, count=count)
  * 
  *     done = []             # <<<<<<<<<<<<<<
  *     for obj in iwait(greenlets, timeout=timeout, count=count):
  *         if getattr(obj, 'exception', None) is not None:
  */
-  __pyx_t_5 = PyList_New(0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 899, __pyx_L1_error)
+  __pyx_t_5 = PyList_New(0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 911, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __pyx_v_done = ((PyObject*)__pyx_t_5);
   __pyx_t_5 = 0;
 
-  /* "src/gevent/greenlet.py":900
+  /* "src/gevent/greenlet.py":912
  * 
  *     done = []
  *     for obj in iwait(greenlets, timeout=timeout, count=count):             # <<<<<<<<<<<<<<
  *         if getattr(obj, 'exception', None) is not None:
  *             if hasattr(obj, '_raise_exception'):
  */
-  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 900, __pyx_L1_error)
+  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 912, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_INCREF(__pyx_v_greenlets);
   __Pyx_GIVEREF(__pyx_v_greenlets);
   PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_v_greenlets);
-  __pyx_t_4 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 900, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 912, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_timeout, __pyx_v_timeout) < 0) __PYX_ERR(0, 900, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_count, __pyx_v_count) < 0) __PYX_ERR(0, 900, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_v_6gevent_9_greenlet_iwait, __pyx_t_5, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 900, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_timeout, __pyx_v_timeout) < 0) __PYX_ERR(0, 912, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_count, __pyx_v_count) < 0) __PYX_ERR(0, 912, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_v_6gevent_9_greenlet_iwait, __pyx_t_5, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 912, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -13922,9 +14005,9 @@ static PyObject *__pyx_f_6gevent_9_greenlet_joinall(PyObject *__pyx_v_greenlets,
     __pyx_t_4 = __pyx_t_3; __Pyx_INCREF(__pyx_t_4); __pyx_t_6 = 0;
     __pyx_t_7 = NULL;
   } else {
-    __pyx_t_6 = -1; __pyx_t_4 = PyObject_GetIter(__pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 900, __pyx_L1_error)
+    __pyx_t_6 = -1; __pyx_t_4 = PyObject_GetIter(__pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 912, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_7 = Py_TYPE(__pyx_t_4)->tp_iternext; if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 900, __pyx_L1_error)
+    __pyx_t_7 = Py_TYPE(__pyx_t_4)->tp_iternext; if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 912, __pyx_L1_error)
   }
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   for (;;) {
@@ -13932,17 +14015,17 @@ static PyObject *__pyx_f_6gevent_9_greenlet_joinall(PyObject *__pyx_v_greenlets,
       if (likely(PyList_CheckExact(__pyx_t_4))) {
         if (__pyx_t_6 >= PyList_GET_SIZE(__pyx_t_4)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_3 = PyList_GET_ITEM(__pyx_t_4, __pyx_t_6); __Pyx_INCREF(__pyx_t_3); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(0, 900, __pyx_L1_error)
+        __pyx_t_3 = PyList_GET_ITEM(__pyx_t_4, __pyx_t_6); __Pyx_INCREF(__pyx_t_3); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(0, 912, __pyx_L1_error)
         #else
-        __pyx_t_3 = PySequence_ITEM(__pyx_t_4, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 900, __pyx_L1_error)
+        __pyx_t_3 = PySequence_ITEM(__pyx_t_4, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 912, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         #endif
       } else {
         if (__pyx_t_6 >= PyTuple_GET_SIZE(__pyx_t_4)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_3 = PyTuple_GET_ITEM(__pyx_t_4, __pyx_t_6); __Pyx_INCREF(__pyx_t_3); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(0, 900, __pyx_L1_error)
+        __pyx_t_3 = PyTuple_GET_ITEM(__pyx_t_4, __pyx_t_6); __Pyx_INCREF(__pyx_t_3); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(0, 912, __pyx_L1_error)
         #else
-        __pyx_t_3 = PySequence_ITEM(__pyx_t_4, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 900, __pyx_L1_error)
+        __pyx_t_3 = PySequence_ITEM(__pyx_t_4, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 912, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         #endif
       }
@@ -13952,7 +14035,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_joinall(PyObject *__pyx_v_greenlets,
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 900, __pyx_L1_error)
+          else __PYX_ERR(0, 912, __pyx_L1_error)
         }
         break;
       }
@@ -13961,39 +14044,39 @@ static PyObject *__pyx_f_6gevent_9_greenlet_joinall(PyObject *__pyx_v_greenlets,
     __Pyx_XDECREF_SET(__pyx_v_obj, __pyx_t_3);
     __pyx_t_3 = 0;
 
-    /* "src/gevent/greenlet.py":901
+    /* "src/gevent/greenlet.py":913
  *     done = []
  *     for obj in iwait(greenlets, timeout=timeout, count=count):
  *         if getattr(obj, 'exception', None) is not None:             # <<<<<<<<<<<<<<
  *             if hasattr(obj, '_raise_exception'):
  *                 obj._raise_exception()
  */
-    __pyx_t_3 = __Pyx_GetAttr3(__pyx_v_obj, __pyx_n_s_exception, Py_None); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 901, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_GetAttr3(__pyx_v_obj, __pyx_n_s_exception, Py_None); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 913, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_t_2 = (__pyx_t_3 != Py_None);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __pyx_t_1 = (__pyx_t_2 != 0);
     if (__pyx_t_1) {
 
-      /* "src/gevent/greenlet.py":902
+      /* "src/gevent/greenlet.py":914
  *     for obj in iwait(greenlets, timeout=timeout, count=count):
  *         if getattr(obj, 'exception', None) is not None:
  *             if hasattr(obj, '_raise_exception'):             # <<<<<<<<<<<<<<
  *                 obj._raise_exception()
  *             else:
  */
-      __pyx_t_1 = __Pyx_HasAttr(__pyx_v_obj, __pyx_n_s_raise_exception); if (unlikely(__pyx_t_1 == ((int)-1))) __PYX_ERR(0, 902, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_HasAttr(__pyx_v_obj, __pyx_n_s_raise_exception); if (unlikely(__pyx_t_1 == ((int)-1))) __PYX_ERR(0, 914, __pyx_L1_error)
       __pyx_t_2 = (__pyx_t_1 != 0);
       if (likely(__pyx_t_2)) {
 
-        /* "src/gevent/greenlet.py":903
+        /* "src/gevent/greenlet.py":915
  *         if getattr(obj, 'exception', None) is not None:
  *             if hasattr(obj, '_raise_exception'):
  *                 obj._raise_exception()             # <<<<<<<<<<<<<<
  *             else:
  *                 raise obj.exception
  */
-        __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_obj, __pyx_n_s_raise_exception); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 903, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_obj, __pyx_n_s_raise_exception); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 915, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_5);
         __pyx_t_8 = NULL;
         if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
@@ -14007,12 +14090,12 @@ static PyObject *__pyx_f_6gevent_9_greenlet_joinall(PyObject *__pyx_v_greenlets,
         }
         __pyx_t_3 = (__pyx_t_8) ? __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_8) : __Pyx_PyObject_CallNoArg(__pyx_t_5);
         __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-        if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 903, __pyx_L1_error)
+        if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 915, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-        /* "src/gevent/greenlet.py":902
+        /* "src/gevent/greenlet.py":914
  *     for obj in iwait(greenlets, timeout=timeout, count=count):
  *         if getattr(obj, 'exception', None) is not None:
  *             if hasattr(obj, '_raise_exception'):             # <<<<<<<<<<<<<<
@@ -14022,7 +14105,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_joinall(PyObject *__pyx_v_greenlets,
         goto __pyx_L7;
       }
 
-      /* "src/gevent/greenlet.py":905
+      /* "src/gevent/greenlet.py":917
  *                 obj._raise_exception()
  *             else:
  *                 raise obj.exception             # <<<<<<<<<<<<<<
@@ -14030,15 +14113,15 @@ static PyObject *__pyx_f_6gevent_9_greenlet_joinall(PyObject *__pyx_v_greenlets,
  *     return done
  */
       /*else*/ {
-        __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_obj, __pyx_n_s_exception); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 905, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_obj, __pyx_n_s_exception); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 917, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_Raise(__pyx_t_3, 0, 0, 0);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        __PYX_ERR(0, 905, __pyx_L1_error)
+        __PYX_ERR(0, 917, __pyx_L1_error)
       }
       __pyx_L7:;
 
-      /* "src/gevent/greenlet.py":901
+      /* "src/gevent/greenlet.py":913
  *     done = []
  *     for obj in iwait(greenlets, timeout=timeout, count=count):
  *         if getattr(obj, 'exception', None) is not None:             # <<<<<<<<<<<<<<
@@ -14047,16 +14130,16 @@ static PyObject *__pyx_f_6gevent_9_greenlet_joinall(PyObject *__pyx_v_greenlets,
  */
     }
 
-    /* "src/gevent/greenlet.py":906
+    /* "src/gevent/greenlet.py":918
  *             else:
  *                 raise obj.exception
  *         done.append(obj)             # <<<<<<<<<<<<<<
  *     return done
  * 
  */
-    __pyx_t_9 = __Pyx_PyList_Append(__pyx_v_done, __pyx_v_obj); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(0, 906, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyList_Append(__pyx_v_done, __pyx_v_obj); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(0, 918, __pyx_L1_error)
 
-    /* "src/gevent/greenlet.py":900
+    /* "src/gevent/greenlet.py":912
  * 
  *     done = []
  *     for obj in iwait(greenlets, timeout=timeout, count=count):             # <<<<<<<<<<<<<<
@@ -14066,7 +14149,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_joinall(PyObject *__pyx_v_greenlets,
   }
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "src/gevent/greenlet.py":907
+  /* "src/gevent/greenlet.py":919
  *                 raise obj.exception
  *         done.append(obj)
  *     return done             # <<<<<<<<<<<<<<
@@ -14078,7 +14161,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet_joinall(PyObject *__pyx_v_greenlets,
   __pyx_r = __pyx_v_done;
   goto __pyx_L0;
 
-  /* "src/gevent/greenlet.py":887
+  /* "src/gevent/greenlet.py":899
  * 
  * 
  * def joinall(greenlets, timeout=None, raise_error=False, count=None):             # <<<<<<<<<<<<<<
@@ -14160,7 +14243,7 @@ static PyObject *__pyx_pw_6gevent_9_greenlet_3joinall(PyObject *__pyx_self, PyOb
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "joinall") < 0)) __PYX_ERR(0, 887, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "joinall") < 0)) __PYX_ERR(0, 899, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -14182,7 +14265,7 @@ static PyObject *__pyx_pw_6gevent_9_greenlet_3joinall(PyObject *__pyx_self, PyOb
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("joinall", 0, 1, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 887, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("joinall", 0, 1, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 899, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gevent._greenlet.joinall", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -14206,7 +14289,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_2joinall(CYTHON_UNUSED PyObject *__
   __pyx_t_2.timeout = __pyx_v_timeout;
   __pyx_t_2.raise_error = __pyx_v_raise_error;
   __pyx_t_2.count = __pyx_v_count;
-  __pyx_t_1 = __pyx_f_6gevent_9_greenlet_joinall(__pyx_v_greenlets, 0, &__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 887, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_6gevent_9_greenlet_joinall(__pyx_v_greenlets, 0, &__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 899, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -14223,7 +14306,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_2joinall(CYTHON_UNUSED PyObject *__
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":910
+/* "src/gevent/greenlet.py":922
  * 
  * 
  * def _killall3(greenlets, exception, waiter):             # <<<<<<<<<<<<<<
@@ -14254,340 +14337,21 @@ static PyObject *__pyx_f_6gevent_9_greenlet__killall3(PyObject *__pyx_v_greenlet
   int __pyx_t_16;
   __Pyx_RefNannySetupContext("_killall3", 0);
 
-  /* "src/gevent/greenlet.py":911
+  /* "src/gevent/greenlet.py":923
  * 
  * def _killall3(greenlets, exception, waiter):
  *     diehards = []             # <<<<<<<<<<<<<<
  *     for g in greenlets:
  *         if not g.dead:
  */
-  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 911, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 923, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_diehards = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/gevent/greenlet.py":912
- * def _killall3(greenlets, exception, waiter):
- *     diehards = []
- *     for g in greenlets:             # <<<<<<<<<<<<<<
- *         if not g.dead:
- *             try:
- */
-  if (unlikely(__pyx_v_greenlets == Py_None)) {
-    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-    __PYX_ERR(0, 912, __pyx_L1_error)
-  }
-  __pyx_t_1 = __pyx_v_greenlets; __Pyx_INCREF(__pyx_t_1); __pyx_t_2 = 0;
-  for (;;) {
-    if (__pyx_t_2 >= PyList_GET_SIZE(__pyx_t_1)) break;
-    #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-    __pyx_t_3 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_3); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 912, __pyx_L1_error)
-    #else
-    __pyx_t_3 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 912, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    #endif
-    __Pyx_XDECREF_SET(__pyx_v_g, __pyx_t_3);
-    __pyx_t_3 = 0;
-
-    /* "src/gevent/greenlet.py":913
- *     diehards = []
- *     for g in greenlets:
- *         if not g.dead:             # <<<<<<<<<<<<<<
- *             try:
- *                 g.throw(exception)
- */
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_g, __pyx_n_s_dead); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 913, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 913, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_5 = ((!__pyx_t_4) != 0);
-    if (__pyx_t_5) {
-
-      /* "src/gevent/greenlet.py":914
- *     for g in greenlets:
- *         if not g.dead:
- *             try:             # <<<<<<<<<<<<<<
- *                 g.throw(exception)
- *             except: # pylint:disable=bare-except
- */
-      {
-        __Pyx_PyThreadState_declare
-        __Pyx_PyThreadState_assign
-        __Pyx_ExceptionSave(&__pyx_t_6, &__pyx_t_7, &__pyx_t_8);
-        __Pyx_XGOTREF(__pyx_t_6);
-        __Pyx_XGOTREF(__pyx_t_7);
-        __Pyx_XGOTREF(__pyx_t_8);
-        /*try:*/ {
-
-          /* "src/gevent/greenlet.py":915
- *         if not g.dead:
- *             try:
- *                 g.throw(exception)             # <<<<<<<<<<<<<<
- *             except: # pylint:disable=bare-except
- *                 g.parent.handle_error(g, *sys_exc_info())
- */
-          __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_g, __pyx_n_s_throw); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 915, __pyx_L6_error)
-          __Pyx_GOTREF(__pyx_t_9);
-          __pyx_t_10 = NULL;
-          if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_9))) {
-            __pyx_t_10 = PyMethod_GET_SELF(__pyx_t_9);
-            if (likely(__pyx_t_10)) {
-              PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_9);
-              __Pyx_INCREF(__pyx_t_10);
-              __Pyx_INCREF(function);
-              __Pyx_DECREF_SET(__pyx_t_9, function);
-            }
-          }
-          __pyx_t_3 = (__pyx_t_10) ? __Pyx_PyObject_Call2Args(__pyx_t_9, __pyx_t_10, __pyx_v_exception) : __Pyx_PyObject_CallOneArg(__pyx_t_9, __pyx_v_exception);
-          __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
-          if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 915, __pyx_L6_error)
-          __Pyx_GOTREF(__pyx_t_3);
-          __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-          __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-
-          /* "src/gevent/greenlet.py":914
- *     for g in greenlets:
- *         if not g.dead:
- *             try:             # <<<<<<<<<<<<<<
- *                 g.throw(exception)
- *             except: # pylint:disable=bare-except
- */
-        }
-        __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-        __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-        __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-        goto __pyx_L13_try_end;
-        __pyx_L6_error:;
-        __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
-        __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
-        __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-
-        /* "src/gevent/greenlet.py":916
- *             try:
- *                 g.throw(exception)
- *             except: # pylint:disable=bare-except             # <<<<<<<<<<<<<<
- *                 g.parent.handle_error(g, *sys_exc_info())
- *             if not g.dead:
- */
-        /*except:*/ {
-          __Pyx_AddTraceback("gevent._greenlet._killall3", __pyx_clineno, __pyx_lineno, __pyx_filename);
-          if (__Pyx_GetException(&__pyx_t_3, &__pyx_t_9, &__pyx_t_10) < 0) __PYX_ERR(0, 916, __pyx_L8_except_error)
-          __Pyx_GOTREF(__pyx_t_3);
-          __Pyx_GOTREF(__pyx_t_9);
-          __Pyx_GOTREF(__pyx_t_10);
-
-          /* "src/gevent/greenlet.py":917
- *                 g.throw(exception)
- *             except: # pylint:disable=bare-except
- *                 g.parent.handle_error(g, *sys_exc_info())             # <<<<<<<<<<<<<<
- *             if not g.dead:
- *                 diehards.append(g)
- */
-          __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_v_g, __pyx_n_s_parent); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 917, __pyx_L8_except_error)
-          __Pyx_GOTREF(__pyx_t_11);
-          __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_n_s_handle_error); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 917, __pyx_L8_except_error)
-          __Pyx_GOTREF(__pyx_t_12);
-          __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-          __pyx_t_11 = PyTuple_New(1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 917, __pyx_L8_except_error)
-          __Pyx_GOTREF(__pyx_t_11);
-          __Pyx_INCREF(__pyx_v_g);
-          __Pyx_GIVEREF(__pyx_v_g);
-          PyTuple_SET_ITEM(__pyx_t_11, 0, __pyx_v_g);
-          __Pyx_INCREF(__pyx_v_6gevent_9_greenlet_sys_exc_info);
-          __pyx_t_14 = __pyx_v_6gevent_9_greenlet_sys_exc_info; __pyx_t_15 = NULL;
-          if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_14))) {
-            __pyx_t_15 = PyMethod_GET_SELF(__pyx_t_14);
-            if (likely(__pyx_t_15)) {
-              PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_14);
-              __Pyx_INCREF(__pyx_t_15);
-              __Pyx_INCREF(function);
-              __Pyx_DECREF_SET(__pyx_t_14, function);
-            }
-          }
-          __pyx_t_13 = (__pyx_t_15) ? __Pyx_PyObject_CallOneArg(__pyx_t_14, __pyx_t_15) : __Pyx_PyObject_CallNoArg(__pyx_t_14);
-          __Pyx_XDECREF(__pyx_t_15); __pyx_t_15 = 0;
-          if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 917, __pyx_L8_except_error)
-          __Pyx_GOTREF(__pyx_t_13);
-          __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-          __pyx_t_14 = __Pyx_PySequence_Tuple(__pyx_t_13); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 917, __pyx_L8_except_error)
-          __Pyx_GOTREF(__pyx_t_14);
-          __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-          __pyx_t_13 = PyNumber_Add(__pyx_t_11, __pyx_t_14); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 917, __pyx_L8_except_error)
-          __Pyx_GOTREF(__pyx_t_13);
-          __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-          __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-          __pyx_t_14 = __Pyx_PyObject_Call(__pyx_t_12, __pyx_t_13, NULL); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 917, __pyx_L8_except_error)
-          __Pyx_GOTREF(__pyx_t_14);
-          __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-          __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-          __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-          __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-          __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
-          __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
-          goto __pyx_L7_exception_handled;
-        }
-        __pyx_L8_except_error:;
-
-        /* "src/gevent/greenlet.py":914
- *     for g in greenlets:
- *         if not g.dead:
- *             try:             # <<<<<<<<<<<<<<
- *                 g.throw(exception)
- *             except: # pylint:disable=bare-except
- */
-        __Pyx_XGIVEREF(__pyx_t_6);
-        __Pyx_XGIVEREF(__pyx_t_7);
-        __Pyx_XGIVEREF(__pyx_t_8);
-        __Pyx_ExceptionReset(__pyx_t_6, __pyx_t_7, __pyx_t_8);
-        goto __pyx_L1_error;
-        __pyx_L7_exception_handled:;
-        __Pyx_XGIVEREF(__pyx_t_6);
-        __Pyx_XGIVEREF(__pyx_t_7);
-        __Pyx_XGIVEREF(__pyx_t_8);
-        __Pyx_ExceptionReset(__pyx_t_6, __pyx_t_7, __pyx_t_8);
-        __pyx_L13_try_end:;
-      }
-
-      /* "src/gevent/greenlet.py":918
- *             except: # pylint:disable=bare-except
- *                 g.parent.handle_error(g, *sys_exc_info())
- *             if not g.dead:             # <<<<<<<<<<<<<<
- *                 diehards.append(g)
- *     waiter.switch(diehards)
- */
-      __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_v_g, __pyx_n_s_dead); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 918, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_10);
-      __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_10); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 918, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-      __pyx_t_4 = ((!__pyx_t_5) != 0);
-      if (__pyx_t_4) {
-
-        /* "src/gevent/greenlet.py":919
- *                 g.parent.handle_error(g, *sys_exc_info())
- *             if not g.dead:
- *                 diehards.append(g)             # <<<<<<<<<<<<<<
- *     waiter.switch(diehards)
- * 
- */
-        __pyx_t_16 = __Pyx_PyList_Append(__pyx_v_diehards, __pyx_v_g); if (unlikely(__pyx_t_16 == ((int)-1))) __PYX_ERR(0, 919, __pyx_L1_error)
-
-        /* "src/gevent/greenlet.py":918
- *             except: # pylint:disable=bare-except
- *                 g.parent.handle_error(g, *sys_exc_info())
- *             if not g.dead:             # <<<<<<<<<<<<<<
- *                 diehards.append(g)
- *     waiter.switch(diehards)
- */
-      }
-
-      /* "src/gevent/greenlet.py":913
- *     diehards = []
- *     for g in greenlets:
- *         if not g.dead:             # <<<<<<<<<<<<<<
- *             try:
- *                 g.throw(exception)
- */
-    }
-
-    /* "src/gevent/greenlet.py":912
- * def _killall3(greenlets, exception, waiter):
- *     diehards = []
- *     for g in greenlets:             # <<<<<<<<<<<<<<
- *         if not g.dead:
- *             try:
- */
-  }
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "src/gevent/greenlet.py":920
- *             if not g.dead:
- *                 diehards.append(g)
- *     waiter.switch(diehards)             # <<<<<<<<<<<<<<
- * 
- * 
- */
-  __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_v_waiter, __pyx_n_s_switch); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 920, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_10);
-  __pyx_t_9 = NULL;
-  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_10))) {
-    __pyx_t_9 = PyMethod_GET_SELF(__pyx_t_10);
-    if (likely(__pyx_t_9)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_10);
-      __Pyx_INCREF(__pyx_t_9);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_10, function);
-    }
-  }
-  __pyx_t_1 = (__pyx_t_9) ? __Pyx_PyObject_Call2Args(__pyx_t_10, __pyx_t_9, __pyx_v_diehards) : __Pyx_PyObject_CallOneArg(__pyx_t_10, __pyx_v_diehards);
-  __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 920, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "src/gevent/greenlet.py":910
- * 
- * 
- * def _killall3(greenlets, exception, waiter):             # <<<<<<<<<<<<<<
- *     diehards = []
- *     for g in greenlets:
- */
-
-  /* function exit code */
-  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_9);
-  __Pyx_XDECREF(__pyx_t_10);
-  __Pyx_XDECREF(__pyx_t_11);
-  __Pyx_XDECREF(__pyx_t_12);
-  __Pyx_XDECREF(__pyx_t_13);
-  __Pyx_XDECREF(__pyx_t_14);
-  __Pyx_XDECREF(__pyx_t_15);
-  __Pyx_AddTraceback("gevent._greenlet._killall3", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = 0;
-  __pyx_L0:;
-  __Pyx_XDECREF(__pyx_v_diehards);
-  __Pyx_XDECREF(__pyx_v_g);
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "src/gevent/greenlet.py":923
- * 
- * 
- * def _killall(greenlets, exception):             # <<<<<<<<<<<<<<
- *     for g in greenlets:
- *         if not g.dead:
- */
-
-static PyObject *__pyx_f_6gevent_9_greenlet__killall(PyObject *__pyx_v_greenlets, PyObject *__pyx_v_exception) {
-  PyObject *__pyx_v_g = NULL;
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  Py_ssize_t __pyx_t_2;
-  PyObject *__pyx_t_3 = NULL;
-  int __pyx_t_4;
-  int __pyx_t_5;
-  PyObject *__pyx_t_6 = NULL;
-  PyObject *__pyx_t_7 = NULL;
-  PyObject *__pyx_t_8 = NULL;
-  PyObject *__pyx_t_9 = NULL;
-  PyObject *__pyx_t_10 = NULL;
-  PyObject *__pyx_t_11 = NULL;
-  PyObject *__pyx_t_12 = NULL;
-  PyObject *__pyx_t_13 = NULL;
-  PyObject *__pyx_t_14 = NULL;
-  PyObject *__pyx_t_15 = NULL;
-  __Pyx_RefNannySetupContext("_killall", 0);
-
   /* "src/gevent/greenlet.py":924
- * 
- * def _killall(greenlets, exception):
+ * def _killall3(greenlets, exception, waiter):
+ *     diehards = []
  *     for g in greenlets:             # <<<<<<<<<<<<<<
  *         if not g.dead:
  *             try:
@@ -14609,7 +14373,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet__killall(PyObject *__pyx_v_greenlets
     __pyx_t_3 = 0;
 
     /* "src/gevent/greenlet.py":925
- * def _killall(greenlets, exception):
+ *     diehards = []
  *     for g in greenlets:
  *         if not g.dead:             # <<<<<<<<<<<<<<
  *             try:
@@ -14686,10 +14450,10 @@ static PyObject *__pyx_f_6gevent_9_greenlet__killall(PyObject *__pyx_v_greenlets
  *                 g.throw(exception)
  *             except: # pylint:disable=bare-except             # <<<<<<<<<<<<<<
  *                 g.parent.handle_error(g, *sys_exc_info())
- * 
+ *             if not g.dead:
  */
         /*except:*/ {
-          __Pyx_AddTraceback("gevent._greenlet._killall", __pyx_clineno, __pyx_lineno, __pyx_filename);
+          __Pyx_AddTraceback("gevent._greenlet._killall3", __pyx_clineno, __pyx_lineno, __pyx_filename);
           if (__Pyx_GetException(&__pyx_t_3, &__pyx_t_9, &__pyx_t_10) < 0) __PYX_ERR(0, 928, __pyx_L8_except_error)
           __Pyx_GOTREF(__pyx_t_3);
           __Pyx_GOTREF(__pyx_t_9);
@@ -14699,8 +14463,8 @@ static PyObject *__pyx_f_6gevent_9_greenlet__killall(PyObject *__pyx_v_greenlets
  *                 g.throw(exception)
  *             except: # pylint:disable=bare-except
  *                 g.parent.handle_error(g, *sys_exc_info())             # <<<<<<<<<<<<<<
- * 
- * 
+ *             if not g.dead:
+ *                 diehards.append(g)
  */
           __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_v_g, __pyx_n_s_parent); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 929, __pyx_L8_except_error)
           __Pyx_GOTREF(__pyx_t_11);
@@ -14767,8 +14531,40 @@ static PyObject *__pyx_f_6gevent_9_greenlet__killall(PyObject *__pyx_v_greenlets
         __pyx_L13_try_end:;
       }
 
+      /* "src/gevent/greenlet.py":930
+ *             except: # pylint:disable=bare-except
+ *                 g.parent.handle_error(g, *sys_exc_info())
+ *             if not g.dead:             # <<<<<<<<<<<<<<
+ *                 diehards.append(g)
+ *     waiter.switch(diehards)
+ */
+      __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_v_g, __pyx_n_s_dead); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 930, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_10);
+      __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_10); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 930, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+      __pyx_t_4 = ((!__pyx_t_5) != 0);
+      if (__pyx_t_4) {
+
+        /* "src/gevent/greenlet.py":931
+ *                 g.parent.handle_error(g, *sys_exc_info())
+ *             if not g.dead:
+ *                 diehards.append(g)             # <<<<<<<<<<<<<<
+ *     waiter.switch(diehards)
+ * 
+ */
+        __pyx_t_16 = __Pyx_PyList_Append(__pyx_v_diehards, __pyx_v_g); if (unlikely(__pyx_t_16 == ((int)-1))) __PYX_ERR(0, 931, __pyx_L1_error)
+
+        /* "src/gevent/greenlet.py":930
+ *             except: # pylint:disable=bare-except
+ *                 g.parent.handle_error(g, *sys_exc_info())
+ *             if not g.dead:             # <<<<<<<<<<<<<<
+ *                 diehards.append(g)
+ *     waiter.switch(diehards)
+ */
+      }
+
       /* "src/gevent/greenlet.py":925
- * def _killall(greenlets, exception):
+ *     diehards = []
  *     for g in greenlets:
  *         if not g.dead:             # <<<<<<<<<<<<<<
  *             try:
@@ -14777,6 +14573,293 @@ static PyObject *__pyx_f_6gevent_9_greenlet__killall(PyObject *__pyx_v_greenlets
     }
 
     /* "src/gevent/greenlet.py":924
+ * def _killall3(greenlets, exception, waiter):
+ *     diehards = []
+ *     for g in greenlets:             # <<<<<<<<<<<<<<
+ *         if not g.dead:
+ *             try:
+ */
+  }
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "src/gevent/greenlet.py":932
+ *             if not g.dead:
+ *                 diehards.append(g)
+ *     waiter.switch(diehards)             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+  __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_v_waiter, __pyx_n_s_switch); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 932, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_10);
+  __pyx_t_9 = NULL;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_10))) {
+    __pyx_t_9 = PyMethod_GET_SELF(__pyx_t_10);
+    if (likely(__pyx_t_9)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_10);
+      __Pyx_INCREF(__pyx_t_9);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_10, function);
+    }
+  }
+  __pyx_t_1 = (__pyx_t_9) ? __Pyx_PyObject_Call2Args(__pyx_t_10, __pyx_t_9, __pyx_v_diehards) : __Pyx_PyObject_CallOneArg(__pyx_t_10, __pyx_v_diehards);
+  __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 932, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "src/gevent/greenlet.py":922
+ * 
+ * 
+ * def _killall3(greenlets, exception, waiter):             # <<<<<<<<<<<<<<
+ *     diehards = []
+ *     for g in greenlets:
+ */
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_9);
+  __Pyx_XDECREF(__pyx_t_10);
+  __Pyx_XDECREF(__pyx_t_11);
+  __Pyx_XDECREF(__pyx_t_12);
+  __Pyx_XDECREF(__pyx_t_13);
+  __Pyx_XDECREF(__pyx_t_14);
+  __Pyx_XDECREF(__pyx_t_15);
+  __Pyx_AddTraceback("gevent._greenlet._killall3", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = 0;
+  __pyx_L0:;
+  __Pyx_XDECREF(__pyx_v_diehards);
+  __Pyx_XDECREF(__pyx_v_g);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "src/gevent/greenlet.py":935
+ * 
+ * 
+ * def _killall(greenlets, exception):             # <<<<<<<<<<<<<<
+ *     for g in greenlets:
+ *         if not g.dead:
+ */
+
+static PyObject *__pyx_f_6gevent_9_greenlet__killall(PyObject *__pyx_v_greenlets, PyObject *__pyx_v_exception) {
+  PyObject *__pyx_v_g = NULL;
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  Py_ssize_t __pyx_t_2;
+  PyObject *__pyx_t_3 = NULL;
+  int __pyx_t_4;
+  int __pyx_t_5;
+  PyObject *__pyx_t_6 = NULL;
+  PyObject *__pyx_t_7 = NULL;
+  PyObject *__pyx_t_8 = NULL;
+  PyObject *__pyx_t_9 = NULL;
+  PyObject *__pyx_t_10 = NULL;
+  PyObject *__pyx_t_11 = NULL;
+  PyObject *__pyx_t_12 = NULL;
+  PyObject *__pyx_t_13 = NULL;
+  PyObject *__pyx_t_14 = NULL;
+  PyObject *__pyx_t_15 = NULL;
+  __Pyx_RefNannySetupContext("_killall", 0);
+
+  /* "src/gevent/greenlet.py":936
+ * 
+ * def _killall(greenlets, exception):
+ *     for g in greenlets:             # <<<<<<<<<<<<<<
+ *         if not g.dead:
+ *             try:
+ */
+  if (unlikely(__pyx_v_greenlets == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
+    __PYX_ERR(0, 936, __pyx_L1_error)
+  }
+  __pyx_t_1 = __pyx_v_greenlets; __Pyx_INCREF(__pyx_t_1); __pyx_t_2 = 0;
+  for (;;) {
+    if (__pyx_t_2 >= PyList_GET_SIZE(__pyx_t_1)) break;
+    #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+    __pyx_t_3 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_3); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 936, __pyx_L1_error)
+    #else
+    __pyx_t_3 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 936, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    #endif
+    __Pyx_XDECREF_SET(__pyx_v_g, __pyx_t_3);
+    __pyx_t_3 = 0;
+
+    /* "src/gevent/greenlet.py":937
+ * def _killall(greenlets, exception):
+ *     for g in greenlets:
+ *         if not g.dead:             # <<<<<<<<<<<<<<
+ *             try:
+ *                 g.throw(exception)
+ */
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_g, __pyx_n_s_dead); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 937, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 937, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __pyx_t_5 = ((!__pyx_t_4) != 0);
+    if (__pyx_t_5) {
+
+      /* "src/gevent/greenlet.py":938
+ *     for g in greenlets:
+ *         if not g.dead:
+ *             try:             # <<<<<<<<<<<<<<
+ *                 g.throw(exception)
+ *             except: # pylint:disable=bare-except
+ */
+      {
+        __Pyx_PyThreadState_declare
+        __Pyx_PyThreadState_assign
+        __Pyx_ExceptionSave(&__pyx_t_6, &__pyx_t_7, &__pyx_t_8);
+        __Pyx_XGOTREF(__pyx_t_6);
+        __Pyx_XGOTREF(__pyx_t_7);
+        __Pyx_XGOTREF(__pyx_t_8);
+        /*try:*/ {
+
+          /* "src/gevent/greenlet.py":939
+ *         if not g.dead:
+ *             try:
+ *                 g.throw(exception)             # <<<<<<<<<<<<<<
+ *             except: # pylint:disable=bare-except
+ *                 g.parent.handle_error(g, *sys_exc_info())
+ */
+          __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_g, __pyx_n_s_throw); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 939, __pyx_L6_error)
+          __Pyx_GOTREF(__pyx_t_9);
+          __pyx_t_10 = NULL;
+          if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_9))) {
+            __pyx_t_10 = PyMethod_GET_SELF(__pyx_t_9);
+            if (likely(__pyx_t_10)) {
+              PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_9);
+              __Pyx_INCREF(__pyx_t_10);
+              __Pyx_INCREF(function);
+              __Pyx_DECREF_SET(__pyx_t_9, function);
+            }
+          }
+          __pyx_t_3 = (__pyx_t_10) ? __Pyx_PyObject_Call2Args(__pyx_t_9, __pyx_t_10, __pyx_v_exception) : __Pyx_PyObject_CallOneArg(__pyx_t_9, __pyx_v_exception);
+          __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
+          if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 939, __pyx_L6_error)
+          __Pyx_GOTREF(__pyx_t_3);
+          __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+          __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+
+          /* "src/gevent/greenlet.py":938
+ *     for g in greenlets:
+ *         if not g.dead:
+ *             try:             # <<<<<<<<<<<<<<
+ *                 g.throw(exception)
+ *             except: # pylint:disable=bare-except
+ */
+        }
+        __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+        __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
+        __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
+        goto __pyx_L13_try_end;
+        __pyx_L6_error:;
+        __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
+        __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
+        __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+
+        /* "src/gevent/greenlet.py":940
+ *             try:
+ *                 g.throw(exception)
+ *             except: # pylint:disable=bare-except             # <<<<<<<<<<<<<<
+ *                 g.parent.handle_error(g, *sys_exc_info())
+ * 
+ */
+        /*except:*/ {
+          __Pyx_AddTraceback("gevent._greenlet._killall", __pyx_clineno, __pyx_lineno, __pyx_filename);
+          if (__Pyx_GetException(&__pyx_t_3, &__pyx_t_9, &__pyx_t_10) < 0) __PYX_ERR(0, 940, __pyx_L8_except_error)
+          __Pyx_GOTREF(__pyx_t_3);
+          __Pyx_GOTREF(__pyx_t_9);
+          __Pyx_GOTREF(__pyx_t_10);
+
+          /* "src/gevent/greenlet.py":941
+ *                 g.throw(exception)
+ *             except: # pylint:disable=bare-except
+ *                 g.parent.handle_error(g, *sys_exc_info())             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+          __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_v_g, __pyx_n_s_parent); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 941, __pyx_L8_except_error)
+          __Pyx_GOTREF(__pyx_t_11);
+          __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_n_s_handle_error); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 941, __pyx_L8_except_error)
+          __Pyx_GOTREF(__pyx_t_12);
+          __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+          __pyx_t_11 = PyTuple_New(1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 941, __pyx_L8_except_error)
+          __Pyx_GOTREF(__pyx_t_11);
+          __Pyx_INCREF(__pyx_v_g);
+          __Pyx_GIVEREF(__pyx_v_g);
+          PyTuple_SET_ITEM(__pyx_t_11, 0, __pyx_v_g);
+          __Pyx_INCREF(__pyx_v_6gevent_9_greenlet_sys_exc_info);
+          __pyx_t_14 = __pyx_v_6gevent_9_greenlet_sys_exc_info; __pyx_t_15 = NULL;
+          if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_14))) {
+            __pyx_t_15 = PyMethod_GET_SELF(__pyx_t_14);
+            if (likely(__pyx_t_15)) {
+              PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_14);
+              __Pyx_INCREF(__pyx_t_15);
+              __Pyx_INCREF(function);
+              __Pyx_DECREF_SET(__pyx_t_14, function);
+            }
+          }
+          __pyx_t_13 = (__pyx_t_15) ? __Pyx_PyObject_CallOneArg(__pyx_t_14, __pyx_t_15) : __Pyx_PyObject_CallNoArg(__pyx_t_14);
+          __Pyx_XDECREF(__pyx_t_15); __pyx_t_15 = 0;
+          if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 941, __pyx_L8_except_error)
+          __Pyx_GOTREF(__pyx_t_13);
+          __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+          __pyx_t_14 = __Pyx_PySequence_Tuple(__pyx_t_13); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 941, __pyx_L8_except_error)
+          __Pyx_GOTREF(__pyx_t_14);
+          __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+          __pyx_t_13 = PyNumber_Add(__pyx_t_11, __pyx_t_14); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 941, __pyx_L8_except_error)
+          __Pyx_GOTREF(__pyx_t_13);
+          __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+          __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+          __pyx_t_14 = __Pyx_PyObject_Call(__pyx_t_12, __pyx_t_13, NULL); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 941, __pyx_L8_except_error)
+          __Pyx_GOTREF(__pyx_t_14);
+          __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+          __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+          __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+          __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+          __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
+          __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
+          goto __pyx_L7_exception_handled;
+        }
+        __pyx_L8_except_error:;
+
+        /* "src/gevent/greenlet.py":938
+ *     for g in greenlets:
+ *         if not g.dead:
+ *             try:             # <<<<<<<<<<<<<<
+ *                 g.throw(exception)
+ *             except: # pylint:disable=bare-except
+ */
+        __Pyx_XGIVEREF(__pyx_t_6);
+        __Pyx_XGIVEREF(__pyx_t_7);
+        __Pyx_XGIVEREF(__pyx_t_8);
+        __Pyx_ExceptionReset(__pyx_t_6, __pyx_t_7, __pyx_t_8);
+        goto __pyx_L1_error;
+        __pyx_L7_exception_handled:;
+        __Pyx_XGIVEREF(__pyx_t_6);
+        __Pyx_XGIVEREF(__pyx_t_7);
+        __Pyx_XGIVEREF(__pyx_t_8);
+        __Pyx_ExceptionReset(__pyx_t_6, __pyx_t_7, __pyx_t_8);
+        __pyx_L13_try_end:;
+      }
+
+      /* "src/gevent/greenlet.py":937
+ * def _killall(greenlets, exception):
+ *     for g in greenlets:
+ *         if not g.dead:             # <<<<<<<<<<<<<<
+ *             try:
+ *                 g.throw(exception)
+ */
+    }
+
+    /* "src/gevent/greenlet.py":936
  * 
  * def _killall(greenlets, exception):
  *     for g in greenlets:             # <<<<<<<<<<<<<<
@@ -14786,7 +14869,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet__killall(PyObject *__pyx_v_greenlets
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/gevent/greenlet.py":923
+  /* "src/gevent/greenlet.py":935
  * 
  * 
  * def _killall(greenlets, exception):             # <<<<<<<<<<<<<<
@@ -14816,7 +14899,7 @@ static PyObject *__pyx_f_6gevent_9_greenlet__killall(PyObject *__pyx_v_greenlets
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":932
+/* "src/gevent/greenlet.py":944
  * 
  * 
  * def _call_spawn_callbacks(gr):             # <<<<<<<<<<<<<<
@@ -14839,7 +14922,7 @@ static void __pyx_f_6gevent_9_greenlet__call_spawn_callbacks(struct __pyx_obj_6g
   PyObject *__pyx_t_10 = NULL;
   __Pyx_RefNannySetupContext("_call_spawn_callbacks", 0);
 
-  /* "src/gevent/greenlet.py":933
+  /* "src/gevent/greenlet.py":945
  * 
  * def _call_spawn_callbacks(gr):
  *     if _spawn_callbacks is not None:             # <<<<<<<<<<<<<<
@@ -14850,7 +14933,7 @@ static void __pyx_f_6gevent_9_greenlet__call_spawn_callbacks(struct __pyx_obj_6g
   __pyx_t_2 = (__pyx_t_1 != 0);
   if (__pyx_t_2) {
 
-    /* "src/gevent/greenlet.py":934
+    /* "src/gevent/greenlet.py":946
  * def _call_spawn_callbacks(gr):
  *     if _spawn_callbacks is not None:
  *         for cb in _spawn_callbacks:             # <<<<<<<<<<<<<<
@@ -14858,7 +14941,7 @@ static void __pyx_f_6gevent_9_greenlet__call_spawn_callbacks(struct __pyx_obj_6g
  * 
  */
     __pyx_t_4 = 0;
-    __pyx_t_7 = __Pyx_set_iterator(__pyx_v_6gevent_9_greenlet__spawn_callbacks, 1, (&__pyx_t_5), (&__pyx_t_6)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 934, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_set_iterator(__pyx_v_6gevent_9_greenlet__spawn_callbacks, 1, (&__pyx_t_5), (&__pyx_t_6)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 946, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     __Pyx_XDECREF(__pyx_t_3);
     __pyx_t_3 = __pyx_t_7;
@@ -14866,12 +14949,12 @@ static void __pyx_f_6gevent_9_greenlet__call_spawn_callbacks(struct __pyx_obj_6g
     while (1) {
       __pyx_t_8 = __Pyx_set_iter_next(__pyx_t_3, __pyx_t_5, &__pyx_t_4, &__pyx_t_7, __pyx_t_6);
       if (unlikely(__pyx_t_8 == 0)) break;
-      if (unlikely(__pyx_t_8 == -1)) __PYX_ERR(0, 934, __pyx_L1_error)
+      if (unlikely(__pyx_t_8 == -1)) __PYX_ERR(0, 946, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_XDECREF_SET(__pyx_v_cb, __pyx_t_7);
       __pyx_t_7 = 0;
 
-      /* "src/gevent/greenlet.py":935
+      /* "src/gevent/greenlet.py":947
  *     if _spawn_callbacks is not None:
  *         for cb in _spawn_callbacks:
  *             cb(gr)             # <<<<<<<<<<<<<<
@@ -14891,14 +14974,14 @@ static void __pyx_f_6gevent_9_greenlet__call_spawn_callbacks(struct __pyx_obj_6g
       }
       __pyx_t_7 = (__pyx_t_10) ? __Pyx_PyObject_Call2Args(__pyx_t_9, __pyx_t_10, ((PyObject *)__pyx_v_gr)) : __Pyx_PyObject_CallOneArg(__pyx_t_9, ((PyObject *)__pyx_v_gr));
       __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
-      if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 935, __pyx_L1_error)
+      if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 947, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     }
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "src/gevent/greenlet.py":933
+    /* "src/gevent/greenlet.py":945
  * 
  * def _call_spawn_callbacks(gr):
  *     if _spawn_callbacks is not None:             # <<<<<<<<<<<<<<
@@ -14907,7 +14990,7 @@ static void __pyx_f_6gevent_9_greenlet__call_spawn_callbacks(struct __pyx_obj_6g
  */
   }
 
-  /* "src/gevent/greenlet.py":932
+  /* "src/gevent/greenlet.py":944
  * 
  * 
  * def _call_spawn_callbacks(gr):             # <<<<<<<<<<<<<<
@@ -14928,7 +15011,7 @@ static void __pyx_f_6gevent_9_greenlet__call_spawn_callbacks(struct __pyx_obj_6g
   __Pyx_RefNannyFinishContext();
 }
 
-/* "src/gevent/greenlet.py":941
+/* "src/gevent/greenlet.py":953
  * 
  * 
  * def killall(greenlets, exception=GreenletExit, block=True, timeout=None):             # <<<<<<<<<<<<<<
@@ -14943,7 +15026,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_7__defaults__(CYTHON_UNUSED PyObjec
   PyObject *__pyx_t_2 = NULL;
   __Pyx_RefNannySetupContext("__defaults__", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyTuple_New(3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 941, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_New(3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 953, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__Pyx_CyFunction_Defaults(__pyx_defaults, __pyx_self)->__pyx_arg_exception);
   __Pyx_GIVEREF(__Pyx_CyFunction_Defaults(__pyx_defaults, __pyx_self)->__pyx_arg_exception);
@@ -14954,7 +15037,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_7__defaults__(CYTHON_UNUSED PyObjec
   __Pyx_INCREF(((PyObject *)Py_None));
   __Pyx_GIVEREF(((PyObject *)Py_None));
   PyTuple_SET_ITEM(__pyx_t_1, 2, ((PyObject *)Py_None));
-  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 941, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 953, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1);
@@ -15037,7 +15120,7 @@ static PyObject *__pyx_pw_6gevent_9_greenlet_5killall(PyObject *__pyx_self, PyOb
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "killall") < 0)) __PYX_ERR(0, 941, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "killall") < 0)) __PYX_ERR(0, 953, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -15059,7 +15142,7 @@ static PyObject *__pyx_pw_6gevent_9_greenlet_5killall(PyObject *__pyx_self, PyOb
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("killall", 0, 1, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 941, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("killall", 0, 1, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 953, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gevent._greenlet.killall", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -15098,30 +15181,30 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_4killall(CYTHON_UNUSED PyObject *__
   __Pyx_RefNannySetupContext("killall", 0);
   __Pyx_INCREF(__pyx_v_greenlets);
 
-  /* "src/gevent/greenlet.py":968
+  /* "src/gevent/greenlet.py":980
  *     """
  *     # support non-indexable containers like iterators or set objects
  *     greenlets = list(greenlets)             # <<<<<<<<<<<<<<
  *     if not greenlets:
  *         return
  */
-  __pyx_t_1 = PySequence_List(__pyx_v_greenlets); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 968, __pyx_L1_error)
+  __pyx_t_1 = PySequence_List(__pyx_v_greenlets); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 980, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF_SET(__pyx_v_greenlets, __pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/gevent/greenlet.py":969
+  /* "src/gevent/greenlet.py":981
  *     # support non-indexable containers like iterators or set objects
  *     greenlets = list(greenlets)
  *     if not greenlets:             # <<<<<<<<<<<<<<
  *         return
  *     loop = greenlets[0].loop
  */
-  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_greenlets); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 969, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_greenlets); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 981, __pyx_L1_error)
   __pyx_t_3 = ((!__pyx_t_2) != 0);
   if (__pyx_t_3) {
 
-    /* "src/gevent/greenlet.py":970
+    /* "src/gevent/greenlet.py":982
  *     greenlets = list(greenlets)
  *     if not greenlets:
  *         return             # <<<<<<<<<<<<<<
@@ -15132,7 +15215,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_4killall(CYTHON_UNUSED PyObject *__
     __pyx_r = Py_None; __Pyx_INCREF(Py_None);
     goto __pyx_L0;
 
-    /* "src/gevent/greenlet.py":969
+    /* "src/gevent/greenlet.py":981
  *     # support non-indexable containers like iterators or set objects
  *     greenlets = list(greenlets)
  *     if not greenlets:             # <<<<<<<<<<<<<<
@@ -15141,53 +15224,53 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_4killall(CYTHON_UNUSED PyObject *__
  */
   }
 
-  /* "src/gevent/greenlet.py":971
+  /* "src/gevent/greenlet.py":983
  *     if not greenlets:
  *         return
  *     loop = greenlets[0].loop             # <<<<<<<<<<<<<<
  *     if block:
  *         waiter = Waiter() # pylint:disable=undefined-variable
  */
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_greenlets, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 971, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_greenlets, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 983, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_loop); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 971, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_loop); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 983, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_loop = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "src/gevent/greenlet.py":972
+  /* "src/gevent/greenlet.py":984
  *         return
  *     loop = greenlets[0].loop
  *     if block:             # <<<<<<<<<<<<<<
  *         waiter = Waiter() # pylint:disable=undefined-variable
  *         loop.run_callback(_killall3, greenlets, exception, waiter)
  */
-  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_v_block); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 972, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_v_block); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 984, __pyx_L1_error)
   if (__pyx_t_3) {
 
-    /* "src/gevent/greenlet.py":973
+    /* "src/gevent/greenlet.py":985
  *     loop = greenlets[0].loop
  *     if block:
  *         waiter = Waiter() # pylint:disable=undefined-variable             # <<<<<<<<<<<<<<
  *         loop.run_callback(_killall3, greenlets, exception, waiter)
  *         t = Timeout._start_new_or_dummy(timeout)
  */
-    __pyx_t_4 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_6gevent_8__waiter_Waiter)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 973, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_6gevent_8__waiter_Waiter)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 985, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_v_waiter = ((struct __pyx_obj_6gevent_8__waiter_Waiter *)__pyx_t_4);
     __pyx_t_4 = 0;
 
-    /* "src/gevent/greenlet.py":974
+    /* "src/gevent/greenlet.py":986
  *     if block:
  *         waiter = Waiter() # pylint:disable=undefined-variable
  *         loop.run_callback(_killall3, greenlets, exception, waiter)             # <<<<<<<<<<<<<<
  *         t = Timeout._start_new_or_dummy(timeout)
  *         try:
  */
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_loop, __pyx_n_s_run_callback); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 974, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_loop, __pyx_n_s_run_callback); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 986, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_5 = __Pyx_CFunc_object____list____object____object___to_py(__pyx_f_6gevent_9_greenlet__killall3); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 974, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_CFunc_object____list____object____object___to_py(__pyx_f_6gevent_9_greenlet__killall3); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 986, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __pyx_t_6 = NULL;
     __pyx_t_7 = 0;
@@ -15204,7 +15287,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_4killall(CYTHON_UNUSED PyObject *__
     #if CYTHON_FAST_PYCALL
     if (PyFunction_Check(__pyx_t_1)) {
       PyObject *__pyx_temp[5] = {__pyx_t_6, __pyx_t_5, __pyx_v_greenlets, __pyx_v_exception, ((PyObject *)__pyx_v_waiter)};
-      __pyx_t_4 = __Pyx_PyFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_7, 4+__pyx_t_7); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 974, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_7, 4+__pyx_t_7); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 986, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
@@ -15213,14 +15296,14 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_4killall(CYTHON_UNUSED PyObject *__
     #if CYTHON_FAST_PYCCALL
     if (__Pyx_PyFastCFunction_Check(__pyx_t_1)) {
       PyObject *__pyx_temp[5] = {__pyx_t_6, __pyx_t_5, __pyx_v_greenlets, __pyx_v_exception, ((PyObject *)__pyx_v_waiter)};
-      __pyx_t_4 = __Pyx_PyCFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_7, 4+__pyx_t_7); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 974, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyCFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_7, 4+__pyx_t_7); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 986, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     } else
     #endif
     {
-      __pyx_t_8 = PyTuple_New(4+__pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 974, __pyx_L1_error)
+      __pyx_t_8 = PyTuple_New(4+__pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 986, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_8);
       if (__pyx_t_6) {
         __Pyx_GIVEREF(__pyx_t_6); PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_6); __pyx_t_6 = NULL;
@@ -15237,21 +15320,21 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_4killall(CYTHON_UNUSED PyObject *__
       __Pyx_GIVEREF(((PyObject *)__pyx_v_waiter));
       PyTuple_SET_ITEM(__pyx_t_8, 3+__pyx_t_7, ((PyObject *)__pyx_v_waiter));
       __pyx_t_5 = 0;
-      __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_8, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 974, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_8, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 986, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
     }
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "src/gevent/greenlet.py":975
+    /* "src/gevent/greenlet.py":987
  *         waiter = Waiter() # pylint:disable=undefined-variable
  *         loop.run_callback(_killall3, greenlets, exception, waiter)
  *         t = Timeout._start_new_or_dummy(timeout)             # <<<<<<<<<<<<<<
  *         try:
  *             alive = waiter.get()
  */
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_6gevent_9_greenlet_Timeout, __pyx_n_s_start_new_or_dummy); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 975, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_6gevent_9_greenlet_Timeout, __pyx_n_s_start_new_or_dummy); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 987, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_8 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_1))) {
@@ -15265,13 +15348,13 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_4killall(CYTHON_UNUSED PyObject *__
     }
     __pyx_t_4 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_1, __pyx_t_8, __pyx_v_timeout) : __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_v_timeout);
     __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 975, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 987, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_v_t = __pyx_t_4;
     __pyx_t_4 = 0;
 
-    /* "src/gevent/greenlet.py":976
+    /* "src/gevent/greenlet.py":988
  *         loop.run_callback(_killall3, greenlets, exception, waiter)
  *         t = Timeout._start_new_or_dummy(timeout)
  *         try:             # <<<<<<<<<<<<<<
@@ -15280,53 +15363,53 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_4killall(CYTHON_UNUSED PyObject *__
  */
     /*try:*/ {
 
-      /* "src/gevent/greenlet.py":977
+      /* "src/gevent/greenlet.py":989
  *         t = Timeout._start_new_or_dummy(timeout)
  *         try:
  *             alive = waiter.get()             # <<<<<<<<<<<<<<
  *             if alive:
  *                 joinall(alive, raise_error=False)
  */
-      __pyx_t_4 = ((struct __pyx_vtabstruct_6gevent_8__waiter_Waiter *)__pyx_v_waiter->__pyx_vtab)->get(__pyx_v_waiter, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 977, __pyx_L6_error)
+      __pyx_t_4 = ((struct __pyx_vtabstruct_6gevent_8__waiter_Waiter *)__pyx_v_waiter->__pyx_vtab)->get(__pyx_v_waiter, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 989, __pyx_L6_error)
       __Pyx_GOTREF(__pyx_t_4);
       __pyx_v_alive = __pyx_t_4;
       __pyx_t_4 = 0;
 
-      /* "src/gevent/greenlet.py":978
+      /* "src/gevent/greenlet.py":990
  *         try:
  *             alive = waiter.get()
  *             if alive:             # <<<<<<<<<<<<<<
  *                 joinall(alive, raise_error=False)
  *         finally:
  */
-      __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_v_alive); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 978, __pyx_L6_error)
+      __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_v_alive); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 990, __pyx_L6_error)
       if (__pyx_t_3) {
 
-        /* "src/gevent/greenlet.py":979
+        /* "src/gevent/greenlet.py":991
  *             alive = waiter.get()
  *             if alive:
  *                 joinall(alive, raise_error=False)             # <<<<<<<<<<<<<<
  *         finally:
  *             t.cancel()
  */
-        __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_joinall); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 979, __pyx_L6_error)
+        __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_joinall); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 991, __pyx_L6_error)
         __Pyx_GOTREF(__pyx_t_4);
-        __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 979, __pyx_L6_error)
+        __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 991, __pyx_L6_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_INCREF(__pyx_v_alive);
         __Pyx_GIVEREF(__pyx_v_alive);
         PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_v_alive);
-        __pyx_t_8 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 979, __pyx_L6_error)
+        __pyx_t_8 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 991, __pyx_L6_error)
         __Pyx_GOTREF(__pyx_t_8);
-        if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_raise_error, Py_False) < 0) __PYX_ERR(0, 979, __pyx_L6_error)
-        __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_1, __pyx_t_8); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 979, __pyx_L6_error)
+        if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_raise_error, Py_False) < 0) __PYX_ERR(0, 991, __pyx_L6_error)
+        __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_1, __pyx_t_8); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 991, __pyx_L6_error)
         __Pyx_GOTREF(__pyx_t_5);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
         __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
         __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-        /* "src/gevent/greenlet.py":978
+        /* "src/gevent/greenlet.py":990
  *         try:
  *             alive = waiter.get()
  *             if alive:             # <<<<<<<<<<<<<<
@@ -15336,7 +15419,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_4killall(CYTHON_UNUSED PyObject *__
       }
     }
 
-    /* "src/gevent/greenlet.py":981
+    /* "src/gevent/greenlet.py":993
  *                 joinall(alive, raise_error=False)
  *         finally:
  *             t.cancel()             # <<<<<<<<<<<<<<
@@ -15345,7 +15428,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_4killall(CYTHON_UNUSED PyObject *__
  */
     /*finally:*/ {
       /*normal exit:*/{
-        __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_t, __pyx_n_s_cancel); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 981, __pyx_L1_error)
+        __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_t, __pyx_n_s_cancel); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 993, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_8);
         __pyx_t_1 = NULL;
         if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_8))) {
@@ -15359,7 +15442,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_4killall(CYTHON_UNUSED PyObject *__
         }
         __pyx_t_5 = (__pyx_t_1) ? __Pyx_PyObject_CallOneArg(__pyx_t_8, __pyx_t_1) : __Pyx_PyObject_CallNoArg(__pyx_t_8);
         __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-        if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 981, __pyx_L1_error)
+        if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 993, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_5);
         __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
         __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
@@ -15385,7 +15468,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_4killall(CYTHON_UNUSED PyObject *__
         __Pyx_XGOTREF(__pyx_t_16);
         __pyx_t_7 = __pyx_lineno; __pyx_t_9 = __pyx_clineno; __pyx_t_10 = __pyx_filename;
         {
-          __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_t, __pyx_n_s_cancel); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 981, __pyx_L10_error)
+          __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_t, __pyx_n_s_cancel); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 993, __pyx_L10_error)
           __Pyx_GOTREF(__pyx_t_8);
           __pyx_t_1 = NULL;
           if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_8))) {
@@ -15399,7 +15482,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_4killall(CYTHON_UNUSED PyObject *__
           }
           __pyx_t_5 = (__pyx_t_1) ? __Pyx_PyObject_CallOneArg(__pyx_t_8, __pyx_t_1) : __Pyx_PyObject_CallNoArg(__pyx_t_8);
           __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-          if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 981, __pyx_L10_error)
+          if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 993, __pyx_L10_error)
           __Pyx_GOTREF(__pyx_t_5);
           __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
           __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
@@ -15433,7 +15516,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_4killall(CYTHON_UNUSED PyObject *__
       __pyx_L7:;
     }
 
-    /* "src/gevent/greenlet.py":972
+    /* "src/gevent/greenlet.py":984
  *         return
  *     loop = greenlets[0].loop
  *     if block:             # <<<<<<<<<<<<<<
@@ -15443,7 +15526,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_4killall(CYTHON_UNUSED PyObject *__
     goto __pyx_L4;
   }
 
-  /* "src/gevent/greenlet.py":983
+  /* "src/gevent/greenlet.py":995
  *             t.cancel()
  *     else:
  *         loop.run_callback(_killall, greenlets, exception)             # <<<<<<<<<<<<<<
@@ -15451,9 +15534,9 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_4killall(CYTHON_UNUSED PyObject *__
  * def _init():
  */
   /*else*/ {
-    __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_loop, __pyx_n_s_run_callback); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 983, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_loop, __pyx_n_s_run_callback); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 995, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_1 = __Pyx_CFunc_object____list____object___to_py(__pyx_f_6gevent_9_greenlet__killall); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 983, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_CFunc_object____list____object___to_py(__pyx_f_6gevent_9_greenlet__killall); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 995, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_4 = NULL;
     __pyx_t_9 = 0;
@@ -15470,7 +15553,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_4killall(CYTHON_UNUSED PyObject *__
     #if CYTHON_FAST_PYCALL
     if (PyFunction_Check(__pyx_t_8)) {
       PyObject *__pyx_temp[4] = {__pyx_t_4, __pyx_t_1, __pyx_v_greenlets, __pyx_v_exception};
-      __pyx_t_5 = __Pyx_PyFunction_FastCall(__pyx_t_8, __pyx_temp+1-__pyx_t_9, 3+__pyx_t_9); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 983, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyFunction_FastCall(__pyx_t_8, __pyx_temp+1-__pyx_t_9, 3+__pyx_t_9); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 995, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -15479,14 +15562,14 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_4killall(CYTHON_UNUSED PyObject *__
     #if CYTHON_FAST_PYCCALL
     if (__Pyx_PyFastCFunction_Check(__pyx_t_8)) {
       PyObject *__pyx_temp[4] = {__pyx_t_4, __pyx_t_1, __pyx_v_greenlets, __pyx_v_exception};
-      __pyx_t_5 = __Pyx_PyCFunction_FastCall(__pyx_t_8, __pyx_temp+1-__pyx_t_9, 3+__pyx_t_9); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 983, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyCFunction_FastCall(__pyx_t_8, __pyx_temp+1-__pyx_t_9, 3+__pyx_t_9); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 995, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     } else
     #endif
     {
-      __pyx_t_6 = PyTuple_New(3+__pyx_t_9); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 983, __pyx_L1_error)
+      __pyx_t_6 = PyTuple_New(3+__pyx_t_9); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 995, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       if (__pyx_t_4) {
         __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_4); __pyx_t_4 = NULL;
@@ -15500,7 +15583,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_4killall(CYTHON_UNUSED PyObject *__
       __Pyx_GIVEREF(__pyx_v_exception);
       PyTuple_SET_ITEM(__pyx_t_6, 2+__pyx_t_9, __pyx_v_exception);
       __pyx_t_1 = 0;
-      __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_8, __pyx_t_6, NULL); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 983, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_8, __pyx_t_6, NULL); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 995, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     }
@@ -15509,7 +15592,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_4killall(CYTHON_UNUSED PyObject *__
   }
   __pyx_L4:;
 
-  /* "src/gevent/greenlet.py":941
+  /* "src/gevent/greenlet.py":953
  * 
  * 
  * def killall(greenlets, exception=GreenletExit, block=True, timeout=None):             # <<<<<<<<<<<<<<
@@ -15539,7 +15622,7 @@ static PyObject *__pyx_pf_6gevent_9_greenlet_4killall(CYTHON_UNUSED PyObject *__
   return __pyx_r;
 }
 
-/* "src/gevent/greenlet.py":985
+/* "src/gevent/greenlet.py":997
  *         loop.run_callback(_killall, greenlets, exception)
  * 
  * def _init():             # <<<<<<<<<<<<<<
@@ -15551,7 +15634,7 @@ static void __pyx_f_6gevent_9_greenlet__init(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("_init", 0);
 
-  /* "src/gevent/greenlet.py":986
+  /* "src/gevent/greenlet.py":998
  * 
  * def _init():
  *     greenlet_init() # pylint:disable=undefined-variable             # <<<<<<<<<<<<<<
@@ -15560,7 +15643,7 @@ static void __pyx_f_6gevent_9_greenlet__init(void) {
  */
   __pyx_f_6gevent_9_greenlet_greenlet_init();
 
-  /* "src/gevent/greenlet.py":985
+  /* "src/gevent/greenlet.py":997
  *         loop.run_callback(_killall, greenlets, exception)
  * 
  * def _init():             # <<<<<<<<<<<<<<
@@ -16108,7 +16191,7 @@ static PyObject *__Pyx_CFunc_object____list____object____object___to_py(PyObject
  *         """wrap(greenlets: list, exception, waiter)"""
  *         return f(greenlets, exception, waiter)
  */
-  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_11cfunc_dot_to_py_54__Pyx_CFunc_object____list____object____object___to_py_1wrap, 0, __pyx_n_s_Pyx_CFunc_object____list____ob, ((PyObject*)__pyx_cur_scope), __pyx_n_s_cfunc_to_py, __pyx_d, ((PyObject *)__pyx_codeobj__17)); if (unlikely(!__pyx_t_1)) __PYX_ERR(4, 65, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_11cfunc_dot_to_py_54__Pyx_CFunc_object____list____object____object___to_py_1wrap, 0, __pyx_n_s_Pyx_CFunc_object____list____ob, ((PyObject*)__pyx_cur_scope), __pyx_n_s_cfunc_to_py, __pyx_d, ((PyObject *)__pyx_codeobj__18)); if (unlikely(!__pyx_t_1)) __PYX_ERR(4, 65, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_wrap = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -16297,7 +16380,7 @@ static PyObject *__Pyx_CFunc_object____list____object___to_py(PyObject *(*__pyx_
  *         """wrap(greenlets: list, exception)"""
  *         return f(greenlets, exception)
  */
-  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_11cfunc_dot_to_py_44__Pyx_CFunc_object____list____object___to_py_1wrap, 0, __pyx_n_s_Pyx_CFunc_object____list____ob_2, ((PyObject*)__pyx_cur_scope), __pyx_n_s_cfunc_to_py, __pyx_d, ((PyObject *)__pyx_codeobj__19)); if (unlikely(!__pyx_t_1)) __PYX_ERR(4, 65, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_11cfunc_dot_to_py_44__Pyx_CFunc_object____list____object___to_py_1wrap, 0, __pyx_n_s_Pyx_CFunc_object____list____ob_2, ((PyObject*)__pyx_cur_scope), __pyx_n_s_cfunc_to_py, __pyx_d, ((PyObject *)__pyx_codeobj__20)); if (unlikely(!__pyx_t_1)) __PYX_ERR(4, 65, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_wrap = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -17484,6 +17567,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s__5, __pyx_k__5, sizeof(__pyx_k__5), 0, 0, 1, 0},
   {&__pyx_kp_s__6, __pyx_k__6, sizeof(__pyx_k__6), 0, 0, 1, 0},
   {&__pyx_kp_s__7, __pyx_k__7, sizeof(__pyx_k__7), 0, 0, 1, 0},
+  {&__pyx_kp_s__8, __pyx_k__8, sizeof(__pyx_k__8), 0, 0, 1, 0},
   {&__pyx_n_s_active, __pyx_k_active, sizeof(__pyx_k_active), 0, 0, 1, 1},
   {&__pyx_n_s_add_spawn_callback, __pyx_k_add_spawn_callback, sizeof(__pyx_k_add_spawn_callback), 0, 0, 1, 1},
   {&__pyx_n_s_alive, __pyx_k_alive, sizeof(__pyx_k_alive), 0, 0, 1, 1},
@@ -17590,8 +17674,9 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_run, __pyx_k_run, sizeof(__pyx_k_run), 0, 0, 1, 1},
   {&__pyx_n_s_run_2, __pyx_k_run_2, sizeof(__pyx_k_run_2), 0, 0, 1, 1},
   {&__pyx_n_s_run_callback, __pyx_k_run_callback, sizeof(__pyx_k_run_callback), 0, 0, 1, 1},
+  {&__pyx_kp_s_s, __pyx_k_s, sizeof(__pyx_k_s), 0, 0, 1, 0},
   {&__pyx_kp_s_s_s, __pyx_k_s_s, sizeof(__pyx_k_s_s), 0, 0, 1, 0},
-  {&__pyx_kp_s_s_s_at_s, __pyx_k_s_s_at_s, sizeof(__pyx_k_s_s_at_s), 0, 0, 1, 0},
+  {&__pyx_kp_s_s_sat_s, __pyx_k_s_sat_s, sizeof(__pyx_k_s_sat_s), 0, 0, 1, 0},
   {&__pyx_n_s_seconds, __pyx_k_seconds, sizeof(__pyx_k_seconds), 0, 0, 1, 1},
   {&__pyx_n_s_self, __pyx_k_self, sizeof(__pyx_k_self), 0, 0, 1, 1},
   {&__pyx_n_s_self_2, __pyx_k_self_2, sizeof(__pyx_k_self_2), 0, 0, 1, 1},
@@ -17637,15 +17722,15 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
   __pyx_builtin___import__ = __Pyx_GetBuiltinName(__pyx_n_s_import); if (!__pyx_builtin___import__) __PYX_ERR(0, 45, __pyx_L1_error)
-  __pyx_builtin_NameError = __Pyx_GetBuiltinName(__pyx_n_s_NameError); if (!__pyx_builtin_NameError) __PYX_ERR(0, 323, __pyx_L1_error)
-  __pyx_builtin_staticmethod = __Pyx_GetBuiltinName(__pyx_n_s_staticmethod); if (!__pyx_builtin_staticmethod) __PYX_ERR(0, 526, __pyx_L1_error)
+  __pyx_builtin_NameError = __Pyx_GetBuiltinName(__pyx_n_s_NameError); if (!__pyx_builtin_NameError) __PYX_ERR(0, 328, __pyx_L1_error)
+  __pyx_builtin_staticmethod = __Pyx_GetBuiltinName(__pyx_n_s_staticmethod); if (!__pyx_builtin_staticmethod) __PYX_ERR(0, 538, __pyx_L1_error)
   __pyx_builtin_TypeError = __Pyx_GetBuiltinName(__pyx_n_s_TypeError); if (!__pyx_builtin_TypeError) __PYX_ERR(0, 65, __pyx_L1_error)
   __pyx_builtin_reversed = __Pyx_GetBuiltinName(__pyx_n_s_reversed); if (!__pyx_builtin_reversed) __PYX_ERR(0, 127, __pyx_L1_error)
   __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(0, 135, __pyx_L1_error)
   __pyx_builtin_AttributeError = __Pyx_GetBuiltinName(__pyx_n_s_AttributeError); if (!__pyx_builtin_AttributeError) __PYX_ERR(0, 251, __pyx_L1_error)
-  __pyx_builtin_hex = __Pyx_GetBuiltinName(__pyx_n_s_hex); if (!__pyx_builtin_hex) __PYX_ERR(0, 429, __pyx_L1_error)
-  __pyx_builtin_id = __Pyx_GetBuiltinName(__pyx_n_s_id); if (!__pyx_builtin_id) __PYX_ERR(0, 429, __pyx_L1_error)
-  __pyx_builtin_AssertionError = __Pyx_GetBuiltinName(__pyx_n_s_AssertionError); if (!__pyx_builtin_AssertionError) __PYX_ERR(0, 868, __pyx_L1_error)
+  __pyx_builtin_hex = __Pyx_GetBuiltinName(__pyx_n_s_hex); if (!__pyx_builtin_hex) __PYX_ERR(0, 441, __pyx_L1_error)
+  __pyx_builtin_id = __Pyx_GetBuiltinName(__pyx_n_s_id); if (!__pyx_builtin_id) __PYX_ERR(0, 441, __pyx_L1_error)
+  __pyx_builtin_AssertionError = __Pyx_GetBuiltinName(__pyx_n_s_AssertionError); if (!__pyx_builtin_AssertionError) __PYX_ERR(0, 880, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -17666,55 +17751,55 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple_);
   __Pyx_GIVEREF(__pyx_tuple_);
 
-  /* "src/gevent/greenlet.py":598
+  /* "src/gevent/greenlet.py":610
  *         """
  *         if cls is Greenlet and not args and 'run' not in kwargs:
  *             raise TypeError("")             # <<<<<<<<<<<<<<
  *         g = cls(*args, **kwargs)
  *         g.start_later(seconds)
  */
-  __pyx_tuple__8 = PyTuple_Pack(1, __pyx_kp_s__4); if (unlikely(!__pyx_tuple__8)) __PYX_ERR(0, 598, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__8);
-  __Pyx_GIVEREF(__pyx_tuple__8);
+  __pyx_tuple__9 = PyTuple_Pack(1, __pyx_kp_s__5); if (unlikely(!__pyx_tuple__9)) __PYX_ERR(0, 610, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__9);
+  __Pyx_GIVEREF(__pyx_tuple__9);
 
-  /* "src/gevent/greenlet.py":728
+  /* "src/gevent/greenlet.py":740
  * 
  *     def _report_result(self, result):
  *         self._exc_info = (None, None, None)             # <<<<<<<<<<<<<<
  *         self.value = result
  *         if self._links and not self._notifier:
  */
-  __pyx_tuple__10 = PyTuple_Pack(3, Py_None, Py_None, Py_None); if (unlikely(!__pyx_tuple__10)) __PYX_ERR(0, 728, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__10);
-  __Pyx_GIVEREF(__pyx_tuple__10);
+  __pyx_tuple__11 = PyTuple_Pack(3, Py_None, Py_None, Py_None); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(0, 740, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__11);
+  __Pyx_GIVEREF(__pyx_tuple__11);
 
-  /* "src/gevent/greenlet.py":760
+  /* "src/gevent/greenlet.py":772
  *             self._report_result(result)
  *         finally:
  *             self.__dict__.pop('_run', None)             # <<<<<<<<<<<<<<
  *             self.args = ()
  *             self.kwargs.clear()
  */
-  __pyx_tuple__11 = PyTuple_Pack(2, __pyx_n_s_run_2, Py_None); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(0, 760, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__11);
-  __Pyx_GIVEREF(__pyx_tuple__11);
-  __pyx_tuple__11 = PyTuple_Pack(2, __pyx_n_s_run_2, Py_None); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(0, 760, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__11);
-  __Pyx_GIVEREF(__pyx_tuple__11);
-  __pyx_tuple__11 = PyTuple_Pack(2, __pyx_n_s_run_2, Py_None); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(0, 760, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__11);
-  __Pyx_GIVEREF(__pyx_tuple__11);
+  __pyx_tuple__12 = PyTuple_Pack(2, __pyx_n_s_run_2, Py_None); if (unlikely(!__pyx_tuple__12)) __PYX_ERR(0, 772, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__12);
+  __Pyx_GIVEREF(__pyx_tuple__12);
+  __pyx_tuple__12 = PyTuple_Pack(2, __pyx_n_s_run_2, Py_None); if (unlikely(!__pyx_tuple__12)) __PYX_ERR(0, 772, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__12);
+  __Pyx_GIVEREF(__pyx_tuple__12);
+  __pyx_tuple__12 = PyTuple_Pack(2, __pyx_n_s_run_2, Py_None); if (unlikely(!__pyx_tuple__12)) __PYX_ERR(0, 772, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__12);
+  __Pyx_GIVEREF(__pyx_tuple__12);
 
-  /* "src/gevent/greenlet.py":868
+  /* "src/gevent/greenlet.py":880
  * 
  *     def start(self, cb): # pylint:disable=unused-argument
  *         raise AssertionError("Cannot start the dummy event")             # <<<<<<<<<<<<<<
  * 
  *     def close(self):
  */
-  __pyx_tuple__15 = PyTuple_Pack(1, __pyx_kp_s_Cannot_start_the_dummy_event); if (unlikely(!__pyx_tuple__15)) __PYX_ERR(0, 868, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__15);
-  __Pyx_GIVEREF(__pyx_tuple__15);
+  __pyx_tuple__16 = PyTuple_Pack(1, __pyx_kp_s_Cannot_start_the_dummy_event); if (unlikely(!__pyx_tuple__16)) __PYX_ERR(0, 880, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__16);
+  __Pyx_GIVEREF(__pyx_tuple__16);
 
   /* "cfunc.to_py":65
  * @cname("__Pyx_CFunc_object____list____object____object___to_py")
@@ -17723,14 +17808,14 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  *         """wrap(greenlets: list, exception, waiter)"""
  *         return f(greenlets, exception, waiter)
  */
-  __pyx_tuple__16 = PyTuple_Pack(3, __pyx_n_s_greenlets, __pyx_n_s_exception, __pyx_n_s_waiter); if (unlikely(!__pyx_tuple__16)) __PYX_ERR(4, 65, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__16);
-  __Pyx_GIVEREF(__pyx_tuple__16);
-  __pyx_codeobj__17 = (PyObject*)__Pyx_PyCode_New(3, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__16, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_wrap, 65, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__17)) __PYX_ERR(4, 65, __pyx_L1_error)
-  __pyx_tuple__18 = PyTuple_Pack(2, __pyx_n_s_greenlets, __pyx_n_s_exception); if (unlikely(!__pyx_tuple__18)) __PYX_ERR(4, 65, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__18);
-  __Pyx_GIVEREF(__pyx_tuple__18);
-  __pyx_codeobj__19 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__18, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_wrap, 65, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__19)) __PYX_ERR(4, 65, __pyx_L1_error)
+  __pyx_tuple__17 = PyTuple_Pack(3, __pyx_n_s_greenlets, __pyx_n_s_exception, __pyx_n_s_waiter); if (unlikely(!__pyx_tuple__17)) __PYX_ERR(4, 65, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__17);
+  __Pyx_GIVEREF(__pyx_tuple__17);
+  __pyx_codeobj__18 = (PyObject*)__Pyx_PyCode_New(3, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__17, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_wrap, 65, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__18)) __PYX_ERR(4, 65, __pyx_L1_error)
+  __pyx_tuple__19 = PyTuple_Pack(2, __pyx_n_s_greenlets, __pyx_n_s_exception); if (unlikely(!__pyx_tuple__19)) __PYX_ERR(4, 65, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__19);
+  __Pyx_GIVEREF(__pyx_tuple__19);
+  __pyx_codeobj__20 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__19, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_wrap, 65, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__20)) __PYX_ERR(4, 65, __pyx_L1_error)
 
   /* "src/gevent/greenlet.py":45
  * # is assignment) without generating a 'lvalue is not valid target'
@@ -17739,9 +17824,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * locals()['greenlet_init'] = lambda: None
  * locals()['Waiter'] = _waiter.Waiter
  */
-  __pyx_tuple__20 = PyTuple_Pack(1, __pyx_n_s_greenlet); if (unlikely(!__pyx_tuple__20)) __PYX_ERR(0, 45, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__20);
-  __Pyx_GIVEREF(__pyx_tuple__20);
+  __pyx_tuple__21 = PyTuple_Pack(1, __pyx_n_s_greenlet); if (unlikely(!__pyx_tuple__21)) __PYX_ERR(0, 45, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__21);
+  __Pyx_GIVEREF(__pyx_tuple__21);
 
   /* "src/gevent/greenlet.py":114
  * class _Frame(object):
@@ -17750,9 +17835,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  *     def __init__(self, f_code, f_lineno, f_back):
  */
-  __pyx_tuple__21 = PyTuple_Pack(3, __pyx_n_s_f_code, __pyx_n_s_f_lineno, __pyx_n_s_f_back); if (unlikely(!__pyx_tuple__21)) __PYX_ERR(0, 114, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__21);
-  __Pyx_GIVEREF(__pyx_tuple__21);
+  __pyx_tuple__22 = PyTuple_Pack(3, __pyx_n_s_f_code, __pyx_n_s_f_lineno, __pyx_n_s_f_back); if (unlikely(!__pyx_tuple__22)) __PYX_ERR(0, 114, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__22);
+  __Pyx_GIVEREF(__pyx_tuple__22);
 
   /* "src/gevent/greenlet.py":268
  * 
@@ -17761,10 +17846,10 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  *         # Store this in the __dict__. We don't use it from the C
  *         # code. It's tempting to discard _spawning_stack_frames
  */
-  __pyx_tuple__22 = PyTuple_Pack(1, __pyx_n_s_self_2); if (unlikely(!__pyx_tuple__22)) __PYX_ERR(0, 268, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__22);
-  __Pyx_GIVEREF(__pyx_tuple__22);
-  __pyx_codeobj__23 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__22, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_spawning_stack, 268, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__23)) __PYX_ERR(0, 268, __pyx_L1_error)
+  __pyx_tuple__23 = PyTuple_Pack(1, __pyx_n_s_self_2); if (unlikely(!__pyx_tuple__23)) __PYX_ERR(0, 268, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__23);
+  __Pyx_GIVEREF(__pyx_tuple__23);
+  __pyx_codeobj__24 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__23, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_spawning_stack, 268, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__24)) __PYX_ERR(0, 268, __pyx_L1_error)
 
   /* "src/gevent/greenlet.py":301
  * 
@@ -17773,381 +17858,381 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  *         """
  *         The greenlet name. By default, a unique name is constructed using
  */
-  __pyx_tuple__24 = PyTuple_Pack(1, __pyx_n_s_self_2); if (unlikely(!__pyx_tuple__24)) __PYX_ERR(0, 301, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__24);
-  __Pyx_GIVEREF(__pyx_tuple__24);
-  __pyx_codeobj__25 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__24, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_name_2, 301, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__25)) __PYX_ERR(0, 301, __pyx_L1_error)
+  __pyx_tuple__25 = PyTuple_Pack(1, __pyx_n_s_self_2); if (unlikely(!__pyx_tuple__25)) __PYX_ERR(0, 301, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__25);
+  __Pyx_GIVEREF(__pyx_tuple__25);
+  __pyx_codeobj__26 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__25, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_name_2, 301, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__26)) __PYX_ERR(0, 301, __pyx_L1_error)
 
-  /* "src/gevent/greenlet.py":311
- *         return 'Greenlet-%d' % (self.minimal_ident)
+  /* "src/gevent/greenlet.py":316
+ *         return 'Greenlet-%d' % (self.minimal_ident,)
  * 
  *     def _raise_exception(self):             # <<<<<<<<<<<<<<
  *         reraise(*self.exc_info)
  * 
  */
-  __pyx_tuple__26 = PyTuple_Pack(1, __pyx_n_s_self_2); if (unlikely(!__pyx_tuple__26)) __PYX_ERR(0, 311, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__26);
-  __Pyx_GIVEREF(__pyx_tuple__26);
-  __pyx_codeobj__27 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__26, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_raise_exception, 311, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__27)) __PYX_ERR(0, 311, __pyx_L1_error)
+  __pyx_tuple__27 = PyTuple_Pack(1, __pyx_n_s_self_2); if (unlikely(!__pyx_tuple__27)) __PYX_ERR(0, 316, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__27);
+  __Pyx_GIVEREF(__pyx_tuple__27);
+  __pyx_codeobj__28 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__27, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_raise_exception, 316, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__28)) __PYX_ERR(0, 316, __pyx_L1_error)
 
-  /* "src/gevent/greenlet.py":402
+  /* "src/gevent/greenlet.py":407
  *         return bool(self)
  * 
  *     def ready(self):             # <<<<<<<<<<<<<<
  *         """
  *         Return a true value if and only if the greenlet has finished
  */
-  __pyx_tuple__28 = PyTuple_Pack(1, __pyx_n_s_self_2); if (unlikely(!__pyx_tuple__28)) __PYX_ERR(0, 402, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__28);
-  __Pyx_GIVEREF(__pyx_tuple__28);
-  __pyx_codeobj__29 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__28, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_ready, 402, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__29)) __PYX_ERR(0, 402, __pyx_L1_error)
+  __pyx_tuple__29 = PyTuple_Pack(1, __pyx_n_s_self_2); if (unlikely(!__pyx_tuple__29)) __PYX_ERR(0, 407, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__29);
+  __Pyx_GIVEREF(__pyx_tuple__29);
+  __pyx_codeobj__30 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__29, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_ready, 407, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__30)) __PYX_ERR(0, 407, __pyx_L1_error)
 
-  /* "src/gevent/greenlet.py":413
+  /* "src/gevent/greenlet.py":418
  *         return self.dead or self._exc_info is not None
  * 
  *     def successful(self):             # <<<<<<<<<<<<<<
  *         """
  *         Return a true value if and only if the greenlet has finished execution
  */
-  __pyx_tuple__30 = PyTuple_Pack(1, __pyx_n_s_self_2); if (unlikely(!__pyx_tuple__30)) __PYX_ERR(0, 413, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__30);
-  __Pyx_GIVEREF(__pyx_tuple__30);
-  __pyx_codeobj__31 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__30, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_successful, 413, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__31)) __PYX_ERR(0, 413, __pyx_L1_error)
+  __pyx_tuple__31 = PyTuple_Pack(1, __pyx_n_s_self_2); if (unlikely(!__pyx_tuple__31)) __PYX_ERR(0, 418, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__31);
+  __Pyx_GIVEREF(__pyx_tuple__31);
+  __pyx_codeobj__32 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__31, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_successful, 418, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__32)) __PYX_ERR(0, 418, __pyx_L1_error)
 
-  /* "src/gevent/greenlet.py":436
+  /* "src/gevent/greenlet.py":448
  * 
  * 
  *     def _formatinfo(self):             # <<<<<<<<<<<<<<
  *         info = self._formatted_info
  *         if info is not None:
  */
-  __pyx_tuple__32 = PyTuple_Pack(1, __pyx_n_s_self_2); if (unlikely(!__pyx_tuple__32)) __PYX_ERR(0, 436, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__32);
-  __Pyx_GIVEREF(__pyx_tuple__32);
-  __pyx_codeobj__33 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__32, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_formatinfo, 436, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__33)) __PYX_ERR(0, 436, __pyx_L1_error)
+  __pyx_tuple__33 = PyTuple_Pack(1, __pyx_n_s_self_2); if (unlikely(!__pyx_tuple__33)) __PYX_ERR(0, 448, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__33);
+  __Pyx_GIVEREF(__pyx_tuple__33);
+  __pyx_codeobj__34 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__33, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_formatinfo, 448, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__34)) __PYX_ERR(0, 448, __pyx_L1_error)
 
-  /* "src/gevent/greenlet.py":486
+  /* "src/gevent/greenlet.py":498
  *             return (ei[0], ei[1], load_traceback(ei[2]))
  * 
  *     def throw(self, *args):             # <<<<<<<<<<<<<<
  *         """Immediately switch into the greenlet and raise an exception in it.
  * 
  */
-  __pyx_tuple__34 = PyTuple_Pack(2, __pyx_n_s_self_2, __pyx_n_s_args); if (unlikely(!__pyx_tuple__34)) __PYX_ERR(0, 486, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__34);
-  __Pyx_GIVEREF(__pyx_tuple__34);
-  __pyx_codeobj__35 = (PyObject*)__Pyx_PyCode_New(1, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS|CO_VARARGS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__34, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_throw, 486, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__35)) __PYX_ERR(0, 486, __pyx_L1_error)
+  __pyx_tuple__35 = PyTuple_Pack(2, __pyx_n_s_self_2, __pyx_n_s_args); if (unlikely(!__pyx_tuple__35)) __PYX_ERR(0, 498, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__35);
+  __Pyx_GIVEREF(__pyx_tuple__35);
+  __pyx_codeobj__36 = (PyObject*)__Pyx_PyCode_New(1, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS|CO_VARARGS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__35, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_throw, 498, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__36)) __PYX_ERR(0, 498, __pyx_L1_error)
 
-  /* "src/gevent/greenlet.py":508
+  /* "src/gevent/greenlet.py":520
  *             self.__handle_death_before_start(args)
  * 
  *     def start(self):             # <<<<<<<<<<<<<<
  *         """Schedule the greenlet to run in this loop iteration"""
  *         if self._start_event is None:
  */
-  __pyx_tuple__36 = PyTuple_Pack(1, __pyx_n_s_self_2); if (unlikely(!__pyx_tuple__36)) __PYX_ERR(0, 508, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__36);
-  __Pyx_GIVEREF(__pyx_tuple__36);
-  __pyx_codeobj__37 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__36, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_start, 508, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__37)) __PYX_ERR(0, 508, __pyx_L1_error)
+  __pyx_tuple__37 = PyTuple_Pack(1, __pyx_n_s_self_2); if (unlikely(!__pyx_tuple__37)) __PYX_ERR(0, 520, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__37);
+  __Pyx_GIVEREF(__pyx_tuple__37);
+  __pyx_codeobj__38 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__37, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_start, 520, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__38)) __PYX_ERR(0, 520, __pyx_L1_error)
 
-  /* "src/gevent/greenlet.py":514
+  /* "src/gevent/greenlet.py":526
  *             self._start_event = self.parent.loop.run_callback(self.switch)
  * 
  *     def start_later(self, seconds):             # <<<<<<<<<<<<<<
  *         """
  *         start_later(seconds) -> None
  */
-  __pyx_tuple__38 = PyTuple_Pack(2, __pyx_n_s_self_2, __pyx_n_s_seconds); if (unlikely(!__pyx_tuple__38)) __PYX_ERR(0, 514, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__38);
-  __Pyx_GIVEREF(__pyx_tuple__38);
-  __pyx_codeobj__39 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__38, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_start_later, 514, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__39)) __PYX_ERR(0, 514, __pyx_L1_error)
+  __pyx_tuple__39 = PyTuple_Pack(2, __pyx_n_s_self_2, __pyx_n_s_seconds); if (unlikely(!__pyx_tuple__39)) __PYX_ERR(0, 526, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__39);
+  __Pyx_GIVEREF(__pyx_tuple__39);
+  __pyx_codeobj__40 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__39, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_start_later, 526, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__40)) __PYX_ERR(0, 526, __pyx_L1_error)
 
-  /* "src/gevent/greenlet.py":527
+  /* "src/gevent/greenlet.py":539
  * 
  *     @staticmethod
  *     def add_spawn_callback(callback):             # <<<<<<<<<<<<<<
  *         """
  *         add_spawn_callback(callback) -> None
  */
-  __pyx_tuple__40 = PyTuple_Pack(1, __pyx_n_s_callback); if (unlikely(!__pyx_tuple__40)) __PYX_ERR(0, 527, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__40);
-  __Pyx_GIVEREF(__pyx_tuple__40);
-  __pyx_codeobj__41 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__40, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_add_spawn_callback, 527, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__41)) __PYX_ERR(0, 527, __pyx_L1_error)
+  __pyx_tuple__41 = PyTuple_Pack(1, __pyx_n_s_callback); if (unlikely(!__pyx_tuple__41)) __PYX_ERR(0, 539, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__41);
+  __Pyx_GIVEREF(__pyx_tuple__41);
+  __pyx_codeobj__42 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__41, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_add_spawn_callback, 539, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__42)) __PYX_ERR(0, 539, __pyx_L1_error)
 
-  /* "src/gevent/greenlet.py":546
+  /* "src/gevent/greenlet.py":558
  * 
  *     @staticmethod
  *     def remove_spawn_callback(callback):             # <<<<<<<<<<<<<<
  *         """
  *         remove_spawn_callback(callback) -> None
  */
-  __pyx_tuple__42 = PyTuple_Pack(1, __pyx_n_s_callback); if (unlikely(!__pyx_tuple__42)) __PYX_ERR(0, 546, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__42);
-  __Pyx_GIVEREF(__pyx_tuple__42);
-  __pyx_codeobj__43 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__42, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_remove_spawn_callback, 546, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__43)) __PYX_ERR(0, 546, __pyx_L1_error)
+  __pyx_tuple__43 = PyTuple_Pack(1, __pyx_n_s_callback); if (unlikely(!__pyx_tuple__43)) __PYX_ERR(0, 558, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__43);
+  __Pyx_GIVEREF(__pyx_tuple__43);
+  __pyx_codeobj__44 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__43, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_remove_spawn_callback, 558, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__44)) __PYX_ERR(0, 558, __pyx_L1_error)
 
-  /* "src/gevent/greenlet.py":563
+  /* "src/gevent/greenlet.py":575
  * 
  *     @classmethod
  *     def spawn(cls, *args, **kwargs):             # <<<<<<<<<<<<<<
  *         """
  *         spawn(function, *args, **kwargs) -> Greenlet
  */
-  __pyx_tuple__44 = PyTuple_Pack(4, __pyx_n_s_cls, __pyx_n_s_args, __pyx_n_s_kwargs, __pyx_n_s_g); if (unlikely(!__pyx_tuple__44)) __PYX_ERR(0, 563, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__44);
-  __Pyx_GIVEREF(__pyx_tuple__44);
-  __pyx_codeobj__45 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS|CO_VARARGS|CO_VARKEYWORDS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__44, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_spawn, 563, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__45)) __PYX_ERR(0, 563, __pyx_L1_error)
+  __pyx_tuple__45 = PyTuple_Pack(4, __pyx_n_s_cls, __pyx_n_s_args, __pyx_n_s_kwargs, __pyx_n_s_g); if (unlikely(!__pyx_tuple__45)) __PYX_ERR(0, 575, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__45);
+  __Pyx_GIVEREF(__pyx_tuple__45);
+  __pyx_codeobj__46 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS|CO_VARARGS|CO_VARKEYWORDS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__45, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_spawn, 575, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__46)) __PYX_ERR(0, 575, __pyx_L1_error)
 
-  /* "src/gevent/greenlet.py":581
+  /* "src/gevent/greenlet.py":593
  * 
  *     @classmethod
  *     def spawn_later(cls, seconds, *args, **kwargs):             # <<<<<<<<<<<<<<
  *         """
  *         spawn_later(seconds, function, *args, **kwargs) -> Greenlet
  */
-  __pyx_tuple__46 = PyTuple_Pack(5, __pyx_n_s_cls, __pyx_n_s_seconds, __pyx_n_s_args, __pyx_n_s_kwargs, __pyx_n_s_g); if (unlikely(!__pyx_tuple__46)) __PYX_ERR(0, 581, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__46);
-  __Pyx_GIVEREF(__pyx_tuple__46);
-  __pyx_codeobj__47 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS|CO_VARARGS|CO_VARKEYWORDS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__46, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_spawn_later, 581, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__47)) __PYX_ERR(0, 581, __pyx_L1_error)
+  __pyx_tuple__47 = PyTuple_Pack(5, __pyx_n_s_cls, __pyx_n_s_seconds, __pyx_n_s_args, __pyx_n_s_kwargs, __pyx_n_s_g); if (unlikely(!__pyx_tuple__47)) __PYX_ERR(0, 593, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__47);
+  __Pyx_GIVEREF(__pyx_tuple__47);
+  __pyx_codeobj__48 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS|CO_VARARGS|CO_VARKEYWORDS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__47, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_spawn_later, 593, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__48)) __PYX_ERR(0, 593, __pyx_L1_error)
 
-  /* "src/gevent/greenlet.py":603
+  /* "src/gevent/greenlet.py":615
  *         return g
  * 
  *     def kill(self, exception=GreenletExit, block=True, timeout=None):             # <<<<<<<<<<<<<<
  *         """
  *         Raise the ``exception`` in the greenlet.
  */
-  __pyx_tuple__48 = PyTuple_Pack(5, __pyx_n_s_self_2, __pyx_n_s_exception, __pyx_n_s_block, __pyx_n_s_timeout, __pyx_n_s_waiter); if (unlikely(!__pyx_tuple__48)) __PYX_ERR(0, 603, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__48);
-  __Pyx_GIVEREF(__pyx_tuple__48);
-  __pyx_codeobj__49 = (PyObject*)__Pyx_PyCode_New(4, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__48, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_kill_2, 603, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__49)) __PYX_ERR(0, 603, __pyx_L1_error)
+  __pyx_tuple__49 = PyTuple_Pack(5, __pyx_n_s_self_2, __pyx_n_s_exception, __pyx_n_s_block, __pyx_n_s_timeout, __pyx_n_s_waiter); if (unlikely(!__pyx_tuple__49)) __PYX_ERR(0, 615, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__49);
+  __Pyx_GIVEREF(__pyx_tuple__49);
+  __pyx_codeobj__50 = (PyObject*)__Pyx_PyCode_New(4, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__49, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_kill_2, 615, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__50)) __PYX_ERR(0, 615, __pyx_L1_error)
 
-  /* "src/gevent/greenlet.py":655
+  /* "src/gevent/greenlet.py":667
  *         # thus it should not raise when the greenlet is already killed (= not started)
  * 
  *     def get(self, block=True, timeout=None):             # <<<<<<<<<<<<<<
  *         """
  *         get(block=True, timeout=None) -> object
  */
-  __pyx_tuple__50 = PyTuple_Pack(6, __pyx_n_s_self_2, __pyx_n_s_block, __pyx_n_s_timeout, __pyx_n_s_switch, __pyx_n_s_t, __pyx_n_s_result); if (unlikely(!__pyx_tuple__50)) __PYX_ERR(0, 655, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__50);
-  __Pyx_GIVEREF(__pyx_tuple__50);
-  __pyx_codeobj__51 = (PyObject*)__Pyx_PyCode_New(3, 0, 6, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__50, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_get_2, 655, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__51)) __PYX_ERR(0, 655, __pyx_L1_error)
+  __pyx_tuple__51 = PyTuple_Pack(6, __pyx_n_s_self_2, __pyx_n_s_block, __pyx_n_s_timeout, __pyx_n_s_switch, __pyx_n_s_t, __pyx_n_s_result); if (unlikely(!__pyx_tuple__51)) __PYX_ERR(0, 667, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__51);
+  __Pyx_GIVEREF(__pyx_tuple__51);
+  __pyx_codeobj__52 = (PyObject*)__Pyx_PyCode_New(3, 0, 6, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__51, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_get_2, 667, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__52)) __PYX_ERR(0, 667, __pyx_L1_error)
 
-  /* "src/gevent/greenlet.py":699
+  /* "src/gevent/greenlet.py":711
  *             self._raise_exception()
  * 
  *     def join(self, timeout=None):             # <<<<<<<<<<<<<<
  *         """
  *         join(timeout=None) -> None
  */
-  __pyx_tuple__52 = PyTuple_Pack(2, __pyx_n_s_self_2, __pyx_n_s_timeout); if (unlikely(!__pyx_tuple__52)) __PYX_ERR(0, 699, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__52);
-  __Pyx_GIVEREF(__pyx_tuple__52);
-  __pyx_codeobj__53 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__52, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_join, 699, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__53)) __PYX_ERR(0, 699, __pyx_L1_error)
+  __pyx_tuple__53 = PyTuple_Pack(2, __pyx_n_s_self_2, __pyx_n_s_timeout); if (unlikely(!__pyx_tuple__53)) __PYX_ERR(0, 711, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__53);
+  __Pyx_GIVEREF(__pyx_tuple__53);
+  __pyx_codeobj__54 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__53, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_join, 711, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__54)) __PYX_ERR(0, 711, __pyx_L1_error)
 
-  /* "src/gevent/greenlet.py":748
+  /* "src/gevent/greenlet.py":760
  *             del exc_info
  * 
  *     def run(self):             # <<<<<<<<<<<<<<
  *         try:
  *             self.__cancel_start()
  */
-  __pyx_tuple__54 = PyTuple_Pack(2, __pyx_n_s_self_2, __pyx_n_s_result); if (unlikely(!__pyx_tuple__54)) __PYX_ERR(0, 748, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__54);
-  __Pyx_GIVEREF(__pyx_tuple__54);
-  __pyx_codeobj__55 = (PyObject*)__Pyx_PyCode_New(1, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__54, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_run, 748, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__55)) __PYX_ERR(0, 748, __pyx_L1_error)
+  __pyx_tuple__55 = PyTuple_Pack(2, __pyx_n_s_self_2, __pyx_n_s_result); if (unlikely(!__pyx_tuple__55)) __PYX_ERR(0, 760, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__55);
+  __Pyx_GIVEREF(__pyx_tuple__55);
+  __pyx_codeobj__56 = (PyObject*)__Pyx_PyCode_New(1, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__55, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_run, 760, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__56)) __PYX_ERR(0, 760, __pyx_L1_error)
 
-  /* "src/gevent/greenlet.py":764
+  /* "src/gevent/greenlet.py":776
  *             self.kwargs.clear()
  * 
  *     def _run(self):             # <<<<<<<<<<<<<<
  *         """
  *         Subclasses may override this method to take any number of
  */
-  __pyx_tuple__56 = PyTuple_Pack(1, __pyx_n_s_self_2); if (unlikely(!__pyx_tuple__56)) __PYX_ERR(0, 764, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__56);
-  __Pyx_GIVEREF(__pyx_tuple__56);
-  __pyx_codeobj__57 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__56, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_run_2, 764, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__57)) __PYX_ERR(0, 764, __pyx_L1_error)
+  __pyx_tuple__57 = PyTuple_Pack(1, __pyx_n_s_self_2); if (unlikely(!__pyx_tuple__57)) __PYX_ERR(0, 776, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__57);
+  __Pyx_GIVEREF(__pyx_tuple__57);
+  __pyx_codeobj__58 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__57, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_run_2, 776, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__58)) __PYX_ERR(0, 776, __pyx_L1_error)
 
-  /* "src/gevent/greenlet.py":778
+  /* "src/gevent/greenlet.py":790
  *         return
  * 
  *     def has_links(self):             # <<<<<<<<<<<<<<
  *         return len(self._links)
  * 
  */
-  __pyx_tuple__58 = PyTuple_Pack(1, __pyx_n_s_self_2); if (unlikely(!__pyx_tuple__58)) __PYX_ERR(0, 778, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__58);
-  __Pyx_GIVEREF(__pyx_tuple__58);
-  __pyx_codeobj__59 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__58, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_has_links, 778, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__59)) __PYX_ERR(0, 778, __pyx_L1_error)
+  __pyx_tuple__59 = PyTuple_Pack(1, __pyx_n_s_self_2); if (unlikely(!__pyx_tuple__59)) __PYX_ERR(0, 790, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__59);
+  __Pyx_GIVEREF(__pyx_tuple__59);
+  __pyx_codeobj__60 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__59, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_has_links, 790, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__60)) __PYX_ERR(0, 790, __pyx_L1_error)
 
-  /* "src/gevent/greenlet.py":781
+  /* "src/gevent/greenlet.py":793
  *         return len(self._links)
  * 
  *     def rawlink(self, callback):             # <<<<<<<<<<<<<<
  *         """
  *         Register a callable to be executed when the greenlet finishes
  */
-  __pyx_tuple__60 = PyTuple_Pack(2, __pyx_n_s_self_2, __pyx_n_s_callback); if (unlikely(!__pyx_tuple__60)) __PYX_ERR(0, 781, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__60);
-  __Pyx_GIVEREF(__pyx_tuple__60);
-  __pyx_codeobj__61 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__60, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_rawlink, 781, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__61)) __PYX_ERR(0, 781, __pyx_L1_error)
+  __pyx_tuple__61 = PyTuple_Pack(2, __pyx_n_s_self_2, __pyx_n_s_callback); if (unlikely(!__pyx_tuple__61)) __PYX_ERR(0, 793, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__61);
+  __Pyx_GIVEREF(__pyx_tuple__61);
+  __pyx_codeobj__62 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__61, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_rawlink, 793, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__62)) __PYX_ERR(0, 793, __pyx_L1_error)
 
-  /* "src/gevent/greenlet.py":797
+  /* "src/gevent/greenlet.py":809
  *             self._notifier = self.parent.loop.run_callback(self._notify_links)
  * 
  *     def link(self, callback, SpawnedLink=SpawnedLink):             # <<<<<<<<<<<<<<
  *         """
  *         Link greenlet's completion to a callable.
  */
-  __pyx_tuple__62 = PyTuple_Pack(3, __pyx_n_s_self_2, __pyx_n_s_callback, __pyx_n_s_SpawnedLink); if (unlikely(!__pyx_tuple__62)) __PYX_ERR(0, 797, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__62);
-  __Pyx_GIVEREF(__pyx_tuple__62);
-  __pyx_codeobj__63 = (PyObject*)__Pyx_PyCode_New(3, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__62, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_link, 797, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__63)) __PYX_ERR(0, 797, __pyx_L1_error)
+  __pyx_tuple__63 = PyTuple_Pack(3, __pyx_n_s_self_2, __pyx_n_s_callback, __pyx_n_s_SpawnedLink); if (unlikely(!__pyx_tuple__63)) __PYX_ERR(0, 809, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__63);
+  __Pyx_GIVEREF(__pyx_tuple__63);
+  __pyx_codeobj__64 = (PyObject*)__Pyx_PyCode_New(3, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__63, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_link, 809, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__64)) __PYX_ERR(0, 809, __pyx_L1_error)
 
-  /* "src/gevent/greenlet.py":811
+  /* "src/gevent/greenlet.py":823
  *         self.rawlink(SpawnedLink(callback))
  * 
  *     def unlink(self, callback):             # <<<<<<<<<<<<<<
  *         """Remove the callback set by :meth:`link` or :meth:`rawlink`"""
  *         try:
  */
-  __pyx_tuple__64 = PyTuple_Pack(2, __pyx_n_s_self_2, __pyx_n_s_callback); if (unlikely(!__pyx_tuple__64)) __PYX_ERR(0, 811, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__64);
-  __Pyx_GIVEREF(__pyx_tuple__64);
-  __pyx_codeobj__65 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__64, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_unlink, 811, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__65)) __PYX_ERR(0, 811, __pyx_L1_error)
+  __pyx_tuple__65 = PyTuple_Pack(2, __pyx_n_s_self_2, __pyx_n_s_callback); if (unlikely(!__pyx_tuple__65)) __PYX_ERR(0, 823, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__65);
+  __Pyx_GIVEREF(__pyx_tuple__65);
+  __pyx_codeobj__66 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__65, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_unlink, 823, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__66)) __PYX_ERR(0, 823, __pyx_L1_error)
 
-  /* "src/gevent/greenlet.py":818
+  /* "src/gevent/greenlet.py":830
  *             pass
  * 
  *     def unlink_all(self):             # <<<<<<<<<<<<<<
  *         """
  *         Remove all the callbacks.
  */
-  __pyx_tuple__66 = PyTuple_Pack(1, __pyx_n_s_self_2); if (unlikely(!__pyx_tuple__66)) __PYX_ERR(0, 818, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__66);
-  __Pyx_GIVEREF(__pyx_tuple__66);
-  __pyx_codeobj__67 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__66, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_unlink_all, 818, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__67)) __PYX_ERR(0, 818, __pyx_L1_error)
+  __pyx_tuple__67 = PyTuple_Pack(1, __pyx_n_s_self_2); if (unlikely(!__pyx_tuple__67)) __PYX_ERR(0, 830, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__67);
+  __Pyx_GIVEREF(__pyx_tuple__67);
+  __pyx_codeobj__68 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__67, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_unlink_all, 830, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__68)) __PYX_ERR(0, 830, __pyx_L1_error)
 
-  /* "src/gevent/greenlet.py":826
+  /* "src/gevent/greenlet.py":838
  *         del self._links[:]
  * 
  *     def link_value(self, callback, SpawnedLink=SuccessSpawnedLink):             # <<<<<<<<<<<<<<
  *         """
  *         Like :meth:`link` but *callback* is only notified when the greenlet
  */
-  __pyx_tuple__68 = PyTuple_Pack(3, __pyx_n_s_self_2, __pyx_n_s_callback, __pyx_n_s_SpawnedLink); if (unlikely(!__pyx_tuple__68)) __PYX_ERR(0, 826, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__68);
-  __Pyx_GIVEREF(__pyx_tuple__68);
-  __pyx_codeobj__69 = (PyObject*)__Pyx_PyCode_New(3, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__68, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_link_value, 826, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__69)) __PYX_ERR(0, 826, __pyx_L1_error)
+  __pyx_tuple__69 = PyTuple_Pack(3, __pyx_n_s_self_2, __pyx_n_s_callback, __pyx_n_s_SpawnedLink); if (unlikely(!__pyx_tuple__69)) __PYX_ERR(0, 838, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__69);
+  __Pyx_GIVEREF(__pyx_tuple__69);
+  __pyx_codeobj__70 = (PyObject*)__Pyx_PyCode_New(3, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__69, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_link_value, 838, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__70)) __PYX_ERR(0, 838, __pyx_L1_error)
 
-  /* "src/gevent/greenlet.py":834
+  /* "src/gevent/greenlet.py":846
  *         self.link(callback, SpawnedLink=SpawnedLink)
  * 
  *     def link_exception(self, callback, SpawnedLink=FailureSpawnedLink):             # <<<<<<<<<<<<<<
  *         """
  *         Like :meth:`link` but *callback* is only notified when the
  */
-  __pyx_tuple__70 = PyTuple_Pack(3, __pyx_n_s_self_2, __pyx_n_s_callback, __pyx_n_s_SpawnedLink); if (unlikely(!__pyx_tuple__70)) __PYX_ERR(0, 834, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__70);
-  __Pyx_GIVEREF(__pyx_tuple__70);
-  __pyx_codeobj__71 = (PyObject*)__Pyx_PyCode_New(3, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__70, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_link_exception, 834, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__71)) __PYX_ERR(0, 834, __pyx_L1_error)
+  __pyx_tuple__71 = PyTuple_Pack(3, __pyx_n_s_self_2, __pyx_n_s_callback, __pyx_n_s_SpawnedLink); if (unlikely(!__pyx_tuple__71)) __PYX_ERR(0, 846, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__71);
+  __Pyx_GIVEREF(__pyx_tuple__71);
+  __pyx_codeobj__72 = (PyObject*)__Pyx_PyCode_New(3, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__71, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_link_exception, 846, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__72)) __PYX_ERR(0, 846, __pyx_L1_error)
 
-  /* "src/gevent/greenlet.py":842
+  /* "src/gevent/greenlet.py":854
  *         self.link(callback, SpawnedLink=SpawnedLink)
  * 
  *     def _notify_links(self):             # <<<<<<<<<<<<<<
  *         while self._links:
  *             # Early links are allowed to remove later links
  */
-  __pyx_tuple__72 = PyTuple_Pack(1, __pyx_n_s_self_2); if (unlikely(!__pyx_tuple__72)) __PYX_ERR(0, 842, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__72);
-  __Pyx_GIVEREF(__pyx_tuple__72);
-  __pyx_codeobj__73 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__72, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_notify_links, 842, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__73)) __PYX_ERR(0, 842, __pyx_L1_error)
+  __pyx_tuple__73 = PyTuple_Pack(1, __pyx_n_s_self_2); if (unlikely(!__pyx_tuple__73)) __PYX_ERR(0, 854, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__73);
+  __Pyx_GIVEREF(__pyx_tuple__73);
+  __pyx_codeobj__74 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__73, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_notify_links, 854, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__74)) __PYX_ERR(0, 854, __pyx_L1_error)
 
-  /* "src/gevent/greenlet.py":859
+  /* "src/gevent/greenlet.py":871
  * 
  * class _dummy_event(object):
  *     __slots__ = ('pending', 'active')             # <<<<<<<<<<<<<<
  * 
  *     def __init__(self):
  */
-  __pyx_tuple__74 = PyTuple_Pack(2, __pyx_n_s_pending, __pyx_n_s_active); if (unlikely(!__pyx_tuple__74)) __PYX_ERR(0, 859, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__74);
-  __Pyx_GIVEREF(__pyx_tuple__74);
+  __pyx_tuple__75 = PyTuple_Pack(2, __pyx_n_s_pending, __pyx_n_s_active); if (unlikely(!__pyx_tuple__75)) __PYX_ERR(0, 871, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__75);
+  __Pyx_GIVEREF(__pyx_tuple__75);
 
-  /* "src/gevent/greenlet.py":864
+  /* "src/gevent/greenlet.py":876
  *         self.pending = self.active = False
  * 
  *     def stop(self):             # <<<<<<<<<<<<<<
  *         pass
  * 
  */
-  __pyx_tuple__75 = PyTuple_Pack(1, __pyx_n_s_self_2); if (unlikely(!__pyx_tuple__75)) __PYX_ERR(0, 864, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__75);
-  __Pyx_GIVEREF(__pyx_tuple__75);
-  __pyx_codeobj__76 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__75, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_stop, 864, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__76)) __PYX_ERR(0, 864, __pyx_L1_error)
+  __pyx_tuple__76 = PyTuple_Pack(1, __pyx_n_s_self_2); if (unlikely(!__pyx_tuple__76)) __PYX_ERR(0, 876, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__76);
+  __Pyx_GIVEREF(__pyx_tuple__76);
+  __pyx_codeobj__77 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__76, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_stop, 876, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__77)) __PYX_ERR(0, 876, __pyx_L1_error)
 
-  /* "src/gevent/greenlet.py":867
+  /* "src/gevent/greenlet.py":879
  *         pass
  * 
  *     def start(self, cb): # pylint:disable=unused-argument             # <<<<<<<<<<<<<<
  *         raise AssertionError("Cannot start the dummy event")
  * 
  */
-  __pyx_tuple__77 = PyTuple_Pack(2, __pyx_n_s_self_2, __pyx_n_s_cb); if (unlikely(!__pyx_tuple__77)) __PYX_ERR(0, 867, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__77);
-  __Pyx_GIVEREF(__pyx_tuple__77);
-  __pyx_codeobj__78 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__77, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_start, 867, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__78)) __PYX_ERR(0, 867, __pyx_L1_error)
+  __pyx_tuple__78 = PyTuple_Pack(2, __pyx_n_s_self_2, __pyx_n_s_cb); if (unlikely(!__pyx_tuple__78)) __PYX_ERR(0, 879, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__78);
+  __Pyx_GIVEREF(__pyx_tuple__78);
+  __pyx_codeobj__79 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__78, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_start, 879, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__79)) __PYX_ERR(0, 879, __pyx_L1_error)
 
-  /* "src/gevent/greenlet.py":870
+  /* "src/gevent/greenlet.py":882
  *         raise AssertionError("Cannot start the dummy event")
  * 
  *     def close(self):             # <<<<<<<<<<<<<<
  *         pass
  * 
  */
-  __pyx_tuple__79 = PyTuple_Pack(1, __pyx_n_s_self_2); if (unlikely(!__pyx_tuple__79)) __PYX_ERR(0, 870, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__79);
-  __Pyx_GIVEREF(__pyx_tuple__79);
-  __pyx_codeobj__80 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__79, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_close, 870, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__80)) __PYX_ERR(0, 870, __pyx_L1_error)
+  __pyx_tuple__80 = PyTuple_Pack(1, __pyx_n_s_self_2); if (unlikely(!__pyx_tuple__80)) __PYX_ERR(0, 882, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__80);
+  __Pyx_GIVEREF(__pyx_tuple__80);
+  __pyx_codeobj__81 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__80, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_close, 882, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__81)) __PYX_ERR(0, 882, __pyx_L1_error)
 
-  /* "src/gevent/greenlet.py":877
+  /* "src/gevent/greenlet.py":889
  * 
  * 
  * def _kill(glet, exception, waiter):             # <<<<<<<<<<<<<<
  *     try:
  *         glet.throw(exception)
  */
-  __pyx_tuple__81 = PyTuple_Pack(3, __pyx_n_s_glet, __pyx_n_s_exception, __pyx_n_s_waiter); if (unlikely(!__pyx_tuple__81)) __PYX_ERR(0, 877, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__81);
-  __Pyx_GIVEREF(__pyx_tuple__81);
-  __pyx_codeobj__82 = (PyObject*)__Pyx_PyCode_New(3, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__81, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_kill, 877, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__82)) __PYX_ERR(0, 877, __pyx_L1_error)
+  __pyx_tuple__82 = PyTuple_Pack(3, __pyx_n_s_glet, __pyx_n_s_exception, __pyx_n_s_waiter); if (unlikely(!__pyx_tuple__82)) __PYX_ERR(0, 889, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__82);
+  __Pyx_GIVEREF(__pyx_tuple__82);
+  __pyx_codeobj__83 = (PyObject*)__Pyx_PyCode_New(3, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__82, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_kill, 889, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__83)) __PYX_ERR(0, 889, __pyx_L1_error)
 
-  /* "src/gevent/greenlet.py":887
+  /* "src/gevent/greenlet.py":899
  * 
  * 
  * def joinall(greenlets, timeout=None, raise_error=False, count=None):             # <<<<<<<<<<<<<<
  *     """
  *     Wait for the ``greenlets`` to finish.
  */
-  __pyx_tuple__83 = PyTuple_Pack(4, __pyx_n_s_greenlets, __pyx_n_s_timeout, __pyx_n_s_raise_error, __pyx_n_s_count); if (unlikely(!__pyx_tuple__83)) __PYX_ERR(0, 887, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__83);
-  __Pyx_GIVEREF(__pyx_tuple__83);
-  __pyx_codeobj__84 = (PyObject*)__Pyx_PyCode_New(4, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__83, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_joinall, 887, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__84)) __PYX_ERR(0, 887, __pyx_L1_error)
+  __pyx_tuple__84 = PyTuple_Pack(4, __pyx_n_s_greenlets, __pyx_n_s_timeout, __pyx_n_s_raise_error, __pyx_n_s_count); if (unlikely(!__pyx_tuple__84)) __PYX_ERR(0, 899, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__84);
+  __Pyx_GIVEREF(__pyx_tuple__84);
+  __pyx_codeobj__85 = (PyObject*)__Pyx_PyCode_New(4, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__84, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_joinall, 899, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__85)) __PYX_ERR(0, 899, __pyx_L1_error)
 
-  /* "src/gevent/greenlet.py":941
+  /* "src/gevent/greenlet.py":953
  * 
  * 
  * def killall(greenlets, exception=GreenletExit, block=True, timeout=None):             # <<<<<<<<<<<<<<
  *     """
  *     Forceably terminate all the ``greenlets`` by causing them to raise ``exception``.
  */
-  __pyx_tuple__85 = PyTuple_Pack(8, __pyx_n_s_greenlets, __pyx_n_s_exception, __pyx_n_s_block, __pyx_n_s_timeout, __pyx_n_s_loop, __pyx_n_s_waiter, __pyx_n_s_t, __pyx_n_s_alive); if (unlikely(!__pyx_tuple__85)) __PYX_ERR(0, 941, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__85);
-  __Pyx_GIVEREF(__pyx_tuple__85);
-  __pyx_codeobj__86 = (PyObject*)__Pyx_PyCode_New(4, 0, 8, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__85, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_killall, 941, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__86)) __PYX_ERR(0, 941, __pyx_L1_error)
+  __pyx_tuple__86 = PyTuple_Pack(8, __pyx_n_s_greenlets, __pyx_n_s_exception, __pyx_n_s_block, __pyx_n_s_timeout, __pyx_n_s_loop, __pyx_n_s_waiter, __pyx_n_s_t, __pyx_n_s_alive); if (unlikely(!__pyx_tuple__86)) __PYX_ERR(0, 953, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__86);
+  __Pyx_GIVEREF(__pyx_tuple__86);
+  __pyx_codeobj__87 = (PyObject*)__Pyx_PyCode_New(4, 0, 8, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__86, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent_greenlet_py, __pyx_n_s_killall, 953, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__87)) __PYX_ERR(0, 953, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -18331,13 +18416,13 @@ static int __Pyx_modinit_type_init_code(void) {
   __pyx_vtable_6gevent_9_greenlet__dummy_event.stop = (PyObject *(*)(struct __pyx_obj_6gevent_9_greenlet__dummy_event *, int __pyx_skip_dispatch))__pyx_f_6gevent_9_greenlet_12_dummy_event_stop;
   __pyx_vtable_6gevent_9_greenlet__dummy_event.start = (PyObject *(*)(struct __pyx_obj_6gevent_9_greenlet__dummy_event *, PyObject *, int __pyx_skip_dispatch))__pyx_f_6gevent_9_greenlet_12_dummy_event_start;
   __pyx_vtable_6gevent_9_greenlet__dummy_event.close = (PyObject *(*)(struct __pyx_obj_6gevent_9_greenlet__dummy_event *, int __pyx_skip_dispatch))__pyx_f_6gevent_9_greenlet_12_dummy_event_close;
-  if (PyType_Ready(&__pyx_type_6gevent_9_greenlet__dummy_event) < 0) __PYX_ERR(0, 858, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_6gevent_9_greenlet__dummy_event) < 0) __PYX_ERR(0, 870, __pyx_L1_error)
   __pyx_type_6gevent_9_greenlet__dummy_event.tp_print = 0;
   if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_6gevent_9_greenlet__dummy_event.tp_dictoffset && __pyx_type_6gevent_9_greenlet__dummy_event.tp_getattro == PyObject_GenericGetAttr)) {
     __pyx_type_6gevent_9_greenlet__dummy_event.tp_getattro = __Pyx_PyObject_GenericGetAttrNoDict;
   }
-  if (__Pyx_SetVtable(__pyx_type_6gevent_9_greenlet__dummy_event.tp_dict, __pyx_vtabptr_6gevent_9_greenlet__dummy_event) < 0) __PYX_ERR(0, 858, __pyx_L1_error)
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_dummy_event, (PyObject *)&__pyx_type_6gevent_9_greenlet__dummy_event) < 0) __PYX_ERR(0, 858, __pyx_L1_error)
+  if (__Pyx_SetVtable(__pyx_type_6gevent_9_greenlet__dummy_event.tp_dict, __pyx_vtabptr_6gevent_9_greenlet__dummy_event) < 0) __PYX_ERR(0, 870, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_dummy_event, (PyObject *)&__pyx_type_6gevent_9_greenlet__dummy_event) < 0) __PYX_ERR(0, 870, __pyx_L1_error)
   __pyx_ptype_6gevent_9_greenlet__dummy_event = &__pyx_type_6gevent_9_greenlet__dummy_event;
   if (PyType_Ready(&__pyx_scope_struct____Pyx_CFunc_object____list____object____object___to_py) < 0) __PYX_ERR(4, 64, __pyx_L1_error)
   __pyx_scope_struct____Pyx_CFunc_object____list____object____object___to_py.tp_print = 0;
@@ -18431,6 +18516,7 @@ static int __Pyx_modinit_variable_import_code(void) {
   if (__Pyx_ImportVoidPtr(__pyx_t_1, "WeakKeyDictionary", (void **)&__pyx_vp_6gevent_7__ident_WeakKeyDictionary, "PyObject *") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   Py_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_t_2 = PyImport_ImportModule("gevent.__greenlet_primitives"); if (!__pyx_t_2) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ImportVoidPtr(__pyx_t_2, "get_objects", (void **)&__pyx_vp_6gevent_21__greenlet_primitives_get_objects, "PyObject *") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ImportVoidPtr(__pyx_t_2, "wref", (void **)&__pyx_vp_6gevent_21__greenlet_primitives_wref, "PyObject *") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ImportVoidPtr(__pyx_t_2, "BlockingSwitchOutError", (void **)&__pyx_vp_6gevent_21__greenlet_primitives_BlockingSwitchOutError, "PyObject *") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ImportVoidPtr(__pyx_t_2, "_greenlet_imported", (void **)&__pyx_vp_6gevent_21__greenlet_primitives__greenlet_imported, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
@@ -19114,7 +19200,7 @@ if (!__Pyx_RefNanny) {
  * locals()['greenlet_init'] = lambda: None
  * locals()['Waiter'] = _waiter.Waiter
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin___import__, __pyx_tuple__20, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 45, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin___import__, __pyx_tuple__21, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 45, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_getcurrent); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 45, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
@@ -19253,7 +19339,7 @@ if (!__Pyx_RefNanny) {
  * 
  *     def __init__(self, f_code, f_lineno, f_back):
  */
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet__Frame->tp_dict, __pyx_n_s_slots, __pyx_tuple__21) < 0) __PYX_ERR(0, 114, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet__Frame->tp_dict, __pyx_n_s_slots, __pyx_tuple__22) < 0) __PYX_ERR(0, 114, __pyx_L1_error)
   PyType_Modified(__pyx_ptype_6gevent_9_greenlet__Frame);
 
   /* "src/gevent/greenlet.py":155
@@ -19287,7 +19373,7 @@ if (!__Pyx_RefNanny) {
  *         # Store this in the __dict__. We don't use it from the C
  *         # code. It's tempting to discard _spawning_stack_frames
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_3spawning_stack, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_spawning_stack, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__23)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 268, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_3spawning_stack, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_spawning_stack, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__24)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 268, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_spawning_stack, __pyx_t_2) < 0) __PYX_ERR(0, 268, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -19339,7 +19425,7 @@ if (!__Pyx_RefNanny) {
  *         """
  *         The greenlet name. By default, a unique name is constructed using
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_5name, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_name, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__25)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 301, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_5name, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_name, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__26)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 301, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_name_2, __pyx_t_2) < 0) __PYX_ERR(0, 301, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -19384,20 +19470,20 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_9_greenlet_Greenlet);
 
-  /* "src/gevent/greenlet.py":311
- *         return 'Greenlet-%d' % (self.minimal_ident)
+  /* "src/gevent/greenlet.py":316
+ *         return 'Greenlet-%d' % (self.minimal_ident,)
  * 
  *     def _raise_exception(self):             # <<<<<<<<<<<<<<
  *         reraise(*self.exc_info)
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_7_raise_exception, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet__raise_exception, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__27)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 311, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_7_raise_exception, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet__raise_exception, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__28)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 316, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_raise_exception, __pyx_t_2) < 0) __PYX_ERR(0, 311, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_raise_exception, __pyx_t_2) < 0) __PYX_ERR(0, 316, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_9_greenlet_Greenlet);
 
-  /* "src/gevent/greenlet.py":321
+  /* "src/gevent/greenlet.py":326
  *     def __nonzero__(self):
  *         return self._start_event is not None and self._exc_info is None
  *     try:             # <<<<<<<<<<<<<<
@@ -19413,20 +19499,20 @@ if (!__Pyx_RefNanny) {
     __Pyx_XGOTREF(__pyx_t_8);
     /*try:*/ {
 
-      /* "src/gevent/greenlet.py":322
+      /* "src/gevent/greenlet.py":327
  *         return self._start_event is not None and self._exc_info is None
  *     try:
  *         __bool__ = __nonzero__ # Python 3             # <<<<<<<<<<<<<<
  *     except NameError: # pragma: no cover
  *         # When we're compiled with Cython, the __nonzero__ function
  */
-      __Pyx_GetNameInClass(__pyx_t_2, (PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet, __pyx_n_s_nonzero); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 322, __pyx_L3_error)
+      __Pyx_GetNameInClass(__pyx_t_2, (PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet, __pyx_n_s_nonzero); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 327, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_2);
-      if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_bool, __pyx_t_2) < 0) __PYX_ERR(0, 322, __pyx_L3_error)
+      if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_bool, __pyx_t_2) < 0) __PYX_ERR(0, 327, __pyx_L3_error)
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       PyType_Modified(__pyx_ptype_6gevent_9_greenlet_Greenlet);
 
-      /* "src/gevent/greenlet.py":321
+      /* "src/gevent/greenlet.py":326
  *     def __nonzero__(self):
  *         return self._start_event is not None and self._exc_info is None
  *     try:             # <<<<<<<<<<<<<<
@@ -19444,7 +19530,7 @@ if (!__Pyx_RefNanny) {
     __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "src/gevent/greenlet.py":323
+    /* "src/gevent/greenlet.py":328
  *     try:
  *         __bool__ = __nonzero__ # Python 3
  *     except NameError: # pragma: no cover             # <<<<<<<<<<<<<<
@@ -19459,7 +19545,7 @@ if (!__Pyx_RefNanny) {
     goto __pyx_L5_except_error;
     __pyx_L5_except_error:;
 
-    /* "src/gevent/greenlet.py":321
+    /* "src/gevent/greenlet.py":326
  *     def __nonzero__(self):
  *         return self._start_event is not None and self._exc_info is None
  *     try:             # <<<<<<<<<<<<<<
@@ -19479,7 +19565,7 @@ if (!__Pyx_RefNanny) {
     __pyx_L8_try_end:;
   }
 
-  /* "src/gevent/greenlet.py":330
+  /* "src/gevent/greenlet.py":335
  *     ### Lifecycle
  * 
  *     if _PYPY:             # <<<<<<<<<<<<<<
@@ -19489,7 +19575,7 @@ if (!__Pyx_RefNanny) {
   __pyx_t_3 = (__pyx_v_6gevent_9_greenlet__PYPY != 0);
   if (__pyx_t_3) {
 
-    /* "src/gevent/greenlet.py":343
+    /* "src/gevent/greenlet.py":348
  *     else:
  *         @property
  *         def dead(self):             # <<<<<<<<<<<<<<
@@ -19502,201 +19588,201 @@ if (!__Pyx_RefNanny) {
   }
   __pyx_L9:;
 
-  /* "src/gevent/greenlet.py":402
+  /* "src/gevent/greenlet.py":407
  *         return bool(self)
  * 
  *     def ready(self):             # <<<<<<<<<<<<<<
  *         """
  *         Return a true value if and only if the greenlet has finished
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_11ready, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_ready, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__29)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 402, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_11ready, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_ready, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__30)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 407, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_ready, __pyx_t_2) < 0) __PYX_ERR(0, 402, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_ready, __pyx_t_2) < 0) __PYX_ERR(0, 407, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_9_greenlet_Greenlet);
 
-  /* "src/gevent/greenlet.py":413
+  /* "src/gevent/greenlet.py":418
  *         return self.dead or self._exc_info is not None
  * 
  *     def successful(self):             # <<<<<<<<<<<<<<
  *         """
  *         Return a true value if and only if the greenlet has finished execution
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_13successful, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_successful, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__31)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 413, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_13successful, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_successful, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__32)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 418, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_successful, __pyx_t_2) < 0) __PYX_ERR(0, 413, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_successful, __pyx_t_2) < 0) __PYX_ERR(0, 418, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_9_greenlet_Greenlet);
 
-  /* "src/gevent/greenlet.py":436
+  /* "src/gevent/greenlet.py":448
  * 
  * 
  *     def _formatinfo(self):             # <<<<<<<<<<<<<<
  *         info = self._formatted_info
  *         if info is not None:
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_17_formatinfo, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet__formatinfo, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__33)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 436, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_17_formatinfo, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet__formatinfo, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__34)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 448, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_formatinfo, __pyx_t_2) < 0) __PYX_ERR(0, 436, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_formatinfo, __pyx_t_2) < 0) __PYX_ERR(0, 448, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_9_greenlet_Greenlet);
 
-  /* "src/gevent/greenlet.py":486
+  /* "src/gevent/greenlet.py":498
  *             return (ei[0], ei[1], load_traceback(ei[2]))
  * 
  *     def throw(self, *args):             # <<<<<<<<<<<<<<
  *         """Immediately switch into the greenlet and raise an exception in it.
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_19throw, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_throw, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__35)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 486, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_19throw, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_throw, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__36)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 498, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_throw, __pyx_t_2) < 0) __PYX_ERR(0, 486, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_throw, __pyx_t_2) < 0) __PYX_ERR(0, 498, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_9_greenlet_Greenlet);
 
-  /* "src/gevent/greenlet.py":508
+  /* "src/gevent/greenlet.py":520
  *             self.__handle_death_before_start(args)
  * 
  *     def start(self):             # <<<<<<<<<<<<<<
  *         """Schedule the greenlet to run in this loop iteration"""
  *         if self._start_event is None:
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_21start, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_start, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__37)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 508, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_21start, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_start, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__38)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 520, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_start, __pyx_t_2) < 0) __PYX_ERR(0, 508, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_start, __pyx_t_2) < 0) __PYX_ERR(0, 520, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_9_greenlet_Greenlet);
 
-  /* "src/gevent/greenlet.py":514
+  /* "src/gevent/greenlet.py":526
  *             self._start_event = self.parent.loop.run_callback(self.switch)
  * 
  *     def start_later(self, seconds):             # <<<<<<<<<<<<<<
  *         """
  *         start_later(seconds) -> None
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_23start_later, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_start_later, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__39)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 514, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_23start_later, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_start_later, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__40)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 526, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_start_later, __pyx_t_2) < 0) __PYX_ERR(0, 514, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_start_later, __pyx_t_2) < 0) __PYX_ERR(0, 526, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_9_greenlet_Greenlet);
 
-  /* "src/gevent/greenlet.py":527
+  /* "src/gevent/greenlet.py":539
  * 
  *     @staticmethod
  *     def add_spawn_callback(callback):             # <<<<<<<<<<<<<<
  *         """
  *         add_spawn_callback(callback) -> None
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_25add_spawn_callback, __Pyx_CYFUNCTION_STATICMETHOD | __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_add_spawn_callback, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__41)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 527, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_25add_spawn_callback, __Pyx_CYFUNCTION_STATICMETHOD | __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_add_spawn_callback, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__42)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 539, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_add_spawn_callback, __pyx_t_2) < 0) __PYX_ERR(0, 527, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_add_spawn_callback, __pyx_t_2) < 0) __PYX_ERR(0, 539, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_9_greenlet_Greenlet);
 
-  /* "src/gevent/greenlet.py":526
+  /* "src/gevent/greenlet.py":538
  *             self._start_event.start(self.switch)
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
  *     def add_spawn_callback(callback):
  *         """
  */
-  __Pyx_GetNameInClass(__pyx_t_2, (PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet, __pyx_n_s_add_spawn_callback); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 527, __pyx_L1_error)
+  __Pyx_GetNameInClass(__pyx_t_2, (PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet, __pyx_n_s_add_spawn_callback); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 539, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_builtin_staticmethod, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 526, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_builtin_staticmethod, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 538, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_add_spawn_callback, __pyx_t_1) < 0) __PYX_ERR(0, 527, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_add_spawn_callback, __pyx_t_1) < 0) __PYX_ERR(0, 539, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   PyType_Modified(__pyx_ptype_6gevent_9_greenlet_Greenlet);
 
-  /* "src/gevent/greenlet.py":546
+  /* "src/gevent/greenlet.py":558
  * 
  *     @staticmethod
  *     def remove_spawn_callback(callback):             # <<<<<<<<<<<<<<
  *         """
  *         remove_spawn_callback(callback) -> None
  */
-  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_27remove_spawn_callback, __Pyx_CYFUNCTION_STATICMETHOD | __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_remove_spawn_callback, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__43)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 546, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_27remove_spawn_callback, __Pyx_CYFUNCTION_STATICMETHOD | __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_remove_spawn_callback, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__44)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 558, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_remove_spawn_callback, __pyx_t_1) < 0) __PYX_ERR(0, 546, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_remove_spawn_callback, __pyx_t_1) < 0) __PYX_ERR(0, 558, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   PyType_Modified(__pyx_ptype_6gevent_9_greenlet_Greenlet);
 
-  /* "src/gevent/greenlet.py":545
+  /* "src/gevent/greenlet.py":557
  *         _spawn_callbacks.add(callback)
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
  *     def remove_spawn_callback(callback):
  *         """
  */
-  __Pyx_GetNameInClass(__pyx_t_1, (PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet, __pyx_n_s_remove_spawn_callback); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 546, __pyx_L1_error)
+  __Pyx_GetNameInClass(__pyx_t_1, (PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet, __pyx_n_s_remove_spawn_callback); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 558, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_staticmethod, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 545, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_staticmethod, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 557, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_remove_spawn_callback, __pyx_t_2) < 0) __PYX_ERR(0, 546, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_remove_spawn_callback, __pyx_t_2) < 0) __PYX_ERR(0, 558, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_9_greenlet_Greenlet);
 
-  /* "src/gevent/greenlet.py":563
+  /* "src/gevent/greenlet.py":575
  * 
  *     @classmethod
  *     def spawn(cls, *args, **kwargs):             # <<<<<<<<<<<<<<
  *         """
  *         spawn(function, *args, **kwargs) -> Greenlet
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_29spawn, __Pyx_CYFUNCTION_CLASSMETHOD | __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_spawn, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__45)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 563, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_29spawn, __Pyx_CYFUNCTION_CLASSMETHOD | __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_spawn, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__46)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 575, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_spawn, __pyx_t_2) < 0) __PYX_ERR(0, 563, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_spawn, __pyx_t_2) < 0) __PYX_ERR(0, 575, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_9_greenlet_Greenlet);
 
-  /* "src/gevent/greenlet.py":562
+  /* "src/gevent/greenlet.py":574
  *                 _spawn_callbacks = None
  * 
  *     @classmethod             # <<<<<<<<<<<<<<
  *     def spawn(cls, *args, **kwargs):
  *         """
  */
-  __Pyx_GetNameInClass(__pyx_t_2, (PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet, __pyx_n_s_spawn); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 563, __pyx_L1_error)
+  __Pyx_GetNameInClass(__pyx_t_2, (PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet, __pyx_n_s_spawn); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 575, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_Method_ClassMethod(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 562, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_Method_ClassMethod(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 574, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_spawn, __pyx_t_1) < 0) __PYX_ERR(0, 563, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_spawn, __pyx_t_1) < 0) __PYX_ERR(0, 575, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   PyType_Modified(__pyx_ptype_6gevent_9_greenlet_Greenlet);
 
-  /* "src/gevent/greenlet.py":581
+  /* "src/gevent/greenlet.py":593
  * 
  *     @classmethod
  *     def spawn_later(cls, seconds, *args, **kwargs):             # <<<<<<<<<<<<<<
  *         """
  *         spawn_later(seconds, function, *args, **kwargs) -> Greenlet
  */
-  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_31spawn_later, __Pyx_CYFUNCTION_CLASSMETHOD | __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_spawn_later, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__47)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 581, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_31spawn_later, __Pyx_CYFUNCTION_CLASSMETHOD | __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_spawn_later, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__48)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 593, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_spawn_later, __pyx_t_1) < 0) __PYX_ERR(0, 581, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_spawn_later, __pyx_t_1) < 0) __PYX_ERR(0, 593, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   PyType_Modified(__pyx_ptype_6gevent_9_greenlet_Greenlet);
 
-  /* "src/gevent/greenlet.py":580
+  /* "src/gevent/greenlet.py":592
  *         return g
  * 
  *     @classmethod             # <<<<<<<<<<<<<<
  *     def spawn_later(cls, seconds, *args, **kwargs):
  *         """
  */
-  __Pyx_GetNameInClass(__pyx_t_1, (PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet, __pyx_n_s_spawn_later); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 581, __pyx_L1_error)
+  __Pyx_GetNameInClass(__pyx_t_1, (PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet, __pyx_n_s_spawn_later); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 593, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_Method_ClassMethod(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 580, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_Method_ClassMethod(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 592, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_spawn_later, __pyx_t_2) < 0) __PYX_ERR(0, 581, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_spawn_later, __pyx_t_2) < 0) __PYX_ERR(0, 593, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_9_greenlet_Greenlet);
 
-  /* "src/gevent/greenlet.py":603
+  /* "src/gevent/greenlet.py":615
  *         return g
  * 
  *     def kill(self, exception=GreenletExit, block=True, timeout=None):             # <<<<<<<<<<<<<<
@@ -19704,93 +19790,93 @@ if (!__Pyx_RefNanny) {
  *         Raise the ``exception`` in the greenlet.
  */
   __Pyx_INCREF(__pyx_v_6gevent_9_greenlet_GreenletExit);
-  __pyx_k__9 = __pyx_v_6gevent_9_greenlet_GreenletExit;
+  __pyx_k__10 = __pyx_v_6gevent_9_greenlet_GreenletExit;
   __Pyx_GIVEREF(__pyx_v_6gevent_9_greenlet_GreenletExit);
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_33kill, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_kill, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__49)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 603, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_33kill, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_kill, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__50)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 615, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_kill_2, __pyx_t_2) < 0) __PYX_ERR(0, 603, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_kill_2, __pyx_t_2) < 0) __PYX_ERR(0, 615, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_9_greenlet_Greenlet);
 
-  /* "src/gevent/greenlet.py":655
+  /* "src/gevent/greenlet.py":667
  *         # thus it should not raise when the greenlet is already killed (= not started)
  * 
  *     def get(self, block=True, timeout=None):             # <<<<<<<<<<<<<<
  *         """
  *         get(block=True, timeout=None) -> object
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_35get, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_get, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__51)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 655, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_35get, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_get, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__52)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 667, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_get_2, __pyx_t_2) < 0) __PYX_ERR(0, 655, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_get_2, __pyx_t_2) < 0) __PYX_ERR(0, 667, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_9_greenlet_Greenlet);
 
-  /* "src/gevent/greenlet.py":699
+  /* "src/gevent/greenlet.py":711
  *             self._raise_exception()
  * 
  *     def join(self, timeout=None):             # <<<<<<<<<<<<<<
  *         """
  *         join(timeout=None) -> None
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_37join, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_join, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__53)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 699, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_37join, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_join, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__54)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 711, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_join, __pyx_t_2) < 0) __PYX_ERR(0, 699, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_join, __pyx_t_2) < 0) __PYX_ERR(0, 711, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_9_greenlet_Greenlet);
 
-  /* "src/gevent/greenlet.py":748
+  /* "src/gevent/greenlet.py":760
  *             del exc_info
  * 
  *     def run(self):             # <<<<<<<<<<<<<<
  *         try:
  *             self.__cancel_start()
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_39run, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_run, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__55)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 748, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_39run, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_run, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__56)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 760, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_run, __pyx_t_2) < 0) __PYX_ERR(0, 748, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_run, __pyx_t_2) < 0) __PYX_ERR(0, 760, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_9_greenlet_Greenlet);
 
-  /* "src/gevent/greenlet.py":764
+  /* "src/gevent/greenlet.py":776
  *             self.kwargs.clear()
  * 
  *     def _run(self):             # <<<<<<<<<<<<<<
  *         """
  *         Subclasses may override this method to take any number of
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_41_run, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet__run, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__57)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 764, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_41_run, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet__run, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__58)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 776, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_run_2, __pyx_t_2) < 0) __PYX_ERR(0, 764, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_run_2, __pyx_t_2) < 0) __PYX_ERR(0, 776, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_9_greenlet_Greenlet);
 
-  /* "src/gevent/greenlet.py":778
+  /* "src/gevent/greenlet.py":790
  *         return
  * 
  *     def has_links(self):             # <<<<<<<<<<<<<<
  *         return len(self._links)
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_43has_links, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_has_links, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__59)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 778, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_43has_links, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_has_links, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__60)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 790, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_has_links, __pyx_t_2) < 0) __PYX_ERR(0, 778, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_has_links, __pyx_t_2) < 0) __PYX_ERR(0, 790, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_9_greenlet_Greenlet);
 
-  /* "src/gevent/greenlet.py":781
+  /* "src/gevent/greenlet.py":793
  *         return len(self._links)
  * 
  *     def rawlink(self, callback):             # <<<<<<<<<<<<<<
  *         """
  *         Register a callable to be executed when the greenlet finishes
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_45rawlink, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_rawlink, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__61)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 781, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_45rawlink, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_rawlink, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__62)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 793, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_rawlink, __pyx_t_2) < 0) __PYX_ERR(0, 781, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_rawlink, __pyx_t_2) < 0) __PYX_ERR(0, 793, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_9_greenlet_Greenlet);
 
-  /* "src/gevent/greenlet.py":797
+  /* "src/gevent/greenlet.py":809
  *             self._notifier = self.parent.loop.run_callback(self._notify_links)
  * 
  *     def link(self, callback, SpawnedLink=SpawnedLink):             # <<<<<<<<<<<<<<
@@ -19798,41 +19884,41 @@ if (!__Pyx_RefNanny) {
  *         Link greenlet's completion to a callable.
  */
   __Pyx_INCREF(((PyObject *)__pyx_ptype_6gevent_9_greenlet_SpawnedLink));
-  __pyx_k__12 = ((PyObject *)__pyx_ptype_6gevent_9_greenlet_SpawnedLink);
+  __pyx_k__13 = ((PyObject *)__pyx_ptype_6gevent_9_greenlet_SpawnedLink);
   __Pyx_GIVEREF(__pyx_ptype_6gevent_9_greenlet_SpawnedLink);
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_47link, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_link, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__63)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 797, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_47link, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_link, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__64)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 809, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_link, __pyx_t_2) < 0) __PYX_ERR(0, 797, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_link, __pyx_t_2) < 0) __PYX_ERR(0, 809, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_9_greenlet_Greenlet);
 
-  /* "src/gevent/greenlet.py":811
+  /* "src/gevent/greenlet.py":823
  *         self.rawlink(SpawnedLink(callback))
  * 
  *     def unlink(self, callback):             # <<<<<<<<<<<<<<
  *         """Remove the callback set by :meth:`link` or :meth:`rawlink`"""
  *         try:
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_49unlink, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_unlink, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__65)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 811, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_49unlink, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_unlink, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__66)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 823, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_unlink, __pyx_t_2) < 0) __PYX_ERR(0, 811, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_unlink, __pyx_t_2) < 0) __PYX_ERR(0, 823, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_9_greenlet_Greenlet);
 
-  /* "src/gevent/greenlet.py":818
+  /* "src/gevent/greenlet.py":830
  *             pass
  * 
  *     def unlink_all(self):             # <<<<<<<<<<<<<<
  *         """
  *         Remove all the callbacks.
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_51unlink_all, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_unlink_all, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__67)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 818, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_51unlink_all, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_unlink_all, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__68)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 830, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_unlink_all, __pyx_t_2) < 0) __PYX_ERR(0, 818, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_unlink_all, __pyx_t_2) < 0) __PYX_ERR(0, 830, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_9_greenlet_Greenlet);
 
-  /* "src/gevent/greenlet.py":826
+  /* "src/gevent/greenlet.py":838
  *         del self._links[:]
  * 
  *     def link_value(self, callback, SpawnedLink=SuccessSpawnedLink):             # <<<<<<<<<<<<<<
@@ -19840,15 +19926,15 @@ if (!__Pyx_RefNanny) {
  *         Like :meth:`link` but *callback* is only notified when the greenlet
  */
   __Pyx_INCREF(((PyObject *)__pyx_ptype_6gevent_9_greenlet_SuccessSpawnedLink));
-  __pyx_k__13 = ((PyObject *)__pyx_ptype_6gevent_9_greenlet_SuccessSpawnedLink);
+  __pyx_k__14 = ((PyObject *)__pyx_ptype_6gevent_9_greenlet_SuccessSpawnedLink);
   __Pyx_GIVEREF(__pyx_ptype_6gevent_9_greenlet_SuccessSpawnedLink);
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_53link_value, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_link_value, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__69)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 826, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_53link_value, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_link_value, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__70)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 838, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_link_value, __pyx_t_2) < 0) __PYX_ERR(0, 826, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_link_value, __pyx_t_2) < 0) __PYX_ERR(0, 838, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_9_greenlet_Greenlet);
 
-  /* "src/gevent/greenlet.py":834
+  /* "src/gevent/greenlet.py":846
  *         self.link(callback, SpawnedLink=SpawnedLink)
  * 
  *     def link_exception(self, callback, SpawnedLink=FailureSpawnedLink):             # <<<<<<<<<<<<<<
@@ -19856,129 +19942,129 @@ if (!__Pyx_RefNanny) {
  *         Like :meth:`link` but *callback* is only notified when the
  */
   __Pyx_INCREF(((PyObject *)__pyx_ptype_6gevent_9_greenlet_FailureSpawnedLink));
-  __pyx_k__14 = ((PyObject *)__pyx_ptype_6gevent_9_greenlet_FailureSpawnedLink);
+  __pyx_k__15 = ((PyObject *)__pyx_ptype_6gevent_9_greenlet_FailureSpawnedLink);
   __Pyx_GIVEREF(__pyx_ptype_6gevent_9_greenlet_FailureSpawnedLink);
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_55link_exception, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_link_exception, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__71)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 834, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_55link_exception, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet_link_exception, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__72)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 846, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_link_exception, __pyx_t_2) < 0) __PYX_ERR(0, 834, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_link_exception, __pyx_t_2) < 0) __PYX_ERR(0, 846, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_9_greenlet_Greenlet);
 
-  /* "src/gevent/greenlet.py":842
+  /* "src/gevent/greenlet.py":854
  *         self.link(callback, SpawnedLink=SpawnedLink)
  * 
  *     def _notify_links(self):             # <<<<<<<<<<<<<<
  *         while self._links:
  *             # Early links are allowed to remove later links
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_57_notify_links, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet__notify_links, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__73)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 842, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_8Greenlet_57_notify_links, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Greenlet__notify_links, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__74)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 854, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_notify_links, __pyx_t_2) < 0) __PYX_ERR(0, 842, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet_Greenlet->tp_dict, __pyx_n_s_notify_links, __pyx_t_2) < 0) __PYX_ERR(0, 854, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_9_greenlet_Greenlet);
 
-  /* "src/gevent/greenlet.py":859
+  /* "src/gevent/greenlet.py":871
  * 
  * class _dummy_event(object):
  *     __slots__ = ('pending', 'active')             # <<<<<<<<<<<<<<
  * 
  *     def __init__(self):
  */
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet__dummy_event->tp_dict, __pyx_n_s_slots, __pyx_tuple__74) < 0) __PYX_ERR(0, 859, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet__dummy_event->tp_dict, __pyx_n_s_slots, __pyx_tuple__75) < 0) __PYX_ERR(0, 871, __pyx_L1_error)
   PyType_Modified(__pyx_ptype_6gevent_9_greenlet__dummy_event);
 
-  /* "src/gevent/greenlet.py":864
+  /* "src/gevent/greenlet.py":876
  *         self.pending = self.active = False
  * 
  *     def stop(self):             # <<<<<<<<<<<<<<
  *         pass
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_12_dummy_event_3stop, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_dummy_event_stop, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__76)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 864, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_12_dummy_event_3stop, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_dummy_event_stop, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__77)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 876, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet__dummy_event->tp_dict, __pyx_n_s_stop, __pyx_t_2) < 0) __PYX_ERR(0, 864, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet__dummy_event->tp_dict, __pyx_n_s_stop, __pyx_t_2) < 0) __PYX_ERR(0, 876, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_9_greenlet__dummy_event);
 
-  /* "src/gevent/greenlet.py":867
+  /* "src/gevent/greenlet.py":879
  *         pass
  * 
  *     def start(self, cb): # pylint:disable=unused-argument             # <<<<<<<<<<<<<<
  *         raise AssertionError("Cannot start the dummy event")
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_12_dummy_event_5start, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_dummy_event_start, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__78)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 867, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_12_dummy_event_5start, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_dummy_event_start, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__79)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 879, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet__dummy_event->tp_dict, __pyx_n_s_start, __pyx_t_2) < 0) __PYX_ERR(0, 867, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet__dummy_event->tp_dict, __pyx_n_s_start, __pyx_t_2) < 0) __PYX_ERR(0, 879, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_9_greenlet__dummy_event);
 
-  /* "src/gevent/greenlet.py":870
+  /* "src/gevent/greenlet.py":882
  *         raise AssertionError("Cannot start the dummy event")
  * 
  *     def close(self):             # <<<<<<<<<<<<<<
  *         pass
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_12_dummy_event_7close, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_dummy_event_close, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__80)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 870, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_12_dummy_event_7close, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_dummy_event_close, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__81)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 882, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet__dummy_event->tp_dict, __pyx_n_s_close, __pyx_t_2) < 0) __PYX_ERR(0, 870, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_9_greenlet__dummy_event->tp_dict, __pyx_n_s_close, __pyx_t_2) < 0) __PYX_ERR(0, 882, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_9_greenlet__dummy_event);
 
-  /* "src/gevent/greenlet.py":873
+  /* "src/gevent/greenlet.py":885
  *         pass
  * 
  * _cancelled_start_event = _dummy_event()             # <<<<<<<<<<<<<<
  * _start_completed_event = _dummy_event()
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_6gevent_9_greenlet__dummy_event)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 873, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_6gevent_9_greenlet__dummy_event)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 885, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_XGOTREF(((PyObject *)__pyx_v_6gevent_9_greenlet__cancelled_start_event));
   __Pyx_DECREF_SET(__pyx_v_6gevent_9_greenlet__cancelled_start_event, ((struct __pyx_obj_6gevent_9_greenlet__dummy_event *)__pyx_t_2));
   __Pyx_GIVEREF(__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "src/gevent/greenlet.py":874
+  /* "src/gevent/greenlet.py":886
  * 
  * _cancelled_start_event = _dummy_event()
  * _start_completed_event = _dummy_event()             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_6gevent_9_greenlet__dummy_event)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 874, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_6gevent_9_greenlet__dummy_event)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 886, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_XGOTREF(((PyObject *)__pyx_v_6gevent_9_greenlet__start_completed_event));
   __Pyx_DECREF_SET(__pyx_v_6gevent_9_greenlet__start_completed_event, ((struct __pyx_obj_6gevent_9_greenlet__dummy_event *)__pyx_t_2));
   __Pyx_GIVEREF(__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "src/gevent/greenlet.py":877
+  /* "src/gevent/greenlet.py":889
  * 
  * 
  * def _kill(glet, exception, waiter):             # <<<<<<<<<<<<<<
  *     try:
  *         glet.throw(exception)
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_1_kill, 0, __pyx_n_s_kill, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__82)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 877, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_1_kill, 0, __pyx_n_s_kill, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__83)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 889, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_kill, __pyx_t_2) < 0) __PYX_ERR(0, 877, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_kill, __pyx_t_2) < 0) __PYX_ERR(0, 889, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "src/gevent/greenlet.py":887
+  /* "src/gevent/greenlet.py":899
  * 
  * 
  * def joinall(greenlets, timeout=None, raise_error=False, count=None):             # <<<<<<<<<<<<<<
  *     """
  *     Wait for the ``greenlets`` to finish.
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_3joinall, 0, __pyx_n_s_joinall, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__84)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 887, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_3joinall, 0, __pyx_n_s_joinall, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__85)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 899, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_joinall, __pyx_t_2) < 0) __PYX_ERR(0, 887, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_joinall, __pyx_t_2) < 0) __PYX_ERR(0, 899, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "src/gevent/greenlet.py":938
+  /* "src/gevent/greenlet.py":950
  * 
  * 
  * _spawn_callbacks = None             # <<<<<<<<<<<<<<
@@ -19990,24 +20076,24 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF_SET(__pyx_v_6gevent_9_greenlet__spawn_callbacks, ((PyObject*)Py_None));
   __Pyx_GIVEREF(Py_None);
 
-  /* "src/gevent/greenlet.py":941
+  /* "src/gevent/greenlet.py":953
  * 
  * 
  * def killall(greenlets, exception=GreenletExit, block=True, timeout=None):             # <<<<<<<<<<<<<<
  *     """
  *     Forceably terminate all the ``greenlets`` by causing them to raise ``exception``.
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_5killall, 0, __pyx_n_s_killall, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__86)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 941, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_9_greenlet_5killall, 0, __pyx_n_s_killall, NULL, __pyx_n_s_gevent__greenlet, __pyx_d, ((PyObject *)__pyx_codeobj__87)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 953, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (!__Pyx_CyFunction_InitDefaults(__pyx_t_2, sizeof(__pyx_defaults), 1)) __PYX_ERR(0, 941, __pyx_L1_error)
+  if (!__Pyx_CyFunction_InitDefaults(__pyx_t_2, sizeof(__pyx_defaults), 1)) __PYX_ERR(0, 953, __pyx_L1_error)
   __Pyx_INCREF(__pyx_v_6gevent_9_greenlet_GreenletExit);
   __Pyx_CyFunction_Defaults(__pyx_defaults, __pyx_t_2)->__pyx_arg_exception = __pyx_v_6gevent_9_greenlet_GreenletExit;
   __Pyx_GIVEREF(__pyx_v_6gevent_9_greenlet_GreenletExit);
   __Pyx_CyFunction_SetDefaultsGetter(__pyx_t_2, __pyx_pf_6gevent_9_greenlet_7__defaults__);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_killall, __pyx_t_2) < 0) __PYX_ERR(0, 941, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_killall, __pyx_t_2) < 0) __PYX_ERR(0, 953, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "src/gevent/greenlet.py":988
+  /* "src/gevent/greenlet.py":1000
  *     greenlet_init() # pylint:disable=undefined-variable
  * 
  * _init()             # <<<<<<<<<<<<<<
@@ -20016,36 +20102,36 @@ if (!__Pyx_RefNanny) {
  */
   __pyx_f_6gevent_9_greenlet__init();
 
-  /* "src/gevent/greenlet.py":990
+  /* "src/gevent/greenlet.py":1002
  * _init()
  * 
  * from gevent._util import import_c_accel             # <<<<<<<<<<<<<<
  * import_c_accel(globals(), 'gevent._greenlet')
  */
-  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 990, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1002, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_n_s_import_c_accel);
   __Pyx_GIVEREF(__pyx_n_s_import_c_accel);
   PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_import_c_accel);
-  __pyx_t_1 = __Pyx_Import(__pyx_n_s_gevent__util, __pyx_t_2, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 990, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_Import(__pyx_n_s_gevent__util, __pyx_t_2, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1002, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_import_c_accel); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 990, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_import_c_accel); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1002, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_import_c_accel, __pyx_t_2) < 0) __PYX_ERR(0, 990, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_import_c_accel, __pyx_t_2) < 0) __PYX_ERR(0, 1002, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/gevent/greenlet.py":991
+  /* "src/gevent/greenlet.py":1003
  * 
  * from gevent._util import import_c_accel
  * import_c_accel(globals(), 'gevent._greenlet')             # <<<<<<<<<<<<<<
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_import_c_accel); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 991, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_import_c_accel); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1003, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_Globals(); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 991, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_Globals(); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1003, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 991, __pyx_L1_error)
+  __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1003, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_GIVEREF(__pyx_t_2);
   PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_2);
@@ -20053,7 +20139,7 @@ if (!__Pyx_RefNanny) {
   __Pyx_GIVEREF(__pyx_n_s_gevent__greenlet);
   PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_n_s_gevent__greenlet);
   __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_4, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 991, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_4, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1003, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;

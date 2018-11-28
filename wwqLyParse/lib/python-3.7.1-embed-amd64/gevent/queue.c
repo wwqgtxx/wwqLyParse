@@ -2001,6 +2001,8 @@ static PyObject *__pyx_f_6gevent_6_queue_7Channel__schedule_unlock(struct __pyx_
 static PyTypeObject *__pyx_ptype_6gevent_21__greenlet_primitives_greenlet = 0;
 static PyTypeObject *__pyx_ptype_6gevent_21__greenlet_primitives_TrackedRawGreenlet = 0;
 static PyTypeObject *__pyx_ptype_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop = 0;
+static PyObject **__pyx_vp_6gevent_21__greenlet_primitives_get_objects = 0;
+#define __pyx_v_6gevent_21__greenlet_primitives_get_objects (*__pyx_vp_6gevent_21__greenlet_primitives_get_objects)
 static PyObject **__pyx_vp_6gevent_21__greenlet_primitives_wref = 0;
 #define __pyx_v_6gevent_21__greenlet_primitives_wref (*__pyx_vp_6gevent_21__greenlet_primitives_wref)
 static PyObject **__pyx_vp_6gevent_21__greenlet_primitives_BlockingSwitchOutError = 0;
@@ -16795,6 +16797,7 @@ static int __Pyx_modinit_variable_import_code(void) {
   __Pyx_RefNannySetupContext("__Pyx_modinit_variable_import_code", 0);
   /*--- Variable import code ---*/
   __pyx_t_1 = PyImport_ImportModule("gevent.__greenlet_primitives"); if (!__pyx_t_1) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ImportVoidPtr(__pyx_t_1, "get_objects", (void **)&__pyx_vp_6gevent_21__greenlet_primitives_get_objects, "PyObject *") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ImportVoidPtr(__pyx_t_1, "wref", (void **)&__pyx_vp_6gevent_21__greenlet_primitives_wref, "PyObject *") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ImportVoidPtr(__pyx_t_1, "BlockingSwitchOutError", (void **)&__pyx_vp_6gevent_21__greenlet_primitives_BlockingSwitchOutError, "PyObject *") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ImportVoidPtr(__pyx_t_1, "_greenlet_imported", (void **)&__pyx_vp_6gevent_21__greenlet_primitives__greenlet_imported, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)

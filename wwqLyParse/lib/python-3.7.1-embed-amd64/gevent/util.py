@@ -6,14 +6,13 @@ Low-level utilities.
 from __future__ import absolute_import, print_function, division
 
 import functools
-import gc
 import pprint
 import sys
 import traceback
 
 from greenlet import getcurrent
-from greenlet import greenlet as RawGreenlet
 
+from gevent._compat import perf_counter
 from gevent._compat import PYPY
 from gevent._compat import thread_mod_name
 from gevent._util import _NONE
@@ -454,20 +453,16 @@ class GreenletTree(object):
 
     @classmethod
     def _forest(cls):
+        from gevent._greenlet_primitives import get_reachable_greenlets
         main_greenlet = cls._root_greenlet(getcurrent())
 
         trees = {}
         roots = {}
         current_tree = roots[main_greenlet] = trees[main_greenlet] = cls(main_greenlet)
 
+        glets = get_reachable_greenlets()
 
-
-        for ob in gc.get_objects():
-            if not isinstance(ob, RawGreenlet):
-                continue
-            if getattr(ob, 'greenlet_tree_is_ignored', False):
-                continue
-
+        for ob in glets:
             spawn_parent = cls.__spawning_parent(ob)
 
             if spawn_parent is None:
@@ -547,10 +542,15 @@ class assert_switches(object):
             pass
 
     .. versionadded:: 1.3
+
+    .. versionchanged:: 1.4
+        If an exception is raised, it now includes information about
+        the duration of blocking and the parameters of this object.
     """
 
     hub = None
     tracer = None
+    _entered = None
 
 
     def __init__(self, max_blocking_time=None, hub_only=False):
@@ -573,6 +573,7 @@ class assert_switches(object):
         else:
             self.tracer = _tracer.MaxSwitchTracer(hub, self.max_blocking_time)
 
+        self._entered = perf_counter()
         self.tracer.monitor_current_greenlet_blocking()
         return self
 
@@ -589,6 +590,14 @@ class assert_switches(object):
 
         did_block = tracer.did_block_hub(hub)
         if did_block:
+            execution_time_s = perf_counter() - self._entered
             active_greenlet = did_block[1]
             report_lines = tracer.did_block_hub_report(hub, active_greenlet, {})
-            raise _FailedToSwitch('\n'.join(report_lines))
+
+            message = 'To the hub' if self.hub_only else 'To any greenlet'
+            message += ' in %.4f seconds' % (execution_time_s,)
+            max_block = self.max_blocking_time
+            message += ' (max allowed %.4f seconds)' % (max_block,) if max_block else ''
+            message += '\n'
+            message += '\n'.join(report_lines)
+            raise _FailedToSwitch(message)

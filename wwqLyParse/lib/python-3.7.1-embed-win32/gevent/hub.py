@@ -339,8 +339,6 @@ def reinit(hub=None):
     #sleep(0.00001)
 
 
-hub_ident_registry = IdentRegistry()
-
 class Hub(WaitOperationsGreenlet):
     """
     A greenlet that runs the event loop.
@@ -386,6 +384,15 @@ class Hub(WaitOperationsGreenlet):
     # because that conflicts with the slot we inherit from the
     # Cythonized-bases.
 
+    # This is the source for our 'minimal_ident' property. We don't use a
+    # IdentRegistry because we've seen some crashes having to do with
+    # clearing weak references on shutdown in Windows (see known_failures.py).
+    # This gives us slightly different semantics than a greenlet's minimal_ident
+    # (notably, there can be holes) but we never documented this object's minimal_ident,
+    # and there should be few enough hub's over the lifetime of a process so as not
+    # to matter much.
+    _hub_counter = 0
+
     def __init__(self, loop=None, default=None):
         WaitOperationsGreenlet.__init__(self, None, None)
         self.thread_ident = get_thread_ident()
@@ -408,7 +415,9 @@ class Hub(WaitOperationsGreenlet):
         self._resolver = None
         self._threadpool = None
         self.format_context = GEVENT_CONFIG.format_context
-        self.minimal_ident = hub_ident_registry.get_ident(self)
+
+        Hub._hub_counter += 1
+        self.minimal_ident = Hub._hub_counter
 
     @Lazy
     def ident_registry(self):
@@ -511,7 +520,9 @@ class Hub(WaitOperationsGreenlet):
         # Unwrap any FileObjectThread we have thrown around sys.stderr
         # (because it can't be used in the hub). Tricky because we are
         # called in error situations when it's not safe to import.
-        stderr = sys.stderr
+        # Be careful not to access sys if we're in the process of interpreter
+        # shutdown.
+        stderr = sys.stderr if sys else None # pylint:disable=using-constant-test
         if type(stderr).__name__ == 'FileObjectThread':
             stderr = stderr.io # pylint:disable=no-member
         return stderr
@@ -521,6 +532,12 @@ class Hub(WaitOperationsGreenlet):
         # traceback.print_exception() as previous versions did.
         # pylint:disable=no-member
         errstream = self.exception_stream
+        if not errstream: # pragma: no cover
+            # If the error stream is gone, such as when the sys dict
+            # gets cleared during interpreter shutdown,
+            # don't cause follow-on errors.
+            # See https://github.com/gevent/gevent/issues/1295
+            return
 
         if value is None:
             errstream.write('%s\n' % type.__name__)

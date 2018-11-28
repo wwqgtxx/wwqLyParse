@@ -868,7 +868,7 @@ struct __pyx_obj_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop {
 
 
 
-/* "src/gevent/_greenlet_primitives.py":52
+/* "src/gevent/_greenlet_primitives.py":53
  * 
  * 
  * class SwitchOutGreenletWithLoop(TrackedRawGreenlet):             # <<<<<<<<<<<<<<
@@ -1109,6 +1109,23 @@ static CYTHON_INLINE PyObject *__Pyx_GetAttr3(PyObject *, PyObject *, PyObject *
 /* RaiseException.proto */
 static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb, PyObject *cause);
 
+/* ListCompAppend.proto */
+#if CYTHON_USE_PYLIST_INTERNALS && CYTHON_ASSUME_SAFE_MACROS
+static CYTHON_INLINE int __Pyx_ListComp_Append(PyObject* list, PyObject* x) {
+    PyListObject* L = (PyListObject*) list;
+    Py_ssize_t len = Py_SIZE(list);
+    if (likely(L->allocated > len)) {
+        Py_INCREF(x);
+        PyList_SET_ITEM(list, len, x);
+        Py_SIZE(list) = len+1;
+        return 0;
+    }
+    return PyList_Append(list, x);
+}
+#else
+#define __Pyx_ListComp_Append(L,x) PyList_Append(L,x)
+#endif
+
 /* CallNextTpDealloc.proto */
 static void __Pyx_call_next_tp_dealloc(PyObject* obj, destructor current_tp_dealloc);
 
@@ -1287,6 +1304,9 @@ static int __Pyx_check_binary_version(void);
 /* VoidPtrExport.proto */
 static int __Pyx_ExportVoidPtr(PyObject *name, void *p, const char *sig);
 
+/* FunctionExport.proto */
+static int __Pyx_ExportFunction(const char *name, void (*f)(void), const char *sig);
+
 /* InitStrings.proto */
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
@@ -1301,12 +1321,14 @@ static PyObject *__pyx_f_6gevent_21__greenlet_primitives_25SwitchOutGreenletWith
 static PyTypeObject *__pyx_ptype_6gevent_21__greenlet_primitives_greenlet = 0;
 static PyTypeObject *__pyx_ptype_6gevent_21__greenlet_primitives_TrackedRawGreenlet = 0;
 static PyTypeObject *__pyx_ptype_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop = 0;
+static PyObject *__pyx_v_6gevent_21__greenlet_primitives_get_objects = 0;
 static PyObject *__pyx_v_6gevent_21__greenlet_primitives_wref = 0;
 static PyObject *__pyx_v_6gevent_21__greenlet_primitives_BlockingSwitchOutError = 0;
 static int __pyx_v_6gevent_21__greenlet_primitives__greenlet_imported;
 static CYTHON_INLINE PyGreenlet *__pyx_f_6gevent_21__greenlet_primitives_getcurrent(void); /*proto*/
 static CYTHON_INLINE void __pyx_f_6gevent_21__greenlet_primitives_greenlet_init(void); /*proto*/
 static CYTHON_INLINE PyObject *__pyx_f_6gevent_21__greenlet_primitives__greenlet_switch(PyGreenlet *); /*proto*/
+static PyObject *__pyx_f_6gevent_21__greenlet_primitives_get_reachable_greenlets(int __pyx_skip_dispatch); /*proto*/
 #define __Pyx_MODULE_NAME "gevent.__greenlet_primitives"
 extern int __pyx_module_is_main_gevent____greenlet_primitives;
 int __pyx_module_is_main_gevent____greenlet_primitives = 0;
@@ -1314,6 +1336,7 @@ int __pyx_module_is_main_gevent____greenlet_primitives = 0;
 /* Implementation of 'gevent.__greenlet_primitives' */
 static PyObject *__pyx_builtin___import__;
 static PyObject *__pyx_builtin_AttributeError;
+static const char __pyx_k_gc[] = "gc";
 static const char __pyx_k_all[] = "__all__";
 static const char __pyx_k_ref[] = "ref";
 static const char __pyx_k_init[] = "__init__";
@@ -1334,6 +1357,7 @@ static const char __pyx_k_pyx_capi[] = "__pyx_capi__";
 static const char __pyx_k_getcurrent[] = "getcurrent";
 static const char __pyx_k_pyx_vtable[] = "__pyx_vtable__";
 static const char __pyx_k_switch_out[] = "switch_out";
+static const char __pyx_k_get_objects[] = "get_objects";
 static const char __pyx_k_gevent__util[] = "gevent._util";
 static const char __pyx_k_greenlet_init[] = "greenlet_init";
 static const char __pyx_k_AttributeError[] = "AttributeError";
@@ -1346,6 +1370,8 @@ static const char __pyx_k_spawning_greenlet[] = "spawning_greenlet";
 static const char __pyx_k_TrackedRawGreenlet[] = "TrackedRawGreenlet";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
 static const char __pyx_k_BlockingSwitchOutError[] = "BlockingSwitchOutError";
+static const char __pyx_k_get_reachable_greenlets[] = "get_reachable_greenlets";
+static const char __pyx_k_greenlet_tree_is_ignored[] = "greenlet_tree_is_ignored";
 static const char __pyx_k_SwitchOutGreenletWithLoop[] = "SwitchOutGreenletWithLoop";
 static const char __pyx_k_gevent___greenlet_primitives[] = "gevent.__greenlet_primitives";
 static const char __pyx_k_A_collection_of_primitives_used[] = "\nA collection of primitives used by the hub, and suitable for\ncompilation with Cython because of their frequency of use.\n\n";
@@ -1363,6 +1389,9 @@ static PyObject *__pyx_n_s_TrackedRawGreenlet;
 static PyObject *__pyx_n_s_all;
 static PyObject *__pyx_n_s_cline_in_traceback;
 static PyObject *__pyx_n_s_function;
+static PyObject *__pyx_n_s_gc;
+static PyObject *__pyx_n_s_get_objects;
+static PyObject *__pyx_n_s_get_reachable_greenlets;
 static PyObject *__pyx_n_s_getcurrent;
 static PyObject *__pyx_n_s_gevent___greenlet_primitives;
 static PyObject *__pyx_n_s_gevent__util;
@@ -1371,6 +1400,7 @@ static PyObject *__pyx_n_s_greenlet;
 static PyObject *__pyx_n_s_greenlet_imported;
 static PyObject *__pyx_n_s_greenlet_init;
 static PyObject *__pyx_n_s_greenlet_switch;
+static PyObject *__pyx_n_s_greenlet_tree_is_ignored;
 static PyObject *__pyx_n_s_import;
 static PyObject *__pyx_n_s_import_c_accel;
 static PyObject *__pyx_n_s_init;
@@ -1398,7 +1428,8 @@ static PyObject *__pyx_pf_6gevent_21__greenlet_primitives_25SwitchOutGreenletWit
 static PyObject *__pyx_pf_6gevent_21__greenlet_primitives_25SwitchOutGreenletWithLoop_4loop___get__(struct __pyx_obj_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop *__pyx_v_self); /* proto */
 static int __pyx_pf_6gevent_21__greenlet_primitives_25SwitchOutGreenletWithLoop_4loop_2__set__(struct __pyx_obj_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
 static int __pyx_pf_6gevent_21__greenlet_primitives_25SwitchOutGreenletWithLoop_4loop_4__del__(struct __pyx_obj_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_6gevent_21__greenlet_primitives__init(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
+static PyObject *__pyx_pf_6gevent_21__greenlet_primitives_get_reachable_greenlets(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
+static PyObject *__pyx_pf_6gevent_21__greenlet_primitives_2_init(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
 static PyObject *__pyx_tp_new_6gevent_21__greenlet_primitives_TrackedRawGreenlet(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tuple_;
@@ -1407,9 +1438,10 @@ static PyObject *__pyx_tuple__4;
 static PyObject *__pyx_codeobj__3;
 static PyObject *__pyx_codeobj__5;
 static PyObject *__pyx_codeobj__6;
+static PyObject *__pyx_codeobj__7;
 /* Late includes */
 
-/* "src/gevent/_greenlet_primitives.py":25
+/* "src/gevent/_greenlet_primitives.py":26
  * # error.
  * locals()['getcurrent'] = __import__('greenlet').getcurrent
  * locals()['greenlet_init'] = lambda: None             # <<<<<<<<<<<<<<
@@ -1418,9 +1450,9 @@ static PyObject *__pyx_codeobj__6;
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_6gevent_21__greenlet_primitives_2lambda(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyMethodDef __pyx_mdef_6gevent_21__greenlet_primitives_2lambda = {"lambda", (PyCFunction)__pyx_pw_6gevent_21__greenlet_primitives_2lambda, METH_NOARGS, 0};
-static PyObject *__pyx_pw_6gevent_21__greenlet_primitives_2lambda(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_6gevent_21__greenlet_primitives_4lambda(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyMethodDef __pyx_mdef_6gevent_21__greenlet_primitives_4lambda = {"lambda", (PyCFunction)__pyx_pw_6gevent_21__greenlet_primitives_4lambda, METH_NOARGS, 0};
+static PyObject *__pyx_pw_6gevent_21__greenlet_primitives_4lambda(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("lambda (wrapper)", 0);
@@ -1446,7 +1478,7 @@ static PyObject *__pyx_lambda_funcdef_6gevent_21__greenlet_primitives_lambda(CYT
   return __pyx_r;
 }
 
-/* "src/gevent/_greenlet_primitives.py":35
+/* "src/gevent/_greenlet_primitives.py":36
  * class TrackedRawGreenlet(greenlet):
  * 
  *     def __init__(self, function, parent):             # <<<<<<<<<<<<<<
@@ -1485,11 +1517,11 @@ static int __pyx_pw_6gevent_21__greenlet_primitives_18TrackedRawGreenlet_1__init
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_parent)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__init__", 1, 2, 2, 1); __PYX_ERR(0, 35, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__init__", 1, 2, 2, 1); __PYX_ERR(0, 36, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 35, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 36, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -1502,7 +1534,7 @@ static int __pyx_pw_6gevent_21__greenlet_primitives_18TrackedRawGreenlet_1__init
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__init__", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 35, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__init__", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 36, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gevent.__greenlet_primitives.TrackedRawGreenlet.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -1530,14 +1562,14 @@ static int __pyx_pf_6gevent_21__greenlet_primitives_18TrackedRawGreenlet___init_
   int __pyx_t_9;
   __Pyx_RefNannySetupContext("__init__", 0);
 
-  /* "src/gevent/_greenlet_primitives.py":36
+  /* "src/gevent/_greenlet_primitives.py":37
  * 
  *     def __init__(self, function, parent):
  *         greenlet.__init__(self, function, parent)             # <<<<<<<<<<<<<<
  *         # See greenlet.py's Greenlet class. We capture the cheap
  *         # parts to maintain the tree structure, but we do not capture
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_ptype_6gevent_21__greenlet_primitives_greenlet), __pyx_n_s_init); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 36, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_ptype_6gevent_21__greenlet_primitives_greenlet), __pyx_n_s_init); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 37, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   __pyx_t_4 = 0;
@@ -1554,7 +1586,7 @@ static int __pyx_pf_6gevent_21__greenlet_primitives_18TrackedRawGreenlet___init_
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[4] = {__pyx_t_3, ((PyObject *)__pyx_v_self), __pyx_v_function, __pyx_v_parent};
-    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 3+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 36, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 3+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 37, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_GOTREF(__pyx_t_1);
   } else
@@ -1562,13 +1594,13 @@ static int __pyx_pf_6gevent_21__greenlet_primitives_18TrackedRawGreenlet___init_
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[4] = {__pyx_t_3, ((PyObject *)__pyx_v_self), __pyx_v_function, __pyx_v_parent};
-    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 3+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 36, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 3+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 37, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_GOTREF(__pyx_t_1);
   } else
   #endif
   {
-    __pyx_t_5 = PyTuple_New(3+__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 36, __pyx_L1_error)
+    __pyx_t_5 = PyTuple_New(3+__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 37, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     if (__pyx_t_3) {
       __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_3); __pyx_t_3 = NULL;
@@ -1582,26 +1614,26 @@ static int __pyx_pf_6gevent_21__greenlet_primitives_18TrackedRawGreenlet___init_
     __Pyx_INCREF(__pyx_v_parent);
     __Pyx_GIVEREF(__pyx_v_parent);
     PyTuple_SET_ITEM(__pyx_t_5, 2+__pyx_t_4, __pyx_v_parent);
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 36, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 37, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/gevent/_greenlet_primitives.py":41
+  /* "src/gevent/_greenlet_primitives.py":42
  *         # the stack because that's too expensive for 'spawn_raw'.
  * 
  *         current = getcurrent() # pylint:disable=undefined-variable             # <<<<<<<<<<<<<<
  *         self.spawning_greenlet = wref(current)
  *         # See Greenlet for how trees are maintained.
  */
-  __pyx_t_1 = ((PyObject *)__pyx_f_6gevent_21__greenlet_primitives_getcurrent()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __pyx_t_1 = ((PyObject *)__pyx_f_6gevent_21__greenlet_primitives_getcurrent()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 42, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_current = ((PyGreenlet *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/gevent/_greenlet_primitives.py":42
+  /* "src/gevent/_greenlet_primitives.py":43
  * 
  *         current = getcurrent() # pylint:disable=undefined-variable
  *         self.spawning_greenlet = wref(current)             # <<<<<<<<<<<<<<
@@ -1621,13 +1653,13 @@ static int __pyx_pf_6gevent_21__greenlet_primitives_18TrackedRawGreenlet___init_
   }
   __pyx_t_1 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_5, ((PyObject *)__pyx_v_current)) : __Pyx_PyObject_CallOneArg(__pyx_t_2, ((PyObject *)__pyx_v_current));
   __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 42, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 43, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_spawning_greenlet, __pyx_t_1) < 0) __PYX_ERR(0, 42, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_spawning_greenlet, __pyx_t_1) < 0) __PYX_ERR(0, 43, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/gevent/_greenlet_primitives.py":44
+  /* "src/gevent/_greenlet_primitives.py":45
  *         self.spawning_greenlet = wref(current)
  *         # See Greenlet for how trees are maintained.
  *         try:             # <<<<<<<<<<<<<<
@@ -1643,19 +1675,19 @@ static int __pyx_pf_6gevent_21__greenlet_primitives_18TrackedRawGreenlet___init_
     __Pyx_XGOTREF(__pyx_t_8);
     /*try:*/ {
 
-      /* "src/gevent/_greenlet_primitives.py":45
+      /* "src/gevent/_greenlet_primitives.py":46
  *         # See Greenlet for how trees are maintained.
  *         try:
  *             self.spawn_tree_locals = current.spawn_tree_locals             # <<<<<<<<<<<<<<
  *         except AttributeError:
  *             self.spawn_tree_locals = {}
  */
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_current), __pyx_n_s_spawn_tree_locals); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 45, __pyx_L3_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_current), __pyx_n_s_spawn_tree_locals); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 46, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_1);
-      if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_spawn_tree_locals, __pyx_t_1) < 0) __PYX_ERR(0, 45, __pyx_L3_error)
+      if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_spawn_tree_locals, __pyx_t_1) < 0) __PYX_ERR(0, 46, __pyx_L3_error)
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "src/gevent/_greenlet_primitives.py":44
+      /* "src/gevent/_greenlet_primitives.py":45
  *         self.spawning_greenlet = wref(current)
  *         # See Greenlet for how trees are maintained.
  *         try:             # <<<<<<<<<<<<<<
@@ -1673,7 +1705,7 @@ static int __pyx_pf_6gevent_21__greenlet_primitives_18TrackedRawGreenlet___init_
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "src/gevent/_greenlet_primitives.py":46
+    /* "src/gevent/_greenlet_primitives.py":47
  *         try:
  *             self.spawn_tree_locals = current.spawn_tree_locals
  *         except AttributeError:             # <<<<<<<<<<<<<<
@@ -1683,49 +1715,49 @@ static int __pyx_pf_6gevent_21__greenlet_primitives_18TrackedRawGreenlet___init_
     __pyx_t_4 = __Pyx_PyErr_ExceptionMatches(__pyx_builtin_AttributeError);
     if (__pyx_t_4) {
       __Pyx_AddTraceback("gevent.__greenlet_primitives.TrackedRawGreenlet.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
-      if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_2, &__pyx_t_5) < 0) __PYX_ERR(0, 46, __pyx_L5_except_error)
+      if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_2, &__pyx_t_5) < 0) __PYX_ERR(0, 47, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_GOTREF(__pyx_t_5);
 
-      /* "src/gevent/_greenlet_primitives.py":47
+      /* "src/gevent/_greenlet_primitives.py":48
  *             self.spawn_tree_locals = current.spawn_tree_locals
  *         except AttributeError:
  *             self.spawn_tree_locals = {}             # <<<<<<<<<<<<<<
  *             if current.parent:
  *                 current.spawn_tree_locals = self.spawn_tree_locals
  */
-      __pyx_t_3 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 47, __pyx_L5_except_error)
+      __pyx_t_3 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 48, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_3);
-      if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_spawn_tree_locals, __pyx_t_3) < 0) __PYX_ERR(0, 47, __pyx_L5_except_error)
+      if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_spawn_tree_locals, __pyx_t_3) < 0) __PYX_ERR(0, 48, __pyx_L5_except_error)
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-      /* "src/gevent/_greenlet_primitives.py":48
+      /* "src/gevent/_greenlet_primitives.py":49
  *         except AttributeError:
  *             self.spawn_tree_locals = {}
  *             if current.parent:             # <<<<<<<<<<<<<<
  *                 current.spawn_tree_locals = self.spawn_tree_locals
  * 
  */
-      __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_current), __pyx_n_s_parent); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 48, __pyx_L5_except_error)
+      __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_current), __pyx_n_s_parent); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 49, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 48, __pyx_L5_except_error)
+      __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 49, __pyx_L5_except_error)
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       if (__pyx_t_9) {
 
-        /* "src/gevent/_greenlet_primitives.py":49
+        /* "src/gevent/_greenlet_primitives.py":50
  *             self.spawn_tree_locals = {}
  *             if current.parent:
  *                 current.spawn_tree_locals = self.spawn_tree_locals             # <<<<<<<<<<<<<<
  * 
  * 
  */
-        __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_spawn_tree_locals); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 49, __pyx_L5_except_error)
+        __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_spawn_tree_locals); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 50, __pyx_L5_except_error)
         __Pyx_GOTREF(__pyx_t_3);
-        if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_v_current), __pyx_n_s_spawn_tree_locals, __pyx_t_3) < 0) __PYX_ERR(0, 49, __pyx_L5_except_error)
+        if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_v_current), __pyx_n_s_spawn_tree_locals, __pyx_t_3) < 0) __PYX_ERR(0, 50, __pyx_L5_except_error)
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-        /* "src/gevent/_greenlet_primitives.py":48
+        /* "src/gevent/_greenlet_primitives.py":49
  *         except AttributeError:
  *             self.spawn_tree_locals = {}
  *             if current.parent:             # <<<<<<<<<<<<<<
@@ -1741,7 +1773,7 @@ static int __pyx_pf_6gevent_21__greenlet_primitives_18TrackedRawGreenlet___init_
     goto __pyx_L5_except_error;
     __pyx_L5_except_error:;
 
-    /* "src/gevent/_greenlet_primitives.py":44
+    /* "src/gevent/_greenlet_primitives.py":45
  *         self.spawning_greenlet = wref(current)
  *         # See Greenlet for how trees are maintained.
  *         try:             # <<<<<<<<<<<<<<
@@ -1761,7 +1793,7 @@ static int __pyx_pf_6gevent_21__greenlet_primitives_18TrackedRawGreenlet___init_
     __pyx_L8_try_end:;
   }
 
-  /* "src/gevent/_greenlet_primitives.py":35
+  /* "src/gevent/_greenlet_primitives.py":36
  * class TrackedRawGreenlet(greenlet):
  * 
  *     def __init__(self, function, parent):             # <<<<<<<<<<<<<<
@@ -1785,7 +1817,7 @@ static int __pyx_pf_6gevent_21__greenlet_primitives_18TrackedRawGreenlet___init_
   return __pyx_r;
 }
 
-/* "src/gevent/_greenlet_primitives.py":59
+/* "src/gevent/_greenlet_primitives.py":60
  *     # circular dependencies with the hub.
  * 
  *     def switch(self):             # <<<<<<<<<<<<<<
@@ -1815,7 +1847,7 @@ static PyObject *__pyx_f_6gevent_21__greenlet_primitives_25SwitchOutGreenletWith
     else {
       PY_UINT64_T type_dict_guard = (likely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dict)) ? __PYX_GET_DICT_VERSION(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dict) : 0;
       #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_switch); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 59, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_switch); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 60, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)(void*)__pyx_pw_6gevent_21__greenlet_primitives_25SwitchOutGreenletWithLoop_1switch)) {
         __Pyx_XDECREF(__pyx_r);
@@ -1832,7 +1864,7 @@ static PyObject *__pyx_f_6gevent_21__greenlet_primitives_25SwitchOutGreenletWith
         }
         __pyx_t_2 = (__pyx_t_4) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 59, __pyx_L1_error)
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 60, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
         __pyx_r = __pyx_t_2;
@@ -1853,22 +1885,22 @@ static PyObject *__pyx_f_6gevent_21__greenlet_primitives_25SwitchOutGreenletWith
     #endif
   }
 
-  /* "src/gevent/_greenlet_primitives.py":60
+  /* "src/gevent/_greenlet_primitives.py":61
  * 
  *     def switch(self):
  *         switch_out = getattr(getcurrent(), 'switch_out', None) # pylint:disable=undefined-variable             # <<<<<<<<<<<<<<
  *         if switch_out is not None:
  *             switch_out()
  */
-  __pyx_t_1 = ((PyObject *)__pyx_f_6gevent_21__greenlet_primitives_getcurrent()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 60, __pyx_L1_error)
+  __pyx_t_1 = ((PyObject *)__pyx_f_6gevent_21__greenlet_primitives_getcurrent()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 61, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_GetAttr3(__pyx_t_1, __pyx_n_s_switch_out, Py_None); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 60, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetAttr3(__pyx_t_1, __pyx_n_s_switch_out, Py_None); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 61, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_switch_out = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "src/gevent/_greenlet_primitives.py":61
+  /* "src/gevent/_greenlet_primitives.py":62
  *     def switch(self):
  *         switch_out = getattr(getcurrent(), 'switch_out', None) # pylint:disable=undefined-variable
  *         if switch_out is not None:             # <<<<<<<<<<<<<<
@@ -1879,7 +1911,7 @@ static PyObject *__pyx_f_6gevent_21__greenlet_primitives_25SwitchOutGreenletWith
   __pyx_t_6 = (__pyx_t_5 != 0);
   if (__pyx_t_6) {
 
-    /* "src/gevent/_greenlet_primitives.py":62
+    /* "src/gevent/_greenlet_primitives.py":63
  *         switch_out = getattr(getcurrent(), 'switch_out', None) # pylint:disable=undefined-variable
  *         if switch_out is not None:
  *             switch_out()             # <<<<<<<<<<<<<<
@@ -1899,12 +1931,12 @@ static PyObject *__pyx_f_6gevent_21__greenlet_primitives_25SwitchOutGreenletWith
     }
     __pyx_t_2 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_1);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 62, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 63, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "src/gevent/_greenlet_primitives.py":61
+    /* "src/gevent/_greenlet_primitives.py":62
  *     def switch(self):
  *         switch_out = getattr(getcurrent(), 'switch_out', None) # pylint:disable=undefined-variable
  *         if switch_out is not None:             # <<<<<<<<<<<<<<
@@ -1913,7 +1945,7 @@ static PyObject *__pyx_f_6gevent_21__greenlet_primitives_25SwitchOutGreenletWith
  */
   }
 
-  /* "src/gevent/_greenlet_primitives.py":63
+  /* "src/gevent/_greenlet_primitives.py":64
  *         if switch_out is not None:
  *             switch_out()
  *         return _greenlet_switch(self) # pylint:disable=undefined-variable             # <<<<<<<<<<<<<<
@@ -1921,13 +1953,13 @@ static PyObject *__pyx_f_6gevent_21__greenlet_primitives_25SwitchOutGreenletWith
  *     def switch_out(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = __pyx_f_6gevent_21__greenlet_primitives__greenlet_switch(((PyGreenlet *)__pyx_v_self)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 63, __pyx_L1_error)
+  __pyx_t_2 = __pyx_f_6gevent_21__greenlet_primitives__greenlet_switch(((PyGreenlet *)__pyx_v_self)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 64, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "src/gevent/_greenlet_primitives.py":59
+  /* "src/gevent/_greenlet_primitives.py":60
  *     # circular dependencies with the hub.
  * 
  *     def switch(self):             # <<<<<<<<<<<<<<
@@ -1971,7 +2003,7 @@ static PyObject *__pyx_pf_6gevent_21__greenlet_primitives_25SwitchOutGreenletWit
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("switch", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_6gevent_21__greenlet_primitives_25SwitchOutGreenletWithLoop_switch(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 59, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_6gevent_21__greenlet_primitives_25SwitchOutGreenletWithLoop_switch(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 60, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -1988,7 +2020,7 @@ static PyObject *__pyx_pf_6gevent_21__greenlet_primitives_25SwitchOutGreenletWit
   return __pyx_r;
 }
 
-/* "src/gevent/_greenlet_primitives.py":65
+/* "src/gevent/_greenlet_primitives.py":66
  *         return _greenlet_switch(self) # pylint:disable=undefined-variable
  * 
  *     def switch_out(self):             # <<<<<<<<<<<<<<
@@ -2015,7 +2047,7 @@ static PyObject *__pyx_f_6gevent_21__greenlet_primitives_25SwitchOutGreenletWith
     else {
       PY_UINT64_T type_dict_guard = (likely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dict)) ? __PYX_GET_DICT_VERSION(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dict) : 0;
       #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_switch_out); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 65, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_switch_out); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 66, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)(void*)__pyx_pw_6gevent_21__greenlet_primitives_25SwitchOutGreenletWithLoop_3switch_out)) {
         __Pyx_XDECREF(__pyx_r);
@@ -2032,7 +2064,7 @@ static PyObject *__pyx_f_6gevent_21__greenlet_primitives_25SwitchOutGreenletWith
         }
         __pyx_t_2 = (__pyx_t_4) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 65, __pyx_L1_error)
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 66, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
         __pyx_r = __pyx_t_2;
@@ -2053,12 +2085,12 @@ static PyObject *__pyx_f_6gevent_21__greenlet_primitives_25SwitchOutGreenletWith
     #endif
   }
 
-  /* "src/gevent/_greenlet_primitives.py":66
+  /* "src/gevent/_greenlet_primitives.py":67
  * 
  *     def switch_out(self):
  *         raise BlockingSwitchOutError('Impossible to call blocking function in the event loop callback')             # <<<<<<<<<<<<<<
  * 
- * def _init():
+ * 
  */
   __Pyx_INCREF(__pyx_v_6gevent_21__greenlet_primitives_BlockingSwitchOutError);
   __pyx_t_2 = __pyx_v_6gevent_21__greenlet_primitives_BlockingSwitchOutError; __pyx_t_3 = NULL;
@@ -2073,14 +2105,14 @@ static PyObject *__pyx_f_6gevent_21__greenlet_primitives_25SwitchOutGreenletWith
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_3, __pyx_kp_s_Impossible_to_call_blocking_func) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_kp_s_Impossible_to_call_blocking_func);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 66, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 67, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_Raise(__pyx_t_1, 0, 0, 0);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __PYX_ERR(0, 66, __pyx_L1_error)
+  __PYX_ERR(0, 67, __pyx_L1_error)
 
-  /* "src/gevent/_greenlet_primitives.py":65
+  /* "src/gevent/_greenlet_primitives.py":66
  *         return _greenlet_switch(self) # pylint:disable=undefined-variable
  * 
  *     def switch_out(self):             # <<<<<<<<<<<<<<
@@ -2123,7 +2155,7 @@ static PyObject *__pyx_pf_6gevent_21__greenlet_primitives_25SwitchOutGreenletWit
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("switch_out", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_6gevent_21__greenlet_primitives_25SwitchOutGreenletWithLoop_switch_out(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 65, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_6gevent_21__greenlet_primitives_25SwitchOutGreenletWithLoop_switch_out(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 66, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -2235,8 +2267,232 @@ static int __pyx_pf_6gevent_21__greenlet_primitives_25SwitchOutGreenletWithLoop_
   return __pyx_r;
 }
 
-/* "src/gevent/_greenlet_primitives.py":68
- *         raise BlockingSwitchOutError('Impossible to call blocking function in the event loop callback')
+/* "src/gevent/_greenlet_primitives.py":70
+ * 
+ * 
+ * def get_reachable_greenlets():             # <<<<<<<<<<<<<<
+ *     # We compile this loop with Cython so that it's faster, and so that
+ *     # the GIL isn't dropped at unpredictable times during the loop.
+ */
+
+static PyObject *__pyx_pw_6gevent_21__greenlet_primitives_1get_reachable_greenlets(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyObject *__pyx_f_6gevent_21__greenlet_primitives_get_reachable_greenlets(CYTHON_UNUSED int __pyx_skip_dispatch) {
+  PyObject *__pyx_7genexpr__pyx_v_x = NULL;
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  PyObject *__pyx_t_4 = NULL;
+  Py_ssize_t __pyx_t_5;
+  PyObject *(*__pyx_t_6)(PyObject *);
+  int __pyx_t_7;
+  int __pyx_t_8;
+  int __pyx_t_9;
+  __Pyx_RefNannySetupContext("get_reachable_greenlets", 0);
+
+  /* "src/gevent/_greenlet_primitives.py":79
+ *     # if other threads have dropped the GIL, but hopefully the speed makes that
+ *     # more rare.) See https://github.com/gevent/gevent/issues/1302
+ *     return [             # <<<<<<<<<<<<<<
+ *         x for x in get_objects()
+ *         if isinstance(x, greenlet) and not getattr(x, 'greenlet_tree_is_ignored', False)
+ */
+  __Pyx_XDECREF(__pyx_r);
+  { /* enter inner scope */
+    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 79, __pyx_L5_error)
+    __Pyx_GOTREF(__pyx_t_1);
+
+    /* "src/gevent/_greenlet_primitives.py":80
+ *     # more rare.) See https://github.com/gevent/gevent/issues/1302
+ *     return [
+ *         x for x in get_objects()             # <<<<<<<<<<<<<<
+ *         if isinstance(x, greenlet) and not getattr(x, 'greenlet_tree_is_ignored', False)
+ *     ]
+ */
+    __Pyx_INCREF(__pyx_v_6gevent_21__greenlet_primitives_get_objects);
+    __pyx_t_3 = __pyx_v_6gevent_21__greenlet_primitives_get_objects; __pyx_t_4 = NULL;
+    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
+      __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_3);
+      if (likely(__pyx_t_4)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+        __Pyx_INCREF(__pyx_t_4);
+        __Pyx_INCREF(function);
+        __Pyx_DECREF_SET(__pyx_t_3, function);
+      }
+    }
+    __pyx_t_2 = (__pyx_t_4) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
+    __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 80, __pyx_L5_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    if (likely(PyList_CheckExact(__pyx_t_2)) || PyTuple_CheckExact(__pyx_t_2)) {
+      __pyx_t_3 = __pyx_t_2; __Pyx_INCREF(__pyx_t_3); __pyx_t_5 = 0;
+      __pyx_t_6 = NULL;
+    } else {
+      __pyx_t_5 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 80, __pyx_L5_error)
+      __Pyx_GOTREF(__pyx_t_3);
+      __pyx_t_6 = Py_TYPE(__pyx_t_3)->tp_iternext; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 80, __pyx_L5_error)
+    }
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    for (;;) {
+      if (likely(!__pyx_t_6)) {
+        if (likely(PyList_CheckExact(__pyx_t_3))) {
+          if (__pyx_t_5 >= PyList_GET_SIZE(__pyx_t_3)) break;
+          #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+          __pyx_t_2 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_5); __Pyx_INCREF(__pyx_t_2); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 80, __pyx_L5_error)
+          #else
+          __pyx_t_2 = PySequence_ITEM(__pyx_t_3, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 80, __pyx_L5_error)
+          __Pyx_GOTREF(__pyx_t_2);
+          #endif
+        } else {
+          if (__pyx_t_5 >= PyTuple_GET_SIZE(__pyx_t_3)) break;
+          #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+          __pyx_t_2 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_5); __Pyx_INCREF(__pyx_t_2); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 80, __pyx_L5_error)
+          #else
+          __pyx_t_2 = PySequence_ITEM(__pyx_t_3, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 80, __pyx_L5_error)
+          __Pyx_GOTREF(__pyx_t_2);
+          #endif
+        }
+      } else {
+        __pyx_t_2 = __pyx_t_6(__pyx_t_3);
+        if (unlikely(!__pyx_t_2)) {
+          PyObject* exc_type = PyErr_Occurred();
+          if (exc_type) {
+            if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
+            else __PYX_ERR(0, 80, __pyx_L5_error)
+          }
+          break;
+        }
+        __Pyx_GOTREF(__pyx_t_2);
+      }
+      __Pyx_XDECREF_SET(__pyx_7genexpr__pyx_v_x, __pyx_t_2);
+      __pyx_t_2 = 0;
+
+      /* "src/gevent/_greenlet_primitives.py":81
+ *     return [
+ *         x for x in get_objects()
+ *         if isinstance(x, greenlet) and not getattr(x, 'greenlet_tree_is_ignored', False)             # <<<<<<<<<<<<<<
+ *     ]
+ * 
+ */
+      __pyx_t_8 = __Pyx_TypeCheck(__pyx_7genexpr__pyx_v_x, __pyx_ptype_6gevent_21__greenlet_primitives_greenlet); 
+      __pyx_t_9 = (__pyx_t_8 != 0);
+      if (__pyx_t_9) {
+      } else {
+        __pyx_t_7 = __pyx_t_9;
+        goto __pyx_L9_bool_binop_done;
+      }
+      __pyx_t_2 = __Pyx_GetAttr3(__pyx_7genexpr__pyx_v_x, __pyx_n_s_greenlet_tree_is_ignored, Py_False); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 81, __pyx_L5_error)
+      __Pyx_GOTREF(__pyx_t_2);
+      __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 81, __pyx_L5_error)
+      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+      __pyx_t_8 = ((!__pyx_t_9) != 0);
+      __pyx_t_7 = __pyx_t_8;
+      __pyx_L9_bool_binop_done:;
+      if (__pyx_t_7) {
+
+        /* "src/gevent/_greenlet_primitives.py":80
+ *     # more rare.) See https://github.com/gevent/gevent/issues/1302
+ *     return [
+ *         x for x in get_objects()             # <<<<<<<<<<<<<<
+ *         if isinstance(x, greenlet) and not getattr(x, 'greenlet_tree_is_ignored', False)
+ *     ]
+ */
+        if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_7genexpr__pyx_v_x))) __PYX_ERR(0, 79, __pyx_L5_error)
+
+        /* "src/gevent/_greenlet_primitives.py":81
+ *     return [
+ *         x for x in get_objects()
+ *         if isinstance(x, greenlet) and not getattr(x, 'greenlet_tree_is_ignored', False)             # <<<<<<<<<<<<<<
+ *     ]
+ * 
+ */
+      }
+
+      /* "src/gevent/_greenlet_primitives.py":80
+ *     # more rare.) See https://github.com/gevent/gevent/issues/1302
+ *     return [
+ *         x for x in get_objects()             # <<<<<<<<<<<<<<
+ *         if isinstance(x, greenlet) and not getattr(x, 'greenlet_tree_is_ignored', False)
+ *     ]
+ */
+    }
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_XDECREF(__pyx_7genexpr__pyx_v_x); __pyx_7genexpr__pyx_v_x = 0;
+    goto __pyx_L11_exit_scope;
+    __pyx_L5_error:;
+    __Pyx_XDECREF(__pyx_7genexpr__pyx_v_x); __pyx_7genexpr__pyx_v_x = 0;
+    goto __pyx_L1_error;
+    __pyx_L11_exit_scope:;
+  } /* exit inner scope */
+  __pyx_r = ((PyObject*)__pyx_t_1);
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "src/gevent/_greenlet_primitives.py":70
+ * 
+ * 
+ * def get_reachable_greenlets():             # <<<<<<<<<<<<<<
+ *     # We compile this loop with Cython so that it's faster, and so that
+ *     # the GIL isn't dropped at unpredictable times during the loop.
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_AddTraceback("gevent.__greenlet_primitives.get_reachable_greenlets", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = 0;
+  __pyx_L0:;
+  __Pyx_XDECREF(__pyx_7genexpr__pyx_v_x);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_6gevent_21__greenlet_primitives_1get_reachable_greenlets(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static char __pyx_doc_6gevent_21__greenlet_primitives_get_reachable_greenlets[] = "get_reachable_greenlets() -> list";
+static PyMethodDef __pyx_mdef_6gevent_21__greenlet_primitives_1get_reachable_greenlets = {"get_reachable_greenlets", (PyCFunction)__pyx_pw_6gevent_21__greenlet_primitives_1get_reachable_greenlets, METH_NOARGS, __pyx_doc_6gevent_21__greenlet_primitives_get_reachable_greenlets};
+static PyObject *__pyx_pw_6gevent_21__greenlet_primitives_1get_reachable_greenlets(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("get_reachable_greenlets (wrapper)", 0);
+  __pyx_r = __pyx_pf_6gevent_21__greenlet_primitives_get_reachable_greenlets(__pyx_self);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_6gevent_21__greenlet_primitives_get_reachable_greenlets(CYTHON_UNUSED PyObject *__pyx_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  __Pyx_RefNannySetupContext("get_reachable_greenlets", 0);
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __pyx_f_6gevent_21__greenlet_primitives_get_reachable_greenlets(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 70, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("gevent.__greenlet_primitives.get_reachable_greenlets", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "src/gevent/_greenlet_primitives.py":84
+ *     ]
  * 
  * def _init():             # <<<<<<<<<<<<<<
  *     greenlet_init() # pylint:disable=undefined-variable
@@ -2244,26 +2500,26 @@ static int __pyx_pf_6gevent_21__greenlet_primitives_25SwitchOutGreenletWithLoop_
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_6gevent_21__greenlet_primitives_1_init(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static char __pyx_doc_6gevent_21__greenlet_primitives__init[] = "_init()";
-static PyMethodDef __pyx_mdef_6gevent_21__greenlet_primitives_1_init = {"_init", (PyCFunction)__pyx_pw_6gevent_21__greenlet_primitives_1_init, METH_NOARGS, __pyx_doc_6gevent_21__greenlet_primitives__init};
-static PyObject *__pyx_pw_6gevent_21__greenlet_primitives_1_init(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_6gevent_21__greenlet_primitives_3_init(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static char __pyx_doc_6gevent_21__greenlet_primitives_2_init[] = "_init()";
+static PyMethodDef __pyx_mdef_6gevent_21__greenlet_primitives_3_init = {"_init", (PyCFunction)__pyx_pw_6gevent_21__greenlet_primitives_3_init, METH_NOARGS, __pyx_doc_6gevent_21__greenlet_primitives_2_init};
+static PyObject *__pyx_pw_6gevent_21__greenlet_primitives_3_init(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("_init (wrapper)", 0);
-  __pyx_r = __pyx_pf_6gevent_21__greenlet_primitives__init(__pyx_self);
+  __pyx_r = __pyx_pf_6gevent_21__greenlet_primitives_2_init(__pyx_self);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_6gevent_21__greenlet_primitives__init(CYTHON_UNUSED PyObject *__pyx_self) {
+static PyObject *__pyx_pf_6gevent_21__greenlet_primitives_2_init(CYTHON_UNUSED PyObject *__pyx_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("_init", 0);
 
-  /* "src/gevent/_greenlet_primitives.py":69
+  /* "src/gevent/_greenlet_primitives.py":85
  * 
  * def _init():
  *     greenlet_init() # pylint:disable=undefined-variable             # <<<<<<<<<<<<<<
@@ -2272,8 +2528,8 @@ static PyObject *__pyx_pf_6gevent_21__greenlet_primitives__init(CYTHON_UNUSED Py
  */
   __pyx_f_6gevent_21__greenlet_primitives_greenlet_init();
 
-  /* "src/gevent/_greenlet_primitives.py":68
- *         raise BlockingSwitchOutError('Impossible to call blocking function in the event loop callback')
+  /* "src/gevent/_greenlet_primitives.py":84
+ *     ]
  * 
  * def _init():             # <<<<<<<<<<<<<<
  *     greenlet_init() # pylint:disable=undefined-variable
@@ -2698,6 +2954,9 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_all, __pyx_k_all, sizeof(__pyx_k_all), 0, 0, 1, 1},
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
   {&__pyx_n_s_function, __pyx_k_function, sizeof(__pyx_k_function), 0, 0, 1, 1},
+  {&__pyx_n_s_gc, __pyx_k_gc, sizeof(__pyx_k_gc), 0, 0, 1, 1},
+  {&__pyx_n_s_get_objects, __pyx_k_get_objects, sizeof(__pyx_k_get_objects), 0, 0, 1, 1},
+  {&__pyx_n_s_get_reachable_greenlets, __pyx_k_get_reachable_greenlets, sizeof(__pyx_k_get_reachable_greenlets), 0, 0, 1, 1},
   {&__pyx_n_s_getcurrent, __pyx_k_getcurrent, sizeof(__pyx_k_getcurrent), 0, 0, 1, 1},
   {&__pyx_n_s_gevent___greenlet_primitives, __pyx_k_gevent___greenlet_primitives, sizeof(__pyx_k_gevent___greenlet_primitives), 0, 0, 1, 1},
   {&__pyx_n_s_gevent__util, __pyx_k_gevent__util, sizeof(__pyx_k_gevent__util), 0, 0, 1, 1},
@@ -2706,6 +2965,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_greenlet_imported, __pyx_k_greenlet_imported, sizeof(__pyx_k_greenlet_imported), 0, 0, 1, 1},
   {&__pyx_n_s_greenlet_init, __pyx_k_greenlet_init, sizeof(__pyx_k_greenlet_init), 0, 0, 1, 1},
   {&__pyx_n_s_greenlet_switch, __pyx_k_greenlet_switch, sizeof(__pyx_k_greenlet_switch), 0, 0, 1, 1},
+  {&__pyx_n_s_greenlet_tree_is_ignored, __pyx_k_greenlet_tree_is_ignored, sizeof(__pyx_k_greenlet_tree_is_ignored), 0, 0, 1, 1},
   {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
   {&__pyx_n_s_import_c_accel, __pyx_k_import_c_accel, sizeof(__pyx_k_import_c_accel), 0, 0, 1, 1},
   {&__pyx_n_s_init, __pyx_k_init, sizeof(__pyx_k_init), 0, 0, 1, 1},
@@ -2729,8 +2989,8 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, 0, 0, 0, 0, 0, 0}
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin___import__ = __Pyx_GetBuiltinName(__pyx_n_s_import); if (!__pyx_builtin___import__) __PYX_ERR(0, 24, __pyx_L1_error)
-  __pyx_builtin_AttributeError = __Pyx_GetBuiltinName(__pyx_n_s_AttributeError); if (!__pyx_builtin_AttributeError) __PYX_ERR(0, 46, __pyx_L1_error)
+  __pyx_builtin___import__ = __Pyx_GetBuiltinName(__pyx_n_s_import); if (!__pyx_builtin___import__) __PYX_ERR(0, 25, __pyx_L1_error)
+  __pyx_builtin_AttributeError = __Pyx_GetBuiltinName(__pyx_n_s_AttributeError); if (!__pyx_builtin_AttributeError) __PYX_ERR(0, 47, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -2740,49 +3000,58 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "src/gevent/_greenlet_primitives.py":24
+  /* "src/gevent/_greenlet_primitives.py":25
  * # is assignment) without generating a 'lvalue is not valid target'
  * # error.
  * locals()['getcurrent'] = __import__('greenlet').getcurrent             # <<<<<<<<<<<<<<
  * locals()['greenlet_init'] = lambda: None
  * locals()['_greenlet_switch'] = greenlet.switch
  */
-  __pyx_tuple_ = PyTuple_Pack(1, __pyx_n_s_greenlet); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 24, __pyx_L1_error)
+  __pyx_tuple_ = PyTuple_Pack(1, __pyx_n_s_greenlet); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 25, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple_);
   __Pyx_GIVEREF(__pyx_tuple_);
 
-  /* "src/gevent/_greenlet_primitives.py":59
+  /* "src/gevent/_greenlet_primitives.py":60
  *     # circular dependencies with the hub.
  * 
  *     def switch(self):             # <<<<<<<<<<<<<<
  *         switch_out = getattr(getcurrent(), 'switch_out', None) # pylint:disable=undefined-variable
  *         if switch_out is not None:
  */
-  __pyx_tuple__2 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(0, 59, __pyx_L1_error)
+  __pyx_tuple__2 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(0, 60, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__2);
   __Pyx_GIVEREF(__pyx_tuple__2);
-  __pyx_codeobj__3 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__2, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent__greenlet_primitives, __pyx_n_s_switch, 59, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__3)) __PYX_ERR(0, 59, __pyx_L1_error)
+  __pyx_codeobj__3 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__2, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent__greenlet_primitives, __pyx_n_s_switch, 60, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__3)) __PYX_ERR(0, 60, __pyx_L1_error)
 
-  /* "src/gevent/_greenlet_primitives.py":65
+  /* "src/gevent/_greenlet_primitives.py":66
  *         return _greenlet_switch(self) # pylint:disable=undefined-variable
  * 
  *     def switch_out(self):             # <<<<<<<<<<<<<<
  *         raise BlockingSwitchOutError('Impossible to call blocking function in the event loop callback')
  * 
  */
-  __pyx_tuple__4 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__4)) __PYX_ERR(0, 65, __pyx_L1_error)
+  __pyx_tuple__4 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__4)) __PYX_ERR(0, 66, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__4);
   __Pyx_GIVEREF(__pyx_tuple__4);
-  __pyx_codeobj__5 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__4, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent__greenlet_primitives, __pyx_n_s_switch_out, 65, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__5)) __PYX_ERR(0, 65, __pyx_L1_error)
+  __pyx_codeobj__5 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__4, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent__greenlet_primitives, __pyx_n_s_switch_out, 66, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__5)) __PYX_ERR(0, 66, __pyx_L1_error)
 
-  /* "src/gevent/_greenlet_primitives.py":68
- *         raise BlockingSwitchOutError('Impossible to call blocking function in the event loop callback')
+  /* "src/gevent/_greenlet_primitives.py":70
+ * 
+ * 
+ * def get_reachable_greenlets():             # <<<<<<<<<<<<<<
+ *     # We compile this loop with Cython so that it's faster, and so that
+ *     # the GIL isn't dropped at unpredictable times during the loop.
+ */
+  __pyx_codeobj__6 = (PyObject*)__Pyx_PyCode_New(0, 0, 0, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent__greenlet_primitives, __pyx_n_s_get_reachable_greenlets, 70, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__6)) __PYX_ERR(0, 70, __pyx_L1_error)
+
+  /* "src/gevent/_greenlet_primitives.py":84
+ *     ]
  * 
  * def _init():             # <<<<<<<<<<<<<<
  *     greenlet_init() # pylint:disable=undefined-variable
  * 
  */
-  __pyx_codeobj__6 = (PyObject*)__Pyx_PyCode_New(0, 0, 0, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent__greenlet_primitives, __pyx_n_s_init_2, 68, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__6)) __PYX_ERR(0, 68, __pyx_L1_error)
+  __pyx_codeobj__7 = (PyObject*)__Pyx_PyCode_New(0, 0, 0, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent__greenlet_primitives, __pyx_n_s_init_2, 84, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__7)) __PYX_ERR(0, 84, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -2809,6 +3078,7 @@ static int __Pyx_modinit_global_init_code(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_modinit_global_init_code", 0);
   /*--- Global init code ---*/
+  __pyx_v_6gevent_21__greenlet_primitives_get_objects = Py_None; Py_INCREF(Py_None);
   __pyx_v_6gevent_21__greenlet_primitives_wref = Py_None; Py_INCREF(Py_None);
   __pyx_v_6gevent_21__greenlet_primitives_BlockingSwitchOutError = Py_None; Py_INCREF(Py_None);
   __Pyx_RefNannyFinishContext();
@@ -2819,6 +3089,7 @@ static int __Pyx_modinit_variable_export_code(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_modinit_variable_export_code", 0);
   /*--- Variable export code ---*/
+  if (__Pyx_ExportVoidPtr(__pyx_n_s_get_objects, (void *)&__pyx_v_6gevent_21__greenlet_primitives_get_objects, "PyObject *") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ExportVoidPtr(__pyx_n_s_wref, (void *)&__pyx_v_6gevent_21__greenlet_primitives_wref, "PyObject *") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ExportVoidPtr(__pyx_n_s_BlockingSwitchOutError, (void *)&__pyx_v_6gevent_21__greenlet_primitives_BlockingSwitchOutError, "PyObject *") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ExportVoidPtr(__pyx_n_s_greenlet_imported, (void *)&__pyx_v_6gevent_21__greenlet_primitives__greenlet_imported, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
@@ -2833,8 +3104,12 @@ static int __Pyx_modinit_function_export_code(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_modinit_function_export_code", 0);
   /*--- Function export code ---*/
+  if (__Pyx_ExportFunction("get_reachable_greenlets", (void (*)(void))__pyx_f_6gevent_21__greenlet_primitives_get_reachable_greenlets, "PyObject *(int __pyx_skip_dispatch)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
+  __pyx_L1_error:;
+  __Pyx_RefNannyFinishContext();
+  return -1;
 }
 
 static int __Pyx_modinit_type_init_code(void) {
@@ -2847,24 +3122,24 @@ static int __Pyx_modinit_type_init_code(void) {
   __pyx_ptype_6gevent_21__greenlet_primitives_greenlet = __Pyx_ImportType(__pyx_t_1, "greenlet", "greenlet", sizeof(PyGreenlet), __Pyx_ImportType_CheckSize_Warn);
    if (!__pyx_ptype_6gevent_21__greenlet_primitives_greenlet) __PYX_ERR(1, 12, __pyx_L1_error)
   __pyx_type_6gevent_21__greenlet_primitives_TrackedRawGreenlet.tp_base = __pyx_ptype_6gevent_21__greenlet_primitives_greenlet;
-  if (PyType_Ready(&__pyx_type_6gevent_21__greenlet_primitives_TrackedRawGreenlet) < 0) __PYX_ERR(0, 33, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_6gevent_21__greenlet_primitives_TrackedRawGreenlet) < 0) __PYX_ERR(0, 34, __pyx_L1_error)
   __pyx_type_6gevent_21__greenlet_primitives_TrackedRawGreenlet.tp_print = 0;
   if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_6gevent_21__greenlet_primitives_TrackedRawGreenlet.tp_dictoffset && __pyx_type_6gevent_21__greenlet_primitives_TrackedRawGreenlet.tp_getattro == PyObject_GenericGetAttr)) {
     __pyx_type_6gevent_21__greenlet_primitives_TrackedRawGreenlet.tp_getattro = __Pyx_PyObject_GenericGetAttr;
   }
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_TrackedRawGreenlet, (PyObject *)&__pyx_type_6gevent_21__greenlet_primitives_TrackedRawGreenlet) < 0) __PYX_ERR(0, 33, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_TrackedRawGreenlet, (PyObject *)&__pyx_type_6gevent_21__greenlet_primitives_TrackedRawGreenlet) < 0) __PYX_ERR(0, 34, __pyx_L1_error)
   __pyx_ptype_6gevent_21__greenlet_primitives_TrackedRawGreenlet = &__pyx_type_6gevent_21__greenlet_primitives_TrackedRawGreenlet;
   __pyx_vtabptr_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop = &__pyx_vtable_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop;
   __pyx_vtable_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop.__pyx_switch = (PyObject *(*)(struct __pyx_obj_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop *, int __pyx_skip_dispatch))__pyx_f_6gevent_21__greenlet_primitives_25SwitchOutGreenletWithLoop_switch;
   __pyx_vtable_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop.switch_out = (PyObject *(*)(struct __pyx_obj_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop *, int __pyx_skip_dispatch))__pyx_f_6gevent_21__greenlet_primitives_25SwitchOutGreenletWithLoop_switch_out;
   __pyx_type_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop.tp_base = __pyx_ptype_6gevent_21__greenlet_primitives_TrackedRawGreenlet;
-  if (PyType_Ready(&__pyx_type_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop) < 0) __PYX_ERR(0, 52, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop) < 0) __PYX_ERR(0, 53, __pyx_L1_error)
   __pyx_type_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop.tp_print = 0;
   if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop.tp_dictoffset && __pyx_type_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop.tp_getattro == PyObject_GenericGetAttr)) {
     __pyx_type_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop.tp_getattro = __Pyx_PyObject_GenericGetAttr;
   }
-  if (__Pyx_SetVtable(__pyx_type_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop.tp_dict, __pyx_vtabptr_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop) < 0) __PYX_ERR(0, 52, __pyx_L1_error)
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_SwitchOutGreenletWithLoop, (PyObject *)&__pyx_type_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop) < 0) __PYX_ERR(0, 52, __pyx_L1_error)
+  if (__Pyx_SetVtable(__pyx_type_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop.tp_dict, __pyx_vtabptr_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop) < 0) __PYX_ERR(0, 53, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_SwitchOutGreenletWithLoop, (PyObject *)&__pyx_type_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop) < 0) __PYX_ERR(0, 53, __pyx_L1_error)
   __pyx_ptype_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop = &__pyx_type_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_RefNannyFinishContext();
@@ -3087,7 +3362,7 @@ if (!__Pyx_RefNanny) {
   /*--- Global type/function init code ---*/
   (void)__Pyx_modinit_global_init_code();
   if (unlikely(__Pyx_modinit_variable_export_code() != 0)) goto __pyx_L1_error;
-  (void)__Pyx_modinit_function_export_code();
+  if (unlikely(__Pyx_modinit_function_export_code() != 0)) goto __pyx_L1_error;
   if (unlikely(__Pyx_modinit_type_init_code() != 0)) goto __pyx_L1_error;
   (void)__Pyx_modinit_type_import_code();
   (void)__Pyx_modinit_variable_import_code();
@@ -3101,8 +3376,8 @@ if (!__Pyx_RefNanny) {
  * from __future__ import print_function
  * 
  * from weakref import ref as wref             # <<<<<<<<<<<<<<
+ * from gc import get_objects
  * 
- * from greenlet import greenlet
  */
   __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 13, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -3121,217 +3396,253 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "src/gevent/_greenlet_primitives.py":15
+  /* "src/gevent/_greenlet_primitives.py":14
+ * 
  * from weakref import ref as wref
+ * from gc import get_objects             # <<<<<<<<<<<<<<
+ * 
+ * from greenlet import greenlet
+ */
+  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 14, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_INCREF(__pyx_n_s_get_objects);
+  __Pyx_GIVEREF(__pyx_n_s_get_objects);
+  PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_get_objects);
+  __pyx_t_1 = __Pyx_Import(__pyx_n_s_gc, __pyx_t_2, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 14, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_get_objects); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 14, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_INCREF(__pyx_t_2);
+  __Pyx_XGOTREF(__pyx_v_6gevent_21__greenlet_primitives_get_objects);
+  __Pyx_DECREF_SET(__pyx_v_6gevent_21__greenlet_primitives_get_objects, __pyx_t_2);
+  __Pyx_GIVEREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "src/gevent/_greenlet_primitives.py":16
+ * from gc import get_objects
  * 
  * from greenlet import greenlet             # <<<<<<<<<<<<<<
  * 
  * from gevent.exceptions import BlockingSwitchOutError
  */
-  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 15, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 16, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_n_s_greenlet);
   __Pyx_GIVEREF(__pyx_n_s_greenlet);
-  PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_greenlet);
-  __pyx_t_1 = __Pyx_Import(__pyx_n_s_greenlet, __pyx_t_2, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 15, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  PyList_SET_ITEM(__pyx_t_1, 0, __pyx_n_s_greenlet);
+  __pyx_t_2 = __Pyx_Import(__pyx_n_s_greenlet, __pyx_t_1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 16, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "src/gevent/_greenlet_primitives.py":17
+  /* "src/gevent/_greenlet_primitives.py":18
  * from greenlet import greenlet
  * 
  * from gevent.exceptions import BlockingSwitchOutError             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 17, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 18, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_n_s_BlockingSwitchOutError);
   __Pyx_GIVEREF(__pyx_n_s_BlockingSwitchOutError);
-  PyList_SET_ITEM(__pyx_t_1, 0, __pyx_n_s_BlockingSwitchOutError);
-  __pyx_t_2 = __Pyx_Import(__pyx_n_s_gevent_exceptions, __pyx_t_1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 17, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_BlockingSwitchOutError); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 17, __pyx_L1_error)
+  PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_BlockingSwitchOutError);
+  __pyx_t_1 = __Pyx_Import(__pyx_n_s_gevent_exceptions, __pyx_t_2, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 18, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_INCREF(__pyx_t_1);
-  __Pyx_XGOTREF(__pyx_v_6gevent_21__greenlet_primitives_BlockingSwitchOutError);
-  __Pyx_DECREF_SET(__pyx_v_6gevent_21__greenlet_primitives_BlockingSwitchOutError, __pyx_t_1);
-  __Pyx_GIVEREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_BlockingSwitchOutError); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 18, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_INCREF(__pyx_t_2);
+  __Pyx_XGOTREF(__pyx_v_6gevent_21__greenlet_primitives_BlockingSwitchOutError);
+  __Pyx_DECREF_SET(__pyx_v_6gevent_21__greenlet_primitives_BlockingSwitchOutError, __pyx_t_2);
+  __Pyx_GIVEREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/gevent/_greenlet_primitives.py":24
+  /* "src/gevent/_greenlet_primitives.py":25
  * # is assignment) without generating a 'lvalue is not valid target'
  * # error.
  * locals()['getcurrent'] = __import__('greenlet').getcurrent             # <<<<<<<<<<<<<<
  * locals()['greenlet_init'] = lambda: None
  * locals()['_greenlet_switch'] = greenlet.switch
  */
-  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin___import__, __pyx_tuple_, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 24, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_getcurrent); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 24, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin___import__, __pyx_tuple_, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 25, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_Globals(); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 24, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_getcurrent); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 25, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (unlikely(PyDict_SetItem(__pyx_t_2, __pyx_n_s_getcurrent, __pyx_t_1) < 0)) __PYX_ERR(0, 24, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_Globals(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 25, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (unlikely(PyDict_SetItem(__pyx_t_1, __pyx_n_s_getcurrent, __pyx_t_2) < 0)) __PYX_ERR(0, 25, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "src/gevent/_greenlet_primitives.py":25
+  /* "src/gevent/_greenlet_primitives.py":26
  * # error.
  * locals()['getcurrent'] = __import__('greenlet').getcurrent
  * locals()['greenlet_init'] = lambda: None             # <<<<<<<<<<<<<<
  * locals()['_greenlet_switch'] = greenlet.switch
  * 
  */
-  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_21__greenlet_primitives_2lambda, 0, __pyx_n_s_lambda, NULL, __pyx_n_s_gevent___greenlet_primitives, __pyx_d, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 25, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_Globals(); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 25, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_21__greenlet_primitives_4lambda, 0, __pyx_n_s_lambda, NULL, __pyx_n_s_gevent___greenlet_primitives, __pyx_d, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 26, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (unlikely(PyDict_SetItem(__pyx_t_2, __pyx_n_s_greenlet_init, __pyx_t_1) < 0)) __PYX_ERR(0, 25, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_1 = __Pyx_Globals(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 26, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (unlikely(PyDict_SetItem(__pyx_t_1, __pyx_n_s_greenlet_init, __pyx_t_2) < 0)) __PYX_ERR(0, 26, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "src/gevent/_greenlet_primitives.py":26
+  /* "src/gevent/_greenlet_primitives.py":27
  * locals()['getcurrent'] = __import__('greenlet').getcurrent
  * locals()['greenlet_init'] = lambda: None
  * locals()['_greenlet_switch'] = greenlet.switch             # <<<<<<<<<<<<<<
  * 
  * __all__ = [
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_ptype_6gevent_21__greenlet_primitives_greenlet), __pyx_n_s_switch); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 26, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_Globals(); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 26, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_ptype_6gevent_21__greenlet_primitives_greenlet), __pyx_n_s_switch); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 27, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (unlikely(PyDict_SetItem(__pyx_t_2, __pyx_n_s_greenlet_switch, __pyx_t_1) < 0)) __PYX_ERR(0, 26, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_1 = __Pyx_Globals(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 27, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (unlikely(PyDict_SetItem(__pyx_t_1, __pyx_n_s_greenlet_switch, __pyx_t_2) < 0)) __PYX_ERR(0, 27, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "src/gevent/_greenlet_primitives.py":28
+  /* "src/gevent/_greenlet_primitives.py":29
  * locals()['_greenlet_switch'] = greenlet.switch
  * 
  * __all__ = [             # <<<<<<<<<<<<<<
  *     'TrackedRawGreenlet',
  *     'SwitchOutGreenletWithLoop',
  */
-  __pyx_t_1 = PyList_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 28, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyList_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 29, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_n_s_TrackedRawGreenlet);
   __Pyx_GIVEREF(__pyx_n_s_TrackedRawGreenlet);
-  PyList_SET_ITEM(__pyx_t_1, 0, __pyx_n_s_TrackedRawGreenlet);
+  PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_TrackedRawGreenlet);
   __Pyx_INCREF(__pyx_n_s_SwitchOutGreenletWithLoop);
   __Pyx_GIVEREF(__pyx_n_s_SwitchOutGreenletWithLoop);
-  PyList_SET_ITEM(__pyx_t_1, 1, __pyx_n_s_SwitchOutGreenletWithLoop);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_all, __pyx_t_1) < 0) __PYX_ERR(0, 28, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  PyList_SET_ITEM(__pyx_t_2, 1, __pyx_n_s_SwitchOutGreenletWithLoop);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_all, __pyx_t_2) < 0) __PYX_ERR(0, 29, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "src/gevent/_greenlet_primitives.py":59
+  /* "src/gevent/_greenlet_primitives.py":60
  *     # circular dependencies with the hub.
  * 
  *     def switch(self):             # <<<<<<<<<<<<<<
  *         switch_out = getattr(getcurrent(), 'switch_out', None) # pylint:disable=undefined-variable
  *         if switch_out is not None:
  */
-  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_21__greenlet_primitives_25SwitchOutGreenletWithLoop_1switch, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SwitchOutGreenletWithLoop_switch, NULL, __pyx_n_s_gevent___greenlet_primitives, __pyx_d, ((PyObject *)__pyx_codeobj__3)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 59, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop->tp_dict, __pyx_n_s_switch, __pyx_t_1) < 0) __PYX_ERR(0, 59, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_21__greenlet_primitives_25SwitchOutGreenletWithLoop_1switch, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SwitchOutGreenletWithLoop_switch, NULL, __pyx_n_s_gevent___greenlet_primitives, __pyx_d, ((PyObject *)__pyx_codeobj__3)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 60, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop->tp_dict, __pyx_n_s_switch, __pyx_t_2) < 0) __PYX_ERR(0, 60, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop);
 
-  /* "src/gevent/_greenlet_primitives.py":65
+  /* "src/gevent/_greenlet_primitives.py":66
  *         return _greenlet_switch(self) # pylint:disable=undefined-variable
  * 
  *     def switch_out(self):             # <<<<<<<<<<<<<<
  *         raise BlockingSwitchOutError('Impossible to call blocking function in the event loop callback')
  * 
  */
-  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_21__greenlet_primitives_25SwitchOutGreenletWithLoop_3switch_out, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SwitchOutGreenletWithLoop_switch_2, NULL, __pyx_n_s_gevent___greenlet_primitives, __pyx_d, ((PyObject *)__pyx_codeobj__5)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 65, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop->tp_dict, __pyx_n_s_switch_out, __pyx_t_1) < 0) __PYX_ERR(0, 65, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_21__greenlet_primitives_25SwitchOutGreenletWithLoop_3switch_out, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SwitchOutGreenletWithLoop_switch_2, NULL, __pyx_n_s_gevent___greenlet_primitives, __pyx_d, ((PyObject *)__pyx_codeobj__5)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 66, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop->tp_dict, __pyx_n_s_switch_out, __pyx_t_2) < 0) __PYX_ERR(0, 66, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop);
 
-  /* "src/gevent/_greenlet_primitives.py":68
- *         raise BlockingSwitchOutError('Impossible to call blocking function in the event loop callback')
+  /* "src/gevent/_greenlet_primitives.py":70
+ * 
+ * 
+ * def get_reachable_greenlets():             # <<<<<<<<<<<<<<
+ *     # We compile this loop with Cython so that it's faster, and so that
+ *     # the GIL isn't dropped at unpredictable times during the loop.
+ */
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_21__greenlet_primitives_1get_reachable_greenlets, 0, __pyx_n_s_get_reachable_greenlets, NULL, __pyx_n_s_gevent___greenlet_primitives, __pyx_d, ((PyObject *)__pyx_codeobj__6)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 70, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_get_reachable_greenlets, __pyx_t_2) < 0) __PYX_ERR(0, 70, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "src/gevent/_greenlet_primitives.py":84
+ *     ]
  * 
  * def _init():             # <<<<<<<<<<<<<<
  *     greenlet_init() # pylint:disable=undefined-variable
  * 
  */
-  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_21__greenlet_primitives_1_init, 0, __pyx_n_s_init_2, NULL, __pyx_n_s_gevent___greenlet_primitives, __pyx_d, ((PyObject *)__pyx_codeobj__6)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 68, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_init_2, __pyx_t_1) < 0) __PYX_ERR(0, 68, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_21__greenlet_primitives_3_init, 0, __pyx_n_s_init_2, NULL, __pyx_n_s_gevent___greenlet_primitives, __pyx_d, ((PyObject *)__pyx_codeobj__7)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 84, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_init_2, __pyx_t_2) < 0) __PYX_ERR(0, 84, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "src/gevent/_greenlet_primitives.py":71
+  /* "src/gevent/_greenlet_primitives.py":87
  *     greenlet_init() # pylint:disable=undefined-variable
  * 
  * _init()             # <<<<<<<<<<<<<<
  * 
  * from gevent._util import import_c_accel
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_init_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 71, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 71, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_init_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 87, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 87, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/gevent/_greenlet_primitives.py":73
+  /* "src/gevent/_greenlet_primitives.py":89
  * _init()
  * 
  * from gevent._util import import_c_accel             # <<<<<<<<<<<<<<
  * import_c_accel(globals(), 'gevent.__greenlet_primitives')
  */
-  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 73, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 89, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_n_s_import_c_accel);
   __Pyx_GIVEREF(__pyx_n_s_import_c_accel);
-  PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_import_c_accel);
-  __pyx_t_1 = __Pyx_Import(__pyx_n_s_gevent__util, __pyx_t_2, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 73, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_import_c_accel); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 73, __pyx_L1_error)
+  PyList_SET_ITEM(__pyx_t_1, 0, __pyx_n_s_import_c_accel);
+  __pyx_t_2 = __Pyx_Import(__pyx_n_s_gevent__util, __pyx_t_1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 89, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_import_c_accel, __pyx_t_2) < 0) __PYX_ERR(0, 73, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_import_c_accel); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 89, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_import_c_accel, __pyx_t_1) < 0) __PYX_ERR(0, 89, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "src/gevent/_greenlet_primitives.py":74
+  /* "src/gevent/_greenlet_primitives.py":90
  * 
  * from gevent._util import import_c_accel
  * import_c_accel(globals(), 'gevent.__greenlet_primitives')             # <<<<<<<<<<<<<<
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_import_c_accel); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 74, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_Globals(); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 74, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_import_c_accel); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 90, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 74, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_Globals(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 90, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 90, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GIVEREF(__pyx_t_2);
-  PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_2);
+  __Pyx_GIVEREF(__pyx_t_1);
+  PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1);
   __Pyx_INCREF(__pyx_n_s_gevent___greenlet_primitives);
   __Pyx_GIVEREF(__pyx_n_s_gevent___greenlet_primitives);
   PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_n_s_gevent___greenlet_primitives);
-  __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_3, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 74, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 90, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "src/gevent/_greenlet_primitives.py":1
  * # -*- coding: utf-8 -*-             # <<<<<<<<<<<<<<
  * # copyright (c) 2018 gevent. See  LICENSE.
  * # cython: auto_pickle=False,embedsignature=True,always_allow_keywords=False
  */
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_1) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "gevent/__greenlet_primitives.pxd":34
  *         _greenlet_imported = True
@@ -5940,6 +6251,43 @@ static int __Pyx_ExportVoidPtr(PyObject *name, void *p, const char *sig) {
     if (!cobj)
         goto bad;
     if (PyDict_SetItem(d, name, cobj) < 0)
+        goto bad;
+    Py_DECREF(cobj);
+    Py_DECREF(d);
+    return 0;
+bad:
+    Py_XDECREF(cobj);
+    Py_XDECREF(d);
+    return -1;
+}
+
+/* FunctionExport */
+static int __Pyx_ExportFunction(const char *name, void (*f)(void), const char *sig) {
+    PyObject *d = 0;
+    PyObject *cobj = 0;
+    union {
+        void (*fp)(void);
+        void *p;
+    } tmp;
+    d = PyObject_GetAttrString(__pyx_m, (char *)"__pyx_capi__");
+    if (!d) {
+        PyErr_Clear();
+        d = PyDict_New();
+        if (!d)
+            goto bad;
+        Py_INCREF(d);
+        if (PyModule_AddObject(__pyx_m, (char *)"__pyx_capi__", d) < 0)
+            goto bad;
+    }
+    tmp.fp = f;
+#if PY_VERSION_HEX >= 0x02070000
+    cobj = PyCapsule_New(tmp.p, sig, 0);
+#else
+    cobj = PyCObject_FromVoidPtrAndDesc(tmp.p, (void *)sig, 0);
+#endif
+    if (!cobj)
+        goto bad;
+    if (PyDict_SetItemString(d, name, cobj) < 0)
         goto bad;
     Py_DECREF(cobj);
     Py_DECREF(d);

@@ -22,8 +22,8 @@
             ]
         ],
         "depends": [
+            "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pip-install-6_5hu6_l\\gevent\\deps\\c-ares\\ares.h",
             "D:\\Python37-32\\lib\\site-packages\\gevent\\resolver\\cares_pton.h",
-            "E:\\QQDownloads\\gevent-master\\gevent-master\\deps\\c-ares\\ares.h",
             "src/gevent/resolver/dnshelper.c",
             "src/gevent/resolver\\cares_ntop.h",
             "src/gevent/resolver\\cares_pton.h",
@@ -34,7 +34,7 @@
         "include_dirs": [
             "src/gevent/resolver",
             "D:\\Python37-32\\lib\\site-packages\\gevent\\resolver",
-            "E:\\QQDownloads\\gevent-master\\gevent-master\\deps\\c-ares"
+            "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pip-install-6_5hu6_l\\gevent\\deps\\c-ares"
         ],
         "libraries": [
             "ws2_32",

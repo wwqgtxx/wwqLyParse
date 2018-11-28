@@ -1606,6 +1606,8 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_13_WaitIterator___exit__(str
 static PyTypeObject *__pyx_ptype_6gevent_21__greenlet_primitives_greenlet = 0;
 static PyTypeObject *__pyx_ptype_6gevent_21__greenlet_primitives_TrackedRawGreenlet = 0;
 static PyTypeObject *__pyx_ptype_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop = 0;
+static PyObject **__pyx_vp_6gevent_21__greenlet_primitives_get_objects = 0;
+#define __pyx_v_6gevent_21__greenlet_primitives_get_objects (*__pyx_vp_6gevent_21__greenlet_primitives_get_objects)
 static PyObject **__pyx_vp_6gevent_21__greenlet_primitives_wref = 0;
 #define __pyx_v_6gevent_21__greenlet_primitives_wref (*__pyx_vp_6gevent_21__greenlet_primitives_wref)
 static PyObject **__pyx_vp_6gevent_21__greenlet_primitives_BlockingSwitchOutError = 0;
@@ -1750,6 +1752,7 @@ static const char __pyx_k_WaitOperationsGreenlet_wait[] = "WaitOperationsGreenle
 static const char __pyx_k_src_gevent__hub_primitives_py[] = "src\\gevent\\_hub_primitives.py";
 static const char __pyx_k_A_collection_of_primitives_used[] = "\nA collection of primitives used by the hub, and suitable for\ncompilation with Cython because of their frequency of use.\n\n\n";
 static const char __pyx_k_Invalid_switch_into_s_r_expected[] = "Invalid switch into %s: %r (expected %r)";
+static const char __pyx_k_The_socket_has_already_been_clos[] = "The socket has already been closed by another greenlet";
 static const char __pyx_k_This_socket_is_already_used_by_a[] = "This socket is already used by another greenlet: %r";
 static const char __pyx_k_WaitOperationsGreenlet__cancel_w[] = "WaitOperationsGreenlet._cancel_wait";
 static const char __pyx_k_WaitOperationsGreenlet_cancel_wa[] = "WaitOperationsGreenlet.cancel_wait";
@@ -1760,6 +1763,7 @@ static PyObject *__pyx_n_s_MultipleWaiter;
 static PyObject *__pyx_n_s_NONE;
 static PyObject *__pyx_n_s_StopIteration;
 static PyObject *__pyx_n_s_SwitchOutGreenletWithLoop;
+static PyObject *__pyx_kp_s_The_socket_has_already_been_clos;
 static PyObject *__pyx_kp_s_This_socket_is_already_used_by_a;
 static PyObject *__pyx_n_s_Timeout;
 static PyObject *__pyx_n_s_WaitIterator;
@@ -5746,8 +5750,8 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives__primitive_wait(PyObject *__
  * 
  * # Suitable to be bound as an instance method
  * def wait_on_socket(socket, watcher, timeout_exc=None):             # <<<<<<<<<<<<<<
- *     _primitive_wait(watcher, socket.timeout,
- *                     timeout_exc if timeout_exc is not None else _NONE,
+ *     if socket is None or watcher is None:
+ *         # test__hub TestCloseSocketWhilePolling, on Python 2; Python 3
  */
 
 static PyObject *__pyx_pw_6gevent_16__hub_primitives_7wait_on_socket(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
@@ -5755,11 +5759,13 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_on_socket(PyObject *__p
   PyObject *__pyx_v_timeout_exc = ((PyObject *)Py_None);
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
+  int __pyx_t_1;
+  int __pyx_t_2;
   int __pyx_t_3;
   PyObject *__pyx_t_4 = NULL;
   PyObject *__pyx_t_5 = NULL;
+  PyObject *__pyx_t_6 = NULL;
+  PyObject *__pyx_t_7 = NULL;
   __Pyx_RefNannySetupContext("wait_on_socket", 0);
   if (__pyx_optional_args) {
     if (__pyx_optional_args->__pyx_n > 0) {
@@ -5770,72 +5776,129 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_on_socket(PyObject *__p
   /* "src/gevent/_hub_primitives.py":285
  * # Suitable to be bound as an instance method
  * def wait_on_socket(socket, watcher, timeout_exc=None):
+ *     if socket is None or watcher is None:             # <<<<<<<<<<<<<<
+ *         # test__hub TestCloseSocketWhilePolling, on Python 2; Python 3
+ *         # catches the EBADF differently.
+ */
+  __pyx_t_2 = (__pyx_v_socket == Py_None);
+  __pyx_t_3 = (__pyx_t_2 != 0);
+  if (!__pyx_t_3) {
+  } else {
+    __pyx_t_1 = __pyx_t_3;
+    goto __pyx_L4_bool_binop_done;
+  }
+  __pyx_t_3 = (__pyx_v_watcher == Py_None);
+  __pyx_t_2 = (__pyx_t_3 != 0);
+  __pyx_t_1 = __pyx_t_2;
+  __pyx_L4_bool_binop_done:;
+  if (unlikely(__pyx_t_1)) {
+
+    /* "src/gevent/_hub_primitives.py":288
+ *         # test__hub TestCloseSocketWhilePolling, on Python 2; Python 3
+ *         # catches the EBADF differently.
+ *         raise ConcurrentObjectUseError("The socket has already been closed by another greenlet")             # <<<<<<<<<<<<<<
+ *     _primitive_wait(watcher, socket.timeout,
+ *                     timeout_exc if timeout_exc is not None else _NONE,
+ */
+    __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_ConcurrentObjectUseError); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 288, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __pyx_t_6 = NULL;
+    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_5))) {
+      __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_5);
+      if (likely(__pyx_t_6)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_5);
+        __Pyx_INCREF(__pyx_t_6);
+        __Pyx_INCREF(function);
+        __Pyx_DECREF_SET(__pyx_t_5, function);
+      }
+    }
+    __pyx_t_4 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_5, __pyx_t_6, __pyx_kp_s_The_socket_has_already_been_clos) : __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_kp_s_The_socket_has_already_been_clos);
+    __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 288, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_Raise(__pyx_t_4, 0, 0, 0);
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __PYX_ERR(0, 288, __pyx_L1_error)
+
+    /* "src/gevent/_hub_primitives.py":285
+ * # Suitable to be bound as an instance method
+ * def wait_on_socket(socket, watcher, timeout_exc=None):
+ *     if socket is None or watcher is None:             # <<<<<<<<<<<<<<
+ *         # test__hub TestCloseSocketWhilePolling, on Python 2; Python 3
+ *         # catches the EBADF differently.
+ */
+  }
+
+  /* "src/gevent/_hub_primitives.py":289
+ *         # catches the EBADF differently.
+ *         raise ConcurrentObjectUseError("The socket has already been closed by another greenlet")
  *     _primitive_wait(watcher, socket.timeout,             # <<<<<<<<<<<<<<
  *                     timeout_exc if timeout_exc is not None else _NONE,
  *                     socket.hub)
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_socket, __pyx_n_s_timeout); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 285, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_socket, __pyx_n_s_timeout); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 289, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
 
-  /* "src/gevent/_hub_primitives.py":286
- * def wait_on_socket(socket, watcher, timeout_exc=None):
+  /* "src/gevent/_hub_primitives.py":290
+ *         raise ConcurrentObjectUseError("The socket has already been closed by another greenlet")
  *     _primitive_wait(watcher, socket.timeout,
  *                     timeout_exc if timeout_exc is not None else _NONE,             # <<<<<<<<<<<<<<
  *                     socket.hub)
  * 
  */
-  __pyx_t_3 = (__pyx_v_timeout_exc != Py_None);
-  if ((__pyx_t_3 != 0)) {
+  __pyx_t_1 = (__pyx_v_timeout_exc != Py_None);
+  if ((__pyx_t_1 != 0)) {
     __Pyx_INCREF(__pyx_v_timeout_exc);
-    __pyx_t_2 = __pyx_v_timeout_exc;
+    __pyx_t_5 = __pyx_v_timeout_exc;
   } else {
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_NONE); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 286, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_2 = __pyx_t_4;
-    __pyx_t_4 = 0;
+    __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_NONE); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 290, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
+    __pyx_t_5 = __pyx_t_6;
+    __pyx_t_6 = 0;
   }
 
-  /* "src/gevent/_hub_primitives.py":287
+  /* "src/gevent/_hub_primitives.py":291
  *     _primitive_wait(watcher, socket.timeout,
  *                     timeout_exc if timeout_exc is not None else _NONE,
  *                     socket.hub)             # <<<<<<<<<<<<<<
  * 
  * def wait_on_watcher(watcher, timeout=None, timeout_exc=_NONE, hub=None):
  */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_socket, __pyx_n_s_hub); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 287, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  if (!(likely(((__pyx_t_4) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_4, __pyx_ptype_6gevent_16__hub_primitives_WaitOperationsGreenlet))))) __PYX_ERR(0, 287, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_socket, __pyx_n_s_hub); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 291, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (!(likely(((__pyx_t_6) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_6, __pyx_ptype_6gevent_16__hub_primitives_WaitOperationsGreenlet))))) __PYX_ERR(0, 291, __pyx_L1_error)
 
-  /* "src/gevent/_hub_primitives.py":285
- * # Suitable to be bound as an instance method
- * def wait_on_socket(socket, watcher, timeout_exc=None):
+  /* "src/gevent/_hub_primitives.py":289
+ *         # catches the EBADF differently.
+ *         raise ConcurrentObjectUseError("The socket has already been closed by another greenlet")
  *     _primitive_wait(watcher, socket.timeout,             # <<<<<<<<<<<<<<
  *                     timeout_exc if timeout_exc is not None else _NONE,
  *                     socket.hub)
  */
-  __pyx_t_5 = __pyx_f_6gevent_16__hub_primitives__primitive_wait(__pyx_v_watcher, __pyx_t_1, __pyx_t_2, ((struct __pyx_obj_6gevent_16__hub_primitives_WaitOperationsGreenlet *)__pyx_t_4)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 285, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_7 = __pyx_f_6gevent_16__hub_primitives__primitive_wait(__pyx_v_watcher, __pyx_t_4, __pyx_t_5, ((struct __pyx_obj_6gevent_16__hub_primitives_WaitOperationsGreenlet *)__pyx_t_6)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 289, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
   /* "src/gevent/_hub_primitives.py":284
  * 
  * # Suitable to be bound as an instance method
  * def wait_on_socket(socket, watcher, timeout_exc=None):             # <<<<<<<<<<<<<<
- *     _primitive_wait(watcher, socket.timeout,
- *                     timeout_exc if timeout_exc is not None else _NONE,
+ *     if socket is None or watcher is None:
+ *         # test__hub TestCloseSocketWhilePolling, on Python 2; Python 3
  */
 
   /* function exit code */
   __pyx_r = Py_None; __Pyx_INCREF(Py_None);
   goto __pyx_L0;
   __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_XDECREF(__pyx_t_6);
+  __Pyx_XDECREF(__pyx_t_7);
   __Pyx_AddTraceback("gevent.__hub_primitives.wait_on_socket", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
@@ -5948,7 +6011,7 @@ static PyObject *__pyx_pf_6gevent_16__hub_primitives_6wait_on_socket(CYTHON_UNUS
   return __pyx_r;
 }
 
-/* "src/gevent/_hub_primitives.py":289
+/* "src/gevent/_hub_primitives.py":293
  *                     socket.hub)
  * 
  * def wait_on_watcher(watcher, timeout=None, timeout_exc=_NONE, hub=None):             # <<<<<<<<<<<<<<
@@ -5977,18 +6040,18 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_on_watcher(PyObject *__
     }
   }
 
-  /* "src/gevent/_hub_primitives.py":313
+  /* "src/gevent/_hub_primitives.py":317
  *         already started.
  *     """
  *     _primitive_wait(watcher, timeout, timeout_exc, hub)             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __pyx_t_1 = __pyx_f_6gevent_16__hub_primitives__primitive_wait(__pyx_v_watcher, __pyx_v_timeout, __pyx_v_timeout_exc, __pyx_v_hub); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 313, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_6gevent_16__hub_primitives__primitive_wait(__pyx_v_watcher, __pyx_v_timeout, __pyx_v_timeout_exc, __pyx_v_hub); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 317, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/gevent/_hub_primitives.py":289
+  /* "src/gevent/_hub_primitives.py":293
  *                     socket.hub)
  * 
  * def wait_on_watcher(watcher, timeout=None, timeout_exc=_NONE, hub=None):             # <<<<<<<<<<<<<<
@@ -6067,7 +6130,7 @@ static PyObject *__pyx_pw_6gevent_16__hub_primitives_9wait_on_watcher(PyObject *
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "wait_on_watcher") < 0)) __PYX_ERR(0, 289, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "wait_on_watcher") < 0)) __PYX_ERR(0, 293, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -6089,13 +6152,13 @@ static PyObject *__pyx_pw_6gevent_16__hub_primitives_9wait_on_watcher(PyObject *
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("wait_on_watcher", 0, 1, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 289, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("wait_on_watcher", 0, 1, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 293, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gevent.__hub_primitives.wait_on_watcher", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_hub), __pyx_ptype_6gevent_16__hub_primitives_WaitOperationsGreenlet, 1, "hub", 0))) __PYX_ERR(0, 289, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_hub), __pyx_ptype_6gevent_16__hub_primitives_WaitOperationsGreenlet, 1, "hub", 0))) __PYX_ERR(0, 293, __pyx_L1_error)
   __pyx_r = __pyx_pf_6gevent_16__hub_primitives_8wait_on_watcher(__pyx_self, __pyx_v_watcher, __pyx_v_timeout, __pyx_v_timeout_exc, __pyx_v_hub);
 
   /* function exit code */
@@ -6118,7 +6181,7 @@ static PyObject *__pyx_pf_6gevent_16__hub_primitives_8wait_on_watcher(CYTHON_UNU
   __pyx_t_2.timeout = __pyx_v_timeout;
   __pyx_t_2.timeout_exc = __pyx_v_timeout_exc;
   __pyx_t_2.hub = __pyx_v_hub;
-  __pyx_t_1 = __pyx_f_6gevent_16__hub_primitives_wait_on_watcher(__pyx_v_watcher, 0, &__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 289, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_6gevent_16__hub_primitives_wait_on_watcher(__pyx_v_watcher, 0, &__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 293, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -6135,7 +6198,7 @@ static PyObject *__pyx_pf_6gevent_16__hub_primitives_8wait_on_watcher(CYTHON_UNU
   return __pyx_r;
 }
 
-/* "src/gevent/_hub_primitives.py":316
+/* "src/gevent/_hub_primitives.py":320
  * 
  * 
  * def wait_read(fileno, timeout=None, timeout_exc=_NONE):             # <<<<<<<<<<<<<<
@@ -6175,26 +6238,26 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_read(PyObject *__pyx_v_
     }
   }
 
-  /* "src/gevent/_hub_primitives.py":327
+  /* "src/gevent/_hub_primitives.py":331
  *     .. seealso:: :func:`cancel_wait`
  *     """
  *     hub = get_hub()             # <<<<<<<<<<<<<<
  *     io = hub.loop.io(fileno, 1)
  *     try:
  */
-  __pyx_t_1 = ((PyObject *)__pyx_f_6gevent_11__hub_local_get_hub_noargs(0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 327, __pyx_L1_error)
+  __pyx_t_1 = ((PyObject *)__pyx_f_6gevent_11__hub_local_get_hub_noargs(0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 331, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_hub = ((struct __pyx_obj_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/gevent/_hub_primitives.py":328
+  /* "src/gevent/_hub_primitives.py":332
  *     """
  *     hub = get_hub()
  *     io = hub.loop.io(fileno, 1)             # <<<<<<<<<<<<<<
  *     try:
  *         return wait_on_watcher(io, timeout, timeout_exc, hub)
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_hub->loop, __pyx_n_s_io); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 328, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_hub->loop, __pyx_n_s_io); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 332, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   __pyx_t_4 = 0;
@@ -6211,7 +6274,7 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_read(PyObject *__pyx_v_
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_v_fileno, __pyx_int_1};
-    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 328, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 332, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_GOTREF(__pyx_t_1);
   } else
@@ -6219,13 +6282,13 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_read(PyObject *__pyx_v_
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_v_fileno, __pyx_int_1};
-    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 328, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 332, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_GOTREF(__pyx_t_1);
   } else
   #endif
   {
-    __pyx_t_5 = PyTuple_New(2+__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 328, __pyx_L1_error)
+    __pyx_t_5 = PyTuple_New(2+__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 332, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     if (__pyx_t_3) {
       __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_3); __pyx_t_3 = NULL;
@@ -6236,7 +6299,7 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_read(PyObject *__pyx_v_
     __Pyx_INCREF(__pyx_int_1);
     __Pyx_GIVEREF(__pyx_int_1);
     PyTuple_SET_ITEM(__pyx_t_5, 1+__pyx_t_4, __pyx_int_1);
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 328, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 332, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   }
@@ -6244,7 +6307,7 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_read(PyObject *__pyx_v_
   __pyx_v_io = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "src/gevent/_hub_primitives.py":329
+  /* "src/gevent/_hub_primitives.py":333
  *     hub = get_hub()
  *     io = hub.loop.io(fileno, 1)
  *     try:             # <<<<<<<<<<<<<<
@@ -6253,7 +6316,7 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_read(PyObject *__pyx_v_
  */
   /*try:*/ {
 
-    /* "src/gevent/_hub_primitives.py":330
+    /* "src/gevent/_hub_primitives.py":334
  *     io = hub.loop.io(fileno, 1)
  *     try:
  *         return wait_on_watcher(io, timeout, timeout_exc, hub)             # <<<<<<<<<<<<<<
@@ -6261,19 +6324,19 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_read(PyObject *__pyx_v_
  *         io.close()
  */
     __Pyx_XDECREF(__pyx_r);
-    if (!(likely(((((PyObject *)__pyx_v_hub)) == Py_None) || likely(__Pyx_TypeTest(((PyObject *)__pyx_v_hub), __pyx_ptype_6gevent_16__hub_primitives_WaitOperationsGreenlet))))) __PYX_ERR(0, 330, __pyx_L4_error)
+    if (!(likely(((((PyObject *)__pyx_v_hub)) == Py_None) || likely(__Pyx_TypeTest(((PyObject *)__pyx_v_hub), __pyx_ptype_6gevent_16__hub_primitives_WaitOperationsGreenlet))))) __PYX_ERR(0, 334, __pyx_L4_error)
     __pyx_t_6.__pyx_n = 3;
     __pyx_t_6.timeout = __pyx_v_timeout;
     __pyx_t_6.timeout_exc = __pyx_v_timeout_exc;
     __pyx_t_6.hub = ((struct __pyx_obj_6gevent_16__hub_primitives_WaitOperationsGreenlet *)__pyx_v_hub);
-    __pyx_t_1 = __pyx_f_6gevent_16__hub_primitives_wait_on_watcher(__pyx_v_io, 0, &__pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 330, __pyx_L4_error)
+    __pyx_t_1 = __pyx_f_6gevent_16__hub_primitives_wait_on_watcher(__pyx_v_io, 0, &__pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 334, __pyx_L4_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_r = __pyx_t_1;
     __pyx_t_1 = 0;
     goto __pyx_L3_return;
   }
 
-  /* "src/gevent/_hub_primitives.py":332
+  /* "src/gevent/_hub_primitives.py":336
  *         return wait_on_watcher(io, timeout, timeout_exc, hub)
  *     finally:
  *         io.close()             # <<<<<<<<<<<<<<
@@ -6300,7 +6363,7 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_read(PyObject *__pyx_v_
       __Pyx_XGOTREF(__pyx_t_14);
       __pyx_t_4 = __pyx_lineno; __pyx_t_7 = __pyx_clineno; __pyx_t_8 = __pyx_filename;
       {
-        __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_io, __pyx_n_s_close); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 332, __pyx_L7_error)
+        __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_io, __pyx_n_s_close); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 336, __pyx_L7_error)
         __Pyx_GOTREF(__pyx_t_2);
         __pyx_t_5 = NULL;
         if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -6314,7 +6377,7 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_read(PyObject *__pyx_v_
         }
         __pyx_t_1 = (__pyx_t_5) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_5) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
         __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 332, __pyx_L7_error)
+        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 336, __pyx_L7_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -6348,7 +6411,7 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_read(PyObject *__pyx_v_
     __pyx_L3_return: {
       __pyx_t_14 = __pyx_r;
       __pyx_r = 0;
-      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_io, __pyx_n_s_close); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 332, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_io, __pyx_n_s_close); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 336, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __pyx_t_5 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -6362,7 +6425,7 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_read(PyObject *__pyx_v_
       }
       __pyx_t_1 = (__pyx_t_5) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_5) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
       __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 332, __pyx_L1_error)
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 336, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -6372,7 +6435,7 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_read(PyObject *__pyx_v_
     }
   }
 
-  /* "src/gevent/_hub_primitives.py":316
+  /* "src/gevent/_hub_primitives.py":320
  * 
  * 
  * def wait_read(fileno, timeout=None, timeout_exc=_NONE):             # <<<<<<<<<<<<<<
@@ -6444,7 +6507,7 @@ static PyObject *__pyx_pw_6gevent_16__hub_primitives_11wait_read(PyObject *__pyx
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "wait_read") < 0)) __PYX_ERR(0, 316, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "wait_read") < 0)) __PYX_ERR(0, 320, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -6463,7 +6526,7 @@ static PyObject *__pyx_pw_6gevent_16__hub_primitives_11wait_read(PyObject *__pyx
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("wait_read", 0, 1, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 316, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("wait_read", 0, 1, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 320, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gevent.__hub_primitives.wait_read", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -6486,7 +6549,7 @@ static PyObject *__pyx_pf_6gevent_16__hub_primitives_10wait_read(CYTHON_UNUSED P
   __pyx_t_2.__pyx_n = 2;
   __pyx_t_2.timeout = __pyx_v_timeout;
   __pyx_t_2.timeout_exc = __pyx_v_timeout_exc;
-  __pyx_t_1 = __pyx_f_6gevent_16__hub_primitives_wait_read(__pyx_v_fileno, 0, &__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 316, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_6gevent_16__hub_primitives_wait_read(__pyx_v_fileno, 0, &__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 320, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -6503,7 +6566,7 @@ static PyObject *__pyx_pf_6gevent_16__hub_primitives_10wait_read(CYTHON_UNUSED P
   return __pyx_r;
 }
 
-/* "src/gevent/_hub_primitives.py":335
+/* "src/gevent/_hub_primitives.py":339
  * 
  * 
  * def wait_write(fileno, timeout=None, timeout_exc=_NONE, event=_NONE):             # <<<<<<<<<<<<<<
@@ -6543,26 +6606,26 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_write(PyObject *__pyx_v
     }
   }
 
-  /* "src/gevent/_hub_primitives.py":351
+  /* "src/gevent/_hub_primitives.py":355
  *     """
  *     # pylint:disable=unused-argument
  *     hub = get_hub()             # <<<<<<<<<<<<<<
  *     io = hub.loop.io(fileno, 2)
  *     try:
  */
-  __pyx_t_1 = ((PyObject *)__pyx_f_6gevent_11__hub_local_get_hub_noargs(0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 351, __pyx_L1_error)
+  __pyx_t_1 = ((PyObject *)__pyx_f_6gevent_11__hub_local_get_hub_noargs(0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_hub = ((struct __pyx_obj_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/gevent/_hub_primitives.py":352
+  /* "src/gevent/_hub_primitives.py":356
  *     # pylint:disable=unused-argument
  *     hub = get_hub()
  *     io = hub.loop.io(fileno, 2)             # <<<<<<<<<<<<<<
  *     try:
  *         return wait_on_watcher(io, timeout, timeout_exc, hub)
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_hub->loop, __pyx_n_s_io); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 352, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_hub->loop, __pyx_n_s_io); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 356, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   __pyx_t_4 = 0;
@@ -6579,7 +6642,7 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_write(PyObject *__pyx_v
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_v_fileno, __pyx_int_2};
-    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 352, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 356, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_GOTREF(__pyx_t_1);
   } else
@@ -6587,13 +6650,13 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_write(PyObject *__pyx_v
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_v_fileno, __pyx_int_2};
-    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 352, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 356, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_GOTREF(__pyx_t_1);
   } else
   #endif
   {
-    __pyx_t_5 = PyTuple_New(2+__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 352, __pyx_L1_error)
+    __pyx_t_5 = PyTuple_New(2+__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 356, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     if (__pyx_t_3) {
       __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_3); __pyx_t_3 = NULL;
@@ -6604,7 +6667,7 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_write(PyObject *__pyx_v
     __Pyx_INCREF(__pyx_int_2);
     __Pyx_GIVEREF(__pyx_int_2);
     PyTuple_SET_ITEM(__pyx_t_5, 1+__pyx_t_4, __pyx_int_2);
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 352, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 356, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   }
@@ -6612,7 +6675,7 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_write(PyObject *__pyx_v
   __pyx_v_io = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "src/gevent/_hub_primitives.py":353
+  /* "src/gevent/_hub_primitives.py":357
  *     hub = get_hub()
  *     io = hub.loop.io(fileno, 2)
  *     try:             # <<<<<<<<<<<<<<
@@ -6621,7 +6684,7 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_write(PyObject *__pyx_v
  */
   /*try:*/ {
 
-    /* "src/gevent/_hub_primitives.py":354
+    /* "src/gevent/_hub_primitives.py":358
  *     io = hub.loop.io(fileno, 2)
  *     try:
  *         return wait_on_watcher(io, timeout, timeout_exc, hub)             # <<<<<<<<<<<<<<
@@ -6629,19 +6692,19 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_write(PyObject *__pyx_v
  *         io.close()
  */
     __Pyx_XDECREF(__pyx_r);
-    if (!(likely(((((PyObject *)__pyx_v_hub)) == Py_None) || likely(__Pyx_TypeTest(((PyObject *)__pyx_v_hub), __pyx_ptype_6gevent_16__hub_primitives_WaitOperationsGreenlet))))) __PYX_ERR(0, 354, __pyx_L4_error)
+    if (!(likely(((((PyObject *)__pyx_v_hub)) == Py_None) || likely(__Pyx_TypeTest(((PyObject *)__pyx_v_hub), __pyx_ptype_6gevent_16__hub_primitives_WaitOperationsGreenlet))))) __PYX_ERR(0, 358, __pyx_L4_error)
     __pyx_t_6.__pyx_n = 3;
     __pyx_t_6.timeout = __pyx_v_timeout;
     __pyx_t_6.timeout_exc = __pyx_v_timeout_exc;
     __pyx_t_6.hub = ((struct __pyx_obj_6gevent_16__hub_primitives_WaitOperationsGreenlet *)__pyx_v_hub);
-    __pyx_t_1 = __pyx_f_6gevent_16__hub_primitives_wait_on_watcher(__pyx_v_io, 0, &__pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 354, __pyx_L4_error)
+    __pyx_t_1 = __pyx_f_6gevent_16__hub_primitives_wait_on_watcher(__pyx_v_io, 0, &__pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 358, __pyx_L4_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_r = __pyx_t_1;
     __pyx_t_1 = 0;
     goto __pyx_L3_return;
   }
 
-  /* "src/gevent/_hub_primitives.py":356
+  /* "src/gevent/_hub_primitives.py":360
  *         return wait_on_watcher(io, timeout, timeout_exc, hub)
  *     finally:
  *         io.close()             # <<<<<<<<<<<<<<
@@ -6668,7 +6731,7 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_write(PyObject *__pyx_v
       __Pyx_XGOTREF(__pyx_t_14);
       __pyx_t_4 = __pyx_lineno; __pyx_t_7 = __pyx_clineno; __pyx_t_8 = __pyx_filename;
       {
-        __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_io, __pyx_n_s_close); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 356, __pyx_L7_error)
+        __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_io, __pyx_n_s_close); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 360, __pyx_L7_error)
         __Pyx_GOTREF(__pyx_t_2);
         __pyx_t_5 = NULL;
         if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -6682,7 +6745,7 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_write(PyObject *__pyx_v
         }
         __pyx_t_1 = (__pyx_t_5) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_5) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
         __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 356, __pyx_L7_error)
+        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 360, __pyx_L7_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -6716,7 +6779,7 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_write(PyObject *__pyx_v
     __pyx_L3_return: {
       __pyx_t_14 = __pyx_r;
       __pyx_r = 0;
-      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_io, __pyx_n_s_close); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 356, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_io, __pyx_n_s_close); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 360, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __pyx_t_5 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -6730,7 +6793,7 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_write(PyObject *__pyx_v
       }
       __pyx_t_1 = (__pyx_t_5) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_5) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
       __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 356, __pyx_L1_error)
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 360, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -6740,7 +6803,7 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_write(PyObject *__pyx_v
     }
   }
 
-  /* "src/gevent/_hub_primitives.py":335
+  /* "src/gevent/_hub_primitives.py":339
  * 
  * 
  * def wait_write(fileno, timeout=None, timeout_exc=_NONE, event=_NONE):             # <<<<<<<<<<<<<<
@@ -6822,7 +6885,7 @@ static PyObject *__pyx_pw_6gevent_16__hub_primitives_13wait_write(PyObject *__py
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "wait_write") < 0)) __PYX_ERR(0, 335, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "wait_write") < 0)) __PYX_ERR(0, 339, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -6844,7 +6907,7 @@ static PyObject *__pyx_pw_6gevent_16__hub_primitives_13wait_write(PyObject *__py
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("wait_write", 0, 1, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 335, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("wait_write", 0, 1, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 339, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gevent.__hub_primitives.wait_write", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -6868,7 +6931,7 @@ static PyObject *__pyx_pf_6gevent_16__hub_primitives_12wait_write(CYTHON_UNUSED 
   __pyx_t_2.timeout = __pyx_v_timeout;
   __pyx_t_2.timeout_exc = __pyx_v_timeout_exc;
   __pyx_t_2.event = __pyx_v_event;
-  __pyx_t_1 = __pyx_f_6gevent_16__hub_primitives_wait_write(__pyx_v_fileno, 0, &__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 335, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_6gevent_16__hub_primitives_wait_write(__pyx_v_fileno, 0, &__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 339, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -6885,7 +6948,7 @@ static PyObject *__pyx_pf_6gevent_16__hub_primitives_12wait_write(CYTHON_UNUSED 
   return __pyx_r;
 }
 
-/* "src/gevent/_hub_primitives.py":359
+/* "src/gevent/_hub_primitives.py":363
  * 
  * 
  * def wait_readwrite(fileno, timeout=None, timeout_exc=_NONE, event=_NONE):             # <<<<<<<<<<<<<<
@@ -6925,26 +6988,26 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_readwrite(PyObject *__p
     }
   }
 
-  /* "src/gevent/_hub_primitives.py":376
+  /* "src/gevent/_hub_primitives.py":380
  *     """
  *     # pylint:disable=unused-argument
  *     hub = get_hub()             # <<<<<<<<<<<<<<
  *     io = hub.loop.io(fileno, 3)
  *     try:
  */
-  __pyx_t_1 = ((PyObject *)__pyx_f_6gevent_11__hub_local_get_hub_noargs(0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 376, __pyx_L1_error)
+  __pyx_t_1 = ((PyObject *)__pyx_f_6gevent_11__hub_local_get_hub_noargs(0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 380, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_hub = ((struct __pyx_obj_6gevent_21__greenlet_primitives_SwitchOutGreenletWithLoop *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/gevent/_hub_primitives.py":377
+  /* "src/gevent/_hub_primitives.py":381
  *     # pylint:disable=unused-argument
  *     hub = get_hub()
  *     io = hub.loop.io(fileno, 3)             # <<<<<<<<<<<<<<
  *     try:
  *         return wait_on_watcher(io, timeout, timeout_exc, hub)
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_hub->loop, __pyx_n_s_io); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 377, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_hub->loop, __pyx_n_s_io); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 381, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   __pyx_t_4 = 0;
@@ -6961,7 +7024,7 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_readwrite(PyObject *__p
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_v_fileno, __pyx_int_3};
-    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 377, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 381, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_GOTREF(__pyx_t_1);
   } else
@@ -6969,13 +7032,13 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_readwrite(PyObject *__p
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_v_fileno, __pyx_int_3};
-    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 377, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 381, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_GOTREF(__pyx_t_1);
   } else
   #endif
   {
-    __pyx_t_5 = PyTuple_New(2+__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 377, __pyx_L1_error)
+    __pyx_t_5 = PyTuple_New(2+__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 381, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     if (__pyx_t_3) {
       __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_3); __pyx_t_3 = NULL;
@@ -6986,7 +7049,7 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_readwrite(PyObject *__p
     __Pyx_INCREF(__pyx_int_3);
     __Pyx_GIVEREF(__pyx_int_3);
     PyTuple_SET_ITEM(__pyx_t_5, 1+__pyx_t_4, __pyx_int_3);
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 377, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 381, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   }
@@ -6994,7 +7057,7 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_readwrite(PyObject *__p
   __pyx_v_io = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "src/gevent/_hub_primitives.py":378
+  /* "src/gevent/_hub_primitives.py":382
  *     hub = get_hub()
  *     io = hub.loop.io(fileno, 3)
  *     try:             # <<<<<<<<<<<<<<
@@ -7003,7 +7066,7 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_readwrite(PyObject *__p
  */
   /*try:*/ {
 
-    /* "src/gevent/_hub_primitives.py":379
+    /* "src/gevent/_hub_primitives.py":383
  *     io = hub.loop.io(fileno, 3)
  *     try:
  *         return wait_on_watcher(io, timeout, timeout_exc, hub)             # <<<<<<<<<<<<<<
@@ -7011,19 +7074,19 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_readwrite(PyObject *__p
  *         io.close()
  */
     __Pyx_XDECREF(__pyx_r);
-    if (!(likely(((((PyObject *)__pyx_v_hub)) == Py_None) || likely(__Pyx_TypeTest(((PyObject *)__pyx_v_hub), __pyx_ptype_6gevent_16__hub_primitives_WaitOperationsGreenlet))))) __PYX_ERR(0, 379, __pyx_L4_error)
+    if (!(likely(((((PyObject *)__pyx_v_hub)) == Py_None) || likely(__Pyx_TypeTest(((PyObject *)__pyx_v_hub), __pyx_ptype_6gevent_16__hub_primitives_WaitOperationsGreenlet))))) __PYX_ERR(0, 383, __pyx_L4_error)
     __pyx_t_6.__pyx_n = 3;
     __pyx_t_6.timeout = __pyx_v_timeout;
     __pyx_t_6.timeout_exc = __pyx_v_timeout_exc;
     __pyx_t_6.hub = ((struct __pyx_obj_6gevent_16__hub_primitives_WaitOperationsGreenlet *)__pyx_v_hub);
-    __pyx_t_1 = __pyx_f_6gevent_16__hub_primitives_wait_on_watcher(__pyx_v_io, 0, &__pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 379, __pyx_L4_error)
+    __pyx_t_1 = __pyx_f_6gevent_16__hub_primitives_wait_on_watcher(__pyx_v_io, 0, &__pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 383, __pyx_L4_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_r = __pyx_t_1;
     __pyx_t_1 = 0;
     goto __pyx_L3_return;
   }
 
-  /* "src/gevent/_hub_primitives.py":381
+  /* "src/gevent/_hub_primitives.py":385
  *         return wait_on_watcher(io, timeout, timeout_exc, hub)
  *     finally:
  *         io.close()             # <<<<<<<<<<<<<<
@@ -7050,7 +7113,7 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_readwrite(PyObject *__p
       __Pyx_XGOTREF(__pyx_t_14);
       __pyx_t_4 = __pyx_lineno; __pyx_t_7 = __pyx_clineno; __pyx_t_8 = __pyx_filename;
       {
-        __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_io, __pyx_n_s_close); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 381, __pyx_L7_error)
+        __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_io, __pyx_n_s_close); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 385, __pyx_L7_error)
         __Pyx_GOTREF(__pyx_t_2);
         __pyx_t_5 = NULL;
         if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -7064,7 +7127,7 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_readwrite(PyObject *__p
         }
         __pyx_t_1 = (__pyx_t_5) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_5) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
         __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 381, __pyx_L7_error)
+        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 385, __pyx_L7_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -7098,7 +7161,7 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_readwrite(PyObject *__p
     __pyx_L3_return: {
       __pyx_t_14 = __pyx_r;
       __pyx_r = 0;
-      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_io, __pyx_n_s_close); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 381, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_io, __pyx_n_s_close); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 385, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __pyx_t_5 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -7112,7 +7175,7 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_readwrite(PyObject *__p
       }
       __pyx_t_1 = (__pyx_t_5) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_5) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
       __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 381, __pyx_L1_error)
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 385, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -7122,7 +7185,7 @@ static PyObject *__pyx_f_6gevent_16__hub_primitives_wait_readwrite(PyObject *__p
     }
   }
 
-  /* "src/gevent/_hub_primitives.py":359
+  /* "src/gevent/_hub_primitives.py":363
  * 
  * 
  * def wait_readwrite(fileno, timeout=None, timeout_exc=_NONE, event=_NONE):             # <<<<<<<<<<<<<<
@@ -7204,7 +7267,7 @@ static PyObject *__pyx_pw_6gevent_16__hub_primitives_15wait_readwrite(PyObject *
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "wait_readwrite") < 0)) __PYX_ERR(0, 359, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "wait_readwrite") < 0)) __PYX_ERR(0, 363, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -7226,7 +7289,7 @@ static PyObject *__pyx_pw_6gevent_16__hub_primitives_15wait_readwrite(PyObject *
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("wait_readwrite", 0, 1, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 359, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("wait_readwrite", 0, 1, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 363, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("gevent.__hub_primitives.wait_readwrite", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -7250,7 +7313,7 @@ static PyObject *__pyx_pf_6gevent_16__hub_primitives_14wait_readwrite(CYTHON_UNU
   __pyx_t_2.timeout = __pyx_v_timeout;
   __pyx_t_2.timeout_exc = __pyx_v_timeout_exc;
   __pyx_t_2.event = __pyx_v_event;
-  __pyx_t_1 = __pyx_f_6gevent_16__hub_primitives_wait_readwrite(__pyx_v_fileno, 0, &__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 359, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_6gevent_16__hub_primitives_wait_readwrite(__pyx_v_fileno, 0, &__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 363, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -7267,7 +7330,7 @@ static PyObject *__pyx_pf_6gevent_16__hub_primitives_14wait_readwrite(CYTHON_UNU
   return __pyx_r;
 }
 
-/* "src/gevent/_hub_primitives.py":384
+/* "src/gevent/_hub_primitives.py":388
  * 
  * 
  * def _init():             # <<<<<<<<<<<<<<
@@ -7295,7 +7358,7 @@ static PyObject *__pyx_pf_6gevent_16__hub_primitives_16_init(CYTHON_UNUSED PyObj
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("_init", 0);
 
-  /* "src/gevent/_hub_primitives.py":385
+  /* "src/gevent/_hub_primitives.py":389
  * 
  * def _init():
  *     greenlet_init() # pylint:disable=undefined-variable             # <<<<<<<<<<<<<<
@@ -7304,7 +7367,7 @@ static PyObject *__pyx_pf_6gevent_16__hub_primitives_16_init(CYTHON_UNUSED PyObj
  */
   __pyx_f_6gevent_16__hub_primitives_greenlet_init();
 
-  /* "src/gevent/_hub_primitives.py":384
+  /* "src/gevent/_hub_primitives.py":388
  * 
  * 
  * def _init():             # <<<<<<<<<<<<<<
@@ -7991,6 +8054,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_NONE, __pyx_k_NONE, sizeof(__pyx_k_NONE), 0, 0, 1, 1},
   {&__pyx_n_s_StopIteration, __pyx_k_StopIteration, sizeof(__pyx_k_StopIteration), 0, 0, 1, 1},
   {&__pyx_n_s_SwitchOutGreenletWithLoop, __pyx_k_SwitchOutGreenletWithLoop, sizeof(__pyx_k_SwitchOutGreenletWithLoop), 0, 0, 1, 1},
+  {&__pyx_kp_s_The_socket_has_already_been_clos, __pyx_k_The_socket_has_already_been_clos, sizeof(__pyx_k_The_socket_has_already_been_clos), 0, 0, 1, 0},
   {&__pyx_kp_s_This_socket_is_already_used_by_a, __pyx_k_This_socket_is_already_used_by_a, sizeof(__pyx_k_This_socket_is_already_used_by_a), 0, 0, 1, 0},
   {&__pyx_n_s_Timeout, __pyx_k_Timeout, sizeof(__pyx_k_Timeout), 0, 0, 1, 1},
   {&__pyx_n_s_WaitIterator, __pyx_k_WaitIterator, sizeof(__pyx_k_WaitIterator), 0, 0, 1, 1},
@@ -8213,70 +8277,70 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  * # Suitable to be bound as an instance method
  * def wait_on_socket(socket, watcher, timeout_exc=None):             # <<<<<<<<<<<<<<
- *     _primitive_wait(watcher, socket.timeout,
- *                     timeout_exc if timeout_exc is not None else _NONE,
+ *     if socket is None or watcher is None:
+ *         # test__hub TestCloseSocketWhilePolling, on Python 2; Python 3
  */
   __pyx_tuple__25 = PyTuple_Pack(3, __pyx_n_s_socket, __pyx_n_s_watcher, __pyx_n_s_timeout_exc); if (unlikely(!__pyx_tuple__25)) __PYX_ERR(0, 284, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__25);
   __Pyx_GIVEREF(__pyx_tuple__25);
   __pyx_codeobj__26 = (PyObject*)__Pyx_PyCode_New(3, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__25, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent__hub_primitives_py, __pyx_n_s_wait_on_socket, 284, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__26)) __PYX_ERR(0, 284, __pyx_L1_error)
 
-  /* "src/gevent/_hub_primitives.py":289
+  /* "src/gevent/_hub_primitives.py":293
  *                     socket.hub)
  * 
  * def wait_on_watcher(watcher, timeout=None, timeout_exc=_NONE, hub=None):             # <<<<<<<<<<<<<<
  *     """
  *     wait(watcher, timeout=None, [timeout_exc=None]) -> None
  */
-  __pyx_tuple__27 = PyTuple_Pack(4, __pyx_n_s_watcher, __pyx_n_s_timeout, __pyx_n_s_timeout_exc, __pyx_n_s_hub); if (unlikely(!__pyx_tuple__27)) __PYX_ERR(0, 289, __pyx_L1_error)
+  __pyx_tuple__27 = PyTuple_Pack(4, __pyx_n_s_watcher, __pyx_n_s_timeout, __pyx_n_s_timeout_exc, __pyx_n_s_hub); if (unlikely(!__pyx_tuple__27)) __PYX_ERR(0, 293, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__27);
   __Pyx_GIVEREF(__pyx_tuple__27);
-  __pyx_codeobj__28 = (PyObject*)__Pyx_PyCode_New(4, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__27, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent__hub_primitives_py, __pyx_n_s_wait_on_watcher, 289, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__28)) __PYX_ERR(0, 289, __pyx_L1_error)
+  __pyx_codeobj__28 = (PyObject*)__Pyx_PyCode_New(4, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__27, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent__hub_primitives_py, __pyx_n_s_wait_on_watcher, 293, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__28)) __PYX_ERR(0, 293, __pyx_L1_error)
 
-  /* "src/gevent/_hub_primitives.py":316
+  /* "src/gevent/_hub_primitives.py":320
  * 
  * 
  * def wait_read(fileno, timeout=None, timeout_exc=_NONE):             # <<<<<<<<<<<<<<
  *     """
  *     wait_read(fileno, timeout=None, [timeout_exc=None]) -> None
  */
-  __pyx_tuple__29 = PyTuple_Pack(3, __pyx_n_s_fileno, __pyx_n_s_timeout, __pyx_n_s_timeout_exc); if (unlikely(!__pyx_tuple__29)) __PYX_ERR(0, 316, __pyx_L1_error)
+  __pyx_tuple__29 = PyTuple_Pack(3, __pyx_n_s_fileno, __pyx_n_s_timeout, __pyx_n_s_timeout_exc); if (unlikely(!__pyx_tuple__29)) __PYX_ERR(0, 320, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__29);
   __Pyx_GIVEREF(__pyx_tuple__29);
-  __pyx_codeobj__30 = (PyObject*)__Pyx_PyCode_New(3, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__29, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent__hub_primitives_py, __pyx_n_s_wait_read, 316, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__30)) __PYX_ERR(0, 316, __pyx_L1_error)
+  __pyx_codeobj__30 = (PyObject*)__Pyx_PyCode_New(3, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__29, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent__hub_primitives_py, __pyx_n_s_wait_read, 320, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__30)) __PYX_ERR(0, 320, __pyx_L1_error)
 
-  /* "src/gevent/_hub_primitives.py":335
+  /* "src/gevent/_hub_primitives.py":339
  * 
  * 
  * def wait_write(fileno, timeout=None, timeout_exc=_NONE, event=_NONE):             # <<<<<<<<<<<<<<
  *     """
  *     wait_write(fileno, timeout=None, [timeout_exc=None]) -> None
  */
-  __pyx_tuple__31 = PyTuple_Pack(4, __pyx_n_s_fileno, __pyx_n_s_timeout, __pyx_n_s_timeout_exc, __pyx_n_s_event); if (unlikely(!__pyx_tuple__31)) __PYX_ERR(0, 335, __pyx_L1_error)
+  __pyx_tuple__31 = PyTuple_Pack(4, __pyx_n_s_fileno, __pyx_n_s_timeout, __pyx_n_s_timeout_exc, __pyx_n_s_event); if (unlikely(!__pyx_tuple__31)) __PYX_ERR(0, 339, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__31);
   __Pyx_GIVEREF(__pyx_tuple__31);
-  __pyx_codeobj__32 = (PyObject*)__Pyx_PyCode_New(4, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__31, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent__hub_primitives_py, __pyx_n_s_wait_write, 335, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__32)) __PYX_ERR(0, 335, __pyx_L1_error)
+  __pyx_codeobj__32 = (PyObject*)__Pyx_PyCode_New(4, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__31, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent__hub_primitives_py, __pyx_n_s_wait_write, 339, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__32)) __PYX_ERR(0, 339, __pyx_L1_error)
 
-  /* "src/gevent/_hub_primitives.py":359
+  /* "src/gevent/_hub_primitives.py":363
  * 
  * 
  * def wait_readwrite(fileno, timeout=None, timeout_exc=_NONE, event=_NONE):             # <<<<<<<<<<<<<<
  *     """
  *     wait_readwrite(fileno, timeout=None, [timeout_exc=None]) -> None
  */
-  __pyx_tuple__33 = PyTuple_Pack(4, __pyx_n_s_fileno, __pyx_n_s_timeout, __pyx_n_s_timeout_exc, __pyx_n_s_event); if (unlikely(!__pyx_tuple__33)) __PYX_ERR(0, 359, __pyx_L1_error)
+  __pyx_tuple__33 = PyTuple_Pack(4, __pyx_n_s_fileno, __pyx_n_s_timeout, __pyx_n_s_timeout_exc, __pyx_n_s_event); if (unlikely(!__pyx_tuple__33)) __PYX_ERR(0, 363, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__33);
   __Pyx_GIVEREF(__pyx_tuple__33);
-  __pyx_codeobj__34 = (PyObject*)__Pyx_PyCode_New(4, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__33, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent__hub_primitives_py, __pyx_n_s_wait_readwrite, 359, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__34)) __PYX_ERR(0, 359, __pyx_L1_error)
+  __pyx_codeobj__34 = (PyObject*)__Pyx_PyCode_New(4, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__33, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent__hub_primitives_py, __pyx_n_s_wait_readwrite, 363, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__34)) __PYX_ERR(0, 363, __pyx_L1_error)
 
-  /* "src/gevent/_hub_primitives.py":384
+  /* "src/gevent/_hub_primitives.py":388
  * 
  * 
  * def _init():             # <<<<<<<<<<<<<<
  *     greenlet_init() # pylint:disable=undefined-variable
  * 
  */
-  __pyx_codeobj__35 = (PyObject*)__Pyx_PyCode_New(0, 0, 0, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent__hub_primitives_py, __pyx_n_s_init, 384, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__35)) __PYX_ERR(0, 384, __pyx_L1_error)
+  __pyx_codeobj__35 = (PyObject*)__Pyx_PyCode_New(0, 0, 0, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_gevent__hub_primitives_py, __pyx_n_s_init, 388, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__35)) __PYX_ERR(0, 388, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -8454,6 +8518,7 @@ static int __Pyx_modinit_variable_import_code(void) {
   __Pyx_RefNannySetupContext("__Pyx_modinit_variable_import_code", 0);
   /*--- Variable import code ---*/
   __pyx_t_1 = PyImport_ImportModule("gevent.__greenlet_primitives"); if (!__pyx_t_1) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ImportVoidPtr(__pyx_t_1, "get_objects", (void **)&__pyx_vp_6gevent_21__greenlet_primitives_get_objects, "PyObject *") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ImportVoidPtr(__pyx_t_1, "wref", (void **)&__pyx_vp_6gevent_21__greenlet_primitives_wref, "PyObject *") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ImportVoidPtr(__pyx_t_1, "BlockingSwitchOutError", (void **)&__pyx_vp_6gevent_21__greenlet_primitives_BlockingSwitchOutError, "PyObject *") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ImportVoidPtr(__pyx_t_1, "_greenlet_imported", (void **)&__pyx_vp_6gevent_21__greenlet_primitives__greenlet_imported, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
@@ -9102,178 +9167,178 @@ if (!__Pyx_RefNanny) {
  * 
  * # Suitable to be bound as an instance method
  * def wait_on_socket(socket, watcher, timeout_exc=None):             # <<<<<<<<<<<<<<
- *     _primitive_wait(watcher, socket.timeout,
- *                     timeout_exc if timeout_exc is not None else _NONE,
+ *     if socket is None or watcher is None:
+ *         # test__hub TestCloseSocketWhilePolling, on Python 2; Python 3
  */
   __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_16__hub_primitives_7wait_on_socket, 0, __pyx_n_s_wait_on_socket, NULL, __pyx_n_s_gevent___hub_primitives, __pyx_d, ((PyObject *)__pyx_codeobj__26)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 284, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_wait_on_socket, __pyx_t_1) < 0) __PYX_ERR(0, 284, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/gevent/_hub_primitives.py":289
+  /* "src/gevent/_hub_primitives.py":293
  *                     socket.hub)
  * 
  * def wait_on_watcher(watcher, timeout=None, timeout_exc=_NONE, hub=None):             # <<<<<<<<<<<<<<
  *     """
  *     wait(watcher, timeout=None, [timeout_exc=None]) -> None
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_NONE); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 289, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_NONE); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 293, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_k__2 = __pyx_t_1;
   __Pyx_GIVEREF(__pyx_t_1);
   __pyx_t_1 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_NONE); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 289, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_NONE); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 293, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_k__2 = __pyx_t_1;
   __Pyx_GIVEREF(__pyx_t_1);
   __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_16__hub_primitives_9wait_on_watcher, 0, __pyx_n_s_wait_on_watcher, NULL, __pyx_n_s_gevent___hub_primitives, __pyx_d, ((PyObject *)__pyx_codeobj__28)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 289, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_16__hub_primitives_9wait_on_watcher, 0, __pyx_n_s_wait_on_watcher, NULL, __pyx_n_s_gevent___hub_primitives, __pyx_d, ((PyObject *)__pyx_codeobj__28)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 293, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_wait_on_watcher, __pyx_t_1) < 0) __PYX_ERR(0, 289, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_wait_on_watcher, __pyx_t_1) < 0) __PYX_ERR(0, 293, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/gevent/_hub_primitives.py":316
+  /* "src/gevent/_hub_primitives.py":320
  * 
  * 
  * def wait_read(fileno, timeout=None, timeout_exc=_NONE):             # <<<<<<<<<<<<<<
  *     """
  *     wait_read(fileno, timeout=None, [timeout_exc=None]) -> None
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_NONE); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 316, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_NONE); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 320, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_k__3 = __pyx_t_1;
   __Pyx_GIVEREF(__pyx_t_1);
   __pyx_t_1 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_NONE); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 316, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_NONE); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 320, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_k__3 = __pyx_t_1;
   __Pyx_GIVEREF(__pyx_t_1);
   __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_16__hub_primitives_11wait_read, 0, __pyx_n_s_wait_read, NULL, __pyx_n_s_gevent___hub_primitives, __pyx_d, ((PyObject *)__pyx_codeobj__30)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 316, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_16__hub_primitives_11wait_read, 0, __pyx_n_s_wait_read, NULL, __pyx_n_s_gevent___hub_primitives, __pyx_d, ((PyObject *)__pyx_codeobj__30)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 320, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_wait_read, __pyx_t_1) < 0) __PYX_ERR(0, 316, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_wait_read, __pyx_t_1) < 0) __PYX_ERR(0, 320, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/gevent/_hub_primitives.py":335
+  /* "src/gevent/_hub_primitives.py":339
  * 
  * 
  * def wait_write(fileno, timeout=None, timeout_exc=_NONE, event=_NONE):             # <<<<<<<<<<<<<<
  *     """
  *     wait_write(fileno, timeout=None, [timeout_exc=None]) -> None
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_NONE); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 335, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_NONE); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 339, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_k__4 = __pyx_t_1;
   __Pyx_GIVEREF(__pyx_t_1);
   __pyx_t_1 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_NONE); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 335, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_NONE); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 339, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_k__5 = __pyx_t_1;
   __Pyx_GIVEREF(__pyx_t_1);
   __pyx_t_1 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_NONE); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 335, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_NONE); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 339, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_k__4 = __pyx_t_1;
   __Pyx_GIVEREF(__pyx_t_1);
   __pyx_t_1 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_NONE); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 335, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_NONE); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 339, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_k__5 = __pyx_t_1;
   __Pyx_GIVEREF(__pyx_t_1);
   __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_16__hub_primitives_13wait_write, 0, __pyx_n_s_wait_write, NULL, __pyx_n_s_gevent___hub_primitives, __pyx_d, ((PyObject *)__pyx_codeobj__32)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 335, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_16__hub_primitives_13wait_write, 0, __pyx_n_s_wait_write, NULL, __pyx_n_s_gevent___hub_primitives, __pyx_d, ((PyObject *)__pyx_codeobj__32)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 339, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_wait_write, __pyx_t_1) < 0) __PYX_ERR(0, 335, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_wait_write, __pyx_t_1) < 0) __PYX_ERR(0, 339, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/gevent/_hub_primitives.py":359
+  /* "src/gevent/_hub_primitives.py":363
  * 
  * 
  * def wait_readwrite(fileno, timeout=None, timeout_exc=_NONE, event=_NONE):             # <<<<<<<<<<<<<<
  *     """
  *     wait_readwrite(fileno, timeout=None, [timeout_exc=None]) -> None
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_NONE); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 359, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_NONE); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 363, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_k__6 = __pyx_t_1;
   __Pyx_GIVEREF(__pyx_t_1);
   __pyx_t_1 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_NONE); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 359, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_NONE); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 363, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_k__7 = __pyx_t_1;
   __Pyx_GIVEREF(__pyx_t_1);
   __pyx_t_1 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_NONE); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 359, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_NONE); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 363, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_k__6 = __pyx_t_1;
   __Pyx_GIVEREF(__pyx_t_1);
   __pyx_t_1 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_NONE); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 359, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_NONE); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 363, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_k__7 = __pyx_t_1;
   __Pyx_GIVEREF(__pyx_t_1);
   __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_16__hub_primitives_15wait_readwrite, 0, __pyx_n_s_wait_readwrite, NULL, __pyx_n_s_gevent___hub_primitives, __pyx_d, ((PyObject *)__pyx_codeobj__34)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 359, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_16__hub_primitives_15wait_readwrite, 0, __pyx_n_s_wait_readwrite, NULL, __pyx_n_s_gevent___hub_primitives, __pyx_d, ((PyObject *)__pyx_codeobj__34)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 363, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_wait_readwrite, __pyx_t_1) < 0) __PYX_ERR(0, 359, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_wait_readwrite, __pyx_t_1) < 0) __PYX_ERR(0, 363, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/gevent/_hub_primitives.py":384
+  /* "src/gevent/_hub_primitives.py":388
  * 
  * 
  * def _init():             # <<<<<<<<<<<<<<
  *     greenlet_init() # pylint:disable=undefined-variable
  * 
  */
-  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_16__hub_primitives_17_init, 0, __pyx_n_s_init, NULL, __pyx_n_s_gevent___hub_primitives, __pyx_d, ((PyObject *)__pyx_codeobj__35)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 384, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6gevent_16__hub_primitives_17_init, 0, __pyx_n_s_init, NULL, __pyx_n_s_gevent___hub_primitives, __pyx_d, ((PyObject *)__pyx_codeobj__35)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 388, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_init, __pyx_t_1) < 0) __PYX_ERR(0, 384, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_init, __pyx_t_1) < 0) __PYX_ERR(0, 388, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/gevent/_hub_primitives.py":387
+  /* "src/gevent/_hub_primitives.py":391
  *     greenlet_init() # pylint:disable=undefined-variable
  * 
  * _init()             # <<<<<<<<<<<<<<
  * 
  * from gevent._util import import_c_accel
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_init); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 387, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_init); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 391, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 387, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 391, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "src/gevent/_hub_primitives.py":389
+  /* "src/gevent/_hub_primitives.py":393
  * _init()
  * 
  * from gevent._util import import_c_accel             # <<<<<<<<<<<<<<
  * import_c_accel(globals(), 'gevent.__hub_primitives')
  */
-  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 389, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 393, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_n_s_import_c_accel);
   __Pyx_GIVEREF(__pyx_n_s_import_c_accel);
   PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_import_c_accel);
-  __pyx_t_1 = __Pyx_Import(__pyx_n_s_gevent__util, __pyx_t_2, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 389, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_Import(__pyx_n_s_gevent__util, __pyx_t_2, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 393, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_import_c_accel); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 389, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_import_c_accel); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 393, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_import_c_accel, __pyx_t_2) < 0) __PYX_ERR(0, 389, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_import_c_accel, __pyx_t_2) < 0) __PYX_ERR(0, 393, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/gevent/_hub_primitives.py":390
+  /* "src/gevent/_hub_primitives.py":394
  * 
  * from gevent._util import import_c_accel
  * import_c_accel(globals(), 'gevent.__hub_primitives')             # <<<<<<<<<<<<<<
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_import_c_accel); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 390, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_import_c_accel); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 394, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_Globals(); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 390, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_Globals(); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 394, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 390, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 394, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_2);
   PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_2);
@@ -9281,7 +9346,7 @@ if (!__Pyx_RefNanny) {
   __Pyx_GIVEREF(__pyx_n_s_gevent___hub_primitives);
   PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_n_s_gevent___hub_primitives);
   __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_3, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 390, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_3, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 394, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;

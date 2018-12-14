@@ -21,6 +21,46 @@ FAKE_HEADERS = {
 EMPTY_COOKIES = "!!!EMPTY_COOKIES!!!"
 
 
+class GetUrlResponse(object):
+    def __init__(self, headers=None, url=None, status_code=None, content=None):
+        self.headers = headers
+        self.url = url
+        self.status_code = status_code
+        self.content = content
+
+    def copy(self):
+        new = self.__class__()
+        new.__dict__.update(self.__dict__)
+        return new
+
+    def get_wrapper(self):
+        if isinstance(self.content, str):
+            return GetUrlResponseContentStrWrapper(self)
+        if isinstance(self.content, bytes):
+            return GetUrlResponseContentBytesWrapper(self)
+        return self.copy()
+
+
+class GetUrlResponseContentStrWrapper(str):
+    def __new__(cls, response: GetUrlResponse):
+        ob = super(GetUrlResponseContentStrWrapper, cls).__new__(cls, response.content)
+        ob.headers = response.headers
+        ob.url = response.url
+        ob.status_code = response.status_code
+        ob.content = response.content
+        return ob
+
+
+class GetUrlResponseContentBytesWrapper(bytes):
+    def __new__(cls, response: GetUrlResponse):
+        ob = super(GetUrlResponseContentBytesWrapper, cls).__new__(cls, response.content)
+        ob.headers = response.headers
+        ob.url = response.url
+        ob.status_code = response.status_code
+        ob.content = response.content
+        return ob
+
+
 class GetUrlImpl(object):
     def __init__(self, service):
         self.service = service
@@ -28,7 +68,7 @@ class GetUrlImpl(object):
     def new_cookie_jar(self):
         raise NotImplementedError
 
-    def get_url(self, url_json, url_json_dict, callmethod, pool=None):
+    def get_url(self, url_json, url_json_dict, callmethod, pool=None) -> GetUrlResponse:
         raise NotImplementedError
 
 
@@ -53,11 +93,3 @@ class GetUrlStreamReader(object):
 
 class GetUrlStreamReadError(ConnectionError):
     pass
-
-
-class GetUrlResponse(object):
-    def __init__(self, headers=None, url=None, status_code=None, content=None):
-        self.headers = headers
-        self.url = url
-        self.status_code = status_code
-        self.content = content

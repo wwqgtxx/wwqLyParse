@@ -59,13 +59,21 @@ class GetUrlService(object):
         else:
             return FUCK_KEY_LOCK
 
+    def new_headers_from_fake(self, _dict=None, **kwargs):
+        headers = self.fake_headers.copy()
+        if _dict:
+            headers.update(_dict)
+        if kwargs:
+            headers.update(kwargs)
+        return headers
+
     def new_cookie_jar(self):
         self.init()
         return self.impl.new_cookie_jar()
 
     def get_url(self, o_url, encoding=None, headers=None, data=None, method=None, cookies=None, cookie_jar=None,
                 verify=None, allow_cache=True, use_pool=True, pool=None, force_flush_cache=False, callmethod=None,
-                only_content=True, stream=False):
+                stream=False):
         self.init()
         # if encoding is None:
         #     encoding = 'utf-8'
@@ -85,7 +93,6 @@ class GetUrlService(object):
             allow_cache = False
         if stream:
             allow_cache = False
-            only_content = False
         url_json_dict = {"o_url": o_url}
         if encoding is not None:
             url_json_dict["encoding"] = encoding
@@ -118,10 +125,7 @@ class GetUrlService(object):
                 if url_json in self.url_cache:
                     result = self.url_cache[url_json]
                     logging.debug(callmethod + "cache get:" + url_json)
-                    if only_content:
-                        return result.content
-                    else:
-                        return result
+                    return result.get_wrapper()
                 logging.debug(callmethod + "normal get:" + url_json)
             else:
                 logging.debug(callmethod + "nocache get:" + url_json)
@@ -130,10 +134,7 @@ class GetUrlService(object):
             result = self.impl.get_url(url_json=url_json, url_json_dict=url_json_dict, callmethod=callmethod, pool=pool)
             if allow_cache and result:
                 self.url_cache[url_json] = result
-            if only_content:
-                return result.content
-            else:
-                return result
+            return result.get_wrapper()
 
 
 get_url_service = GetUrlService()

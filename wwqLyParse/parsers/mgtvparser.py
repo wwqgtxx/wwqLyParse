@@ -124,8 +124,7 @@ class MgTVParser(Parser):
         api_data = self.get_api_data(input_text, cookie_jar)
         did = api_data['did']
         # domain = api_data['data']['stream_domain'][0]
-        headers = get_url_service.fake_headers.copy()
-        headers.update({"Referer": input_text})
+        headers = get_url_service.new_headers_from_fake({"Referer": input_text})
         for lstream in api_data['stream']:
             if lstream['url'] and lstream['def'] == label:
                 for domain in api_data['stream_domain']:

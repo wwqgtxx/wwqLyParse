@@ -59,8 +59,12 @@ class GetUrlService(object):
         else:
             return FUCK_KEY_LOCK
 
-    def get_url(self, o_url, encoding=None, headers=None, data=None, method=None, cookies=None, verify=None,
-                allow_cache=True, use_pool=True, pool=None, force_flush_cache=False, callmethod=None,
+    def new_cookie_jar(self):
+        self.init()
+        return self.impl.new_cookie_jar()
+
+    def get_url(self, o_url, encoding=None, headers=None, data=None, method=None, cookies=None, cookie_jar=None,
+                verify=None, allow_cache=True, use_pool=True, pool=None, force_flush_cache=False, callmethod=None,
                 only_content=True, stream=False):
         self.init()
         # if encoding is None:
@@ -77,6 +81,8 @@ class GetUrlService(object):
             allow_cache = False
         else:
             data = None
+        if cookie_jar is not None:
+            allow_cache = False
         if stream:
             allow_cache = False
             only_content = False
@@ -89,6 +95,8 @@ class GetUrlService(object):
             url_json_dict["method"] = method
         if cookies is not None:
             url_json_dict["cookies"] = cookies
+        if cookie_jar is not None:
+            url_json_dict["cookie_jar"] = str(cookie_jar)
         if len(url_json_dict) == 1:
             url_json = o_url
         else:
@@ -97,6 +105,7 @@ class GetUrlService(object):
         url_json_dict["headers"] = headers
         url_json_dict["method"] = method
         url_json_dict["cookies"] = cookies
+        url_json_dict["cookie_jar"] = cookie_jar
         url_json_dict["data"] = data
         url_json_dict["verify"] = verify
         url_json_dict["stream"] = stream

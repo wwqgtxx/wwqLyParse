@@ -47,11 +47,14 @@ class AioHttpGetUrlImpl(GetUrlImpl):
         logging.getLogger("chardet").setLevel(logging.WARNING)
         self.common_loop = self._get_async_loop()
         self.common_connector = TCPConnector(limit=GET_URL_PARALLEL_LIMIT, loop=self.common_loop)
-        self.common_cookie_jar = aiohttp.CookieJar(loop=self.common_loop)
+        self.common_cookie_jar = self.new_cookie_jar()
         self.common_client_timeout = aiohttp.ClientTimeout(sock_connect=GET_URL_CONNECT_TIMEOUT,
                                                            sock_read=GET_URL_RECV_TIMEOUT)
         logging.debug("init %s" % self.common_connector)
         weakref.finalize(self, self.common_connector.close)
+
+    def new_cookie_jar(self):
+        return aiohttp.CookieJar(loop=self.common_loop)
 
     def _get_async_loop(self):
         loop = asyncio.SelectorEventLoop(DefaultSelector())
@@ -69,8 +72,8 @@ class AioHttpGetUrlImpl(GetUrlImpl):
         threading.Thread(target=_run_forever, name="GetUrlLoopThread", daemon=True).start()
         return loop
 
-    async def _get_url_aiohttp(self, url_json, o_url, encoding, headers, data, method, callmethod, verify, cookies,
-                               retry_num, stream, connector=None, cookie_jar=None):
+    async def _get_url_aiohttp(self, url_json, o_url, encoding, headers, data, method, callmethod, verify,
+                               cookies, cookie_jar, retry_num, stream, connector=None):
         async def __get_url_aiohttp(session: aiohttp.ClientSession):
             for i in range(0, retry_num + 1):
                 try:
@@ -114,8 +117,7 @@ class AioHttpGetUrlImpl(GetUrlImpl):
             cookie_jar = self.common_cookie_jar
         if cookies is EMPTY_COOKIES:
             cookies = {}
-        if cookies is not None:
-            cookie_jar = None
+            cookie_jar = self.new_cookie_jar()
         try:
             async with aiohttp.ClientSession(connector=connector, connector_owner=False,
                                              cookies=cookies, cookie_jar=cookie_jar) as _session:

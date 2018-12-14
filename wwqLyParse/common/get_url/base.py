@@ -25,6 +25,9 @@ class GetUrlImpl(object):
     def __init__(self, service):
         self.service = service
 
+    def new_cookie_jar(self):
+        raise NotImplementedError
+
     def get_url(self, url_json, url_json_dict, callmethod, pool=None):
         raise NotImplementedError
 

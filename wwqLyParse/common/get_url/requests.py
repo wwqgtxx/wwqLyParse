@@ -9,6 +9,7 @@ import functools
 import urllib3
 import requests
 import requests.adapters
+import requests.cookies
 
 
 class RequestsGetUrlStreamReader(GetUrlStreamReader):
@@ -33,8 +34,11 @@ class RequestsGetUrlImpl(GetUrlImpl):
         warnings.filterwarnings("ignore", module="urllib3")
         logging.getLogger("chardet").setLevel(logging.WARNING)
         self.common_http_adapter = self._get_http_adapter()
-        self.common_session = self._get_session()
+        self.common_cookie_jar = self.new_cookie_jar()
         self.common_timeout = (GET_URL_CONNECT_TIMEOUT, GET_URL_RECV_TIMEOUT)
+
+    def new_cookie_jar(self):
+        return requests.cookies.cookiejar_from_dict({})
 
     def _get_http_adapter(self, size=GET_URL_PARALLEL_LIMIT, retry=GET_URL_RETRY_NUM):
         return requests.adapters.HTTPAdapter(pool_connections=size,
@@ -54,14 +58,16 @@ class RequestsGetUrlImpl(GetUrlImpl):
             }
         return session
 
-    def _get_url_requests(self, url_json, o_url, encoding, headers, data, method, callmethod, verify, cookies,
-                          use_pool, stream):
+    def _get_url_requests(self, url_json, o_url, encoding, headers, data, method, callmethod, verify,
+                          cookies, cookie_jar, use_pool, stream):
         try:
+            session = self._get_session()
+            if cookie_jar is None:
+                cookie_jar = self.common_cookie_jar
             if cookies is EMPTY_COOKIES:
                 cookies = {}
-                session = self._get_session()
-            else:
-                session = self.common_session
+                cookie_jar = self.new_cookie_jar()
+            session.cookies = cookie_jar
             resp = session.request(method=method if method else "GET", url=o_url,
                                    headers=headers if headers else self.service.fake_headers, data=data,
                                    cookies=cookies,

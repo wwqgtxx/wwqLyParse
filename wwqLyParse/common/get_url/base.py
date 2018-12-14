@@ -38,27 +38,9 @@ class GetUrlResponse(object):
             return GetUrlResponseContentStrWrapper(self)
         if isinstance(self.content, bytes):
             return GetUrlResponseContentBytesWrapper(self)
+        if isinstance(self.content, GetUrlStreamReader):
+            return GetUrlResponseContentStreamReaderWrapper(self)
         return self.copy()
-
-
-class GetUrlResponseContentStrWrapper(str):
-    def __new__(cls, response: GetUrlResponse):
-        ob = super(GetUrlResponseContentStrWrapper, cls).__new__(cls, response.content)
-        ob.headers = response.headers
-        ob.url = response.url
-        ob.status_code = response.status_code
-        ob.content = response.content
-        return ob
-
-
-class GetUrlResponseContentBytesWrapper(bytes):
-    def __new__(cls, response: GetUrlResponse):
-        ob = super(GetUrlResponseContentBytesWrapper, cls).__new__(cls, response.content)
-        ob.headers = response.headers
-        ob.url = response.url
-        ob.status_code = response.status_code
-        ob.content = response.content
-        return ob
 
 
 class GetUrlImpl(object):
@@ -93,3 +75,51 @@ class GetUrlStreamReader(object):
 
 class GetUrlStreamReadError(ConnectionError):
     pass
+
+
+class GetUrlResponseContentStreamReaderWrapper(GetUrlStreamReader):
+    def __init__(self, response: GetUrlResponse):
+        self.headers = response.headers
+        self.url = response.url
+        self.status_code = response.status_code
+        self.content = response.content
+
+    @property
+    def decoded_encoding(self):
+        return self.content.decoded_encoding
+
+    @decoded_encoding.setter
+    def decoded_encoding(self, value):
+        self.content.decoded_encoding = value
+
+    def read(self, size=4096):
+        return self.content.read(size)
+
+    def _read(self, size):
+        return self.content._read(size)
+
+    def __enter__(self):
+        return self.content.__enter__()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        return self.content.__exit__(exc_type, exc_val, exc_tb)
+
+
+class GetUrlResponseContentStrWrapper(str):
+    def __new__(cls, response: GetUrlResponse):
+        ob = super(GetUrlResponseContentStrWrapper, cls).__new__(cls, response.content)
+        ob.headers = response.headers
+        ob.url = response.url
+        ob.status_code = response.status_code
+        ob.content = response.content
+        return ob
+
+
+class GetUrlResponseContentBytesWrapper(bytes):
+    def __new__(cls, response: GetUrlResponse):
+        ob = super(GetUrlResponseContentBytesWrapper, cls).__new__(cls, response.content)
+        ob.headers = response.headers
+        ob.url = response.url
+        ob.status_code = response.status_code
+        ob.content = response.content
+        return ob

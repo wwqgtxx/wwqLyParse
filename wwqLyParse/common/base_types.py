@@ -9,6 +9,7 @@ class Parser(object):
     filters = []
     un_supports = []
     types = []
+    replace_if_exists = []
 
     def parse(self, url, *k, **kk):
         pass
@@ -24,6 +25,9 @@ class Parser(object):
 
     def get_types(self):
         return self.types
+
+    def get_replace_if_exists(self):
+        return self.replace_if_exists
 
     def check_support(self, url, types=None):
         if (types is None) or (not self.get_types()) or (is_in(types, self.get_types(), strict=False)):

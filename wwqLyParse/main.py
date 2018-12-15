@@ -258,7 +258,15 @@ def parse(input_text, types=None, parsers_name=None, url_handles_name=None,
             t_results.append(result)
         if type(result) == list:
             t_results.extend(result)
+    replace_if_exists_list = list()
     for t_result in t_results:
+        parser = t_result["parser"]
+        replace_if_exists_list.extend(parser.get_replace_if_exists())
+    for t_result in t_results:
+        parser = t_result["parser"]
+        if parser.__class__.__name__ in replace_if_exists_list:
+            logging.info("drop " + str(t_result["parser"]) + "'s result because of replace_if_exists_list")
+            continue
         data = t_result["result"]
         try:
             if "sorted" not in data or data["sorted"] != True:

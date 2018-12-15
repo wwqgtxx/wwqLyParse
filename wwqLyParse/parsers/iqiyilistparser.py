@@ -12,13 +12,16 @@ try:
 except Exception as e:
     from common import *
 
-__all__ = ["IQiYiAListParser3", "IQiYiAListParser4", "IQiYiLibMListParser", "IQiYiVListParser"]
+__all__ = ["IQiYiAListParser", "IQiYiAListParser2",
+           "IQiYiAListParser3", "IQiYiAListParser4",
+           "IQiYiLibMListParser", "IQiYiVListParser"]
 
 
 class IQiYiAListParser(Parser):
     filters = ["www.iqiyi.com/a_"]
     types = ["list"]
     RE_GET_AID = ' albumId: "([0-9]+)",'  # albumId: 202340701,
+    RE_GET_CID = ' cid: "([0-9]+)",'  # cid: 2,
     """
 
     window.Q = window.Q || {};
@@ -41,18 +44,21 @@ class IQiYiAListParser(Parser):
     PAGE_ID_END = sys.maxsize
     ONLY_IGNORE_EMPTY_PAGE = False
     ADD_NO_TO_NAME = True
+    TAKE_CARE_CID = '2'
+    TAKE_CARE_CID_TYPE = "INCLUDE"
 
     # get info from 271 javascript API port
     def _get_info_from_js_port(self, html_text):
         # get album id
         aid = r1(self.RE_GET_AID, html_text)
+        cid = r1(self.RE_GET_CID, html_text)
         # get info list
-        vlist = self._get_vinfo_list(aid)
+        vlist = self._get_vinfo_list(aid, cid)
         # done
         return vlist
 
     # make js API port URL
-    def _make_port_url(self, aid, page_n=None):
+    def _make_port_url(self, aid, cid, page_n=None):
         if self.MANY_PAGE:
             url = self.URL_JS_API_PORT.format(aid, page_n)
         else:
@@ -61,7 +67,7 @@ class IQiYiAListParser(Parser):
         return url
 
     # get vinfo list, get full list from js API port
-    def _get_vinfo_list(self, aid):
+    def _get_vinfo_list(self, aid, cid):
         vlist = []
         # request each page
         page_n = self.PAGE_ID_START
@@ -69,7 +75,7 @@ class IQiYiAListParser(Parser):
         while page_n < self.PAGE_ID_END:
             # make request url
             page_n += 1
-            url = self._make_port_url(aid, page_n)
+            url = self._make_port_url(aid, cid, page_n)
             # get text
             raw_text = get_url(url)
 
@@ -110,6 +116,8 @@ class IQiYiAListParser(Parser):
         vlist = info['data']['vlist']
         out = []  # output info
         for v in vlist:
+            if v.get('type', 1) == "0":
+                continue
             one = {}
 
             one['no'] = v['pd']
@@ -131,7 +139,7 @@ class IQiYiAListParser(Parser):
             if self.ADD_NO_TO_NAME:
                 one['no'] = "第" + str(i['no']) + "集 " + str(i['subtitle'])
             else:
-                one['no'] = i['no']
+                one['no'] = i['title']
             one['subtitle'] = i['subtitle']
             one['url'] = i['url']
             vlist.append(one)
@@ -139,7 +147,21 @@ class IQiYiAListParser(Parser):
         return vlist
 
     def _check_support(self, input_text):
-        return True
+        html_text = get_url(input_text)
+        # get cid
+        cid = r1(self.RE_GET_CID, html_text)
+        if self.TAKE_CARE_CID_TYPE == "INCLUDE":
+            if cid is None or cid == self.TAKE_CARE_CID:
+                return True
+            else:
+                logging.debug("%s ignore by cid: %s" % (str(self), cid))
+                return False
+        elif  self.TAKE_CARE_CID_TYPE == "EXCLUDE":
+            if cid is None or cid != self.TAKE_CARE_CID:
+                return True
+            else:
+                logging.debug("%s ignore by cid: %s" % (str(self), cid))
+                return False
 
     def parse(self, input_text, *k, **kk):
         if not self._check_support(input_text):
@@ -170,9 +192,6 @@ class IQiYiAListParser(Parser):
 
 
 class IQiYiAListParser2(IQiYiAListParser):
-    filters = ["www.iqiyi.com/a_"]
-    types = ["list"]
-
     # RE_GET_AID = ' albumId: "([0-9]+)",'  # albumId: 203342201,
     """
 
@@ -190,10 +209,18 @@ class IQiYiAListParser2(IQiYiAListParser):
 
     """
     # http://cache.video.qiyi.com/jp/sdvlst/6/203342201/
-    URL_JS_API_PORT = 'http://cache.video.qiyi.com/jp/sdvlst/6/{}/'
+    URL_JS_API_PORT = 'http://cache.video.qiyi.com/jp/sdvlst/{}/{}/'
 
+    TAKE_CARE_CID = '2'
+    TAKE_CARE_CID_TYPE = "EXCLUDE"
     MANY_PAGE = False
     ADD_NO_TO_NAME = False
+
+    # make js API port URL
+    def _make_port_url(self, aid, cid, page_n=None):
+        url = self.URL_JS_API_PORT.format(cid, aid)
+        # print(url)
+        return url
 
     # parse one page json
     def _parse_one_page_json(self, info):
@@ -214,10 +241,12 @@ class IQiYiAListParser2(IQiYiAListParser):
 
 
 class IQiYiAListParser3(IQiYiAListParser):
+    replace_if_exists = ["IQiYiAListParser"]
+
     # https://pcw-api.iqiyi.com/albums/album/avlistinfo?aid=202340701&size=50&page=2
     URL_JS_API_PORT = "https://pcw-api.iqiyi.com/albums/album/avlistinfo?aid={}&size=50&page={}"
-    RE_GET_CID = ' cid: "([0-9]+)",'  # cid: 2,
-    NEED_CID = '2'
+    TAKE_CARE_CID = '2'
+    TAKE_CARE_CID_TYPE = "INCLUDE"
 
     # parse one page json
     def _parse_one_page_json(self, info):
@@ -236,24 +265,23 @@ class IQiYiAListParser3(IQiYiAListParser):
         # get video info done
         return out
 
-    def _check_support(self, input_text):
-        html_text = get_url(input_text)
-        # get cid
-        cid = r1(self.RE_GET_CID, html_text)
-        if cid is None or cid == self.NEED_CID:
-            return True
-        else:
-            logging.debug("%s ignore by cid: %s" % (str(self), cid))
-            return False
 
+class IQiYiAListParser4(IQiYiAListParser):
+    replace_if_exists = ["IQiYiAListParser2"]
 
-class IQiYiAListParser4(IQiYiAListParser3):
     # https://pcw-api.iqiyi.com/album/source/svlistinfo?cid=6&sourceid=203342201&timelist=2016
-    URL_JS_API_PORT = "https://pcw-api.iqiyi.com/album/source/svlistinfo?cid=6&sourceid={}&timelist=" + \
+    URL_JS_API_PORT = "https://pcw-api.iqiyi.com/album/source/svlistinfo?cid={}&sourceid={}&timelist=" + \
                       "%2C".join(str(i) for i in range(2000, 2051))
-    NEED_CID = '6'
+    TAKE_CARE_CID = '2'
+    TAKE_CARE_CID_TYPE = "EXCLUDE"
     MANY_PAGE = False
     ADD_NO_TO_NAME = False
+
+    # make js API port URL
+    def _make_port_url(self, aid, cid, page_n=None):
+        url = self.URL_JS_API_PORT.format(cid, aid)
+        # print(url)
+        return url
 
     # parse one page json
     def _parse_one_page_json(self, info):

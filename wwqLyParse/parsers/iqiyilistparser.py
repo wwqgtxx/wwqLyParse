@@ -12,14 +12,13 @@ try:
 except Exception as e:
     from common import *
 
-__all__ = ["IQiYiAListParser", "IQiYiAListParser2", "IQiYiLibMListParser", "IQiYiVListParser"]
+__all__ = ["IQiYiAListParser3", "IQiYiAListParser2", "IQiYiLibMListParser", "IQiYiVListParser"]
 
 
 class IQiYiAListParser(Parser):
     filters = ["www.iqiyi.com/a_"]
     types = ["list"]
     RE_GET_AID = ' albumId: "([0-9]+)",'  # albumId: 202340701,
-    # TODO: https://pcw-api.iqiyi.com/albums/album/avlistinfo?aid=202340701&size=50&page=2
     """
 
     window.Q = window.Q || {};
@@ -36,7 +35,7 @@ class IQiYiAListParser(Parser):
 
     """
     # http://cache.video.qiyi.com/jp/avlist/202340701/2/
-    URL_JS_API_PORT = 'http://cache.video.qiyi.com/jp/avlist/'
+    URL_JS_API_PORT = 'http://cache.video.qiyi.com/jp/avlist/{}/{}/'
     MANY_PAGE = True
 
     # get info from 271 javascript API port
@@ -56,9 +55,9 @@ class IQiYiAListParser(Parser):
     # make js API port URL
     def make_port_url(self, aid, page_n=0):
         if self.MANY_PAGE:
-            url = self.URL_JS_API_PORT + str(aid) + '/' + str(page_n) + '/'
+            url = self.URL_JS_API_PORT.format(aid, page_n)
         else:
-            url = self.URL_JS_API_PORT + str(aid) + '/'
+            url = self.URL_JS_API_PORT.format(aid)
         # print(url)
         return url
 
@@ -117,11 +116,6 @@ class IQiYiAListParser(Parser):
             one['title'] = v['vn']
             one['subtitle'] = v['vt']
             one['url'] = v['vurl']
-
-            # get more info
-            one['vid'] = v['vid']
-            one['time_s'] = v['timeLength']
-            one['tvid'] = v['id']
 
             out.append(one)
         # get video info done
@@ -189,7 +183,7 @@ class IQiYiAListParser2(IQiYiAListParser):
 
     """
     # http://cache.video.qiyi.com/jp/sdvlst/6/203342201/
-    URL_JS_API_PORT = 'http://cache.video.qiyi.com/jp/sdvlst/6/'
+    URL_JS_API_PORT = 'http://cache.video.qiyi.com/jp/sdvlst/6/{}/'
 
     MANY_PAGE = False
 
@@ -205,11 +199,6 @@ class IQiYiAListParser2(IQiYiAListParser):
             one['title'] = v['desc']
             one['subtitle'] = v['shortTitle']
             one['url'] = v['vUrl']
-
-            # get more info
-            one['vid'] = v['vid']
-            one['time_s'] = v['timeLength']
-            one['tvid'] = v['tvId']
 
             out.append(one)
         # get video info done
@@ -228,6 +217,28 @@ class IQiYiAListParser2(IQiYiAListParser):
             vlist.append(one)
         # done
         return vlist
+
+
+class IQiYiAListParser3(IQiYiAListParser):
+    # https://pcw-api.iqiyi.com/albums/album/avlistinfo?aid=202340701&size=50&page=2
+    URL_JS_API_PORT = "https://pcw-api.iqiyi.com/albums/album/avlistinfo?aid={}&size=50&page={}"
+
+    # parse one page json
+    def parse_one_page_json(self, info):
+        # get and parse video info items
+        vlist = info['data']['epsodelist']
+        out = []  # output info
+        for v in vlist:
+            one = {}
+
+            one['no'] = v['order']
+            one['title'] = v['name']
+            one['subtitle'] = v['subtitle']
+            one['url'] = v['playUrl']
+
+            out.append(one)
+        # get video info done
+        return out
 
 
 class IQiYiLibMListParser(Parser):

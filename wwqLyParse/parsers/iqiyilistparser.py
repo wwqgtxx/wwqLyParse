@@ -22,7 +22,23 @@ class IQiYiAListParser(Parser):
     def parse(self, input_text, *k, **kk):
         # modity from sceext2's list271.py
         def get_list_info_api1(html_text):
-            RE_GET_AID = ' albumId: ([0-9]+),'  # albumId: 202340701,
+            RE_GET_AID = ' albumId: "([0-9]+)",'  # albumId: 202340701,
+            # TODO: https://pcw-api.iqiyi.com/albums/album/avlistinfo?aid=202340701&size=50&page=2
+            """
+            
+            window.Q = window.Q || {};
+            Q.PageInfo = Q.PageInfo || {};
+            Q.PageInfo.playPageInfo = {
+                albumId: "219950401",
+                tvId: "898515400",
+                sourceId: 0,
+                cid: "2",
+                videoLine: 0,
+                position: 'album',
+                pageType: 'zhuanji'
+            };
+        
+            """
             # http://cache.video.qiyi.com/jp/avlist/202340701/2/
             URL_JS_API_PORT = 'http://cache.video.qiyi.com/jp/avlist/'
 
@@ -119,7 +135,23 @@ class IQiYiAListParser(Parser):
             return vlist
 
         def get_list_info_api2(html_text):
-            RE_GET_AID = ' albumId: ([0-9]+),'  # albumId: 203342201,
+            RE_GET_AID = ' albumId: "([0-9]+)",'  # albumId: 203342201,
+            # TODO: https://pcw-api.iqiyi.com/album/source/svlistinfo?cid=6&sourceid=203342201&timelist=2016
+            """
+            
+            window.Q = window.Q || {};
+            Q.PageInfo = Q.PageInfo || {};
+            Q.PageInfo.playPageInfo = {
+                albumId: "203342201",
+                tvId: "439048900",
+                sourceId: 203342201,
+                cid: "6",
+                videoLine: 0,
+                position: 'album',
+                pageType: 'zhuanji'
+            };
+        
+            """
             # http://cache.video.qiyi.com/jp/sdvlst/6/203342201/
             URL_JS_API_PORT = 'http://cache.video.qiyi.com/jp/sdvlst/6/'
 

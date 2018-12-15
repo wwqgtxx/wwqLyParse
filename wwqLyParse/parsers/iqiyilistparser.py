@@ -12,7 +12,7 @@ try:
 except Exception as e:
     from common import *
 
-__all__ = ["IQiYiAListParser3", "IQiYiAListParser2", "IQiYiLibMListParser", "IQiYiVListParser"]
+__all__ = ["IQiYiAListParser3", "IQiYiAListParser4", "IQiYiLibMListParser", "IQiYiVListParser"]
 
 
 class IQiYiAListParser(Parser):
@@ -37,23 +37,22 @@ class IQiYiAListParser(Parser):
     # http://cache.video.qiyi.com/jp/avlist/202340701/2/
     URL_JS_API_PORT = 'http://cache.video.qiyi.com/jp/avlist/{}/{}/'
     MANY_PAGE = True
+    PAGE_ID_START = 0
+    PAGE_ID_END = sys.maxsize
+    ONLY_IGNORE_EMPTY_PAGE = False
+    ADD_NO_TO_NAME = True
 
     # get info from 271 javascript API port
-    def get_info_from_js_port(self, html_text):
+    def _get_info_from_js_port(self, html_text):
         # get album id
-        aid = self.get_aid(html_text)
+        aid = r1(self.RE_GET_AID, html_text)
         # get info list
-        vlist = self.get_vinfo_list(aid)
+        vlist = self._get_vinfo_list(aid)
         # done
         return vlist
 
-    # get album id
-    def get_aid(self, html_text):
-        m = re.findall(self.RE_GET_AID, html_text)
-        return m[0]
-
     # make js API port URL
-    def make_port_url(self, aid, page_n=0):
+    def _make_port_url(self, aid, page_n=None):
         if self.MANY_PAGE:
             url = self.URL_JS_API_PORT.format(aid, page_n)
         else:
@@ -62,20 +61,20 @@ class IQiYiAListParser(Parser):
         return url
 
     # get vinfo list, get full list from js API port
-    def get_vinfo_list(self, aid):
+    def _get_vinfo_list(self, aid):
         vlist = []
         # request each page
-        page_n = 0
+        page_n = self.PAGE_ID_START
         urls = []
-        while True:
+        while page_n < self.PAGE_ID_END:
             # make request url
             page_n += 1
-            url = self.make_port_url(aid, page_n)
+            url = self._make_port_url(aid, page_n)
             # get text
             raw_text = get_url(url)
 
             # get list
-            sub_list = self.parse_one_page(raw_text)
+            sub_list = self._parse_one_page(raw_text)
             for sub in sub_list:
                 url = sub['url']
                 if url in urls:
@@ -85,14 +84,15 @@ class IQiYiAListParser(Parser):
             if len(sub_list) > 0:
                 vlist += sub_list
             else:  # no more data
-                break
+                if not self.ONLY_IGNORE_EMPTY_PAGE:
+                    break
             if not self.MANY_PAGE:
                 break
         # get full vinfo list done
         return vlist
 
     # parse one page info, parse raw info
-    def parse_one_page(self, raw_text):
+    def _parse_one_page(self, raw_text):
         # remove 'var tvInfoJs={' before json text, and json just ended with '}'
         json_text = '{' + raw_text.split('{', 1)[1]
         # load as json text
@@ -102,10 +102,10 @@ class IQiYiAListParser(Parser):
         if info['code'] == 'A00004':
             return []  # just return null result
 
-        return self.parse_one_page_json(info)
+        return self._parse_one_page_json(info)
 
     # parse one page json
-    def parse_one_page_json(self, info):
+    def _parse_one_page_json(self, info):
         # get and parse video info items
         vlist = info['data']['vlist']
         out = []  # output info
@@ -121,21 +121,29 @@ class IQiYiAListParser(Parser):
         # get video info done
         return out
 
-    def get_list_info_api(self, html_text):
+    def _get_list_info_api(self, html_text):
         # get info from js API port
-        info2 = self.get_info_from_js_port(html_text)
+        info2 = self._get_info_from_js_port(html_text)
         # replace vlist with js port data
         vlist = []
         for i in info2:
             one = {}
-            one['no'] = "第" + str(i['no']) + "集 " + str(i['subtitle'])
+            if self.ADD_NO_TO_NAME:
+                one['no'] = "第" + str(i['no']) + "集 " + str(i['subtitle'])
+            else:
+                one['no'] = i['no']
             one['subtitle'] = i['subtitle']
             one['url'] = i['url']
             vlist.append(one)
         # done
         return vlist
 
+    def _check_support(self, input_text):
+        return True
+
     def parse(self, input_text, *k, **kk):
+        if not self._check_support(input_text):
+            return []
         html_text = get_url(input_text)
         html = PyQuery(html_text)
         title = html('h1.main_title > a').text()
@@ -157,7 +165,7 @@ class IQiYiAListParser(Parser):
             "type": "list",
             "caption": "271视频全集"
         }
-        data["data"] = self.get_list_info_api(html_text)
+        data["data"] = self._get_list_info_api(html_text)
         return data
 
 
@@ -165,8 +173,7 @@ class IQiYiAListParser2(IQiYiAListParser):
     filters = ["www.iqiyi.com/a_"]
     types = ["list"]
 
-    RE_GET_AID = ' albumId: "([0-9]+)",'  # albumId: 203342201,
-    # TODO: https://pcw-api.iqiyi.com/album/source/svlistinfo?cid=6&sourceid=203342201&timelist=2016
+    # RE_GET_AID = ' albumId: "([0-9]+)",'  # albumId: 203342201,
     """
 
     window.Q = window.Q || {};
@@ -186,9 +193,10 @@ class IQiYiAListParser2(IQiYiAListParser):
     URL_JS_API_PORT = 'http://cache.video.qiyi.com/jp/sdvlst/6/{}/'
 
     MANY_PAGE = False
+    ADD_NO_TO_NAME = False
 
     # parse one page json
-    def parse_one_page_json(self, info):
+    def _parse_one_page_json(self, info):
         # get and parse video info items
         vlist = info['data']
         out = []  # output info
@@ -204,27 +212,15 @@ class IQiYiAListParser2(IQiYiAListParser):
         # get video info done
         return out
 
-    def get_list_info_api(self, html_text):
-        # get info from js API port
-        info2 = self.get_info_from_js_port(html_text)
-        # replace vlist with js port data
-        vlist = []
-        for i in info2:
-            one = {}
-            one['no'] = i['no']
-            one['subtitle'] = i['subtitle']
-            one['url'] = i['url']
-            vlist.append(one)
-        # done
-        return vlist
-
 
 class IQiYiAListParser3(IQiYiAListParser):
     # https://pcw-api.iqiyi.com/albums/album/avlistinfo?aid=202340701&size=50&page=2
     URL_JS_API_PORT = "https://pcw-api.iqiyi.com/albums/album/avlistinfo?aid={}&size=50&page={}"
+    RE_GET_CID = ' cid: "([0-9]+)",'  # cid: 2,
+    NEED_CID = '2'
 
     # parse one page json
-    def parse_one_page_json(self, info):
+    def _parse_one_page_json(self, info):
         # get and parse video info items
         vlist = info['data']['epsodelist']
         out = []  # output info
@@ -237,6 +233,43 @@ class IQiYiAListParser3(IQiYiAListParser):
             one['url'] = v['playUrl']
 
             out.append(one)
+        # get video info done
+        return out
+
+    def _check_support(self, input_text):
+        html_text = get_url(input_text)
+        # get cid
+        cid = r1(self.RE_GET_CID, html_text)
+        if cid is None or cid == self.NEED_CID:
+            return True
+        else:
+            logging.debug("%s ignore by cid: %s" % (str(self), cid))
+            return False
+
+
+class IQiYiAListParser4(IQiYiAListParser3):
+    # https://pcw-api.iqiyi.com/album/source/svlistinfo?cid=6&sourceid=203342201&timelist=2016
+    URL_JS_API_PORT = "https://pcw-api.iqiyi.com/album/source/svlistinfo?cid=6&sourceid={}&timelist=" + \
+                      "%2C".join(str(i) for i in range(2000, 2051))
+    NEED_CID = '6'
+    MANY_PAGE = False
+    ADD_NO_TO_NAME = False
+
+    # parse one page json
+    def _parse_one_page_json(self, info):
+        # get and parse video info items
+        vlist = info['data']
+        out = []  # output info
+        for _v in vlist.values():
+            for v in _v:
+                one = {}
+
+                one['no'] = v['order']
+                one['title'] = v['name']
+                one['subtitle'] = v['subtitle']
+                one['url'] = v['playUrl']
+
+                out.append(one)
         # get video info done
         return out
 

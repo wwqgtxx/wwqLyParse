@@ -71,6 +71,15 @@ class GetUrlService(object):
         self.init()
         return self.impl.new_cookie_jar()
 
+    def force_flush_cache(self, response, callmethod=None):
+        if callmethod is None:
+            callmethod = get_caller_info(1)
+        url_json = getattr(response, "url_json", response)
+        if url_json is not None:
+            with self._get_url_key_lock(url_json, True):
+                self.url_cache.pop(url_json, None)
+                logging.debug(callmethod + "force_flush_cache:" + url_json)
+
     def get_url(self, o_url, encoding=None, headers=None, data=None, method=None, cookies=None, cookie_jar=None,
                 verify=None, allow_cache=True, use_pool=True, pool=None, force_flush_cache=False, callmethod=None,
                 stream=False):
@@ -118,20 +127,20 @@ class GetUrlService(object):
         url_json_dict["stream"] = stream
 
         with self._get_url_key_lock(url_json, allow_cache):
+            result = None
             if force_flush_cache:
-                self.url_cache.pop(url_json, None)
-                logging.debug(callmethod + "force_flush_cache get:" + url_json)
+                self.force_flush_cache(url_json, callmethod)
             if allow_cache:
                 if url_json in self.url_cache:
                     result = self.url_cache[url_json]
                     logging.debug(callmethod + "cache get:" + url_json)
-                    return result.get_wrapper()
                 logging.debug(callmethod + "normal get:" + url_json)
             else:
                 logging.debug(callmethod + "nocache get:" + url_json)
                 # use_pool = False
-
-            result = self.impl.get_url(url_json=url_json, url_json_dict=url_json_dict, callmethod=callmethod, pool=pool)
+            if result is None:
+                result = self.impl.get_url(url_json=url_json, url_json_dict=url_json_dict, callmethod=callmethod,
+                                           pool=pool)
             if allow_cache and result:
                 self.url_cache[url_json] = result
             return result.get_wrapper()

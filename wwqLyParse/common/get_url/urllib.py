@@ -84,7 +84,8 @@ class UrlLibGetUrlImpl(GetUrlImpl):
             resp = opener.open(req)
             result = GetUrlResponse(headers=dict(resp.info()),
                                     url=str(resp.geturl()),
-                                    status_code=resp.getcode())
+                                    status_code=resp.getcode(),
+                                    url_json=url_json)
             if stream:
                 result.content = UrlLibGetUrlStreamReader(resp)
             else:

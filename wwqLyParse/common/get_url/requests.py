@@ -76,7 +76,8 @@ class RequestsGetUrlImpl(GetUrlImpl):
                                    timeout=self.common_timeout)
             result = GetUrlResponse(headers=dict(resp.headers),
                                     url=str(resp.url),
-                                    status_code=resp.status_code)
+                                    status_code=resp.status_code,
+                                    url_json=url_json)
             if stream:
                 result.content = RequestsGetUrlStreamReader(resp)
             else:

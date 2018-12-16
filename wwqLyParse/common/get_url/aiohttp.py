@@ -84,7 +84,8 @@ class AioHttpGetUrlImpl(GetUrlImpl):
                                                  proxy=self.service.http_proxy or None)
                     result = GetUrlResponse(headers=dict(resp.headers),
                                             url=str(resp.url),
-                                            status_code=resp.status)
+                                            status_code=resp.status,
+                                            url_json=url_json)
                     if stream:
                         result.content = AioHttpGetUrlStreamReader(resp, self.common_loop)
                     else:

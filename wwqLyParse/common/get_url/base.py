@@ -22,11 +22,12 @@ EMPTY_COOKIES = "!!!EMPTY_COOKIES!!!"
 
 
 class GetUrlResponse(object):
-    def __init__(self, headers=None, url=None, status_code=None, content=None):
+    def __init__(self, headers=None, url=None, status_code=None, content=None, url_json=None):
         self.headers = headers
         self.url = url
         self.status_code = status_code
         self.content = content
+        self.url_json = url_json
 
     def copy(self):
         new = self.__class__()
@@ -83,6 +84,7 @@ class GetUrlResponseContentStreamReaderWrapper(GetUrlStreamReader):
         self.url = response.url
         self.status_code = response.status_code
         self.content = response.content
+        self.url_json = response.url_json
 
     @property
     def decoded_encoding(self):
@@ -112,6 +114,7 @@ class GetUrlResponseContentStrWrapper(str):
         ob.url = response.url
         ob.status_code = response.status_code
         ob.content = response.content
+        ob.url_json = response.url_json
         return ob
 
 
@@ -122,4 +125,5 @@ class GetUrlResponseContentBytesWrapper(bytes):
         ob.url = response.url
         ob.status_code = response.status_code
         ob.content = response.content
+        ob.url_json = response.url_json
         return ob

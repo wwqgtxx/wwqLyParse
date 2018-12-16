@@ -20,6 +20,8 @@ class GetUrlService(object):
         self.url_key_lock = KeyLockDict()
         self.pool_get_url = WorkerPool(GET_URL_PARALLEL_LIMIT, thread_name_prefix="GetUrlPool")
         self.fake_headers = FAKE_HEADERS.copy()
+        self.check_response_func_list = list()
+        self.check_response_retry_num = GET_URL_CHECK_RESP_RETRY_NUM
         self.ssl_verify = True
         self.http_proxy = None
         self.impl = None  # type:GetUrlImpl
@@ -134,16 +136,44 @@ class GetUrlService(object):
                 if url_json in self.url_cache:
                     result = self.url_cache[url_json]
                     logging.debug(callmethod + "cache get:" + url_json)
-                logging.debug(callmethod + "normal get:" + url_json)
+                else:
+                    logging.debug(callmethod + "normal get:" + url_json)
             else:
                 logging.debug(callmethod + "nocache get:" + url_json)
                 # use_pool = False
-            if result is None:
-                result = self.impl.get_url(url_json=url_json, url_json_dict=url_json_dict, callmethod=callmethod,
-                                           pool=pool)
+            for i in range(0, self.check_response_retry_num + 1):
+                if result is None:
+                    result = self.impl.get_url(url_json=url_json, url_json_dict=url_json_dict, callmethod=callmethod,
+                                               pool=pool)
+                cr = self._check_response(result)
+                if cr is None:
+                    break
+                else:
+                    logging.warning(callmethod + 'request %s check_response by %s fail! retry %d in %d.'
+                                    % (o_url, cr, i + 1, self.check_response_retry_num))
+                    self.force_flush_cache(result, callmethod)
+                    result = None
             if allow_cache and result:
                 self.url_cache[url_json] = result
+            if result is None:
+                return None
             return result.get_wrapper()
+
+    def _check_response(self, response: GetUrlResponse, func=None):
+        check_response_func_list = self.check_response_func_list.copy()
+        if func is not None:
+            check_response_func_list.append(func)
+        for func in check_response_func_list:
+            t = func(response)
+            if not t:
+                return func
+        return None
+
+    def reg_check_response_func(self, func):
+        if func not in self.check_response_func_list:
+            logging.debug("reg %s to %s" % (func, self))
+            self.check_response_func_list.append(func)
+        return func
 
 
 get_url_service = GetUrlService()

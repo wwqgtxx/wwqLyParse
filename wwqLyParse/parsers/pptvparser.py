@@ -240,17 +240,8 @@ class PPTVParser(Parser):
             # "sorted" : 1,
             "data": []
         }
-
-        while True:
-            html = get_url(input_text)
-            # if """document.write('<meta http-equiv="Refresh" Content="0; Url='+u+'">')""" in html:
-                # logging.debug(html)
-                # continue
-            vid = match1(html, 'webcfg\s*=\s*{"id":\s*(\d+)')
-            if vid:
-                break
-            logging.debug(html)
-            get_url_service.force_flush_cache(html)
+        html = get_url(input_text)
+        vid = match1(html, 'webcfg\s*=\s*{"id":\s*(\d+)')
         # logging.debug(html)
         while True:
             xml = get_url(

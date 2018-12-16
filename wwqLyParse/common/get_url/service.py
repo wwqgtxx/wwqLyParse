@@ -153,7 +153,7 @@ class GetUrlService(object):
                                     % (o_url, cr, i + 1, self.check_response_retry_num))
                     self.force_flush_cache(result, callmethod)
                     result = None
-            if allow_cache and result:
+            if allow_cache and result and result.status_code == 200:
                 self.url_cache[url_json] = result
             if result is None:
                 return None

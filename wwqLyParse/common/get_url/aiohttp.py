@@ -40,6 +40,15 @@ class AioHttpGetUrlStreamReader(GetUrlStreamReader):
         asyncio.run_coroutine_threadsafe(self.resp.__aexit__(exc_type, exc_val, exc_tb), loop=self.loop).result()
 
 
+async def __close_connector( connector: TCPConnector):
+    logging.debug("close %s" % connector)
+    await connector.close()
+
+
+def _close_connector(loop: asyncio.AbstractEventLoop, connector: TCPConnector):
+    asyncio.run_coroutine_threadsafe(__close_connector(connector), loop).result()
+
+
 class AioHttpGetUrlImpl(GetUrlImpl):
 
     def __init__(self, service):
@@ -51,7 +60,7 @@ class AioHttpGetUrlImpl(GetUrlImpl):
         self.common_client_timeout = aiohttp.ClientTimeout(sock_connect=GET_URL_CONNECT_TIMEOUT,
                                                            sock_read=GET_URL_RECV_TIMEOUT)
         logging.debug("init %s" % self.common_connector)
-        weakref.finalize(self, self.common_connector.close)
+        weakref.finalize(self, _close_connector, self.common_loop, self.common_connector)
 
     def new_cookie_jar(self):
         return aiohttp.CookieJar(loop=self.common_loop)

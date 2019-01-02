@@ -269,7 +269,7 @@ Streams:   # All available quality
     def get_version(self):
         try:
             stdout, stderr = self._run(['-v'], need_stderr=False, use_hps=False)
-            return stdout.split(',')[0]
+            return str(stdout.split(',')[0]).replace("\\n", "").strip()
         except Exception as e:
             logging.exception("get version error")
         return ""

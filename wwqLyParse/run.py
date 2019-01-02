@@ -142,6 +142,7 @@ class LibWwqParseCtypes(LibWwqLyParseBase):
         self.lib.get_uuid.restype = ctypes.c_char_p
         self.lib.get_name.restype = ctypes.c_char_p
         logging.debug("successful load lib %s" % self.lib)
+        assert self.get_uuid().decode() == CONFIG["uuid"]
 
     def get_uuid(self) -> bytes:
         return self.lib.get_uuid()

@@ -1,8 +1,6 @@
 #!/usr/bin/env python3.5
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
-from .utils import is_in
-import re
 
 
 class Parser(object):
@@ -17,6 +15,9 @@ class Parser(object):
     def parse_url(self, url, label, min=None, max=None, *k, **kk):
         pass
 
+    def get_version(self):
+        pass
+
     def get_filters(self):
         return self.filters
 
@@ -29,18 +30,8 @@ class Parser(object):
     def get_replace_if_exists(self):
         return self.replace_if_exists
 
-    def check_support(self, url, types=None):
-        if (types is None) or (not self.get_types()) or (is_in(types, self.get_types(), strict=False)):
-            for un_support in self.get_un_supports():
-                if re.search(un_support, url):
-                    return False
-            for filter_str in self.get_filters():
-                if re.search(filter_str, url):
-                    return True
-        return False
-
     def close_parser(self):
-        return
+        pass
 
 
 class ReCallMainParseFunc(object):
@@ -62,11 +53,5 @@ class UrlHandle(object):
     def get_order(self):
         return self.order
 
-    def check_support(self, url):
-        for filter_str in self.get_filters():
-            if re.match(filter_str, url):
-                return True
-        return False
-
     def close_url_handle(self):
-        return
+        pass

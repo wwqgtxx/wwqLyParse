@@ -110,6 +110,24 @@ urlhandle_class_map = import_by_module_name(module_names=get_all_filename_by_dir
                                             super_class=UrlHandle)
 
 
+def parser_check_support(parser, url, types=None):
+    if (types is None) or (not parser.get_types()) or (is_in(types, parser.get_types(), strict=False)):
+        for un_support in parser.get_un_supports():
+            if re.search(un_support, url):
+                return False
+        for filter_str in parser.get_filters():
+            if re.search(filter_str, url):
+                return True
+    return False
+
+
+def url_handle_check_support(url_handle, url):
+    for filter_str in url_handle.get_filters():
+        if re.match(filter_str, url):
+            return True
+    return False
+
+
 def url_handle_parse(input_text, url_handles_name=None):
     start_time = time.time()
     if url_handles_name is not None:
@@ -132,7 +150,7 @@ def url_handle_parse(input_text, url_handles_name=None):
     for sorted_url_handles_dict_key in sorted_url_handles_dict_keys:
         url_handle_list = url_handles_dict[sorted_url_handles_dict_key]
         for url_handle_obj in url_handle_list:
-            if url_handle_obj.check_support(input_text):
+            if url_handle_check_support(url_handle_obj, input_text):
                 try:
                     logging.debug(url_handle_obj)
                     result = url_handle_obj.url_handle(input_text)
@@ -167,20 +185,19 @@ def init_version():
         ver = f.readline().strip()
         version['version'] = ver
 
-    version['name'] = get_name().decode() + version['version'] + "[Include "
-    try:
-        version['name'] = version['name'] + parser_class_map["YouGetParser"]().get_version() + "&"
-    except:
-        logging.warning("YouGetParser version get error")
-    try:
-        version['name'] = version['name'] + parser_class_map["YKDLParser"]().get_version() + "&"
-    except:
-        logging.warning("YKDLParser version get error")
-    try:
-        version['name'] = version['name'] + parser_class_map["AnnieParser"]().get_version() + "&"
-    except:
-        logging.warning("AnnieParser version get error")
-    version['name'] = version['name'] + "]" + " Running on Python %s" % sys.version
+    name_tmp_list = [get_name().decode(), version['version'], "[Include "]
+    for parser in parsers:
+        try:
+            version_str = parser.get_version()
+            if version_str:
+                name_tmp_list.append(version_str)
+                name_tmp_list.append("&")
+        except:
+            logging.warning("%s version get error" % parser)
+    name_tmp_list.append("]")
+    name_tmp_list.append(" Running on Python ")
+    name_tmp_list.append(sys.version)
+    version['name'] = "".join(name_tmp_list)
 
 
 def parse_password(input_text, kk):
@@ -242,14 +259,14 @@ def parse(input_text, types=None, parsers_name=None, url_handles_name=None,
     results = []
     if _use_inside:
         for parser in parsers:
-            if parser.check_support(input_text, types):
+            if parser_check_support(parser, input_text, types):
                 results.append(_inside_pool.spawn(run, _inside_queue, parser, input_text, _inside_pool, *k, **kk))
         return results
     t_results = []
     q_results = SimpleQueue()
     with WorkerPool() as pool:
         for parser in parsers:
-            if parser.check_support(input_text, types):
+            if parser_check_support(parser, input_text, types):
                 pool.spawn(run, q_results, parser, input_text, pool, *k, **kk)
         pool.join(timeout=PARSE_TIMEOUT)
     while not q_results.empty():

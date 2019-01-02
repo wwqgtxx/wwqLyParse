@@ -6,7 +6,7 @@ except Exception as e:
     from common import *
 
 
-class LibWwqLyParseBase():
+class LibWwqLyParseBase(object):
     def __init__(self):
         if sysconfig.get_platform() == "win-amd64":
             self.lib_path = get_real_path("./wwqLyParse64.dll")
@@ -88,10 +88,10 @@ class LibWwqParseCtypes(LibWwqLyParseBase):
         return result
 
 
-# try:
-lib_wwqLyParse = LibWwqParseCFFI()
-# except:
-#     lib_wwqLyParse = LibWwqParseCtypes()
+try:
+    lib_wwqLyParse = LibWwqParseCFFI()
+except:
+    lib_wwqLyParse = LibWwqParseCtypes()
 
 get_uuid = lib_wwqLyParse.get_uuid
 get_name = lib_wwqLyParse.get_name

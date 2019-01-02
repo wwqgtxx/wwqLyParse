@@ -11,6 +11,7 @@ import configparser
 import re
 import json
 import logging
+import threading
 
 
 class GetUrlService(object):
@@ -26,34 +27,36 @@ class GetUrlService(object):
         self.http_proxy = None
         self.impl = None  # type:GetUrlImpl
         self.inited = False
+        self.init_lock = threading.Lock()
 
     def init(self):
-        if not self.inited:
-            configparser.RawConfigParser.OPTCRE = re.compile(r'(?P<option>[^=\s][^=]*)\s*(?P<vi>[=])\s*(?P<value>.*)$')
-            config = configparser.ConfigParser()
-            config.read(get_real_path("./config.ini"))
-            self.http_proxy = config.get("get_url", "http_proxy", fallback=None)
-            self.ssl_verify = config.getboolean("get_url", "ssl_verify", fallback=True)
-            if self.impl is None:
-                try:
-                    from .aiohttp import AioHttpGetUrlImpl
-                    self.impl = AioHttpGetUrlImpl(self)
-                except:
-                    pass
-            if self.impl is None:
-                try:
-                    from .requests import RequestsGetUrlImpl
-                    self.impl = RequestsGetUrlImpl(self)
-                except:
-                    pass
-            if self.impl is None:
-                try:
-                    from .urllib import UrlLibGetUrlImpl
-                    self.impl = UrlLibGetUrlImpl(self)
-                except:
-                    pass
-            logging.debug(self.impl)
-            self.inited = True
+        with self.init_lock:
+            if not self.inited:
+                configparser.RawConfigParser.OPTCRE = re.compile(r'(?P<option>[^=\s][^=]*)\s*(?P<vi>[=])\s*(?P<value>.*)$')
+                config = configparser.ConfigParser()
+                config.read(get_real_path("./config.ini"))
+                self.http_proxy = config.get("get_url", "http_proxy", fallback=None)
+                self.ssl_verify = config.getboolean("get_url", "ssl_verify", fallback=True)
+                if self.impl is None:
+                    try:
+                        from .aiohttp import AioHttpGetUrlImpl
+                        self.impl = AioHttpGetUrlImpl(self)
+                    except:
+                        pass
+                if self.impl is None:
+                    try:
+                        from .requests import RequestsGetUrlImpl
+                        self.impl = RequestsGetUrlImpl(self)
+                    except:
+                        pass
+                if self.impl is None:
+                    try:
+                        from .urllib import UrlLibGetUrlImpl
+                        self.impl = UrlLibGetUrlImpl(self)
+                    except:
+                        pass
+                logging.debug(self.impl)
+                self.inited = True
 
     def _get_url_key_lock(self, url_json, allow_cache):
         if allow_cache:

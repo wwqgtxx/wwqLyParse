@@ -4,6 +4,7 @@
 import asyncio
 import logging
 import threading
+import functools
 from .selectors import DefaultSelector
 from .concurrent_futures import ThreadPoolExecutor
 from .workerpool import POOL_TYPE, GEVENT_POOL
@@ -46,6 +47,14 @@ def get_running_async_loop():
 def run_in_common_async_loop(coro):
     loop = get_common_async_loop()
     return asyncio.run_coroutine_threadsafe(coro, loop)
+
+
+async def async_run_func(func, *args, **kwargs):
+    fn = functools.partial(func, *args, **kwargs)
+    if asyncio.iscoroutinefunction(func):
+        return await fn()
+    else:
+        return await get_running_async_loop().run_in_executor(None, fn)
 
 
 class AsyncPool(object):

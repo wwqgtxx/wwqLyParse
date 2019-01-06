@@ -45,6 +45,8 @@ class Pool(object):
 
     def join(self, *k, timeout=None, **kk):
         while True:
+            if len(self.pool_threads) == 0:
+                return
             try:
                 return wait(self.pool_threads, timeout)
             except ValueError:

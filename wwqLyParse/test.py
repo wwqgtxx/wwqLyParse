@@ -28,19 +28,8 @@ from main import *
 
 get_url_service.init()
 
-import asyncio
-
-
-async def test():
-    loop = asyncio.get_event_loop()
-    print(loop)
-    result = await get_url_service.get_url_async("http://www.baidu.com")
-    print(result)
-
 
 if __name__ == "__main__":
-    loop = get_common_async_loop()
-    asyncio.run_coroutine_threadsafe(test(), loop).result()
     # main(r"file:///E:\QQDownloads\11.m3u8")
     # main(r"file:///E:\QQDownloads\a.list")
     # main(r"file:///E:\QQDownloads\url.media")
@@ -51,7 +40,7 @@ if __name__ == "__main__":
     # main("https://v.qq.com/x/cover/jcalf255t3psbgs/j00266kl1ud.html?ptag=qqbrowser", types="list")
     # main("http://v.pptv.com/show/MxfOTcmjmtg7uSE.html", parsers_name=["PPTVParser"])
     # main("http://v.pptv.com/show/A5XBPichGT43wbtY.html", parsers_name=["PPTVParser"])
-    main("http://v.pptv.com/show/MxfOTcmjmtg7uSE.html", types="list")
+    # main("http://v.pptv.com/show/MxfOTcmjmtg7uSE.html", types="list")
     # main(r"https://youku.pohaier.com/yk.php?url=d1BTTTFlVnRTell1VDhtQmlLZ3lrTkZSUGtTdlhrY3JOZlJOTnZZRmE2ZDZiSVNkNU9rdVJoMlBoL1doR1FDRGVmWkJCR25rbkE=")
     # main("http://defaultts.tc.qq.com/defaultts.tc.qq.com/mcvctgljBW77YvaEtxIhsDu81rGkBDNrvJH-aOijrz6vYDOAERMwo8YjsMhsUX30gycp3l48NFvhiK0q8RrcI_piINVQwY4sfKdsmv5qi459Q7GV-rljooWl1yRZcP-f/c00248syj3f.321004.ts.m3u8?ver=4")
     # main("http://v.yinyuetai.com/video/3080638", parsers_name=["YinYueTaiParser"])
@@ -61,7 +50,7 @@ if __name__ == "__main__":
     # main("http://www.mgtv.com/b/316045/4096972.html", label="3@MgTVParser")
     # url_cache.timeout = 10
     # main("http://www.iqiyi.com/lib/m_201087714.html")
-    # main("http://www.iqiyi.com/v_19rrez6nc4.html", types="list")
+    main("http://www.iqiyi.com/v_19rrez6nc4.html", types="list")
     # main("http://www.iqiyi.com/v_19rrcl8dck.html", types="list")
     # main("http://www.iqiyi.com/v_19rr8jbmeo.html", types="list")
     # main("https://www.iqiyi.com/v_19rqs0we9s.html", types="list")

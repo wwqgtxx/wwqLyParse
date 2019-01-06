@@ -26,10 +26,9 @@ if __name__ == "__main__":
 
 from main import *
 
-get_url_service.init()
 
-
-if __name__ == "__main__":
+def test():
+    get_url_service.init()
     # main(r"file:///E:\QQDownloads\11.m3u8")
     # main(r"file:///E:\QQDownloads\a.list")
     # main(r"file:///E:\QQDownloads\url.media")
@@ -103,3 +102,8 @@ if __name__ == "__main__":
     # init_version()
     # print(version)
     pass
+
+
+if __name__ == "__main__":
+    start_common_async_loop_in_main_thread(test)
+    os._exit(0)

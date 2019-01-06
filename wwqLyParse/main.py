@@ -61,7 +61,6 @@ if __name__ == "__main__":
                 pass
         else:
             logging.info("use simple pool")
-    get_url_service.init()
     if not os.environ.get("NOT_LOGGING", None):
         if gevent:
             try:
@@ -76,9 +75,11 @@ except Exception as e:
     from lib.lib_wwqLyParse import *
 
 import re, threading, sys, json, os, time, logging, importlib
-import asyncio
 from argparse import ArgumentParser
 from typing import Dict, Tuple, List
+
+# import asyncio
+# async_patch_logging()
 
 # try:
 #     from flask import Flask, request, abort
@@ -640,8 +641,9 @@ def arg_parser():
     return args
 
 
-def main(debugstr=None, parsers_name=None, types=None, label=None, pipe=None, timeout=PARSE_TIMEOUT,
-         close_timeout=CLOSE_TIMEOUT):
+def main(debugstr=None, parsers_name=None, types=None, label=None, pipe=None, force_start=False
+         , timeout=PARSE_TIMEOUT, close_timeout=CLOSE_TIMEOUT):
+    get_url_service.init()
     logging.debug("\n------------------------------------------------------------\n")
     global PARSE_TIMEOUT
     PARSE_TIMEOUT = timeout
@@ -653,15 +655,12 @@ def main(debugstr=None, parsers_name=None, types=None, label=None, pipe=None, ti
         else:
             debug(parse_url(debugstr, label))
     else:
-        if not pipe:
-            pipe = args.pipe
-        run(pipe, args.force_start)
+        run(pipe, force_start)
 
 
 if __name__ == '__main__':
     init_version()
     args = arg_parser()
-    globals()["args"] = args
-    main(args.debug, args.parser, args.types, args.label, args.pipe, args.timeout, args.close_timeout)
-
-    # main()
+    start_common_async_loop_in_main_thread(main,
+                                           args.debug, args.parser, args.types, args.label, args.pipe, args.force_start,
+                                           args.timeout, args.close_timeout)

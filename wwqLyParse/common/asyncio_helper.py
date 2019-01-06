@@ -2,15 +2,24 @@
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
 import asyncio
+import sys
 import logging
 import threading
 import functools
+import itertools
 from .selectors import DefaultSelector
 from .concurrent_futures import ThreadPoolExecutor
 from .workerpool import POOL_TYPE, GEVENT_POOL
 
+if sys.version_info >= (3, 7):
+    async_current_task = asyncio.current_task
+    async_create_task = asyncio.create_task
+else:
+    async_current_task = asyncio.Task.current_task
+    async_create_task = asyncio.ensure_future
 
-def new_running_async_loop(name="AsyncLoopThread"):
+
+def new_raw_async_loop():
     if POOL_TYPE == GEVENT_POOL:
         loop = asyncio.SelectorEventLoop(DefaultSelector())
     else:
@@ -20,13 +29,19 @@ def new_running_async_loop(name="AsyncLoopThread"):
     assert isinstance(executor, concurrent.futures.ThreadPoolExecutor)
     loop.set_default_executor(executor)
     logging.debug("set %s for %s" % (executor, loop))
+    return loop
 
-    def _run_forever():
-        logging.debug("start loop %s", loop)
-        asyncio.set_event_loop(loop)
-        loop.run_forever()
 
-    threading.Thread(target=_run_forever, name=name, daemon=True).start()
+def _run_forever(loop):
+    logging.debug("start loop %s", loop)
+    asyncio.set_event_loop(loop)
+    loop.run_forever()
+
+
+def new_running_async_loop(name="AsyncLoopThread"):
+    loop = new_raw_async_loop()
+
+    threading.Thread(target=_run_forever, args=(loop,), name=name, daemon=True).start()
     return loop
 
 
@@ -38,6 +53,20 @@ def get_common_async_loop():
     if _common_async_loop is None:
         _common_async_loop = new_running_async_loop()
     return _common_async_loop
+
+
+def start_common_async_loop_in_main_thread(callback, *args, **kwargs):
+    global _common_async_loop
+    assert _common_async_loop is None
+    _common_async_loop = new_raw_async_loop()
+
+    def _cb():
+        callback(*args, **kwargs)
+        _common_async_loop.stop()
+
+    thread = threading.Thread(target=_cb)
+    _common_async_loop.call_soon(thread.start)
+    _run_forever(_common_async_loop)
 
 
 def get_running_async_loop():
@@ -58,8 +87,13 @@ async def async_run_func(func, *args, **kwargs):
 
 
 class AsyncPool(object):
+    _counter = itertools.count().__next__
+
     def __init__(self, size=0, thread_name_prefix=None):
         self.queue = asyncio.Queue(maxsize=size)
+        self._thread_name_prefix = (thread_name_prefix or
+                                    ("AsyncPool-%d" % self._counter()))
+        self._thread_name_counter = itertools.count().__next__
         self.pool_tasks = []
 
     def _remove_from_pool_tasks(self, task):
@@ -73,7 +107,10 @@ class AsyncPool(object):
         return await task.result()
 
     def spawn(self, coco):
-        task = asyncio.ensure_future(coco)
+        thread_name = '%s_%d' % (self._thread_name_prefix or self,
+                                 self._thread_name_counter())
+        task = async_create_task(coco)
+        task.name = thread_name
         task.add_done_callback(self._remove_from_pool_tasks)
         self.pool_tasks.append(task)
         return task
@@ -103,3 +140,21 @@ class AsyncPool(object):
                 return await asyncio.wait(wait_list, timeout=timeout)
             except ValueError:
                 pass
+
+
+def async_patch_logging():
+    old_factory = logging.getLogRecordFactory()
+
+    def record_factory(*args, **kwargs):
+        record = old_factory(*args, **kwargs)
+        try:
+            task = async_current_task()
+            if task is not None:
+                record.threadName = record.threadName + '~' + getattr(task, "name")
+        except AttributeError:
+            pass
+        except RuntimeError:
+            pass
+        return record
+
+    logging.setLogRecordFactory(record_factory)

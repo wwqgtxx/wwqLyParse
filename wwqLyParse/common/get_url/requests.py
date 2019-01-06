@@ -101,10 +101,5 @@ class RequestsGetUrlImpl(GetUrlImpl):
         return None
 
     def get_url(self, url_json, url_json_dict, callmethod, pool=None):
-        fn = functools.partial(self._get_url_requests, url_json=url_json, callmethod=callmethod,
-                               use_pool=pool is not None, **url_json_dict)
-        if pool is not None:
-            result = pool.apply(fn)
-        else:
-            result = fn()
-        return result
+        return self._get_url_requests(url_json=url_json, callmethod=callmethod,
+                                      use_pool=pool is not None, **url_json_dict)

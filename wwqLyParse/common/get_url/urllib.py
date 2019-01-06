@@ -125,13 +125,6 @@ class UrlLibGetUrlImpl(GetUrlImpl):
 
     def get_url(self, url_json, url_json_dict, callmethod, pool=None):
         retry_num = GET_URL_RETRY_NUM
-        fn = functools.partial(self._get_url_urllib, url_json=url_json, callmethod=callmethod,
-                               use_pool=pool is not None,
-                               **url_json_dict)
         for i in range(retry_num):
-            if pool is not None:
-                result = pool.apply(fn)
-            else:
-                result = fn()
-            return result
-        return None
+            return self._get_url_urllib(url_json=url_json, callmethod=callmethod, use_pool=pool is not None,
+                                        **url_json_dict)

@@ -12,6 +12,7 @@ import re
 import json
 import logging
 import threading
+import functools
 
 
 class GetUrlService(object):
@@ -32,7 +33,8 @@ class GetUrlService(object):
     def init(self):
         with self.init_lock:
             if not self.inited:
-                configparser.RawConfigParser.OPTCRE = re.compile(r'(?P<option>[^=\s][^=]*)\s*(?P<vi>[=])\s*(?P<value>.*)$')
+                configparser.RawConfigParser.OPTCRE = re.compile(
+                    r'(?P<option>[^=\s][^=]*)\s*(?P<vi>[=])\s*(?P<value>.*)$')
                 config = configparser.ConfigParser()
                 config.read(get_real_path("./config.ini"))
                 self.http_proxy = config.get("get_url", "http_proxy", fallback=None)
@@ -144,10 +146,14 @@ class GetUrlService(object):
             else:
                 logging.debug(callmethod + "nocache get:" + url_json)
                 # use_pool = False
+            fn = functools.partial(self.impl.get_url,
+                                   url_json=url_json, url_json_dict=url_json_dict, callmethod=callmethod, pool=pool)
             for i in range(0, self.check_response_retry_num + 1):
                 if result is None:
-                    result = self.impl.get_url(url_json=url_json, url_json_dict=url_json_dict, callmethod=callmethod,
-                                               pool=pool)
+                    if pool is not None:
+                        result = pool.apply(fn)
+                    else:
+                        result = fn()
                 cr = self._check_response(result)
                 if cr is None:
                     break

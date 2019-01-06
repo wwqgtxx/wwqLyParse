@@ -52,7 +52,7 @@ class GetUrlImpl(object):
     def new_cookie_jar(self):
         raise NotImplementedError
 
-    def get_url(self, url_json, url_json_dict, callmethod, pool=None) -> GetUrlResponse:
+    def get_url(self, url_json, url_json_dict, callmethod) -> GetUrlResponse:
         raise NotImplementedError
 
 

@@ -1,14 +1,16 @@
 #!/usr/bin/env python3.5
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
+GEVENT_POOL = "geventpool"
+SIMPLE_POOL = "simplepool"
 try:
     from . import geventpool as _pool
 
-    POOL_TYPE = "geventpool"
+    POOL_TYPE = GEVENT_POOL
 except:
     from . import simplepool as _pool
 
-    POOL_TYPE = "simplepool"
+    POOL_TYPE = SIMPLE_POOL
 
 GreenletExit = _pool.GreenletExit
 

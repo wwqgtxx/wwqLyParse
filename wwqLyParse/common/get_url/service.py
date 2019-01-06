@@ -13,6 +13,7 @@ import json
 import logging
 import threading
 import functools
+import asyncio
 
 
 class GetUrlService(object):
@@ -88,15 +89,11 @@ class GetUrlService(object):
                 logging.debug(callmethod + "force_flush_cache:" + url_json)
 
     def get_url(self, o_url, encoding=None, headers=None, data=None, method=None, cookies=None, cookie_jar=None,
-                verify=None, allow_cache=True, use_pool=True, pool=None, force_flush_cache=False, callmethod=None,
-                stream=False):
+                verify=None, allow_cache=True, callmethod=None, stream=False):
         self.init()
         # if encoding is None:
         #     encoding = 'utf-8'
-        if pool is None:
-            pool = self.pool_get_url
-        if not use_pool:
-            pool = None
+
         if verify is None:
             verify = self.ssl_verify
         if callmethod is None:
@@ -135,8 +132,6 @@ class GetUrlService(object):
 
         with self._get_url_key_lock(url_json, allow_cache):
             result = None
-            if force_flush_cache:
-                self.force_flush_cache(url_json, callmethod)
             if allow_cache:
                 if url_json in self.url_cache:
                     result = self.url_cache[url_json]
@@ -145,15 +140,11 @@ class GetUrlService(object):
                     logging.debug(callmethod + "normal get:" + url_json)
             else:
                 logging.debug(callmethod + "nocache get:" + url_json)
-                # use_pool = False
             fn = functools.partial(self.impl.get_url,
-                                   url_json=url_json, url_json_dict=url_json_dict, callmethod=callmethod, pool=pool)
+                                   url_json=url_json, url_json_dict=url_json_dict, callmethod=callmethod)
             for i in range(0, self.check_response_retry_num + 1):
                 if result is None:
-                    if pool is not None:
-                        result = pool.apply(fn)
-                    else:
-                        result = fn()
+                    result = self.pool_get_url.apply(fn)
                 cr = self._check_response(result)
                 if cr is None:
                     break
@@ -167,6 +158,15 @@ class GetUrlService(object):
             if result is None:
                 return None
             return result.get_wrapper()
+
+    async def get_url_async(self, o_url, encoding=None, headers=None, data=None, method=None, cookies=None,
+                            cookie_jar=None, verify=None, allow_cache=True, callmethod=None, stream=False, loop=None):
+        if loop is None:
+            loop = asyncio.get_event_loop()
+        fn = functools.partial(self.get_url, o_url, encoding=encoding, headers=headers, data=data, method=method,
+                               cookies=cookies, cookie_jar=cookie_jar, verify=verify,
+                               allow_cache=allow_cache, callmethod=callmethod, stream=stream)
+        return await loop.run_in_executor(None, fn)
 
     def _check_response(self, response: GetUrlResponse, func=None):
         check_response_func_list = self.check_response_func_list.copy()

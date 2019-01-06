@@ -59,7 +59,7 @@ class RequestsGetUrlImpl(GetUrlImpl):
         return session
 
     def _get_url_requests(self, url_json, o_url, encoding, headers, data, method, callmethod, verify,
-                          cookies, cookie_jar, use_pool, stream):
+                          cookies, cookie_jar, stream):
         try:
             session = self._get_session()
             if cookie_jar is None:
@@ -91,15 +91,11 @@ class RequestsGetUrlImpl(GetUrlImpl):
             return result
         except requests.exceptions.RequestException as e:
             logging.warning(callmethod + 'requests error %s' % e)
-        except GreenletExit as e:
-            if use_pool:
-                return None
-            else:
-                raise e
+        except GreenletExit:
+            raise
         except:
             logging.exception(callmethod + "get url " + url_json + "fail")
         return None
 
-    def get_url(self, url_json, url_json_dict, callmethod, pool=None):
-        return self._get_url_requests(url_json=url_json, callmethod=callmethod,
-                                      use_pool=pool is not None, **url_json_dict)
+    def get_url(self, url_json, url_json_dict, callmethod):
+        return self._get_url_requests(url_json=url_json, callmethod=callmethod, **url_json_dict)

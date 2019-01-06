@@ -25,9 +25,22 @@ if __name__ == "__main__":
     del os
 
 from main import *
+
 get_url_service.init()
 
+import asyncio
+
+
+async def test():
+    loop = asyncio.get_event_loop()
+    print(loop)
+    result = await get_url_service.get_url_async("http://www.baidu.com")
+    print(result)
+
+
 if __name__ == "__main__":
+    loop = get_common_async_loop()
+    asyncio.run_coroutine_threadsafe(test(), loop).result()
     # main(r"file:///E:\QQDownloads\11.m3u8")
     # main(r"file:///E:\QQDownloads\a.list")
     # main(r"file:///E:\QQDownloads\url.media")

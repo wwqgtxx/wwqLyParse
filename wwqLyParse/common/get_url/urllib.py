@@ -50,7 +50,7 @@ class UrlLibGetUrlImpl(GetUrlImpl):
         return opener
 
     def _get_url_urllib(self, url_json, o_url, encoding, headers, data, method, callmethod, verify, cookies, cookie_jar,
-                        use_pool, stream):
+                        stream):
         try:
             # url 包含中文时 parse.quote_from_bytes(o_url.encode('utf-8'), ':/&%?=+')
             logging.debug("get %s", o_url)
@@ -114,17 +114,13 @@ class UrlLibGetUrlImpl(GetUrlImpl):
             logging.warning(callmethod + 'request attempt RemoteDisconnected')
         except http.client.IncompleteRead:
             logging.warning(callmethod + 'request attempt IncompleteRead')
-        except GreenletExit as e:
-            if use_pool:
-                return None
-            else:
-                raise e
+        except GreenletExit:
+            raise
         except:
             logging.exception(callmethod + "get url " + url_json + "fail")
         return None
 
-    def get_url(self, url_json, url_json_dict, callmethod, pool=None):
+    def get_url(self, url_json, url_json_dict, callmethod):
         retry_num = GET_URL_RETRY_NUM
         for i in range(retry_num):
-            return self._get_url_urllib(url_json=url_json, callmethod=callmethod, use_pool=pool is not None,
-                                        **url_json_dict)
+            return self._get_url_urllib(url_json=url_json, callmethod=callmethod, **url_json_dict)

@@ -2,17 +2,6 @@
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
 if __name__ == "__main__":
-    # import sys
-    #
-    # sys.modules["gevent"] = None
-
-    # try:
-    #     from gevent import monkey
-    #
-    #     monkey.patch_all()
-    #     del monkey
-    # except Exception:
-    #     pass
     import os
     import sys
 
@@ -24,11 +13,6 @@ if __name__ == "__main__":
 
     del sys
     del os
-
-# try:
-#     import gevent
-# except Exception:
-#     gevent = None
 
 import sys
 import os
@@ -47,27 +31,6 @@ except Exception as e:
 if __name__ == "__main__":
     # get_common_real_thread_pool()
     logging.root.addHandler(RemoteStreamHandler(ADDRESS_LOGGING, FORMAT, DATA_FMT))
-    # if not os.environ.get("NOT_LOGGING", None):
-    #     if gevent:
-    #         logging.info("gevent.monkey.patch_all()")
-    #         logging.info("use gevent.pool")
-    #         logging.info("use %s" % gevent.config.loop)
-    #         logging.info("gevent version: %s" % gevent.__version__)
-    #         try:
-    #             import gevent.libuv.loop
-    #
-    #             logging.info(gevent.libuv.loop.get_version())
-    #         except Exception:
-    #             pass
-    #     else:
-    #         logging.info("use simple pool")
-    # if not os.environ.get("NOT_LOGGING", None):
-    #     if gevent:
-    #         try:
-    #             gevent.config.resolver = 'dnspython'
-    #         except Exception:
-    #             pass
-    #         logging.info("use %s" % gevent.config.resolver)
 
 try:
     from .lib.lib_wwqLyParse import *
@@ -81,12 +44,6 @@ from typing import Dict, Tuple, List
 import asyncio
 
 asyncio_helper.patch_logging()
-
-# try:
-#     from flask import Flask, request, abort
-# except Exception:
-#     from .flask import Flask, request, abort
-# app = Flask(__name__)
 
 version = {
     'port_version': "0.5.0",

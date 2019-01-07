@@ -23,7 +23,7 @@ class AnnieParser(Parser):
                    r'^(http|https)://\d+\.\d+\.\d+\.\d+']
     name = "Annie解析"
 
-    def _run(self, arg, need_stderr=False, use_hps=True):
+    async def _run(self, arg, need_stderr=False, use_hps=True):
         if sysconfig.get_platform() == "win-amd64":
             annie_bin = get_real_path('./annie/annie64.exe')
         else:
@@ -33,11 +33,11 @@ class AnnieParser(Parser):
                 args = [annie_bin]
                 args += ['-x', "http://localhost:%s" % hps.port]
                 args += arg
-                return run_subprocess(args, get_main().PARSE_TIMEOUT - 5, need_stderr)
+                return await async_run_subprocess(args, get_main().PARSE_TIMEOUT - 5, need_stderr)
         else:
             args = [annie_bin]
             args += arg
-            return run_subprocess(args, get_main().PARSE_TIMEOUT - 5, need_stderr)
+            return await async_run_subprocess(args, get_main().PARSE_TIMEOUT - 5, need_stderr)
 
     def _make_arg(self, url, _format=None, use_info=False, *k, **kk):
         # arg = self._make_proxy_arg()
@@ -189,9 +189,9 @@ Streams:   # All available quality
         return out
 
     # parse functions
-    def _parse(self, url, *k, **kk):
+    async def _parse(self, url, *k, **kk):
         yarg = self._make_arg(url, *k, **kk)
-        stdout, stderr = self._run(yarg)
+        stdout, stderr = await self._run(yarg)
         # print(stdout)
         # try to decode
         err = None
@@ -221,8 +221,8 @@ Streams:   # All available quality
         out = self._parse_parse(info)
         return out
 
-    def parse(self, url, *k, **kk):
-        out = self._parse(url, *k, **kk)
+    async def parse(self, url, *k, **kk):
+        out = await self._parse(url, *k, **kk)
         if "bilibili" in url:
             for item in out['data']:
                 if isinstance(item, dict):
@@ -239,18 +239,18 @@ Streams:   # All available quality
                                     item2["args"] = {'Referer': url}
         return out
 
-    def _parse_url(self, url, label, min=None, max=None, *k, **kk):
+    async def _parse_url(self, url, label, min=None, max=None, *k, **kk):
         _format = parse_label(label)
         yarg = self._make_arg(url, _format, *k, **kk)
-        stdout, stderr = self._run(yarg)
+        stdout, stderr = await self._run(yarg)
         # just load json, without ERROR check
         info = self._try_parse_json(stdout)
         logging.debug("\n" + str(info))
         out = self._parse_parse_url(info, _format)
         return out
 
-    def parse_url(self, url, label, min=None, max=None, *k, **kk):
-        out = self._parse_url(url, label, min, max, *k, **kk)
+    async def parse_url(self, url, label, min=None, max=None, *k, **kk):
+        out = await self._parse_url(url, label, min, max, *k, **kk)
         if "iqiyi" in url:
             for item in out:
                 item["unfixIp"] = True
@@ -266,9 +266,9 @@ Streams:   # All available quality
                         item["args"] = {'Referer': url}
         return out
 
-    def get_version(self):
+    async def get_version(self):
         try:
-            stdout, stderr = self._run(['-v'], need_stderr=False, use_hps=False)
+            stdout, stderr = await self._run(['-v'], need_stderr=False, use_hps=False)
             return str(stdout.split(',')[0]).replace("\\n", "").strip()
         except Exception as e:
             logging.exception("get version error")

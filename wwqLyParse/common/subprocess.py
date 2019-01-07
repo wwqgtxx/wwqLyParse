@@ -65,5 +65,26 @@ def run_subprocess(args, timeout=None, need_stderr=True, **kwargs):
     return stdout, stderr
 
 
+import asyncio
+
+
+async def async_run_subprocess(args, timeout=None, need_stderr=True, **kwargs):
+    pipe = asyncio.subprocess.PIPE
+    logging.debug(args)
+    args = subprocess.list2cmdline(args)
+    p = await asyncio.create_subprocess_shell(args, stdout=pipe, stderr=pipe if need_stderr else None, **kwargs)
+    try:
+        stdout, stderr = await asyncio.wait_for(p.communicate(), timeout=timeout)
+    except asyncio.TimeoutError:
+        logging.debug("Timeout!!! kill %s" % p)
+        p.kill()
+        stdout, stderr = await p.communicate()
+    # try to decode
+    stdout = try_decode(stdout)
+    stderr = try_decode(stderr) if need_stderr else None
+    # print(stdout)
+    return stdout, stderr
+
+
 def debug(text):
     print((str(text)).encode('gbk', 'ignore').decode('gbk'))

@@ -190,7 +190,7 @@ class AsyncPool(object):
                 pass
 
 
-def async_patch_logging():
+def patch_logging():
     old_factory = logging.getLogRecordFactory()
 
     def record_factory(*args, **kwargs):

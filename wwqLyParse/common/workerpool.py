@@ -122,38 +122,38 @@ class WorkerPool(_pool.Pool):
         return _pool.wait(wait_list, timeout=timeout)
 
 
-def _apply(_func, _args, _kwds):
-    if _args is None:
-        _args = ()
-    if _kwds is None:
-        _kwds = {}
-    result = {"type": "ok", "result": None}
-    try:
-        result["result"] = _func(*_args, **_kwds)
-    except BaseException as e:
-        result["type"] = "error"
-        result["result"] = e
-    return result
-
-
-class RealThreadPool(_pool.ThreadPool):
-    def apply(self, func, args=None, kwds=None):
-        result = super(RealThreadPool, self).apply(_apply, args=(func, args, kwds))
-        if result["type"] == "ok":
-            return result["result"]
-        else:
-            raise result["result"]
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.kill()
-
-    def __bool__(self):
-        return True
-
-
+# def _apply(_func, _args, _kwds):
+#     if _args is None:
+#         _args = ()
+#     if _kwds is None:
+#         _kwds = {}
+#     result = {"type": "ok", "result": None}
+#     try:
+#         result["result"] = _func(*_args, **_kwds)
+#     except BaseException as e:
+#         result["type"] = "error"
+#         result["result"] = e
+#     return result
+#
+#
+# class RealThreadPool(_pool.ThreadPool):
+#     def apply(self, func, args=None, kwds=None):
+#         result = super(RealThreadPool, self).apply(_apply, args=(func, args, kwds))
+#         if result["type"] == "ok":
+#             return result["result"]
+#         else:
+#             raise result["result"]
+#
+#     def __enter__(self):
+#         return self
+#
+#     def __exit__(self, exc_type, exc_val, exc_tb):
+#         self.kill()
+#
+#     def __bool__(self):
+#         return True
+#
+#
 # _common_real_thread_pool = None
 #
 #

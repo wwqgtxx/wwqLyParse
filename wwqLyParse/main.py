@@ -80,7 +80,7 @@ from typing import Dict, Tuple, List
 
 import asyncio
 
-asyncio_helper.async_patch_logging()
+asyncio_helper.patch_logging()
 
 # try:
 #     from flask import Flask, request, abort
@@ -174,7 +174,7 @@ async def _url_handle_parse(input_text, url_handles_name=None):
     return input_text
 
 
-def init_version():
+async def _init_version():
     parsers = new_objects(parser_class_map)
     url_handles = new_objects(urlhandle_class_map)
     for parser in parsers:
@@ -191,7 +191,7 @@ def init_version():
     name_tmp_list = [get_name().decode(), version['version'], "[Include "]
     for parser in parsers:
         try:
-            version_str = parser.get_version()
+            version_str = await asyncio_helper.async_run_func_or_co(parser.get_version)
             if version_str:
                 name_tmp_list.append(version_str)
                 name_tmp_list.append("&")
@@ -201,6 +201,10 @@ def init_version():
     name_tmp_list.append(" Running on Python ")
     name_tmp_list.append(sys.version)
     version['name'] = "".join(name_tmp_list)
+
+
+def init_version():
+    return asyncio_helper.run_in_main_async_loop(_init_version()).result()
 
 
 async def _parse_password(input_text, kk):
@@ -600,6 +604,7 @@ def arg_parser():
 
 def main(debugstr=None, parsers_name=None, types=None, label=None, pipe=None, force_start=False
          , timeout=PARSE_TIMEOUT, close_timeout=CLOSE_TIMEOUT):
+    init_version()
     get_url_service.init()
     logging.debug("\n------------------------------------------------------------\n")
     global PARSE_TIMEOUT
@@ -616,7 +621,6 @@ def main(debugstr=None, parsers_name=None, types=None, label=None, pipe=None, fo
 
 
 if __name__ == '__main__':
-    init_version()
     args = arg_parser()
     asyncio_helper.start_main_async_loop_in_main_thread(main,
                                                         args.debug, args.parser, args.types,

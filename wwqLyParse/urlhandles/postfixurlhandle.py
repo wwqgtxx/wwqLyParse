@@ -16,20 +16,15 @@ __all__ = ["PostfixUrlHandle"]
 class PostfixUrlHandle(UrlHandle):
     filters = ['^(http|https)://[^\s]+/[^\s]+\.[s]{0,1}html(\?|#)[^\s]+']
 
-    def url_handle(self, url):
+    async def url_handle(self, url):
         if re.match('http://v.qq.com/cover/y/[^\s]+\.html\?vid=[^\s]+', url):
             return url
         result = re.match('^(http|https)://[^\s]+/[^\s]+\.[s]{0,1}html', url).group()
-        q_results = queue.Queue()
-        htmls = []
-        with WorkerPool() as pool:
-            pool.spawn(call_method_and_save_to_queue, queue=q_results, method=get_url, args=(url,),
-                       kwargs=dict(callmethod=get_caller_info(0)))
-            pool.spawn(call_method_and_save_to_queue, queue=q_results, method=get_url, args=(result,),
-                       kwargs=dict(callmethod=get_caller_info(0)))
-            pool.join()
-        while not q_results.empty():
-            htmls.append(q_results.get())
-        if str(htmls[0]).strip() == str(htmls[1]).strip():
-            return result
-        return url
+        async with asyncio_helper.AsyncPool() as pool:
+            task1 = pool.spawn(get_url_service.get_url_async(url, callmethod=get_caller_info(0)))
+            task2 = pool.spawn(get_url_service.get_url_async(result, callmethod=get_caller_info(0)))
+            html1 = await task1
+            html2 = await task2
+            if str(html1).strip() == str(html2).strip():
+                return result
+            return url

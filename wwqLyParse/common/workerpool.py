@@ -3,14 +3,18 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 GEVENT_POOL = "geventpool"
 SIMPLE_POOL = "simplepool"
-try:
-    from . import geventpool as _pool
+# try:
+#     from . import geventpool as _pool
+#
+#     POOL_TYPE = GEVENT_POOL
+# except:
+#     from . import simplepool as _pool
+#
+#     POOL_TYPE = SIMPLE_POOL
 
-    POOL_TYPE = GEVENT_POOL
-except:
-    from . import simplepool as _pool
+from . import simplepool as _pool
 
-    POOL_TYPE = SIMPLE_POOL
+POOL_TYPE = SIMPLE_POOL
 
 GreenletExit = _pool.GreenletExit
 
@@ -150,11 +154,11 @@ class RealThreadPool(_pool.ThreadPool):
         return True
 
 
-_common_real_thread_pool = None
-
-
-def get_common_real_thread_pool():
-    global _common_real_thread_pool
-    if _common_real_thread_pool is None:
-        _common_real_thread_pool = RealThreadPool()
-    return _common_real_thread_pool
+# _common_real_thread_pool = None
+#
+#
+# def get_common_real_thread_pool():
+#     global _common_real_thread_pool
+#     if _common_real_thread_pool is None:
+#         _common_real_thread_pool = RealThreadPool()
+#     return _common_real_thread_pool

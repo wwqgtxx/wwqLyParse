@@ -40,17 +40,17 @@ class LeEGPParser(Parser):
     def get_vid(self, url):
         return match1(url, 'vplay/(\d+).html', '#record/(\d+)')
 
-    def get_first_json(self, vid, q):
+    async def get_first_json(self, vid, q):
         # normal process
         if type(q) == list:
             q = ','.join(q)
         url = 'http://tvepg.letv.com/apk/data/common/security/playurl/geturl/byvid.shtml?vid=%s&key=&vtype=%s' % (
             vid, q)
-        r = get_url(url, allow_cache=False)
+        r = await get_url_service.get_url_async(url, allow_cache=False)
         data = json.loads(r)
         return data
 
-    def parse(self, input_text, *k, **kk):
+    async def parse(self, input_text, *k, **kk):
         info = {
             "type": "formats",
             "name": "",
@@ -62,10 +62,10 @@ class LeEGPParser(Parser):
             "data": []
         }
 
-        html = get_url(input_text)
+        html = await get_url_service.get_url_async(input_text)
         info['name'] = match1(html, r'title:"(.+?)",')
         vid = self.get_vid(input_text)
-        data = self.get_first_json(vid, self.stream_ids)
+        data = await self.get_first_json(vid, self.stream_ids)
         debug(json.dumps(data))
         if data["statusCode"] != 1001:
             return

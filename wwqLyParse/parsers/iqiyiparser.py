@@ -51,14 +51,14 @@ def get_vf(url_params):
     return vf
 
 
-def getvps(tvid, vid):
+async def getvps(tvid, vid):
     tm = int(time.time() * 1000)
     host = 'http://cache.video.qiyi.com'
     src = '/vps?tvid=' + tvid + '&vid=' + vid + '&v=0&qypid=' + tvid + '_12&src=01012001010000000000&t=' + str(
         tm) + '&k_tag=1&k_uid=' + get_macid() + '&rs=1'
     vf = get_vf(src)
     req_url = host + src + '&vf=' + vf
-    html = get_url(req_url, allow_cache=False)
+    html = await get_url_service.get_url_async(req_url, allow_cache=False)
     return json.loads(html)
 
 
@@ -109,8 +109,8 @@ class IQiYiParser(Parser):
             stream_type = {'id': stream_id, 'container': 'flv', 'video_profile': stream_id}
         return stream_type
 
-    def get_vid_and_title(self, url):
-        html = get_url(url)
+    async def get_vid_and_title(self, url):
+        html = await get_url_service.get_url_async(url)
         video_info = match1(html, ":video-info='(.+?)'")
         if video_info:
             video_info = json.loads(video_info)
@@ -138,15 +138,15 @@ class IQiYiParser(Parser):
             title = match1(html, '<title>([^<]+)').split('-')[0]
         return tvid, videoid, title
 
-    def get_vps_data(self, tvid, videoid):
-        vps_data = getvps(tvid, videoid)
+    async def get_vps_data(self, tvid, videoid):
+        vps_data = await getvps(tvid, videoid)
         assert vps_data['code'] == 'A00000', 'can\'t play this video!!'
 
         logging.debug(vps_data)
 
         return vps_data
 
-    def parse(self, input_text, *k, **kk):
+    async def parse(self, input_text, *k, **kk):
         data = {
             "type": "formats",
             "name": "",
@@ -158,10 +158,10 @@ class IQiYiParser(Parser):
             "data": []
         }
         url = input_text
-        html = get_url(url)
-        tvid, videoid, title = self.get_vid_and_title(url)
+        html = await get_url_service.get_url_async(url)
+        tvid, videoid, title = await self.get_vid_and_title(url)
         data["name"] = title
-        vps_data = self.get_vps_data(tvid, videoid)
+        vps_data = await self.get_vps_data(tvid, videoid)
         url_prefix = vps_data['data']['vp']['du']
         stream = vps_data['data']['vp']['tkl'][0]
         vs_array = stream['vs']
@@ -187,12 +187,12 @@ class IQiYiParser(Parser):
 
         return data
 
-    def parse_url(self, input_text, label, min=None, max=None, *k, **kk):
-        def _worker(url, url_list, in_pool):
+    async def parse_url(self, input_text, label, min=None, max=None, *k, **kk):
+        async def _worker(url, url_list, in_pool):
             try:
                 if len(url_list) > 5:
                     return
-                json_data = get_url(url, allow_cache=False)
+                json_data = await get_url_service.get_url_async(url, allow_cache=False)
                 if not json_data:
                     return
                 json_data = json.loads(json_data)
@@ -201,7 +201,7 @@ class IQiYiParser(Parser):
                 # url_head = r1(r'https?://([^/]*)', down_url)
                 if down_url not in url_list:
                     url_list.append(down_url)
-            except GreenletExit:
+            except asyncio_helper.CancelledError:
                 if not in_pool:
                     raise
             except:
@@ -213,8 +213,8 @@ class IQiYiParser(Parser):
             use_pool = False
         url = input_text
         data = []
-        tvid, videoid, title = self.get_vid_and_title(url)
-        vps_data = self.get_vps_data(tvid, videoid)
+        tvid, videoid, title = await self.get_vid_and_title(url)
+        vps_data = await self.get_vps_data(tvid, videoid)
         url_prefix = vps_data['data']['vp']['du']
         stream = vps_data['data']['vp']['tkl'][0]
         vs_array = stream['vs']
@@ -239,19 +239,19 @@ class IQiYiParser(Parser):
                     data.append(info)
                 try:
                     if use_pool:
-                        with WorkerPool(10) as pool:
+                        async with asyncio_helper.AsyncPool(10) as pool:
                             for _ in range(10):
                                 for seg_info in fs_array:
                                     url = url_prefix + seg_info['l']
                                     url_list = url_dict[url]
-                                    pool.spawn(_worker, url, url_list, True)
-                            pool.join(timeout=self.parse_timeout)
+                                    pool.spawn(_worker(url, url_list, True))
+                            await pool.join(timeout=self.parse_timeout)
 
                     for seg_info in fs_array:
                         url = url_prefix + seg_info['l']
                         url_list = url_dict[url]
                         if len(url_list) == 0:
-                            _worker(url, url_list, False)
+                            await _worker(url, url_list, False)
                 except GreenletExit:
                     pass
                 finally:

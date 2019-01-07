@@ -19,8 +19,8 @@ class LeListParser1(Parser):
     filters = ["www.le.com/ptv/vplay/"]
     types = ["list"]
 
-    def parse(self, input_text, *k, **kk):
-        html = get_url(input_text)
+    async def parse(self, input_text, *k, **kk):
+        html = await get_url_service.get_url_async(input_text)
         pid = match1(html, r'pid:\s*(\w+),')
         if pid:
             html2_url = "http://www.le.com/tv/%s.html" % pid
@@ -31,14 +31,14 @@ class LeListParser2(Parser):
     filters = ["www.le.com/tv/"]
     types = ["list"]
 
-    def parse(self, input_text, *k, **kk):
-        html2 = get_url(input_text)
+    async def parse(self, input_text, *k, **kk):
+        html2 = await get_url_service.get_url_async(input_text)
         html2 = PyQuery(html2)
         title = html2("div.top_tit > h2").text()
         try:
             pid = match1(input_text, r'http://www.le.com/tv/(\w+).html')
             api_url = "http://d.api.m.le.com/detail/episode?pid={}&platform=pc&page=1&pagesize=1000&type=1".format(pid)
-            api_data = get_url(api_url)
+            api_data = await get_url_service.get_url_async(api_url)
             debug(api_data)
             api_json = json.loads(api_data)
             assert api_json["code"] == "200"
@@ -69,10 +69,10 @@ class LeListParser2(Parser):
             raise
         except:
             logging.exception("parse error rollback to old function")
-            return self.old_parse(input_text, *k, **kk)
+            return await self.old_parse(input_text, *k, **kk)
 
-    def old_parse(self, input_text, *k, **kk):
-        html2 = get_url(input_text)
+    async def old_parse(self, input_text, *k, **kk):
+        html2 = await get_url_service.get_url_async(input_text)
         html2 = PyQuery(html2)
         show_cnt = html2("div#first_videolist div.show_cnt > div")
         title = html2("div.top_tit > h2").text()

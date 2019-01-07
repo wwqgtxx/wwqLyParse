@@ -27,7 +27,12 @@ def get_caller_info(call_deep=0):
         fn = os.path.basename(fn)
     except:
         pass
-    callmethod = "<%s:%d %s> " % (fn, lno, func)
+    try:
+        from .asyncio_helper import get_task_name_with_thread
+        thread_name = get_task_name_with_thread()
+    except:
+        thread_name = ""
+    callmethod = "<%s:%d %s %s> " % (fn, lno, func, thread_name)
     return callmethod
 
 

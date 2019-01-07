@@ -23,16 +23,16 @@ class PPTVListParser(Parser):
     un_supports = []
     types = ["list"]
 
-    def parse(self, input_text, *k, **kk):
-        ppi = json.loads(get_url("https://ppi.api.pptv.com/ppi.php"))["ppi"]
+    async def parse(self, input_text, *k, **kk):
+        ppi = json.loads(await get_url_service.get_url_async("https://ppi.api.pptv.com/ppi.php"))["ppi"]
         logging.debug(ppi)
 
-        html = get_url(input_text)
+        html = await get_url_service.get_url_async(input_text)
         # cid = match1(html, 'webcfg\s*=\s*{"id":\s*(\d+)')
         pid = match1(html, 'webcfg\s*=\s*{.*"pid":\s*(\d+)')
         json_url = "http://apis.web.pptv.com/show/videoList?from=web&version=1.0.0&format=json&pid={}&cat_id=2&vt=22".format(
             pid)
-        json_data = json.loads(get_url(json_url, cookies={"ppi": ppi}))
+        json_data = json.loads(await get_url_service.get_url_async(json_url, cookies={"ppi": ppi}))
         logging.debug(json_data)
         title = ""
         data = {
@@ -57,7 +57,7 @@ class PPTVListParser(Parser):
             data["data"].append(info)
 
         # json_url = "http://apis.web.pptv.com/show/star?cid={}".format(cid)
-        # json_data = json.loads(get_url(json_url, cookies={"ppi": ppi}))
+        # json_data = json.loads(await get_url_service.get_url_async(json_url, cookies={"ppi": ppi}))
         # logging.debug(json_data)
         # data["title"] = json_data["info"][0]["title"]
 

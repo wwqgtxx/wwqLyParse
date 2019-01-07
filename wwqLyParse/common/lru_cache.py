@@ -125,9 +125,7 @@ class LRUCache(collections.MutableMapping):
 
 import typing
 
-KT = typing.TypeVar('KT')  # Key type.
-VT = typing.TypeVar('VT')  # Value type.
-LRUCacheType = typing.MutableMapping[KT, VT]
+LRUCacheType = typing.MutableMapping
 
 if __name__ == '__main__':
     l = LRUCache(5, 10)

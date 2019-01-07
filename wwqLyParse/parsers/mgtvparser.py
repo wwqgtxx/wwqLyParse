@@ -54,13 +54,13 @@ class MgTVParser(Parser):
     def get_api_url3(self, domain, url, did):
         return '{}{}'.format(domain, url)
 
-    def get_api_data(self, url, cookie_jar=None, only_api1=False):
+    async def get_api_data(self, url, cookie_jar=None, only_api1=False):
         vid = self.get_vid(url)
         clit = "clit=%d" % int(time.time())
         did = str(uuid.uuid4())
         tk2 = self.get_tk2(did, clit)
         api_url = self.get_api_url1(vid, tk2)
-        api_data1 = get_url(api_url, allow_cache=False, cookie_jar=cookie_jar)
+        api_data1 = await get_url_service.get_url_async(api_url, allow_cache=False, cookie_jar=cookie_jar)
         api_data1 = json.loads(api_data1)
         logging.debug(api_data1)
         assert api_data1['code'] == 200
@@ -69,7 +69,7 @@ class MgTVParser(Parser):
         if not only_api1:
             pm2 = api_data['atc']['pm2']
             api_url2 = self.get_api_url2(vid, tk2, clit, pm2)
-            api_data2 = get_url(api_url2, allow_cache=False, cookie_jar=cookie_jar)
+            api_data2 = await get_url_service.get_url_async(api_url2, allow_cache=False, cookie_jar=cookie_jar)
             api_data2 = json.loads(api_data2)
             logging.debug(api_data2)
             assert api_data2['code'] == 200
@@ -77,7 +77,7 @@ class MgTVParser(Parser):
         logging.debug(api_data)
         return api_data
 
-    def parse(self, input_text, types=None, *k, **kk):
+    async def parse(self, input_text, types=None, *k, **kk):
         data = {
             "type": "formats",
             "name": "",
@@ -89,7 +89,7 @@ class MgTVParser(Parser):
             "data": []
         }
         cookie_jar = get_url_service.new_cookie_jar()
-        api_data = self.get_api_data(input_text, cookie_jar)
+        api_data = await self.get_api_data(input_text, cookie_jar)
         info = api_data['info']
         data["name"] = info['series'] + ' ' + info['title'] + ' ' + info['desc']
         data["icon"] = info['thumb']
@@ -104,7 +104,7 @@ class MgTVParser(Parser):
                 })
         return data
 
-    def parse_url(self, input_text, label, min=None, max=None, *k, **kk):
+    async def parse_url(self, input_text, label, min=None, max=None, *k, **kk):
         data = {
             "protocol": "m3u8",
             "urls": [],
@@ -121,7 +121,7 @@ class MgTVParser(Parser):
             # "convertData" : "",
         }
         cookie_jar = get_url_service.new_cookie_jar()
-        api_data = self.get_api_data(input_text, cookie_jar)
+        api_data = await self.get_api_data(input_text, cookie_jar)
         did = api_data['did']
         # domain = api_data['data']['stream_domain'][0]
         headers = get_url_service.new_headers_from_fake({"Referer": input_text})
@@ -130,7 +130,7 @@ class MgTVParser(Parser):
                 for domain in api_data['stream_domain']:
                     api_data3_url = self.get_api_url3(domain, lstream['url'], did)
                     api_data3_url = api_data3_url.replace("http://", "https://")
-                    api_data3 = get_url(api_data3_url, headers=headers, allow_cache=False, cookie_jar=cookie_jar)
+                    api_data3 = await get_url_service.get_url_async(api_data3_url, headers=headers, allow_cache=False, cookie_jar=cookie_jar)
                     # print(api_data3)
                     api_data3 = json.loads(api_data3)
                     # print(api_data3)
@@ -162,7 +162,7 @@ class MgTVListParser(MgTVParser):
     filters = MgTVParser.filters + [r'https?://www.mgtv.com/h/(\d+).html']
     types = ["collection"]
 
-    def parse(self, input_text, *k, **kk):
+    async def parse(self, input_text, *k, **kk):
         data = {
             "data": [],
             "more": False,
@@ -173,18 +173,18 @@ class MgTVListParser(MgTVParser):
         }
         collection_id = match1(input_text, r'https?://www.mgtv.com/h/(\d+).html')
         if not collection_id:
-            api_data = self.get_api_data(input_text, only_api1=True)
+            api_data = await self.get_api_data(input_text, only_api1=True)
             info = api_data['info']
             collection_id = info['collection_id']
         url1 = 'https://pcweb.api.mgtv.com/variety/showlist?collection_id=' + collection_id
-        api_data1 = json.loads(get_url(url1))
+        api_data1 = json.loads(await get_url_service.get_url_async(url1))
         # print(api_data1)
         if api_data1['code'] != 200 and not api_data1['data']:
             return []
         data['title'] = api_data1['data']['info']['title']
         for tab in api_data1['data']['tab_m']:
             url2 = url1 + '&month=' + tab['m']
-            api_data2 = json.loads(get_url(url2))
+            api_data2 = json.loads(await get_url_service.get_url_async(url2))
             # print(api_data2)
             if api_data2['code'] == 200 and api_data2['data']:
                 for item in api_data2['data']['list']:

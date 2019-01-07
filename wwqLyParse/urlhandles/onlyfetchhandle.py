@@ -17,8 +17,8 @@ class OnlyFetchUrlHandle(UrlHandle):
     filters = ['^(http|https)://']
     order = sys.maxsize
 
-    def url_handle(self, url):
-        get_url(url)
+    async def url_handle(self, url):
+        await get_url_service.get_url_async(url)
         return url
 
     @staticmethod

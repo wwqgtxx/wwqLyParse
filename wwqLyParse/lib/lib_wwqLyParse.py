@@ -95,9 +95,10 @@ except:
 
 get_uuid = lib_wwqLyParse.get_uuid
 get_name = lib_wwqLyParse.get_name
+lib_parse = lib_wwqLyParse.lib_parse
 
-if POOL_TYPE == "geventpool":
-    def lib_parse(byte_str: bytes):
-        return get_common_real_thread_pool().apply(lib_wwqLyParse.lib_parse, args=(byte_str,))
-else:
-    lib_parse = lib_wwqLyParse.lib_parse
+# if POOL_TYPE == "geventpool":
+#     def lib_parse(byte_str: bytes):
+#         return get_common_real_thread_pool().apply(lib_wwqLyParse.lib_parse, args=(byte_str,))
+# else:
+#     lib_parse = lib_wwqLyParse.lib_parse

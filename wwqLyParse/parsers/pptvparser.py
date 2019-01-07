@@ -229,7 +229,7 @@ class PPTVParser(Parser):
             stream_type = {'id': stream_id, 'container': 'm3u8', 'video_profile': stream_id}
         return stream_type
 
-    def parse(self, input_text, *k, **kk):
+    async def parse(self, input_text, *k, **kk):
         info = {
             "type": "formats",
             "name": "",
@@ -240,11 +240,11 @@ class PPTVParser(Parser):
             # "sorted" : 1,
             "data": []
         }
-        html = get_url(input_text)
+        html = await get_url_service.get_url_async(input_text)
         vid = match1(html, 'webcfg\s*=\s*{"id":\s*(\d+)')
         # logging.debug(html)
         while True:
-            xml = get_url(
+            xml = await get_url_service.get_url_async(
                 'http://web-play.pptv.com/webplay3-0-{}.xml?zone=8&version=4&username=&ppi=302c3333&type=ppbox.launcher&pageUrl=http%3A%2F%2Fv.pptv.com&o=0&referrer=&kk=&scver=1&appplt=flp&appid=pptv.flashplayer.vod&appver=3.4.3.3&nddp=1'.format(
                     vid), allow_cache=False)
             if xml.startswith("<html>"):

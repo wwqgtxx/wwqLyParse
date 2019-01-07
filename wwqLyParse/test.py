@@ -6,13 +6,13 @@ if __name__ == "__main__":
     # import sys
     #
     # sys.modules["gevent"] = None
-    try:
-        from gevent import monkey
-
-        monkey.patch_all()
-        del monkey
-    except Exception:
-        gevent = None
+    # try:
+    #     from gevent import monkey
+    #
+    #     monkey.patch_all()
+    #     del monkey
+    # except Exception:
+    #     gevent = None
     import os
     import sys
 
@@ -27,8 +27,15 @@ if __name__ == "__main__":
 from main import *
 
 
+# async def a_test():
+#     result = await get_url_service.get_url_async("http://10.10.1.96")
+#     print(result)
+
+
 def test():
     get_url_service.init()
+    # run_in_common_async_loop(a_test()).result()
+    # print(get_url("http://10.10.1.96"))
     # main(r"file:///E:\QQDownloads\11.m3u8")
     # main(r"file:///E:\QQDownloads\a.list")
     # main(r"file:///E:\QQDownloads\url.media")
@@ -47,9 +54,10 @@ def test():
     # main("http://www.mgtv.com/b/316045/4096972.html", types="collection")
     # main("http://www.mgtv.com/b/316045/4096972.html", parsers_name=["MgTVParser"])
     # main("http://www.mgtv.com/b/316045/4096972.html", label="3@MgTVParser")
+    # main("http://www.mgtv.com/b/316045/4096972.html", label="3@MgTVParser2")
     # url_cache.timeout = 10
     # main("http://www.iqiyi.com/lib/m_201087714.html")
-    main("http://www.iqiyi.com/v_19rrez6nc4.html", types="list")
+    # main("http://www.iqiyi.com/v_19rrez6nc4.html", types="list")
     # main("http://www.iqiyi.com/v_19rrcl8dck.html", types="list")
     # main("http://www.iqiyi.com/v_19rr8jbmeo.html", types="list")
     # main("https://www.iqiyi.com/v_19rqs0we9s.html", types="list")
@@ -79,7 +87,7 @@ def test():
     # main("http://www.le.com/ptv/vplay/27416375.html", parsers_name=["LeEGPParser"])
     # main("http://www.le.com/ptv/vplay/28902091.html", parsers_name=["LeEGPParser"])
     # main("http://www.le.com/ptv/vplay/24185783.html", parsers_name=["LeEGPParser"])
-    # main("https://v.youku.com/v_show/id_XMzU1MjQyNzk2OA==.html", types="list")
+    main("https://v.youku.com/v_show/id_XMzU1MjQyNzk2OA==.html", types="list")
     # main("https://v.youku.com/v_show/id_XMzU3MTI0OTgyMA==.html", types="list")
     # main("http://v.youku.com/v_show/id_XMjcxMzkwMjU3Mg==.html", types="list")
     # main("http://v.youku.com/v_show/id_XMTYxODUxOTEyNA==.html?f=27502474")
@@ -105,5 +113,5 @@ def test():
 
 
 if __name__ == "__main__":
-    start_common_async_loop_in_main_thread(test)
-    os._exit(0)
+    asyncio_helper.start_main_async_loop_in_main_thread(test)
+    # os._exit(0)

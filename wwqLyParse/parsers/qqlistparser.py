@@ -25,8 +25,8 @@ class QQListParser(Parser):
     un_supports = []
     types = ["list"]
 
-    def parse(self, input_text, *k, **kk):
-        html = get_url(input_text)
+    async def parse(self, input_text, *k, **kk):
+        html = await get_url_service.get_url_async(input_text)
         html = PyQuery(html)
         title = ""
         for meta in html('meta[itemprop="name"]'):
@@ -67,7 +67,7 @@ class QQListParserX(Parser):
     un_supports = []
     types = ["list"]
 
-    def parse(self, input_text, *k, **kk):
+    async def parse(self, input_text, *k, **kk):
         m = re.findall(r'//v.qq.com/x/cover/([^\s]+)/', input_text)
         if not m:
             m = re.findall(r'//v.qq.com/x/cover/([^\s]+)\.html', input_text)
@@ -77,7 +77,7 @@ class QQListParserX(Parser):
             if url:
                 url = "/detail/%s/%s.html" % (url[0], url)
             else:
-                html = get_url(input_text)
+                html = await get_url_service.get_url_async(input_text)
                 html = PyQuery(html)
                 url = html("a._main_title").attr("href")
                 if not url:

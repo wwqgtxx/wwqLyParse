@@ -49,13 +49,13 @@ class IQiYiMTsParser(Parser):
         10: '4K-H264',
     }
 
-    def getVMS(self, tvid, vid):
+    async def get_vms(self, tvid, vid):
         t = int(time.time() * 1000)
         src = '76f90cbd92f94a2e925d83e8ccd22cb7'
         key = 'd5fb4bd9d50c4be6948c97edd7254b0e'
         sc = hashlib.new('md5', bytes(str(t) + key + vid, 'utf-8')).hexdigest()
         vmsreq = 'http://cache.m.iqiyi.com/tmts/{0}/{1}/?t={2}&sc={3}&src={4}'.format(tvid, vid, t, sc, src)
-        return json.loads(get_url(vmsreq, allow_cache=False))
+        return json.loads(await get_url_service.get_url_async(vmsreq, allow_cache=False))
 
     def getStream_type(self, stream_id):
         try:
@@ -71,7 +71,7 @@ class IQiYiMTsParser(Parser):
             stream_type = {'id': stream_id, 'container': 'ts', 'video_profile': stream_id}
         return stream_type
 
-    def parse(self, input_text, *k, **kk):
+    async def parse(self, input_text, *k, **kk):
         data = {
             "type": "formats",
             "name": "",
@@ -83,7 +83,7 @@ class IQiYiMTsParser(Parser):
             "data": []
         }
         url = input_text
-        html = get_url(url)
+        html = await get_url_service.get_url_async(url)
         video_info = match1(html, ":video-info='(.+?)'")
         if video_info:
             video_info = json.loads(video_info)
@@ -110,14 +110,14 @@ class IQiYiMTsParser(Parser):
                              )
             title = match1(html, '<title>([^<]+)').split('-')[0]
         # self.vid = (tvid, videoid)
-        info = self.getVMS(tvid, videoid)
+        info = await self.get_vms(tvid, videoid)
         assert info['code'] == 'A00000', 'can\'t play this video'
         data["name"] = title
         used_id = []
         if 'ctl' in info['data']:
             for stream_id in info['data']['ctl']["vip"]["bids"]:
                 v = info['data']['ctl']['configs'][str(stream_id)]['vid']
-                vip_info = self.getVMS(tvid, v)
+                vip_info = await self.get_vms(tvid, v)
                 if vip_info['code'] == 'A00000':
                     vip_url = vip_info['data']['m3u']
                     stream_type = self.getStream_type(stream_id)

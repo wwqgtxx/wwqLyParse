@@ -48,12 +48,12 @@ class IQiYiAListParser(Parser):
     TAKE_CARE_CID_TYPE = "INCLUDE"
 
     # get info from 271 javascript API port
-    def _get_info_from_js_port(self, html_text):
+    async def _get_info_from_js_port(self, html_text):
         # get album id
         aid = r1(self.RE_GET_AID, html_text)
         cid = r1(self.RE_GET_CID, html_text)
         # get info list
-        vlist = self._get_vinfo_list(aid, cid)
+        vlist = await self._get_vinfo_list(aid, cid)
         # done
         return vlist
 
@@ -67,7 +67,7 @@ class IQiYiAListParser(Parser):
         return url
 
     # get vinfo list, get full list from js API port
-    def _get_vinfo_list(self, aid, cid):
+    async def _get_vinfo_list(self, aid, cid):
         vlist = []
         # request each page
         page_n = self.PAGE_ID_START
@@ -77,7 +77,7 @@ class IQiYiAListParser(Parser):
             page_n += 1
             url = self._make_port_url(aid, cid, page_n)
             # get text
-            raw_text = get_url(url)
+            raw_text = await get_url_service.get_url_async(url)
 
             # get list
             sub_list = self._parse_one_page(raw_text)
@@ -129,9 +129,9 @@ class IQiYiAListParser(Parser):
         # get video info done
         return out
 
-    def _get_list_info_api(self, html_text):
+    async def _get_list_info_api(self, html_text):
         # get info from js API port
-        info2 = self._get_info_from_js_port(html_text)
+        info2 = await self._get_info_from_js_port(html_text)
         # replace vlist with js port data
         vlist = []
         for i in info2:
@@ -146,8 +146,8 @@ class IQiYiAListParser(Parser):
         # done
         return vlist
 
-    def _check_support(self, input_text):
-        html_text = get_url(input_text)
+    async def _check_support(self, input_text):
+        html_text = await get_url_service.get_url_async(input_text)
         # get cid
         cid = r1(self.RE_GET_CID, html_text)
         if self.TAKE_CARE_CID_TYPE == "INCLUDE":
@@ -163,10 +163,10 @@ class IQiYiAListParser(Parser):
                 logging.debug("%s ignore by cid: %s" % (str(self), cid))
                 return False
 
-    def parse(self, input_text, *k, **kk):
-        if not self._check_support(input_text):
+    async def parse(self, input_text, *k, **kk):
+        if not await self._check_support(input_text):
             return []
-        html_text = get_url(input_text)
+        html_text = await get_url_service.get_url_async(input_text)
         html = PyQuery(html_text)
         title = html('h1.main_title > a').text()
         if not title:
@@ -187,7 +187,7 @@ class IQiYiAListParser(Parser):
             "type": "list",
             "caption": "271视频全集"
         }
-        data["data"] = self._get_list_info_api(html_text)
+        data["data"] = await self._get_list_info_api(html_text)
         return data
 
 
@@ -306,8 +306,8 @@ class IQiYiLibMListParser(Parser):
     filters = ["www.iqiyi.com/lib/m"]
     types = ["list"]
 
-    def parse(self, input_text, *k, **kk):
-        html = PyQuery(get_url(input_text))
+    async def parse(self, input_text, *k, **kk):
+        html = PyQuery(await get_url_service.get_url_async(input_text))
         a = html("a.albumPlayBtn")
         url = a.attr("href")
         if str(url).startswith("//"):
@@ -357,7 +357,7 @@ class IQiYiLibMListParser(Parser):
         data_doc_id = html('span.play_source').attr('data-doc-id')
         if data_doc_id:
             ejson_url = 'http://rq.video.iqiyi.com/aries/e.json?site=iqiyi&docId=' + data_doc_id + '&count=100000'
-            ejson = json.loads(get_url(ejson_url))
+            ejson = json.loads(await get_url_service.get_url_async(ejson_url))
             ejson_datas = ejson["data"]["objs"]
             data["total"] = ejson_datas["info"]["total_video_number"]
             data["title"] = ejson_datas["info"]["album_title"]
@@ -382,9 +382,9 @@ class IQiYiVListParser(Parser):
     filters = ["www.iqiyi.com/v_"]
     types = ["list"]
 
-    def parse(self, input_text, *k, **kk):
+    async def parse(self, input_text, *k, **kk):
         logging.debug(input_text)
-        html = PyQuery(get_url(input_text))
+        html = PyQuery(await get_url_service.get_url_async(input_text))
         url = ""
         # logging.debug(html)
         if not url:

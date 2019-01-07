@@ -19,7 +19,7 @@ class FilesParser1(Parser):
     filters = [r"^file:///[\s\S]+\.m3u8$"]
     types = ["formats"]
 
-    def parse(self, input_text, *k, **kk):
+    async def parse(self, input_text, *k, **kk):
         return {
             "type": "formats",
             "name": "m3u8",
@@ -40,8 +40,8 @@ class FilesParser2(Parser):
     filters = [r"^(http|https)://"]
     types = ["formats"]
 
-    def parse(self, input_text, *k, **kk):
-        data = get_url(input_text)
+    async def parse(self, input_text, *k, **kk):
+        data = await get_url_service.get_url_async(input_text)
         if str(data).startswith("#EXTM3U"):
             return {
                 "type": "formats",

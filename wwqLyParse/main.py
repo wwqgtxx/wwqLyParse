@@ -132,6 +132,8 @@ async def _url_handle_parse(input_text, url_handles_name=None):
 
 
 async def _init_version():
+    if version['version']:
+        return
     parsers = new_objects(parser_class_map)
     url_handles = new_objects(urlhandle_class_map)
     for parser in parsers:
@@ -288,6 +290,8 @@ async def _parse_url(input_text, label, min=None, max=None, url_handles_name=Non
     parser_name = t_label[1]
     _parser_class_map = import_by_class_name(class_names=[parser_name], prefix="parsers.", super_class=Parser)
     parsers = new_objects(_parser_class_map)
+    if not parsers:
+        return None
 
     input_text = await _parse_password(input_text, kk)
 
@@ -338,6 +342,7 @@ def close():
         pool.join(timeout=CLOSE_TIMEOUT)
         pool.spawn(exit)
         pool.join()
+
 
 def _handle(data):
     req_data = lib_parse(data)

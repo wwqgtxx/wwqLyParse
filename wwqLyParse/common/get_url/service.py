@@ -179,6 +179,8 @@ class GetUrlService(object):
                         asyncio_helper.async_run_func_or_co(self.impl.get_url, url_json=url_json,
                                                             url_json_dict=url_json_dict,
                                                             callmethod=callmethod))
+                    if result is None:
+                        return None
                 cr = self._check_response(result)
                 if cr is None:
                     break

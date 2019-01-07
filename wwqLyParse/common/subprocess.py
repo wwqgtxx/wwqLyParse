@@ -75,10 +75,12 @@ async def async_run_subprocess(args, timeout=None, need_stderr=True, **kwargs):
     p = await asyncio.create_subprocess_shell(args, stdout=pipe, stderr=pipe if need_stderr else None, **kwargs)
     try:
         stdout, stderr = await asyncio.wait_for(p.communicate(), timeout=timeout)
-    except asyncio.TimeoutError:
-        logging.debug("Timeout!!! kill %s" % p)
-        p.kill()
-        stdout, stderr = await p.communicate()
+    finally:
+        try:
+            p.terminate()
+            logging.debug("Timeout!!! kill %s" % p)
+        except:
+            pass
     # try to decode
     stdout = try_decode(stdout)
     stderr = try_decode(stderr) if need_stderr else None

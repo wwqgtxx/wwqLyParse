@@ -243,6 +243,7 @@ class PPTVParser(Parser):
         html = await get_url_service.get_url_async(input_text)
         vid = match1(html, 'webcfg\s*=\s*{"id":\s*(\d+)')
         # logging.debug(html)
+        assert vid
         while True:
             xml = await get_url_service.get_url_async(
                 'http://web-play.pptv.com/webplay3-0-{}.xml?zone=8&version=4&username=&ppi=302c3333&type=ppbox.launcher&pageUrl=http%3A%2F%2Fv.pptv.com&o=0&referrer=&kk=&scver=1&appplt=flp&appid=pptv.flashplayer.vod&appver=3.4.3.3&nddp=1'.format(

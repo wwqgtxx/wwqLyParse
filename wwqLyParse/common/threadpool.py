@@ -26,7 +26,7 @@ class ThreadPool(object):
         self.pool_size = size
         self.ex = ThreadPoolExecutor(size, thread_name_prefix=thread_name_prefix, class_name="ThreadPool")
         self.pool_threads = []
-        logging.debug("new pool %s" % self)
+        # logging.debug("new pool %s" % self)
 
     def _remove_from_pool_threads(self, future):
         try:

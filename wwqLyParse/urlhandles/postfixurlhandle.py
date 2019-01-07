@@ -20,7 +20,7 @@ class PostfixUrlHandle(UrlHandle):
         if re.match('http://v.qq.com/cover/y/[^\s]+\.html\?vid=[^\s]+', url):
             return url
         result = re.match('^(http|https)://[^\s]+/[^\s]+\.[s]{0,1}html', url).group()
-        async with asyncio_helper.AsyncPool() as pool:
+        async with AsyncPool() as pool:
             task1 = pool.spawn(get_url_service.get_url_async(url, callmethod=get_caller_info(0)))
             task2 = pool.spawn(get_url_service.get_url_async(result, callmethod=get_caller_info(0)))
             html1 = await task1

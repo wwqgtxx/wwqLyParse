@@ -6,13 +6,13 @@ if __name__ == "__main__":
     #
     # sys.modules["gevent"] = None
 
-    # try:
-    #     from gevent import monkey
-    #
-    #     monkey.patch_all()
-    #     del monkey
-    # except Exception:
-    #     pass
+    try:
+        from gevent import monkey
+
+        monkey.patch_all()
+        del monkey
+    except Exception:
+        pass
     import os
     import sys
 
@@ -25,10 +25,10 @@ if __name__ == "__main__":
     del sys
     del os
 
-# try:
-#     import gevent
-# except Exception:
-#     gevent = None
+try:
+    import gevent
+except Exception:
+    gevent = None
 
 import sys
 import os
@@ -45,29 +45,29 @@ except Exception as e:
     from common import *
 
 if __name__ == "__main__":
-    # get_common_real_thread_pool()
+    get_common_real_thread_pool()
     logging.root.addHandler(RemoteStreamHandler(ADDRESS_LOGGING, FORMAT, DATA_FMT))
-    # if not os.environ.get("NOT_LOGGING", None):
-    #     if gevent:
-    #         logging.info("gevent.monkey.patch_all()")
-    #         logging.info("use gevent.pool")
-    #         logging.info("use %s" % gevent.config.loop)
-    #         logging.info("gevent version: %s" % gevent.__version__)
-    #         try:
-    #             import gevent.libuv.loop
-    #
-    #             logging.info(gevent.libuv.loop.get_version())
-    #         except Exception:
-    #             pass
-    #     else:
-    #         logging.info("use simple pool")
-    # if not os.environ.get("NOT_LOGGING", None):
-    #     if gevent:
-    #         try:
-    #             gevent.config.resolver = 'dnspython'
-    #         except Exception:
-    #             pass
-    #         logging.info("use %s" % gevent.config.resolver)
+    if not os.environ.get("NOT_LOGGING", None):
+        if gevent:
+            logging.info("gevent.monkey.patch_all()")
+            logging.info("use gevent.pool")
+            logging.info("use %s" % gevent.config.loop)
+            logging.info("gevent version: %s" % gevent.__version__)
+            try:
+                import gevent.libuv.loop
+
+                logging.info(gevent.libuv.loop.get_version())
+            except Exception:
+                pass
+        else:
+            logging.info("use simple pool")
+    if not os.environ.get("NOT_LOGGING", None):
+        if gevent:
+            try:
+                gevent.config.resolver = 'dnspython'
+            except Exception:
+                pass
+            logging.info("use %s" % gevent.config.resolver)
 
 try:
     from .lib.lib_wwqLyParse import *
@@ -131,7 +131,7 @@ def url_handle_check_support(url_handle, url):
     return False
 
 
-async def _url_handle_parse(input_text, url_handles_name=None):
+def url_handle_parse(input_text, url_handles_name=None):
     start_time = time.time()
     if url_handles_name is not None:
         _url_handle_class_map = import_by_class_name(class_names=url_handles_name, prefix="urlhandles.",
@@ -156,7 +156,7 @@ async def _url_handle_parse(input_text, url_handles_name=None):
             if url_handle_check_support(url_handle_obj, input_text):
                 try:
                     logging.debug(url_handle_obj)
-                    result = await asyncio_helper.async_run_func_or_co(url_handle_obj.url_handle, input_text)
+                    result = url_handle_obj.url_handle(input_text)
                     if (result is not None) and (result is not "") and result != input_text:
                         logging.debug('urlHandle:"' + input_text + '"-->"' + result + '"')
                         input_text = result
@@ -174,7 +174,7 @@ async def _url_handle_parse(input_text, url_handles_name=None):
     return input_text
 
 
-async def _init_version():
+def init_version():
     parsers = new_objects(parser_class_map)
     url_handles = new_objects(urlhandle_class_map)
     for parser in parsers:
@@ -191,7 +191,7 @@ async def _init_version():
     name_tmp_list = [get_name().decode(), version['version'], "[Include "]
     for parser in parsers:
         try:
-            version_str = await asyncio_helper.async_run_func_or_co(parser.get_version)
+            version_str = asyncio_helper.async_run_func_or_co(parser.get_version)
             if version_str:
                 name_tmp_list.append(version_str)
                 name_tmp_list.append("&")
@@ -203,11 +203,7 @@ async def _init_version():
     version['name'] = "".join(name_tmp_list)
 
 
-def init_version():
-    return asyncio_helper.run_in_main_async_loop(_init_version()).result()
-
-
-async def _parse_password(input_text, kk):
+def _parse_password(input_text, kk):
     if "||" in input_text:
         input_text = str(input_text).split("||")
         kk["password"] = input_text[1]
@@ -219,20 +215,19 @@ def get_version():
     return version
 
 
-async def _parse(input_text, types=None, parsers_name=None, url_handles_name=None,
-                 _use_inside=False, _inside_pool=None, _inside_queue=None,
-                 *k, **kk):
+def parse(input_text, types=None, parsers_name=None, url_handles_name=None,
+          _use_inside=False, _inside_pool=None, _inside_queue=None,
+          *k, **kk):
     if parsers_name is not None:
         _parser_class_map = import_by_class_name(class_names=parsers_name, prefix="parsers.", super_class=Parser)
     else:
         _parser_class_map = parser_class_map
     parsers = new_objects(_parser_class_map)
 
-    async def run(queue, parser, input_text, pool: AsyncPool, *k, **kk):
+    def run(queue, parser, input_text, pool: WorkerPool, *k, **kk):
         try:
-            assert isinstance(queue, asyncio.Queue)
             logging.debug(parser)
-            result = await asyncio_helper.async_run_func_or_co(parser.parse, input_text, *k, **kk)
+            result = parser.parse(input_text, *k, **kk)
             if type(result) == dict:
                 if "error" in result:
                     logging.error(result["error"])
@@ -244,14 +239,13 @@ async def _parse(input_text, types=None, parsers_name=None, url_handles_name=Non
                         if ('code' in data) and (data['code'] is not None) and (data['code'] != ""):
                             data['code'] = str(data['code']) + "@" + parser.__class__.__name__
                     q_result = {"result": result, "parser": parser}
-                    await queue.put(q_result)
+                    queue.put(q_result)
             elif type(result) == list:
-                await queue.put(result)
+                queue.put(result)
             elif type(result) == ReCallMainParseFunc:
-                wait_list = await _parse(*result.k, _use_inside=True, _inside_pool=pool, _inside_queue=queue,
-                                         **result.kk)
-                await pool.wait(wait_list)
-        except asyncio.CancelledError:
+                wait_list = parse(*result.k, _use_inside=True, _inside_pool=pool, _inside_queue=queue, **result.kk)
+                pool.wait(wait_list)
+        except GreenletExit:
             logging.warning("%s timeout exit" % parser)
         except Exception as e:
             logging.exception(str(parser))
@@ -259,9 +253,9 @@ async def _parse(input_text, types=None, parsers_name=None, url_handles_name=Non
             # import traceback
             # traceback.print_exc()
 
-    input_text = await _parse_password(input_text, kk)
+    input_text = parse_password(input_text, kk)
 
-    input_text = await _url_handle_parse(input_text, url_handles_name)
+    input_text = url_handle_parse(input_text, url_handles_name)
     if not input_text:
         return None
 
@@ -269,17 +263,17 @@ async def _parse(input_text, types=None, parsers_name=None, url_handles_name=Non
     if _use_inside:
         for parser in parsers:
             if parser_check_support(parser, input_text, types):
-                results.append(_inside_pool.spawn(run(_inside_queue, parser, input_text, _inside_pool, *k, **kk)))
+                results.append(_inside_pool.spawn(run, _inside_queue, parser, input_text, _inside_pool, *k, **kk))
         return results
     t_results = []
-    q_results = asyncio.Queue()
-    async with AsyncPool() as pool:
+    q_results = SimpleQueue()
+    with WorkerPool() as pool:
         for parser in parsers:
             if parser_check_support(parser, input_text, types):
-                pool.spawn(run(q_results, parser, input_text, pool, *k, **kk))
-        await pool.join(timeout=PARSE_TIMEOUT)
+                pool.spawn(run, q_results, parser, input_text, pool, *k, **kk)
+        pool.join(timeout=PARSE_TIMEOUT)
     while not q_results.empty():
-        result = await q_results.get()
+        result = q_results.get()
         if type(result) == dict:
             t_results.append(result)
         if type(result) == list:
@@ -305,23 +299,17 @@ async def _parse(input_text, types=None, parsers_name=None, url_handles_name=Non
     return results
 
 
-def parse(input_text, types=None, parsers_name=None, url_handles_name=None):
-    return asyncio_helper.run_in_main_async_loop(
-        _parse(input_text, types=types, parsers_name=parsers_name, url_handles_name=url_handles_name)).result()
-
-
-async def _parse_url(input_text, label, min=None, max=None, url_handles_name=None, *k, **kk):
-    async def run(queue, parser, input_text, label, min, max, *k, **kk):
+def parse_url(input_text, label, min=None, max=None, url_handles_name=None, *k, **kk):
+    def run(queue, parser, input_text, label, min, max, *k, **kk):
         try:
-            assert isinstance(queue, asyncio.Queue)
             logging.debug(parser)
-            result = await asyncio_helper.async_run_func_or_co(parser.parse_url, input_text, label, min, max, *k, **kk)
+            result = parser.parse_url(input_text, label, min, max, *k, **kk)
             if (result is not None) and (result != []):
                 if "error" in result:
                     logging.error(result["error"])
                     return
-                await queue.put(result)
-        except asyncio.CancelledError:
+                queue.put(result)
+        except GreenletExit:
             logging.warning("%s timeout exit" % parser)
         except Exception as e:
             logging.exception(str(parser))
@@ -332,26 +320,21 @@ async def _parse_url(input_text, label, min=None, max=None, url_handles_name=Non
     _parser_class_map = import_by_class_name(class_names=[parser_name], prefix="parsers.", super_class=Parser)
     parsers = new_objects(_parser_class_map)
 
-    input_text = await _parse_password(input_text, kk)
+    input_text = parse_password(input_text, kk)
 
-    input_text = await _url_handle_parse(input_text, url_handles_name)
+    input_text = url_handle_parse(input_text, url_handles_name)
     if not input_text:
         return None
     parser = parsers[0]
-    q_results = asyncio.Queue()
-    async with AsyncPool() as pool:
-        pool.spawn(run(q_results, parser, input_text, label, min, max, *k, **kk))
-        await pool.join(timeout=PARSE_TIMEOUT)
+    q_results = SimpleQueue()
+    with WorkerPool() as pool:
+        pool.spawn(run, q_results, parser, input_text, label, min, max, *k, **kk)
+        pool.join(timeout=PARSE_TIMEOUT)
     if not q_results.empty():
-        result = await q_results.get()
+        result = q_results.get()
     else:
         result = []
     return result
-
-
-def parse_url(input_text, label, min=None, max=None, url_handles_name=None, *k, **kk):
-    return asyncio_helper.run_in_main_async_loop(
-        _parse_url(input_text, label, min=min, max=max, url_handles_name=url_handles_name)).result()
 
 
 def debug(text):
@@ -381,6 +364,15 @@ def close():
         pool.join(timeout=CLOSE_TIMEOUT)
         pool.spawn(exit)
         pool.join()
+
+
+# @app.route('/cache/<url>', methods=['POST', 'GET'])
+# def cache(url):
+#     data = get_http_cache_data(url)
+#     if data is not None:
+#         return data
+#     else:
+#         abort(404)
 
 def _handle(data):
     req_data = lib_parse(data)

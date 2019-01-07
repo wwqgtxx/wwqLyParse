@@ -5,8 +5,7 @@
 
 from .get_url import *
 from .for_path import get_real_path
-from .selectors import DefaultSelector
-from .workerpool import WorkerPool
+from .threadpool import ThreadPool
 from .utils import format_exception
 import sys
 
@@ -24,7 +23,6 @@ import http.client
 import urllib.parse
 
 NetWorkIOError = (socket.error, ssl.SSLError, OSError)
-socketserver._ServerSelector = DefaultSelector
 
 
 class CertUtil(object):
@@ -271,7 +269,7 @@ class HttpProxyServer(socketserver.TCPServer):
     """Local Proxy Server"""
     allow_reuse_address = False
     daemon_threads = True
-    common_worker_pool = WorkerPool(thread_name_prefix="HPSPool")
+    common_worker_pool = ThreadPool(thread_name_prefix="HPSPool")
 
     def __init__(self, host="localhost", port=0):
         self.is_start = False

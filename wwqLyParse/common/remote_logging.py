@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.5
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
-from .multiprocessing_connection import Client, Connection
+from multiprocessing.connection import Client, Connection
 import logging
 import traceback
 import sys

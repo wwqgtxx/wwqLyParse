@@ -3,25 +3,30 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 
 import functools
-import itertools
-import weakref
-import threading
 import logging
-import time
-import queue
 from .concurrent_futures import ThreadPoolExecutor
 from .concurrent_futures import wait
 
 
-class GreenletExit(Exception):
-    pass
+def call_method_and_save_to_queue(queue, method, args=None, kwargs=None, allow_none=True):
+    if args is None:
+        args = ()
+    if kwargs is None:
+        kwargs = {}
+    try:
+        result = method(*args, **kwargs)
+        if allow_none or result:
+            queue.put(result)
+    except SystemExit:
+        raise
 
 
-class Pool(object):
+class ThreadPool(object):
     def __init__(self, size=None, thread_name_prefix=''):
         self.pool_size = size
         self.ex = ThreadPoolExecutor(size, thread_name_prefix=thread_name_prefix, class_name="ThreadPool")
         self.pool_threads = []
+        logging.debug("new pool %s" % self)
 
     def _remove_from_pool_threads(self, future):
         try:
@@ -55,11 +60,12 @@ class Pool(object):
     def kill(self, *k, block=False, **kk):
         self.ex.shutdown(wait=block)
 
+    def __enter__(self):
+        return self
 
-class ThreadPool(Pool):
-    def __init__(self, size=None, hub=None):
-        super(ThreadPool, self).__init__(size)
-        logging.debug("new pool %s" % self)
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.kill(block=False)
 
-    def apply(self, func, args=None, kwds=None):
-        return self.spawn(func, *args, **kwds).result()
+    @staticmethod
+    def wait(wait_list, timeout=None):
+        return wait(wait_list, timeout=timeout)

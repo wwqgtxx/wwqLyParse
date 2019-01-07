@@ -9,6 +9,7 @@ import traceback
 import functools
 import inspect
 import ctypes
+import uuid
 
 
 def get_main():

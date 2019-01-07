@@ -65,7 +65,7 @@ class LeListParser2(Parser):
                 }
                 data["data"].append(info)
             return data
-        except GreenletExit:
+        except AsyncCancelled:
             raise
         except:
             logging.exception("parse error rollback to old function")

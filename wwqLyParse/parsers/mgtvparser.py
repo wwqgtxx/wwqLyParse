@@ -7,6 +7,7 @@ import urllib.request, io, os, sys, json, re
 
 from pyquery.pyquery import PyQuery
 import base64
+import uuid
 
 try:
     from ..common import *

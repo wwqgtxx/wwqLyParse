@@ -3,18 +3,14 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 GEVENT_POOL = "geventpool"
 SIMPLE_POOL = "simplepool"
-# try:
-#     from . import geventpool as _pool
-#
-#     POOL_TYPE = GEVENT_POOL
-# except:
-#     from . import simplepool as _pool
-#
-#     POOL_TYPE = SIMPLE_POOL
+try:
+    from . import geventpool as _pool
 
-from . import simplepool as _pool
+    POOL_TYPE = GEVENT_POOL
+except:
+    from . import simplepool as _pool
 
-POOL_TYPE = SIMPLE_POOL
+    POOL_TYPE = SIMPLE_POOL
 
 GreenletExit = _pool.GreenletExit
 
@@ -122,43 +118,60 @@ class WorkerPool(_pool.Pool):
         return _pool.wait(wait_list, timeout=timeout)
 
 
-# def _apply(_func, _args, _kwds):
-#     if _args is None:
-#         _args = ()
-#     if _kwds is None:
-#         _kwds = {}
-#     result = {"type": "ok", "result": None}
-#     try:
-#         result["result"] = _func(*_args, **_kwds)
-#     except BaseException as e:
-#         result["type"] = "error"
-#         result["result"] = e
-#     return result
-#
-#
-# class RealThreadPool(_pool.ThreadPool):
-#     def apply(self, func, args=None, kwds=None):
-#         result = super(RealThreadPool, self).apply(_apply, args=(func, args, kwds))
-#         if result["type"] == "ok":
-#             return result["result"]
-#         else:
-#             raise result["result"]
-#
-#     def __enter__(self):
-#         return self
-#
-#     def __exit__(self, exc_type, exc_val, exc_tb):
-#         self.kill()
-#
-#     def __bool__(self):
-#         return True
-#
-#
-# _common_real_thread_pool = None
-#
-#
-# def get_common_real_thread_pool():
-#     global _common_real_thread_pool
-#     if _common_real_thread_pool is None:
-#         _common_real_thread_pool = RealThreadPool()
-#     return _common_real_thread_pool
+def _apply(_func, _args, _kwds):
+    if _args is None:
+        _args = ()
+    if _kwds is None:
+        _kwds = {}
+    result = {"type": "ok", "result": None}
+    try:
+        result["result"] = _func(*_args, **_kwds)
+    except BaseException as e:
+        result["type"] = "error"
+        result["result"] = e
+    return result
+
+
+class RealThreadPool(_pool.ThreadPool):
+    def apply(self, func, args=None, kwds=None):
+        result = super(RealThreadPool, self).apply(_apply, args=(func, args, kwds))
+        if result["type"] == "ok":
+            return result["result"]
+        else:
+            raise result["result"]
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.kill()
+
+    def __bool__(self):
+        return True
+
+
+_common_real_thread_pool = None
+
+
+def get_common_real_thread_pool():
+    global _common_real_thread_pool
+    if _common_real_thread_pool is None:
+        _common_real_thread_pool = RealThreadPool()
+    return _common_real_thread_pool
+
+def new_raw_async_loop():
+    import asyncio
+    from .concurrent_futures import ThreadPoolExecutor
+    from .selectors import DefaultSelector
+    import logging
+
+    if POOL_TYPE == GEVENT_POOL:
+        loop = asyncio.SelectorEventLoop(DefaultSelector())
+    else:
+        loop = asyncio.ProactorEventLoop()
+    executor = ThreadPoolExecutor()
+    import concurrent.futures
+    assert isinstance(executor, concurrent.futures.ThreadPoolExecutor)
+    loop.set_default_executor(executor)
+    logging.debug("set %s for %s" % (executor, loop))
+    return loop

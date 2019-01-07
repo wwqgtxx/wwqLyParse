@@ -3,13 +3,13 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 
 if __name__ == "__main__":
-    try:
-        from gevent import monkey
-
-        monkey.patch_all()
-        del monkey
-    except Exception:
-        gevent = None
+    # try:
+    #     from gevent import monkey
+    #
+    #     monkey.patch_all()
+    #     del monkey
+    # except Exception:
+    #     gevent = None
     import os
     import sys
 

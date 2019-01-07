@@ -239,7 +239,7 @@ class IQiYiParser(Parser):
                     data.append(info)
                 try:
                     if use_pool:
-                        async with asyncio_helper.AsyncPool(10) as pool:
+                        async with AsyncPool(10) as pool:
                             for _ in range(10):
                                 for seg_info in fs_array:
                                     url = url_prefix + seg_info['l']
@@ -252,7 +252,7 @@ class IQiYiParser(Parser):
                         url_list = url_dict[url]
                         if len(url_list) == 0:
                             await _worker(url, url_list, False)
-                except GreenletExit:
+                except AsyncCancelled:
                     pass
                 finally:
                     return data

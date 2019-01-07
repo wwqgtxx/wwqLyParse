@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
 from .base import *
+from ..async_pool import AsyncPool
 from .. import asyncio_helper
 from ..for_path import get_real_path
 from ..lru_cache import LRUCache
@@ -22,7 +23,7 @@ class GetUrlService(object):
         self.url_cache = LRUCache(size=URL_CACHE_MAX, timeout=URL_CACHE_TIMEOUT, use_lock=False)
         self.url_key_lock = AsyncKeyLockDict()
         self.loop = asyncio_helper.new_running_async_loop("GetUrlLoop")
-        self.pool_get_url = asyncio_helper.AsyncPool(GET_URL_PARALLEL_LIMIT, thread_name_prefix="GetUrlPool",
+        self.pool_get_url = AsyncPool(GET_URL_PARALLEL_LIMIT, thread_name_prefix="GetUrlPool",
                                                      loop=self.loop)
         self.fake_headers = FAKE_HEADERS.copy()
         self.check_response_func_list = list()

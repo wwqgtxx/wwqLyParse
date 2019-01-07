@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
 from .base import *
-from ..workerpool import *
 import warnings
 import logging
 import functools
@@ -91,8 +90,8 @@ class RequestsGetUrlImpl(GetUrlImpl):
             return result
         except requests.exceptions.RequestException as e:
             logging.warning(callmethod + 'requests error %s' % e)
-        except GreenletExit:
-            raise
+        # except Cancelled:
+        #     raise
         except:
             logging.exception(callmethod + "get url " + url_json + "fail")
         return None

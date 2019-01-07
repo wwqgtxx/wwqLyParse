@@ -1,9 +1,9 @@
 #!/usr/bin/env python3.5
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
-from . import multiprocessing_connection
+import multiprocessing.connection as multiprocessing_connection
 from .lru_cache import *
-from .workerpool import *
+from .threadpool import *
 import itertools
 import logging
 from typing import Dict, Tuple, List
@@ -47,7 +47,7 @@ class ConnectionServer(object):
             conn.close()
 
     def _process(self, conn_lru_dict: LRUCacheType[multiprocessing_connection.Connection, bool],
-                 handle_pool: WorkerPool,
+                 handle_pool: ThreadPool,
                  c_recv: multiprocessing_connection.Connection,
                  c_send: multiprocessing_connection.Connection,
                  wait=multiprocessing_connection.wait):
@@ -70,7 +70,7 @@ class ConnectionServer(object):
                 logging.exception("error")
 
     def run(self):
-        with WorkerPool(thread_name_prefix="HandlePool-%d" % self._counter()) as handle_pool:
+        with ThreadPool(thread_name_prefix="HandlePool-%d" % self._counter()) as handle_pool:
             with multiprocessing_connection.Listener(self.address, authkey=self.authkey) as listener:
                 c_recv, c_send = multiprocessing_connection.Pipe(False)
 

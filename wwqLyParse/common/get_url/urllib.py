@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
 from .base import *
-from ..workerpool import *
 import logging
 import re
 import gzip
@@ -114,8 +113,8 @@ class UrlLibGetUrlImpl(GetUrlImpl):
             logging.warning(callmethod + 'request attempt RemoteDisconnected')
         except http.client.IncompleteRead:
             logging.warning(callmethod + 'request attempt IncompleteRead')
-        except GreenletExit:
-            raise
+        # except Cancelled:
+        #     raise
         except:
             logging.exception(callmethod + "get url " + url_json + "fail")
         return None

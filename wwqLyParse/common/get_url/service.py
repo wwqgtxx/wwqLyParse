@@ -211,6 +211,5 @@ class GetUrlService(object):
 
 
 get_url_service = GetUrlService()
-get_url = get_url_service.get_url
 
-__all__ = ["GetUrlService", "get_url_service", "get_url", "EMPTY_COOKIES"]
+__all__ = ["GetUrlService", "get_url_service", "EMPTY_COOKIES"]

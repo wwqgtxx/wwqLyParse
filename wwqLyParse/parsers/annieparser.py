@@ -29,7 +29,7 @@ class AnnieParser(Parser):
         else:
             annie_bin = get_real_path('./annie/annie32.exe')
         if use_hps:
-            with HttpProxyServer() as hps:
+            async with AsyncHttpProxyServer() as hps:
                 args = [annie_bin]
                 args += ['-x', "http://localhost:%s" % hps.port]
                 args += arg

@@ -60,7 +60,7 @@ class YouGetParser(Parser):
         else:
             args = [py_bin, y_bin]
         if use_hps:
-            with HttpProxyServer() as hps:
+            async with AsyncHttpProxyServer() as hps:
                 args += self._get_proxy_args(hps.port)
                 args += arg
                 return await async_run_subprocess(args, get_main().PARSE_TIMEOUT - 5, need_stderr)

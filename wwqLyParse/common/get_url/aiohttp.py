@@ -22,6 +22,8 @@ class TCPConnector(aiohttp.TCPConnector):
 
 
 class AioHttpGetUrlStreamReader(GetUrlStreamReader):
+    decoded_encoding = GetUrlStreamReader.decoded_encoding + ['br']
+
     def __init__(self, resp: aiohttp.ClientResponse, loop: asyncio.AbstractEventLoop):
         self.resp = resp
         self.loop = loop

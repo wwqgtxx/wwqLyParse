@@ -9,7 +9,8 @@ import functools
 import itertools
 from .concurrent_futures import ThreadPoolExecutor
 
-if sys.version_info >= (3, 7):
+PY37 = sys.version_info >= (3, 7)
+if PY37:
     get_current_task = asyncio.current_task
     get_running_loop = asyncio.get_running_loop
 else:

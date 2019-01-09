@@ -292,8 +292,8 @@ class AsyncBaseHttpRequestHandler:
         False.
 
         """
-        self.send_response_only(http.HTTPStatus.CONTINUE)
-        self.end_headers()
+        await self.send_response_only(http.HTTPStatus.CONTINUE)
+        await self.end_headers()
         return True
 
     async def handle_one_request(self):

@@ -73,10 +73,13 @@ def start_main_async_loop_in_main_thread(callback, *args, **kwargs):
     threading.current_thread().name = "MainThread"
 
 
+_MODULE_TASK_NAME = "__asyncio_helper__.name"
+
+
 def set_task_name(name: str, task: asyncio.Task = None):
     if task is None:
         task = get_current_task()
-    task.name = name
+    setattr(task, _MODULE_TASK_NAME, name)
 
 
 def get_task_name(task: asyncio.Task = None):
@@ -84,7 +87,7 @@ def get_task_name(task: asyncio.Task = None):
         if task is None:
             task = get_current_task()
         if task is not None:
-            return getattr(task, "name")
+            return getattr(task, _MODULE_TASK_NAME)
     except AttributeError:
         pass
     except RuntimeError:
@@ -118,6 +121,47 @@ async def async_run_func_or_co(func_or_co, *args, **kwargs):
         return await fn()
     else:
         return await get_running_loop().run_in_executor(None, fn)
+
+
+_MODULE_TIMEOUT = "__asyncio_helper__.timeout"
+_MODULE_TIMEOUT_HANDLE = "__asyncio_helper__.timeout_handle"
+
+
+def set_timeout(task: asyncio.Task, timeout: [float, int], loop: asyncio.AbstractEventLoop = None, timeout_cancel=True):
+    assert isinstance(timeout, (float, int))
+    if loop is None:
+        loop = get_running_loop()
+    now_time = loop.time()
+    out_time = now_time + timeout
+    setattr(task, _MODULE_TIMEOUT, out_time)
+    if timeout_cancel:
+        if timeout <= 0:
+            task.cancel()
+            return
+        handle = getattr(task, _MODULE_TIMEOUT_HANDLE, None)
+        if handle is not None:
+            assert isinstance(handle, asyncio.Handle)
+            handle.cancel()
+        handle = loop.call_at(out_time, task.cancel)
+        setattr(task, _MODULE_TIMEOUT_HANDLE, handle)
+
+
+def get_left_time(task: asyncio.Task = None, loop: asyncio.AbstractEventLoop = None):
+    if loop is None:
+        loop = get_running_loop()
+    if task is None:
+        task = get_current_task()
+    out_time = getattr(task, _MODULE_TIMEOUT, None)
+    if not out_time:
+        if PY37:
+            return sys.maxsize
+        else:
+            return 60 * 60 * 24  # one day (resolve the ValueError("timeout too big") in py35)
+    now_time = loop.time()
+    left_time = out_time - now_time
+    if left_time < 0:
+        return 0
+    return left_time
 
 
 def patch_logging():

@@ -66,7 +66,7 @@ class LeEGPParser(Parser):
         info['name'] = match1(html, r'title:"(.+?)",')
         vid = self.get_vid(input_text)
         data = await self.get_first_json(vid, self.stream_ids)
-        debug(json.dumps(data))
+        safe_print(json.dumps(data))
         if data["statusCode"] != 1001:
             return
         if not data["data"]:

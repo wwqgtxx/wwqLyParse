@@ -63,10 +63,10 @@ class YouGetParser(Parser):
             async with AsyncHttpProxyServer() as hps:
                 args += self._get_proxy_args(hps.port)
                 args += arg
-                return await async_run_subprocess(args, get_main().PARSE_TIMEOUT - 5, need_stderr)
+                return await async_run_subprocess(args, asyncio_helper.get_left_time() - 0.1, need_stderr)
         else:
             args += arg
-            return await async_run_subprocess(args, get_main().PARSE_TIMEOUT - 5, need_stderr)
+            return await async_run_subprocess(args, asyncio_helper.get_left_time() - 0.1, need_stderr)
 
     # parse you-get output for parse
     def _parse_parse(self, raw):

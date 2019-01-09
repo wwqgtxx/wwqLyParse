@@ -39,7 +39,7 @@ class LeListParser2(Parser):
             pid = match1(input_text, r'http://www.le.com/tv/(\w+).html')
             api_url = "http://d.api.m.le.com/detail/episode?pid={}&platform=pc&page=1&pagesize=1000&type=1".format(pid)
             api_data = await get_url_service.get_url_async(api_url)
-            debug(api_data)
+            safe_print(api_data)
             api_json = json.loads(api_data)
             assert api_json["code"] == "200"
             api_json_data = api_json["data"]

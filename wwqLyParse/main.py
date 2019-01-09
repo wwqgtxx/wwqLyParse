@@ -70,7 +70,7 @@ urlhandle_class_map = import_by_module_name(module_names=get_all_filename_by_dir
                                             super_class=UrlHandle)
 
 
-def parser_check_support(parser, url, types=None):
+async def parser_check_support(parser, url, types=None):
     if (types is None) or (not parser.get_types()) or (is_in(types, parser.get_types(), strict=False)):
         for un_support in parser.get_un_supports():
             if re.search(un_support, url):
@@ -81,7 +81,7 @@ def parser_check_support(parser, url, types=None):
     return False
 
 
-def url_handle_check_support(url_handle, url):
+async def url_handle_check_support(url_handle, url):
     for filter_str in url_handle.get_filters():
         if re.match(filter_str, url):
             return True
@@ -89,7 +89,6 @@ def url_handle_check_support(url_handle, url):
 
 
 async def _url_handle_parse(input_text, url_handles_name=None):
-    start_time = time.time()
     if url_handles_name is not None:
         _url_handle_class_map = import_by_class_name(class_names=url_handles_name, prefix="urlhandles.",
                                                      super_class=UrlHandle)
@@ -110,24 +109,20 @@ async def _url_handle_parse(input_text, url_handles_name=None):
     for sorted_url_handles_dict_key in sorted_url_handles_dict_keys:
         url_handle_list = url_handles_dict[sorted_url_handles_dict_key]
         for url_handle_obj in url_handle_list:
-            if url_handle_check_support(url_handle_obj, input_text):
+            if await url_handle_check_support(url_handle_obj, input_text):
                 try:
                     logging.debug(url_handle_obj)
                     result = await asyncio_helper.async_run_func_or_co(url_handle_obj.url_handle, input_text)
                     if (result is not None) and (result is not "") and result != input_text:
                         logging.debug('urlHandle:"' + input_text + '"-->"' + result + '"')
                         input_text = result
-                    end_time = time.time()
-                    if (end_time - start_time) > PARSE_TIMEOUT / 2:
-                        break
+                except asyncio.CancelledError:
+                    raise
                 except Exception as e:
                     logging.exception(str(url_handle_obj))
                     # print(e)
                     # import traceback
                     # traceback.print_exc()
-    end_time = time.time()
-    if (end_time - start_time) >= PARSE_TIMEOUT:
-        return None
     return input_text
 
 
@@ -217,6 +212,8 @@ async def _parse(input_text, types=None, parsers_name=None, url_handles_name=Non
             # print(e)
             # import traceback
             # traceback.print_exc()
+    if not _use_inside:
+        asyncio_helper.set_timeout(asyncio_helper.get_current_task(), PARSE_TIMEOUT + 1)
 
     input_text = await _parse_password(input_text, kk)
 
@@ -227,16 +224,19 @@ async def _parse(input_text, types=None, parsers_name=None, url_handles_name=Non
     results = []
     if _use_inside:
         for parser in parsers:
-            if parser_check_support(parser, input_text, types):
-                results.append(_inside_pool.spawn(run(_inside_queue, parser, input_text, _inside_pool, *k, **kk)))
+            if await parser_check_support(parser, input_text, types):
+                task = _inside_pool.spawn(run(_inside_queue, parser, input_text, _inside_pool, *k, **kk))
+                asyncio_helper.set_timeout(task, asyncio_helper.get_left_time() - 1)
+                results.append(task)
         return results
     t_results = []
     q_results = asyncio.Queue()
     async with AsyncPool() as pool:
         for parser in parsers:
-            if parser_check_support(parser, input_text, types):
-                pool.spawn(run(q_results, parser, input_text, pool, *k, **kk))
-        await pool.join(timeout=PARSE_TIMEOUT)
+            if await parser_check_support(parser, input_text, types):
+                task = pool.spawn(run(q_results, parser, input_text, pool, *k, **kk))
+                asyncio_helper.set_timeout(task, asyncio_helper.get_left_time()-1)
+        await pool.join()
     while not q_results.empty():
         result = await q_results.get()
         if type(result) == dict:
@@ -265,8 +265,11 @@ async def _parse(input_text, types=None, parsers_name=None, url_handles_name=Non
 
 
 def parse(input_text, types=None, parsers_name=None, url_handles_name=None):
-    return asyncio_helper.run_in_main_async_loop(
-        _parse(input_text, types=types, parsers_name=parsers_name, url_handles_name=url_handles_name)).result()
+    try:
+        return asyncio_helper.run_in_main_async_loop(
+            _parse(input_text, types=types, parsers_name=parsers_name, url_handles_name=url_handles_name)).result()
+    except asyncio.CancelledError:
+        return []
 
 
 async def _parse_url(input_text, label, min=None, max=None, url_handles_name=None, *k, **kk):
@@ -293,6 +296,8 @@ async def _parse_url(input_text, label, min=None, max=None, url_handles_name=Non
     if not parsers:
         return None
 
+    asyncio_helper.set_timeout(asyncio_helper.get_current_task(), PARSE_TIMEOUT + 1)
+
     input_text = await _parse_password(input_text, kk)
 
     input_text = await _url_handle_parse(input_text, url_handles_name)
@@ -301,8 +306,9 @@ async def _parse_url(input_text, label, min=None, max=None, url_handles_name=Non
     parser = parsers[0]
     q_results = asyncio.Queue()
     async with AsyncPool() as pool:
-        pool.spawn(run(q_results, parser, input_text, label, min, max, *k, **kk))
-        await pool.join(timeout=PARSE_TIMEOUT)
+        task = pool.spawn(run(q_results, parser, input_text, label, min, max, *k, **kk))
+        asyncio_helper.set_timeout(task, asyncio_helper.get_left_time() - 1)
+        await pool.join()
     if not q_results.empty():
         result = await q_results.get()
     else:
@@ -311,8 +317,11 @@ async def _parse_url(input_text, label, min=None, max=None, url_handles_name=Non
 
 
 def parse_url(input_text, label, min=None, max=None, url_handles_name=None, *k, **kk):
-    return asyncio_helper.run_in_main_async_loop(
-        _parse_url(input_text, label, min=min, max=max, url_handles_name=url_handles_name)).result()
+    try:
+        return asyncio_helper.run_in_main_async_loop(
+            _parse_url(input_text, label, min=min, max=max, url_handles_name=url_handles_name)).result()
+    except asyncio.CancelledError:
+        return []
 
 
 def debug(text):

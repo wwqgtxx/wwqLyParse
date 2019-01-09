@@ -12,13 +12,13 @@ import ctypes
 import uuid
 
 
-def get_main():
-    try:
-        from .. import main
-    except Exception as e:
-        import main
-
-    return main
+# def get_main():
+#     try:
+#         from .. import main
+#     except Exception as e:
+#         import main
+#
+#     return main
 
 
 def get_caller_info(call_deep=0):

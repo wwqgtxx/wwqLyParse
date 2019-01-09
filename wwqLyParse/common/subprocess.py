@@ -75,6 +75,8 @@ async def async_run_subprocess(args, timeout=None, need_stderr=True, **kwargs):
     p = await asyncio.create_subprocess_shell(args, stdout=pipe, stderr=pipe if need_stderr else None, **kwargs)
     try:
         stdout, stderr = await asyncio.wait_for(p.communicate(), timeout=timeout)
+    except asyncio.TimeoutError:
+        raise asyncio.CancelledError
     finally:
         try:
             p.terminate()
@@ -88,5 +90,5 @@ async def async_run_subprocess(args, timeout=None, need_stderr=True, **kwargs):
     return stdout, stderr
 
 
-def debug(text):
+def safe_print(text):
     print((str(text)).encode('gbk', 'ignore').decode('gbk'))

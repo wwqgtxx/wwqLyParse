@@ -13,7 +13,7 @@ class TCPConnector(aiohttp.TCPConnector):
 
     def _get(self, key):
         conn = super(TCPConnector, self)._get(key)
-        url = "%s://%s:%d" % ("https" if key.is_ssl else "http", key.host, key.port)
+        url = "%s://%s:%d" % ("https" if key.ssl else "http", key.host, key.port)
         if conn is None:
             self._logger.debug("create new connection for %s" % url)
         else:
@@ -59,8 +59,7 @@ class AioHttpGetUrlImpl(GetUrlImpl):
         self.common_loop = service.loop
         self.common_connector = TCPConnector(limit=GET_URL_PARALLEL_LIMIT, loop=self.common_loop)
         self.common_cookie_jar = self.new_cookie_jar()
-        self.common_client_timeout = aiohttp.ClientTimeout(sock_connect=GET_URL_CONNECT_TIMEOUT,
-                                                       sock_read=GET_URL_RECV_TIMEOUT)
+        self.common_client_timeout = GET_URL_CONNECT_TIMEOUT+GET_URL_RECV_TIMEOUT
         logging.debug("init %s" % self.common_connector)
         weakref.finalize(self, _close_connector, self.common_loop, self.common_connector)
 
@@ -75,7 +74,7 @@ class AioHttpGetUrlImpl(GetUrlImpl):
                     resp = await session.request(method=method if method else "GET", url=o_url,
                                                  headers=headers if headers else self.service.fake_headers, data=data,
                                                  timeout=self.common_client_timeout,
-                                                 ssl=None if verify else False,
+                                                 verify_ssl=None if verify else False,
                                                  proxy=self.service.http_proxy or None)
                     result = GetUrlResponse(headers=dict(resp.headers),
                                             url=str(resp.url),

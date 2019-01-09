@@ -15,10 +15,15 @@ def get_real_path(abstract_path):
     return os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(COMMON_PATH)), abstract_path))
 
 
+PY37 = sys.version_info >= (3, 7)
+
 # sys.path.insert(0, get_real_path('./lib/flask_lib'))
-sys.path.insert(0, get_real_path('./lib/aiohttp_lib'))
+if PY37:
+    sys.path.insert(0, get_real_path('./lib/aiohttp_lib'))
+else:
+    sys.path.insert(0, get_real_path('./lib/aiohttp_lib_py352'))
 sys.path.insert(0, get_real_path('./lib/requests_lib'))
-sys.path.insert(0, get_real_path('./lib/dns_lib'))
+# sys.path.insert(0, get_real_path('./lib/dns_lib'))
 
 import mimetypes
 

@@ -44,7 +44,10 @@ class GetUrlService(object):
                 self.ssl_verify = config.getboolean("get_url", "ssl_verify", fallback=True)
                 if self.impl is None:
                     try:
-                        from .aiohttp import AioHttpGetUrlImpl
+                        if asyncio_helper.PY37:
+                            from .aiohttp import AioHttpGetUrlImpl
+                        else:
+                            from .aiohttp352 import AioHttpGetUrlImpl
                         self.impl = AioHttpGetUrlImpl(self)
                     except:
                         pass

@@ -17,11 +17,15 @@ else:
     get_current_task = asyncio.Task.current_task
     get_running_loop = asyncio.get_event_loop
 
+AbstractEventLoop = asyncio.AbstractEventLoop
 CancelledError = asyncio.CancelledError
 
 
-def new_raw_async_loop():
-    loop = asyncio.ProactorEventLoop()
+def new_raw_async_loop(force_use_selector=False):
+    if not force_use_selector:
+        loop = asyncio.ProactorEventLoop()
+    else:
+        loop = asyncio.SelectorEventLoop()
     executor = ThreadPoolExecutor()
     import concurrent.futures
     assert isinstance(executor, concurrent.futures.ThreadPoolExecutor)
@@ -36,8 +40,8 @@ def _run_forever(loop):
     loop.run_forever()
 
 
-def new_running_async_loop(name="AsyncLoopThread"):
-    loop = new_raw_async_loop()
+def new_running_async_loop(name="AsyncLoopThread", force_use_selector=False):
+    loop = new_raw_async_loop(force_use_selector=force_use_selector)
     threading.Thread(target=_run_forever, args=(loop,), name=name, daemon=True).start()
     return loop
 
@@ -123,6 +127,22 @@ async def async_run_func_or_co(func_or_co, *args, **kwargs):
         return await get_running_loop().run_in_executor(None, fn)
 
 
+async def async_run_in_other_loop(co, loop, cancel_connect=True):
+    our_loop = get_running_loop()
+    if loop == our_loop:
+        # shortcuts in same loop
+        fu = asyncio.ensure_future(co)
+    else:
+        fu = asyncio.wrap_future(asyncio.run_coroutine_threadsafe(co, loop=loop))
+    if not cancel_connect:
+        fu = asyncio.shield(fu)
+    return await fu
+
+
+def run_in_other_loop(co, loop, timeout=None):
+    return asyncio.run_coroutine_threadsafe(co, loop=loop).result(timeout=timeout)
+
+
 _MODULE_TIMEOUT = "__asyncio_helper__.timeout"
 _MODULE_TIMEOUT_HANDLE = "__asyncio_helper__.timeout_handle"
 
@@ -173,3 +193,54 @@ def patch_logging():
         return record
 
     logging.setLogRecordFactory(record_factory)
+
+
+async def start_tls(self, transport, protocol, sslcontext, *,
+                    server_side=False,
+                    server_hostname=None,
+                    ssl_handshake_timeout=None):
+    """Upgrade transport to TLS.
+
+        Return a new transport that *protocol* should start using
+        immediately.
+        """
+
+    # for py37
+    _start_tls = getattr(self, "start_tls", None)
+    if _start_tls is not None:
+        return await _start_tls(transport, protocol, sslcontext, server_side=server_side,
+                                server_hostname=server_hostname,
+                                ssl_handshake_timeout=ssl_handshake_timeout)
+
+    # try to back port start_tls support from py37's asyncio/base_event.py
+    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    # Notice its not work fine with ProactorEventLoop because of bpo-26819 and bpo-33694
+    # so we must use a SelectEventLoop for this function when below python3.7
+    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    assert not isinstance(self, asyncio.ProactorEventLoop)
+
+    import asyncio.sslproto as sslproto
+
+    waiter = self.create_future()
+    ssl_protocol = sslproto.SSLProtocol(
+        self, protocol, sslcontext, waiter,
+        server_side, server_hostname)
+
+    # Pause early so that "ssl_protocol.data_received()" doesn't
+    # have a chance to get called before "ssl_protocol.connection_made()".
+    transport.pause_reading()
+
+    transport._protocol = ssl_protocol
+    # transport.set_protocol(ssl_protocol)
+    conmade_cb = self.call_soon(ssl_protocol.connection_made, transport)
+    resume_cb = self.call_soon(transport.resume_reading)
+
+    try:
+        await waiter
+    except Exception:
+        transport.close()
+        conmade_cb.cancel()
+        resume_cb.cancel()
+        raise
+
+    return ssl_protocol._app_transport

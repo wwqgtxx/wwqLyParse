@@ -21,22 +21,22 @@ class TCPConnector(aiohttp.TCPConnector):
         return conn
 
 
-class AioHttpGetUrlStreamReader(GetUrlStreamReader):
-    decoded_encoding = GetUrlStreamReader.decoded_encoding + ['br']
+class AioHttpGetUrlStreamReader(GetUrlStreamReaderAsync):
+    decoded_encoding = []
 
     def __init__(self, resp: aiohttp.ClientResponse, loop: asyncio.AbstractEventLoop):
+        super().__init__(loop)
         self.resp = resp
-        self.loop = loop
 
-    def _read(self, size):
-        return asyncio.run_coroutine_threadsafe(self.resp.content.read(size), loop=self.loop).result()
+    async def _read_async(self, size):
+        return await asyncio_helper.async_run_in_other_loop(self.resp.content.read(size), loop=self.loop)
 
-    def __enter__(self):
-        asyncio.run_coroutine_threadsafe(self.resp.__aenter__(), loop=self.loop).result()
+    async def __aenter__(self):
+        await asyncio_helper.async_run_in_other_loop(self.resp.__aenter__(), loop=self.loop)
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        asyncio.run_coroutine_threadsafe(self.resp.__aexit__(exc_type, exc_val, exc_tb), loop=self.loop).result()
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await asyncio_helper.async_run_in_other_loop(self.resp.__aexit__(exc_type, exc_val, exc_tb), loop=self.loop)
 
 
 async def __close_connector(connector: TCPConnector):
@@ -59,7 +59,7 @@ class AioHttpGetUrlImpl(GetUrlImpl):
         self.common_loop = service.loop
         self.common_connector = TCPConnector(limit=GET_URL_PARALLEL_LIMIT, loop=self.common_loop)
         self.common_cookie_jar = self.new_cookie_jar()
-        self.common_client_timeout = GET_URL_CONNECT_TIMEOUT+GET_URL_RECV_TIMEOUT
+        self.common_client_timeout = GET_URL_CONNECT_TIMEOUT + GET_URL_RECV_TIMEOUT
         logging.debug("init %s" % self.common_connector)
         weakref.finalize(self, _close_connector, self.common_loop, self.common_connector)
 
@@ -115,7 +115,8 @@ class AioHttpGetUrlImpl(GetUrlImpl):
             cookie_jar = self.new_cookie_jar()
         try:
             async with aiohttp.ClientSession(connector=connector, connector_owner=False,
-                                             cookies=cookies, cookie_jar=cookie_jar) as _session:
+                                             cookies=cookies, cookie_jar=cookie_jar,
+                                             auto_decompress=not stream) as _session:
                 return await __get_url_aiohttp(_session)
         except aiohttp.ClientError as e:
             logging.error(callmethod + 'request %s ClientError! Error message: %s' % (o_url, e))

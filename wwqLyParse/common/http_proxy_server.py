@@ -92,6 +92,19 @@ class AsyncHttpProtocol(asyncio.streams.FlowControlMixin, asyncio.protocols.Prot
             closed.exception()
 
 
+_hps_loop = None
+
+
+def get_hps_loop():
+    global _hps_loop
+    if _hps_loop is None:
+        if not asyncio_helper.PY37:
+            _hps_loop = asyncio_helper.new_running_async_loop("HPSLoop", force_use_selector=True)
+        else:
+            _hps_loop = asyncio_helper.get_main_async_loop()
+    return _hps_loop
+
+
 class AsyncHttpProxyServer(object):
     address_family = socket.AF_INET
     socket_type = socket.SOCK_STREAM
@@ -105,12 +118,33 @@ class AsyncHttpProxyServer(object):
         self.socket.bind((host, port))
         self.server_address = self.socket.getsockname()
         self.server = None  # type:asyncio.AbstractServer
+        self.loop = get_hps_loop()
 
     @property
     def port(self):
         return self.server_address[1]
 
-    async def start(self):
+    async def start_async(self):
+        return await asyncio.wrap_future(
+            asyncio.run_coroutine_threadsafe(
+                self._start(), loop=self.loop))
+
+    def start(self):
+        return asyncio_helper.run_in_other_loop(self._start(), loop=self.loop)
+
+    async def shutdown_async(self):
+        return await asyncio_helper.async_run_in_other_loop(self._shutdown(), loop=self.loop)
+
+    def shutdown(self):
+        return asyncio_helper.run_in_other_loop(self._shutdown(), loop=self.loop)
+
+    async def join_async(self):
+        return await asyncio_helper.async_run_in_other_loop(self._join(), loop=self.loop)
+
+    def join(self):
+        return asyncio_helper.run_in_other_loop(self._join(), loop=self.loop)
+
+    async def _start(self):
         loop = asyncio_helper.get_running_loop()
         pool = AsyncPool(thread_name_prefix="HPSPool-%d" % self._counter(), loop=loop)
 
@@ -120,23 +154,23 @@ class AsyncHttpProxyServer(object):
         self.server = await loop.create_server(factory, sock=self.socket, )
         logging.info("listen address:'http://%s:%s'" % self.server_address)
 
-    async def shutdown(self):
+    async def _shutdown(self):
         if self.server:
             logging.info("begin shutdown listen address:'http://%s:%s'" % self.server_address)
             self.server.close()
             await self.server.wait_closed()
             logging.info("finish shutdown listen address:'http://%s:%s'" % self.server_address)
 
-    async def join(self):
+    async def _join(self):
         if self.server:
             await self.server.wait_closed()
 
     async def __aenter__(self):
-        await self.start()
+        await self.start_async()
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
-        await self.shutdown()
+        await self.shutdown_async()
 
 
 class AsyncBaseHttpRequestHandler:
@@ -588,8 +622,8 @@ class AsyncProxyHandler(AsyncBaseHttpRequestHandler):
                 context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
                 # context = ssl.SSLContext(ssl.PROTOCOL_TLS)
                 context.load_cert_chain(certfile, certfile)
-                transport = await self.protocol.loop.start_tls(self.protocol.transport, self.protocol,
-                                                               sslcontext=context, server_side=True)
+                transport = await asyncio_helper.start_tls(self.protocol.loop, self.protocol.transport, self.protocol,
+                                                           sslcontext=context, server_side=True)
                 self.protocol.transport = transport
                 self.protocol.rebuild()
                 await self.setup()
@@ -675,9 +709,9 @@ class AsyncProxyHandler(AsyncBaseHttpRequestHandler):
 
         try:
             if isinstance(content, GetUrlStreamReader):
-                with content:
+                async with content:
                     while True:
-                        data = content.read()
+                        data = await content.read_async()
                         if not data:
                             break
                         self.wfile.write(data)
@@ -706,11 +740,6 @@ class AsyncProxyHandler(AsyncBaseHttpRequestHandler):
             return await self.do_url_fetch()
 
 
-if not asyncio_helper.PY37:
-    from .http_proxy_server_thread import FuckAsyncProxyServer
-
-    AsyncHttpProxyServer = FuckAsyncProxyServer
-
-from .http_proxy_server_thread import HttpProxyServer
+HttpProxyServer = AsyncHttpProxyServer
 
 __all__ = ["HttpProxyServer", "AsyncHttpProxyServer"]

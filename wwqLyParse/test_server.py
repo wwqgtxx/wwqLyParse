@@ -31,13 +31,11 @@ get_url_service.init()
 
 async def test():
     async with AsyncHttpProxyServer(host='localhost', port=1082) as hps:
-        await hps.join()
+        await hps.join_async()
 
 
 def server():
     asyncio_helper.run_in_main_async_loop(test()).result()
-    # time.sleep(5)
-    # asyncio_helper.run_in_main_async_loop(ahps.shutdown()).result()
 
 
 if __name__ == "__main__":

@@ -87,15 +87,14 @@ class GetUrlService(object):
     def force_flush_cache(self, response, callmethod=None):
         if callmethod is None:
             callmethod = get_caller_info(1)
-        return asyncio.run_coroutine_threadsafe(
-            self._force_flush_cache_async(response, callmethod=callmethod), loop=self.loop).result()
+        return asyncio_helper.run_in_other_loop(
+            self._force_flush_cache_async(response, callmethod=callmethod), loop=self.loop)
 
     async def force_flush_cache_async(self, response, callmethod=None):
         if callmethod is None:
             callmethod = get_caller_info(1)
-        return await asyncio.shield(asyncio.wrap_future(
-            asyncio.run_coroutine_threadsafe(
-                self._force_flush_cache_async(response, callmethod=callmethod), loop=self.loop)))
+        return await asyncio_helper.async_run_in_other_loop(
+            self._force_flush_cache_async(response, callmethod=callmethod), loop=self.loop, cancel_connect=False)
 
     async def _force_flush_cache_async(self, response, callmethod=None):
         if callmethod is None:
@@ -110,20 +109,20 @@ class GetUrlService(object):
                 verify=None, allow_cache=True, callmethod=None, stream=False):
         if callmethod is None:
             callmethod = get_caller_info(1)
-        return asyncio.run_coroutine_threadsafe(
+        return asyncio_helper.run_in_other_loop(
             self._get_url_async(o_url, encoding=encoding, headers=headers, data=data, method=method,
                                 cookies=cookies, cookie_jar=cookie_jar, verify=verify,
-                                allow_cache=allow_cache, callmethod=callmethod, stream=stream), loop=self.loop).result()
+                                allow_cache=allow_cache, callmethod=callmethod, stream=stream), loop=self.loop)
 
     async def get_url_async(self, o_url, encoding=None, headers=None, data=None, method=None, cookies=None,
                             cookie_jar=None, verify=None, allow_cache=True, callmethod=None, stream=False):
         if callmethod is None:
             callmethod = get_caller_info(1)
-        return await asyncio.shield(asyncio.wrap_future(
-            asyncio.run_coroutine_threadsafe(
-                self._get_url_async(o_url, encoding=encoding, headers=headers, data=data, method=method,
-                                    cookies=cookies, cookie_jar=cookie_jar, verify=verify,
-                                    allow_cache=allow_cache, callmethod=callmethod, stream=stream), loop=self.loop)))
+        return await asyncio_helper.async_run_in_other_loop(
+            self._get_url_async(o_url, encoding=encoding, headers=headers, data=data, method=method,
+                                cookies=cookies, cookie_jar=cookie_jar, verify=verify,
+                                allow_cache=allow_cache, callmethod=callmethod, stream=stream),
+            loop=self.loop, cancel_connect=False)
 
     async def _get_url_async(self, o_url, encoding=None, headers=None, data=None, method=None, cookies=None,
                              cookie_jar=None, verify=None, allow_cache=True, callmethod=None, stream=False):

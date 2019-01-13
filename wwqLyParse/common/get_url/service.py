@@ -21,9 +21,9 @@ class GetUrlService(object):
 
     def __init__(self):
         self.url_cache = LRUCache(size=URL_CACHE_MAX, timeout=URL_CACHE_TIMEOUT, use_lock=False)
-        self.url_key_lock = AsyncKeyLockDict()
-        self.loop = asyncio_helper.new_running_async_loop("GetUrlLoop")
-        self.pool_get_url = AsyncPool(GET_URL_PARALLEL_LIMIT, thread_name_prefix="GetUrlPool", loop=self.loop)
+        self.url_key_lock = None  # type:AsyncKeyLockDict
+        self.loop = None  # type:asyncio.AbstractEventLoop
+        self.pool_get_url = None  # type:AsyncPool
         self.fake_headers = FAKE_HEADERS.copy()
         self.check_response_func_list = list()
         self.check_response_retry_num = GET_URL_CHECK_RESP_RETRY_NUM
@@ -36,6 +36,9 @@ class GetUrlService(object):
     def init(self):
         with self.init_lock:
             if not self.inited:
+                self.url_key_lock = AsyncKeyLockDict()
+                self.loop = asyncio_helper.new_running_async_loop("GetUrlLoop")
+                self.pool_get_url = AsyncPool(GET_URL_PARALLEL_LIMIT, thread_name_prefix="GetUrlPool", loop=self.loop)
                 configparser.RawConfigParser.OPTCRE = re.compile(
                     r'(?P<option>[^=\s][^=]*)\s*(?P<vi>[=])\s*(?P<value>.*)$')
                 config = configparser.ConfigParser()
@@ -85,18 +88,21 @@ class GetUrlService(object):
         return self.impl.new_cookie_jar()
 
     def force_flush_cache(self, response, callmethod=None):
+        self.init()
         if callmethod is None:
             callmethod = get_caller_info(1)
         return asyncio_helper.run_in_other_loop(
             self._force_flush_cache_async(response, callmethod=callmethod), loop=self.loop)
 
     async def force_flush_cache_async(self, response, callmethod=None):
+        self.init()
         if callmethod is None:
             callmethod = get_caller_info(1)
         return await asyncio_helper.async_run_in_other_loop(
             self._force_flush_cache_async(response, callmethod=callmethod), loop=self.loop, cancel_connect=False)
 
     async def _force_flush_cache_async(self, response, callmethod=None):
+        self.init()
         if callmethod is None:
             callmethod = get_caller_info(1)
         url_json = getattr(response, "url_json", response)
@@ -107,6 +113,7 @@ class GetUrlService(object):
 
     def get_url(self, o_url, encoding=None, headers=None, data=None, method=None, cookies=None, cookie_jar=None,
                 verify=None, allow_cache=True, callmethod=None, stream=False):
+        self.init()
         if callmethod is None:
             callmethod = get_caller_info(1)
         return asyncio_helper.run_in_other_loop(
@@ -116,6 +123,7 @@ class GetUrlService(object):
 
     async def get_url_async(self, o_url, encoding=None, headers=None, data=None, method=None, cookies=None,
                             cookie_jar=None, verify=None, allow_cache=True, callmethod=None, stream=False):
+        self.init()
         if callmethod is None:
             callmethod = get_caller_info(1)
         return await asyncio_helper.async_run_in_other_loop(

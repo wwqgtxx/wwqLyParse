@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
 import multiprocessing.connection as multiprocessing_connection
-from .async_connection import *
-import asyncio
 from .lru_cache import *
 from .threadpool import *
 import itertools
@@ -92,34 +90,3 @@ class ConnectionServer(object):
                         c_send.send_bytes(b'ok')
                     except:
                         logging.exception("error")
-
-
-class AsyncConnectionServer(AsyncPipeServer):
-    def __init__(self, address, handle, authkey=None, logger=logging.root, loop=None):
-        super().__init__(address, handle, authkey, logger, loop)
-        self.raw_handle = handle
-        self.handle = self._handle
-
-    async def _handle(self, conn: AsyncPipeConnection):
-        try:
-            while True:
-                data = await conn.recv_bytes()
-                if not data:
-                    raise EOFError
-                self.logger.debug("parse conn %s" % conn)
-                # self.logger.debug(data)
-                try:
-                    result = self.raw_handle(data)
-                except Exception:
-                    self.logger.exception("handle error")
-                else:
-                    if result is not None:
-                        await conn.send_bytes(result)
-        except asyncio.IncompleteReadError:
-            self.logger.debug("conn %s was IncompleteRead" % conn)
-        except OSError:
-            self.logger.debug("conn %s was closed" % conn)
-        except EOFError:
-            self.logger.debug("conn %s was eof" % conn)
-        except BrokenPipeError:
-            self.logger.debug("conn %s was broken" % conn)

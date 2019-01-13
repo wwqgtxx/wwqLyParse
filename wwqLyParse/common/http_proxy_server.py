@@ -23,6 +23,7 @@ import itertools
 import asyncio
 from . import asyncio_helper
 from .async_pool import *
+from .async_connection import *
 
 NetWorkIOError = (socket.error, ssl.SSLError, OSError)
 
@@ -35,74 +36,6 @@ class CertUtil(object):
     def get_cert(commonname, sans=()):
         return get_real_path(CertUtil.ca_keyfile)
 
-
-class AsyncHttpProtocol(asyncio.streams.FlowControlMixin, asyncio.protocols.Protocol):
-    def __init__(self, handle_class, pool, loop=None):
-        super().__init__(loop=loop)
-        self.handle_class = handle_class
-        self.pool = pool  # type: AsyncPool
-        self.loop = self._loop  # type: asyncio.AbstractEventLoop
-        self.stream_reader = None  # type: asyncio.StreamReader
-        self.stream_writer = None  # type: asyncio.StreamWriter
-        self.transport = None  # type: asyncio.Transport
-        self._over_ssl = False
-        self._closed = self.loop.create_future()
-
-    def rebuild(self):
-        self.stream_reader = asyncio.StreamReader(loop=self.loop)
-        self.stream_reader.set_transport(self.transport)
-        self._over_ssl = self.transport.get_extra_info('sslcontext') is not None
-        self.stream_writer = asyncio.StreamWriter(self.transport, self,
-                                                  self.stream_reader,
-                                                  self.loop)
-
-    def connection_made(self, transport):
-        self.transport = transport
-        self.rebuild()
-        res = self.handle_class(self)
-        self.pool.spawn(res())
-
-    def connection_lost(self, exc):
-        if self.stream_reader is not None:
-            if exc is None:
-                self.stream_reader.feed_eof()
-            else:
-                self.stream_reader.set_exception(exc)
-        if not self._closed.done():
-            if exc is None:
-                self._closed.set_result(None)
-            else:
-                self._closed.set_exception(exc)
-        super().connection_lost(exc)
-        self.stream_reader = None
-        self.stream_writer = None
-
-    def data_received(self, data):
-        self.stream_reader.feed_data(data)
-
-    def eof_received(self):
-        self.stream_reader.feed_eof()
-        if self._over_ssl:
-            return False
-        return True
-
-    def __del__(self):
-        closed = self._closed
-        if closed.done() and not closed.cancelled():
-            closed.exception()
-
-
-# _hps_loop = None
-#
-#
-# def get_hps_loop():
-#     global _hps_loop
-#     if _hps_loop is None:
-#         if not asyncio_helper.PY37:
-#             _hps_loop = asyncio_helper.new_running_async_loop("HPSLoop", force_use_selector=True)
-#         else:
-#             _hps_loop = asyncio_helper.get_main_async_loop()
-#     return _hps_loop
 
 get_hps_loop = asyncio_helper.get_main_async_loop
 
@@ -151,7 +84,7 @@ class AsyncHttpProxyServer(object):
         pool = AsyncPool(thread_name_prefix="HPSPool-%d" % self._counter(), loop=loop)
 
         def factory():
-            return AsyncHttpProtocol(AsyncProxyHandler, pool, loop)
+            return AsyncTcpStreamProtocol(AsyncProxyHandler, pool, loop)
 
         self.server = await loop.create_server(factory, sock=self.socket, )
         logging.info("listen address:'http://%s:%s'" % self.server_address)
@@ -175,43 +108,7 @@ class AsyncHttpProxyServer(object):
         await self.shutdown_async()
 
 
-class AsyncBaseHttpRequestHandler:
-    def __init__(self, protocol: AsyncHttpProtocol):
-        self.protocol = protocol
-        self._setup()
-
-    async def __call__(self, *args, **kwargs):
-        await self.setup()
-        try:
-            await self.handle()
-        except ConnectionResetError:
-            pass
-        finally:
-            await self.finish()
-
-    def _setup(self):
-        self.wfile = self.protocol.stream_writer
-        self.rfile = self.protocol.stream_reader
-        self.socket = self.protocol.transport.get_extra_info('socket')
-        self.sockname = self.protocol.transport.get_extra_info('sockname')
-        self.peername = self.protocol.transport.get_extra_info('peername')
-        self.client_address = self.peername
-
-    async def setup(self):
-        self._setup()
-
-    # async def handle(self):
-    #     pass
-
-    async def finish(self):
-        try:
-            await self.wfile.drain()
-        except asyncio.CancelledError:
-            raise
-        except:
-            pass
-        self.wfile.close()
-
+class AsyncBaseHttpRequestHandler(AsyncTcpStreamRequestHandler):
     protocol_version = "HTTP/0.9"
     default_request_version = "HTTP/0.9"
     error_message_format = http.server.DEFAULT_ERROR_MESSAGE

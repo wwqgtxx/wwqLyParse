@@ -7,16 +7,12 @@ import logging
 import threading
 import functools
 import itertools
+import concurrent.futures
 from .concurrent_futures import ThreadPoolExecutor
 
 PY37 = sys.version_info >= (3, 7)
-if PY37:
-    get_current_task = asyncio.current_task
-    get_running_loop = asyncio.get_running_loop
-else:
-    get_current_task = asyncio.Task.current_task
-    get_running_loop = asyncio.get_event_loop
-
+get_current_task = asyncio.current_task
+get_running_loop = asyncio.get_running_loop
 AbstractEventLoop = asyncio.AbstractEventLoop
 CancelledError = asyncio.CancelledError
 
@@ -35,14 +31,22 @@ def new_raw_async_loop(force_use_selector=False):
 
 
 def _run_forever(loop):
-    logging.debug("start loop %s", loop)
+    logging.debug("starting loop %s", loop)
     asyncio.set_event_loop(loop)
     loop.run_forever()
 
 
 def new_running_async_loop(name="AsyncLoopThread", force_use_selector=False):
+    fu = concurrent.futures.Future()
     loop = new_raw_async_loop(force_use_selector=force_use_selector)
+
+    def _cb():
+        logging.debug("finish start loop %s", loop)
+        fu.set_result(None)
+
+    loop.call_soon_threadsafe(_cb)
     threading.Thread(target=_run_forever, args=(loop,), name=name, daemon=True).start()
+    fu.result()
     return loop
 
 
@@ -59,6 +63,11 @@ def start_main_async_loop_in_main_thread(callback, *args, **kwargs):
     assert _main_async_loop is None
     _main_async_loop = new_raw_async_loop()
 
+    async def _co():
+        logging.debug("finish start main loop %s", _main_async_loop)
+
+        threading.Thread(target=_cb).start()
+
     def _cb():
         try:
             callback(*args, **kwargs)
@@ -71,8 +80,7 @@ def start_main_async_loop_in_main_thread(callback, *args, **kwargs):
             asyncio.run_coroutine_threadsafe(_null(), _main_async_loop)
 
     logging.debug(asyncio)
-    thread = threading.Thread(target=_cb)
-    _main_async_loop.call_soon(thread.start)
+    _main_async_loop.create_task(_co())
     threading.current_thread().name = "MainLoop"
     _run_forever(_main_async_loop)
     threading.current_thread().name = "MainThread"
@@ -140,8 +148,25 @@ async def async_run_in_other_loop(co, loop, cancel_connect=True):
     return await fu
 
 
-def run_in_other_loop(co, loop, timeout=None):
-    return asyncio.run_coroutine_threadsafe(co, loop=loop).result(timeout=timeout)
+class InSameLoopError(Exception):
+    pass
+
+
+def run_in_other_loop(co, loop, timeout=None, cancel_connect=False):
+    try:
+        r_loop = get_running_loop()
+    except RuntimeError:
+        pass
+    else:
+        if r_loop is loop:
+            raise InSameLoopError()
+    fu = asyncio.run_coroutine_threadsafe(co, loop=loop)
+    try:
+        return fu.result(timeout=timeout)
+    except concurrent.futures.TimeoutError:
+        if cancel_connect:
+            fu.cancel()
+        raise
 
 
 _MODULE_TIMEOUT = "__asyncio_helper__.timeout"
@@ -174,10 +199,7 @@ def get_left_time(task: asyncio.Task = None, loop: asyncio.AbstractEventLoop = N
         task = get_current_task()
     out_time = getattr(task, _MODULE_TIMEOUT, None)
     if not out_time:
-        if PY37:
-            return sys.maxsize
-        else:
-            return 60 * 60 * 24  # one day (resolve the ValueError("timeout too big") in py35)
+        return sys.maxsize
     now_time = loop.time()
     left_time = out_time - now_time
     if left_time < 0:
@@ -213,4 +235,3 @@ async def start_tls(self, transport, protocol, sslcontext, *,
                                 ssl_handshake_timeout=ssl_handshake_timeout)
     else:
         raise NotImplementedError
-

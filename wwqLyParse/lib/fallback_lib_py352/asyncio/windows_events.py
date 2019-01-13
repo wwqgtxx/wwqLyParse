@@ -30,6 +30,7 @@ NULL = 0
 INFINITE = 0xffffffff
 ERROR_CONNECTION_REFUSED = 1225
 ERROR_CONNECTION_ABORTED = 1236
+ERROR_OPERATION_ABORTED = 995
 
 # Initial delay in seconds for connect_pipe() before retrying to connect
 CONNECT_PIPE_INIT_DELAY = 0.001
@@ -428,7 +429,7 @@ class IocpProactor:
                 return ov.getresult()
             except OSError as exc:
                 if exc.winerror in (_overlapped.ERROR_NETNAME_DELETED,
-                                    _overlapped.ERROR_OPERATION_ABORTED):
+                                    ERROR_OPERATION_ABORTED):
                     raise ConnectionResetError(*exc.args)
                 else:
                     raise
@@ -451,7 +452,7 @@ class IocpProactor:
                 return ov.getresult()
             except OSError as exc:
                 if exc.winerror in (_overlapped.ERROR_NETNAME_DELETED,
-                                    _overlapped.ERROR_OPERATION_ABORTED):
+                                    ERROR_OPERATION_ABORTED):
                     raise ConnectionResetError(*exc.args)
                 else:
                     raise
@@ -471,7 +472,7 @@ class IocpProactor:
                 return ov.getresult()
             except OSError as exc:
                 if exc.winerror in (_overlapped.ERROR_NETNAME_DELETED,
-                                    _overlapped.ERROR_OPERATION_ABORTED):
+                                    ERROR_OPERATION_ABORTED):
                     raise ConnectionResetError(*exc.args)
                 else:
                     raise
@@ -544,7 +545,7 @@ class IocpProactor:
                 return ov.getresult()
             except OSError as exc:
                 if exc.winerror in (_overlapped.ERROR_NETNAME_DELETED,
-                                    _overlapped.ERROR_OPERATION_ABORTED):
+                                    ERROR_OPERATION_ABORTED):
                     raise ConnectionResetError(*exc.args)
                 else:
                     raise

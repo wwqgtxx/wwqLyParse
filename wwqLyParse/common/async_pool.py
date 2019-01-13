@@ -7,12 +7,12 @@ class AsyncPool(object):
     _counter = itertools.count().__next__
 
     def __init__(self, size=0, thread_name_prefix=None, loop=None):
+        self.loop = get_running_loop() if loop is None else loop
         self.size = size
-        self.semaphore = asyncio.locks.BoundedSemaphore(size)
+        self.semaphore = asyncio.locks.BoundedSemaphore(size, loop=self.loop)
         self._thread_name_prefix = (thread_name_prefix or
                                     ("AsyncPool-%d" % self._counter()))
         self._thread_name_counter = itertools.count().__next__
-        self.loop = get_running_loop() if loop is None else loop
         self.pool_tasks = []
 
     def _remove_from_pool_tasks(self, task):

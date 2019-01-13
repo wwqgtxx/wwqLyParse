@@ -28,9 +28,7 @@ try:
 except Exception as e:
     from common import *
 
-if __name__ == "__main__":
-    # get_common_real_thread_pool()
-    logging.root.addHandler(RemoteStreamHandler(ADDRESS_LOGGING, FORMAT, DATA_FMT))
+asyncio_helper.patch_logging()
 
 try:
     from .lib.lib_wwqLyParse import *
@@ -40,10 +38,6 @@ except Exception as e:
 import re, threading, sys, json, os, time, logging, importlib
 from argparse import ArgumentParser
 from typing import Dict, Tuple, List
-
-import asyncio
-
-asyncio_helper.patch_logging()
 
 version = {
     'port_version': "0.5.0",
@@ -64,10 +58,8 @@ CLOSE_TIMEOUT = 10
 RECV_TIMEOUT = 60
 CONN_LRU_TIMEOUT = 60 * 60  # 1 hour
 
-parser_class_map = import_by_module_name(module_names=get_all_filename_by_dir('./parsers'), prefix="parsers.",
-                                         super_class=Parser)
-urlhandle_class_map = import_by_module_name(module_names=get_all_filename_by_dir('./urlhandles'), prefix="urlhandles.",
-                                            super_class=UrlHandle)
+parser_class_map = None
+urlhandle_class_map = None
 
 
 async def parser_check_support(parser, url, types=None):
@@ -444,6 +436,18 @@ def arg_parser():
 
 def main(debugstr=None, parsers_name=None, types=None, label=None, pipe=None, force_start=False
          , timeout=PARSE_TIMEOUT, close_timeout=CLOSE_TIMEOUT):
+    if __name__ == "__main__":
+        # get_common_real_thread_pool()
+        add_remote_logging(FORMAT, DATA_FMT)
+    global parser_class_map
+    if parser_class_map is None:
+        parser_class_map = import_by_module_name(module_names=get_all_filename_by_dir('./parsers'), prefix="parsers.",
+                                                 super_class=Parser)
+    global urlhandle_class_map
+    if urlhandle_class_map is None:
+        urlhandle_class_map = import_by_module_name(module_names=get_all_filename_by_dir('./urlhandles'),
+                                                    prefix="urlhandles.",
+                                                    super_class=UrlHandle)
     init_version()
     get_url_service.init()
     logging.debug("\n------------------------------------------------------------\n")

@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
 from multiprocessing.connection import Client, Connection
+from .async_connection import *
+from . import asyncio_helper
+import concurrent.futures
 import logging
 import traceback
 import sys
@@ -10,16 +13,22 @@ ADDRESS_LOGGING = r'\\.\pipe\%s-%s' % ("wwqLyParse", 'logging')
 
 
 class RemoteStream(object):
-    def __init__(self, address):
+    def __init__(self, address, loop):
         self.address = address
-        self.conn = None  # type: Connection
+        self.loop = loop
+        self.conn = None  # type: AsyncPipeConnection
 
     def write(self, data):
         for _ in range(3):
             try:
                 if self.conn is None:
-                    self.conn = Client(address=self.address)
-                self.conn.send_bytes(str(data).encode("utf-8"))
+                    self.conn = AsyncPipeConnection.create_pipe_connection(self.address, self.loop)
+                    logging.debug("get remote_logging connection %s" % self.conn)
+                if self.conn:
+                    self.conn.send_bytes(str(data).encode("utf-8"))
+                return
+            except asyncio_helper.InSameLoopError:
+                self.conn = None
                 return
             except FileNotFoundError:
                 self.conn = None
@@ -40,9 +49,9 @@ class RemoteStream(object):
 
 
 class RemoteStreamHandler(logging.Handler):
-    def __init__(self, address, fmt=None, date_fmt=None, style='%'):
+    def __init__(self, address, fmt=None, date_fmt=None, style='%', loop=None):
         super(RemoteStreamHandler, self).__init__()
-        self.stream = RemoteStream(address)
+        self.stream = RemoteStream(address, loop)
         fmt = logging.Formatter(fmt, date_fmt, style)
         self.setFormatter(fmt)
         # logging.root.addHandler(self)
@@ -54,3 +63,8 @@ class RemoteStreamHandler(logging.Handler):
             stream.write(msg)
         except Exception:
             self.handleError(record)
+
+
+def add_remote_logging(fmt=None, date_fmt=None, style='%'):
+    pc_loop = asyncio_helper.new_running_async_loop("RemoteLogging")
+    logging.root.addHandler(RemoteStreamHandler(ADDRESS_LOGGING, fmt, date_fmt, style, loop=pc_loop))

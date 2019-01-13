@@ -21,9 +21,12 @@ PY37 = sys.version_info >= (3, 7)
 if PY37:
     sys.path.insert(0, get_real_path('./lib/aiohttp_lib'))
 else:
+    sys.path.insert(0, get_real_path('./lib/fallback_lib_py352'))
     sys.path.insert(0, get_real_path('./lib/aiohttp_lib_py352'))
 sys.path.insert(0, get_real_path('./lib/requests_lib'))
 # sys.path.insert(0, get_real_path('./lib/dns_lib'))
+
+print(sys.path)
 
 import mimetypes
 

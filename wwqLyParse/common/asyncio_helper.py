@@ -70,6 +70,7 @@ def start_main_async_loop_in_main_thread(callback, *args, **kwargs):
 
             asyncio.run_coroutine_threadsafe(_null(), _main_async_loop)
 
+    logging.debug(asyncio)
     thread = threading.Thread(target=_cb)
     _main_async_loop.call_soon(thread.start)
     threading.current_thread().name = "MainLoop"
@@ -205,42 +206,11 @@ async def start_tls(self, transport, protocol, sslcontext, *,
         immediately.
         """
 
-    # for py37
     _start_tls = getattr(self, "start_tls", None)
     if _start_tls is not None:
         return await _start_tls(transport, protocol, sslcontext, server_side=server_side,
                                 server_hostname=server_hostname,
                                 ssl_handshake_timeout=ssl_handshake_timeout)
+    else:
+        raise NotImplementedError
 
-    # try to back port start_tls support from py37's asyncio/base_event.py
-    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    # Notice its not work fine with ProactorEventLoop because of bpo-26819 and bpo-33694
-    # so we must use a SelectEventLoop for this function when below python3.7
-    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    assert not isinstance(self, asyncio.ProactorEventLoop)
-
-    import asyncio.sslproto as sslproto
-
-    waiter = self.create_future()
-    ssl_protocol = sslproto.SSLProtocol(
-        self, protocol, sslcontext, waiter,
-        server_side, server_hostname)
-
-    # Pause early so that "ssl_protocol.data_received()" doesn't
-    # have a chance to get called before "ssl_protocol.connection_made()".
-    transport.pause_reading()
-
-    transport._protocol = ssl_protocol
-    # transport.set_protocol(ssl_protocol)
-    conmade_cb = self.call_soon(ssl_protocol.connection_made, transport)
-    resume_cb = self.call_soon(transport.resume_reading)
-
-    try:
-        await waiter
-    except Exception:
-        transport.close()
-        conmade_cb.cancel()
-        resume_cb.cancel()
-        raise
-
-    return ssl_protocol._app_transport

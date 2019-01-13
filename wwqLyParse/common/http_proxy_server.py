@@ -92,17 +92,19 @@ class AsyncHttpProtocol(asyncio.streams.FlowControlMixin, asyncio.protocols.Prot
             closed.exception()
 
 
-_hps_loop = None
+# _hps_loop = None
+#
+#
+# def get_hps_loop():
+#     global _hps_loop
+#     if _hps_loop is None:
+#         if not asyncio_helper.PY37:
+#             _hps_loop = asyncio_helper.new_running_async_loop("HPSLoop", force_use_selector=True)
+#         else:
+#             _hps_loop = asyncio_helper.get_main_async_loop()
+#     return _hps_loop
 
-
-def get_hps_loop():
-    global _hps_loop
-    if _hps_loop is None:
-        if not asyncio_helper.PY37:
-            _hps_loop = asyncio_helper.new_running_async_loop("HPSLoop", force_use_selector=True)
-        else:
-            _hps_loop = asyncio_helper.get_main_async_loop()
-    return _hps_loop
+get_hps_loop = asyncio_helper.get_main_async_loop
 
 
 class AsyncHttpProxyServer(object):

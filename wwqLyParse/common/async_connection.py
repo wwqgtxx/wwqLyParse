@@ -4,6 +4,7 @@
 import asyncio
 from . import asyncio_helper
 from .async_pool import AsyncPool
+import os
 import struct
 import logging
 import itertools
@@ -114,6 +115,8 @@ class AsyncStreamRequestHandler(object):
             await self.handle()
         except ConnectionResetError:
             pass
+        except AuthenticationError:
+            pass
         finally:
             await self.finish()
 
@@ -168,7 +171,7 @@ class AsyncPipeConnection(object):
         self.handle = handle
 
     @classmethod
-    async def _create_pipe_connection_async(cls, address):
+    async def _create_pipe_connection_async(cls, address, family=None, authkey=None):
         loop = asyncio_helper.get_running_loop()
         assert isinstance(loop, asyncio.ProactorEventLoop)
         handle_future = loop.create_future()
@@ -185,17 +188,25 @@ class AsyncPipeConnection(object):
 
         trans, protocol = await loop.create_pipe_connection(factory, address)
         conn = await handle_future  # type:AsyncPipeConnection
+        try:
+            if authkey is not None:
+                await conn._answer_challenge_async(authkey)
+                await conn._deliver_challenge_async(authkey)
+        except AuthenticationError:
+            await conn._close_async()
         return conn
 
     @classmethod
-    async def create_pipe_connection_async(cls, address, loop=None):
+    async def create_pipe_connection_async(cls, address, family=None, authkey=None, loop=None):
         if loop is None:
             loop = asyncio_helper.get_running_loop()
-        return await asyncio_helper.async_run_in_other_loop(cls._create_pipe_connection_async(address), loop)
+        conn = await asyncio_helper.async_run_in_other_loop(cls._create_pipe_connection_async(address, family, authkey),
+                                                            loop)  # type:AsyncPipeConnection
+        return conn
 
     @classmethod
-    def create_pipe_connection(cls, address, loop=None, timeout=None):
-        conn = asyncio_helper.run_in_other_loop(cls._create_pipe_connection_async(address),
+    def create_pipe_connection(cls, address, family=None, authkey=None, loop=None, timeout=None):
+        conn = asyncio_helper.run_in_other_loop(cls._create_pipe_connection_async(address, family, authkey),
                                                 loop, timeout=timeout)  # type:AsyncPipeConnection
         return conn
 
@@ -205,10 +216,14 @@ class AsyncPipeConnection(object):
         self.handle.wfile.write(b_data_head + b_data)
         await self.handle.wfile.drain()
 
-    async def _recv_bytes_async(self):
+    async def _recv_bytes_async(self, max_size=None):
         assert self.handle is not None
+        if max_size is None:
+            max_size = asyncio_helper.PIPE_MAX_BYTES
         b_data_head = await self.handle.rfile.readexactly(8)
         b_data_len = struct.unpack("!Q", b_data_head)[0]
+        if b_data_len > max_size:
+            raise asyncio.LimitOverrunError("data too big", b_data_len)
         return await self.handle.rfile.readexactly(b_data_len)
 
     async def _close_async(self):
@@ -233,6 +248,54 @@ class AsyncPipeConnection(object):
     def close(self):
         return asyncio_helper.run_in_other_loop(self._close_async(), self.handle.protocol.loop)
 
+    def __enter__(self):
+        return self
+
+    async def __aenter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await self.close_async()
+
+    async def _deliver_challenge_async(self, authkey: bytes):
+        import hmac
+        if not isinstance(authkey, bytes):
+            raise ValueError(
+                "Authkey must be bytes, not {0!s}".format(type(authkey)))
+        try:
+            message = os.urandom(MESSAGE_LENGTH)
+            await self._send_bytes_async(CHALLENGE + message)
+            digest = hmac.new(authkey, message, 'md5').digest()
+            response = await self._recv_bytes_async(256)  # reject large message
+            if response == digest:
+                await self._send_bytes_async(WELCOME)
+            else:
+                await self._send_bytes_async(FAILURE)
+                raise AuthenticationError('digest received was wrong')
+        except asyncio.LimitOverrunError as e:
+            await self._send_bytes_async(FAILURE)
+            raise AuthenticationError(e)
+
+    async def _answer_challenge_async(self, authkey: bytes):
+        import hmac
+        if not isinstance(authkey, bytes):
+            raise ValueError(
+                "Authkey must be bytes, not {0!s}".format(type(authkey)))
+        try:
+            message = await self._recv_bytes_async(256)  # reject large message
+            assert message[:len(CHALLENGE)] == CHALLENGE, 'message = %r' % message
+            message = message[len(CHALLENGE):]
+            digest = hmac.new(authkey, message, 'md5').digest()
+            await self._send_bytes_async(digest)
+            response = await self._recv_bytes_async(256)  # reject large message
+            if response != WELCOME:
+                raise AuthenticationError('digest sent was rejected')
+        except asyncio.LimitOverrunError as e:
+            raise AuthenticationError(e)
+
 
 class AsyncPipeServer(object):
     counter = itertools.count().__next__
@@ -252,13 +315,18 @@ class AsyncPipeServer(object):
         assert isinstance(loop, asyncio.ProactorEventLoop)
         pool = AsyncPool(thread_name_prefix="HandlePool-%d" % self.counter(), loop=loop)
         handle = self.handle
+        authkey = self.authkey
 
         class _PipeHandle(AsyncPipeStreamRequestHandler):
             def __init__(self, *k, **kk):
                 super().__init__(*k, **kk)
 
             async def handle(self):
-                await handle(AsyncPipeConnection(self))
+                conn = AsyncPipeConnection(self)
+                if authkey is not None:
+                    await conn._deliver_challenge_async(authkey)
+                    await conn._answer_challenge_async(authkey)
+                await handle(conn)
 
         def factory():
             return AsyncPipeStreamProtocol(_PipeHandle, pool, loop)
@@ -269,7 +337,7 @@ class AsyncPipeServer(object):
         return await asyncio_helper.async_run_in_other_loop(self._run_async(), self.loop)
 
     def run(self):
-        return asyncio_helper.run_in_other_loop(self._run_async(),self.loop)
+        return asyncio_helper.run_in_other_loop(self._run_async(), self.loop)
 
     async def _shutdown_async(self):
         if self.server is not None:
@@ -280,3 +348,18 @@ class AsyncPipeServer(object):
 
     def shutdown(self):
         return asyncio_helper.run_in_other_loop(self._shutdown_async(), self.loop)
+
+
+class AuthenticationError(Exception):
+    pass
+
+
+#
+# Authentication stuff
+#
+
+MESSAGE_LENGTH = 20
+
+CHALLENGE = b'#CHALLENGE#'
+WELCOME = b'#WELCOME#'
+FAILURE = b'#FAILURE#'

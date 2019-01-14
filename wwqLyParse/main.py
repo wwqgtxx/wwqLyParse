@@ -204,6 +204,7 @@ async def _parse(input_text, types=None, parsers_name=None, url_handles_name=Non
             # print(e)
             # import traceback
             # traceback.print_exc()
+
     if not _use_inside:
         asyncio_helper.set_timeout(asyncio_helper.get_current_task(), PARSE_TIMEOUT + 1)
 
@@ -227,7 +228,7 @@ async def _parse(input_text, types=None, parsers_name=None, url_handles_name=Non
         for parser in parsers:
             if await parser_check_support(parser, input_text, types):
                 task = pool.spawn(run(q_results, parser, input_text, pool, *k, **kk))
-                asyncio_helper.set_timeout(task, asyncio_helper.get_left_time()-1)
+                asyncio_helper.set_timeout(task, asyncio_helper.get_left_time() - 1)
         await pool.join()
     while not q_results.empty():
         result = await q_results.get()
@@ -327,22 +328,28 @@ def debug(text):
     logging.debug(info)
 
 
+_close_lock = threading.Lock()
+
+
 def close():
-    parsers = new_objects(parser_class_map)
-    url_handles = new_objects(urlhandle_class_map)
+    if _close_lock.acquire(blocking=False):
+        logging.debug("Oh!Oh!Oh! I'm closing!")
+        parsers = new_objects(parser_class_map)
+        url_handles = new_objects(urlhandle_class_map)
 
-    def exit():
-        time.sleep(0.001)
-        os._exit(0)
+        def exit():
+            # asyncio_helper.get_main_async_loop().stop()
+            # time.sleep(0.001)
+            os._exit(0)
 
-    with ThreadPool(thread_name_prefix="ClosePool") as pool:
-        for parser in parsers:
-            pool.spawn(parser.close_parser)
-        for url_handle_obj in url_handles:
-            pool.spawn(url_handle_obj.close_url_handle)
-        pool.join(timeout=CLOSE_TIMEOUT)
-        pool.spawn(exit)
-        pool.join()
+        with ThreadPool(thread_name_prefix="ClosePool") as pool:
+            for parser in parsers:
+                pool.spawn(parser.close_parser)
+            for url_handle_obj in url_handles:
+                pool.spawn(url_handle_obj.close_url_handle)
+            pool.join(timeout=CLOSE_TIMEOUT)
+            pool.spawn(exit)
+            pool.join()
 
 
 def _handle(data):
@@ -402,8 +409,12 @@ def run(pipe, force_start=False):
                             req = req.encode("utf-8")
                             req = lib_parse(req)
                             conn.send_bytes(req)
+                            time.sleep(0.1)
+                except FileNotFoundError:
+                    pass
                 except EOFError:
                     pass
+                time.sleep(0.1)
             else:
                 raise
 
@@ -461,7 +472,10 @@ def main(debugstr=None, parsers_name=None, types=None, label=None, pipe=None, fo
         else:
             debug(parse_url(debugstr, label))
     else:
-        run(pipe, force_start)
+        try:
+            run(pipe, force_start)
+        except:
+            logging.exception("run error")
 
 
 if __name__ == '__main__':

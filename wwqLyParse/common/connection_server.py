@@ -32,10 +32,11 @@ class ConnectionServer(object):
             # self.logger.debug(data)
             try:
                 result = self.handle(data)
-                if result is not None:
-                    conn.send_bytes(result)
             except Exception:
                 self.logger.exception("handle error")
+            else:
+                if result is not None:
+                    conn.send_bytes(result)
             conn_lru_dict[conn] = True
             c_send.send_bytes(b'ok')
         except OSError:
@@ -95,10 +96,11 @@ class ConnectionServer(object):
 
 
 class AsyncConnectionServer(AsyncPipeServer):
-    def __init__(self, address, handle, authkey=None, logger=logging.root, loop=None):
+    def __init__(self, address, handle, authkey=None, logger=logging.root, loop=None, run_directly=False):
         super().__init__(address, handle, authkey, logger, loop)
         self.raw_handle = handle
         self.handle = self._handle
+        self.run_directly = run_directly
 
     async def _handle(self, conn: AsyncPipeConnection):
         try:
@@ -109,12 +111,15 @@ class AsyncConnectionServer(AsyncPipeServer):
                 self.logger.debug("parse conn %s" % conn)
                 # self.logger.debug(data)
                 try:
-                    result = self.raw_handle(data)
+                    if self.run_directly:
+                        result = self.raw_handle(data)
+                    else:
+                        result = await asyncio_helper.async_run_func_or_co(self.raw_handle, data)
                 except Exception:
                     self.logger.exception("handle error")
                 else:
                     if result is not None:
-                        await conn.send_bytes(result)
+                        await conn.send_bytes_async(result)
         except asyncio.IncompleteReadError:
             self.logger.debug("conn %s was IncompleteRead" % conn)
         except OSError:

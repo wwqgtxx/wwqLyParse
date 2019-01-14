@@ -1,4 +1,4 @@
-rem @echo off
+@echo off
 set PYTHONDONTWRITEBYTECODE=x
 cd %~dp0
 if %processor_architecture%==x86 (

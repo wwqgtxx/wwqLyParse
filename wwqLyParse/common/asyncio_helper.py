@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
 import asyncio
+# import asyncio.windows_utils
 import sys
 import logging
 import threading
@@ -16,9 +17,21 @@ get_running_loop = asyncio.get_running_loop
 AbstractEventLoop = asyncio.AbstractEventLoop
 CancelledError = asyncio.CancelledError
 
+PIPE_MAX_BYTES = 32 * 1024 * 1024  # 32m
+
+
+# class IocpProactor(asyncio.IocpProactor):
+#     def recv(self, conn, nbytes, flags=0):
+#         if isinstance(conn, asyncio.windows_utils.PipeHandle):
+#             # patch default nNumberOfBytesToRead from 32k to 32m
+#             if nbytes == 32768:  # proactor_event.py line 274
+#                 nbytes = PIPE_MAX_BYTES
+#         return super().recv(conn, nbytes, flags)
+
 
 def new_raw_async_loop(force_use_selector=False):
     if not force_use_selector:
+        # loop = asyncio.ProactorEventLoop(IocpProactor())
         loop = asyncio.ProactorEventLoop()
     else:
         loop = asyncio.SelectorEventLoop()

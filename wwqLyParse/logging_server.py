@@ -40,23 +40,23 @@ def _handle(data):
     print(data.decode("utf-8"))
 
 
-async def test():
-    address_logging = ADDRESS_LOGGING
-    logging.info("listen address:'%s'" % address_logging)
-    aps = AsyncConnectionServer(ADDRESS_LOGGING, _handle)
-    await aps.run_async()
+# async def test():
+#     address_logging = ADDRESS_LOGGING
+#     logging.info("listen address:'%s'" % address_logging)
+#     aps = AsyncConnectionServer(ADDRESS_LOGGING, _handle, run_directly=True)
+#     await aps.run_async()
+#
+#
+# def main():
+#     asyncio_helper.run_in_main_async_loop(test()).result()
+#
+#     threading.main_thread().join()
 
 
 def main():
-    asyncio_helper.run_in_main_async_loop(test()).result()
-
-    threading.main_thread().join()
-
-
-# def main():
-#     address_logging = ADDRESS_LOGGING
-#     logging.info("listen address:'%s'" % address_logging)
-#     ConnectionServer(address_logging, _handle).run()
+    address_logging = ADDRESS_LOGGING
+    logging.info("listen address:'%s'" % address_logging)
+    ConnectionServer(address_logging, _handle).run()
 
 
 if __name__ == "__main__":

@@ -84,7 +84,7 @@ class AsyncHttpProxyServer(object):
         pool = AsyncPool(thread_name_prefix="HPSPool-%d" % self._counter(), loop=loop)
 
         def factory():
-            return AsyncTcpStreamProtocol(AsyncProxyHandler, pool, loop)
+            return asyncio_helper.AsyncTcpStreamProtocol(AsyncProxyHandler, pool, loop)
 
         self.server = await loop.create_server(factory, sock=self.socket, )
         logging.info("listen address:'http://%s:%s'" % self.server_address)
@@ -108,7 +108,7 @@ class AsyncHttpProxyServer(object):
         await self.shutdown_async()
 
 
-class AsyncBaseHttpRequestHandler(AsyncTcpStreamRequestHandler):
+class AsyncBaseHttpRequestHandler(asyncio_helper.AsyncTcpStreamRequestHandler):
     protocol_version = "HTTP/0.9"
     default_request_version = "HTTP/0.9"
     error_message_format = http.server.DEFAULT_ERROR_MESSAGE

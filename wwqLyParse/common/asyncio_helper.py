@@ -248,3 +248,157 @@ async def start_tls(self, transport, protocol, sslcontext, *,
                                 ssl_handshake_timeout=ssl_handshake_timeout)
     else:
         raise NotImplementedError
+
+
+class AsyncStreamProtocol(asyncio.streams.FlowControlMixin, asyncio.protocols.Protocol):
+    def __init__(self, handle_class, pool=None, loop=None):
+        super().__init__(loop=loop)
+        self.handle_class = handle_class
+        self.pool = pool  # type: AsyncPool
+        self.loop = self._loop  # type: asyncio.AbstractEventLoop
+        self.stream_reader = None  # type: asyncio.StreamReader
+        self.stream_writer = None  # type: asyncio.StreamWriter
+        self.transport = None  # type: asyncio.Transport
+        self._closed = self.loop.create_future()
+
+    def rebuild(self):
+        self.stream_reader = asyncio.StreamReader(loop=self.loop)
+        self.stream_reader.set_transport(self.transport)
+        self.stream_writer = asyncio.StreamWriter(self.transport, self,
+                                                  self.stream_reader,
+                                                  self.loop)
+
+    def connection_made(self, transport):
+        self.transport = transport
+        self.rebuild()
+        res = self.handle_class(self)
+        if self.pool is None:
+            self.loop.create_task(res())
+        else:
+            self.pool.spawn(res())
+
+    def connection_lost(self, exc):
+        if self.stream_reader is not None:
+            if exc is None:
+                self.stream_reader.feed_eof()
+            else:
+                self.stream_reader.set_exception(exc)
+        if not self._closed.done():
+            if exc is None:
+                self._closed.set_result(None)
+            else:
+                self._closed.set_exception(exc)
+        super().connection_lost(exc)
+        # self.stream_reader = None
+        # self.stream_writer = None
+
+    def data_received(self, data):
+        self.stream_reader.feed_data(data)
+
+    def eof_received(self):
+        self.stream_reader.feed_eof()
+        return True
+
+    def __del__(self):
+        closed = self._closed
+        if closed.done() and not closed.cancelled():
+            closed.exception()
+
+
+class AsyncPipeStreamProtocol(AsyncStreamProtocol):
+    def __init__(self, handle_class, pool, loop=None):
+        super().__init__(handle_class, pool, loop=loop)
+        self.pipe = None
+
+    def rebuild(self):
+        super().rebuild()
+        self.pipe = self.transport.get_extra_info('pipe')
+
+
+class AsyncTcpStreamProtocol(AsyncStreamProtocol):
+    def __init__(self, handle_class, pool, loop=None):
+        super().__init__(handle_class, pool, loop=loop)
+        self._over_ssl = False
+        self.socket = None
+        self.sockname = None
+        self.peername = None
+
+    def rebuild(self):
+        super().rebuild()
+        self._over_ssl = self.transport.get_extra_info('sslcontext') is not None
+        self.socket = self.transport.get_extra_info('socket')
+        self.sockname = self.transport.get_extra_info('sockname')
+        self.peername = self.transport.get_extra_info('peername')
+
+    def eof_received(self):
+        self.stream_reader.feed_eof()
+        if self._over_ssl:
+            return False
+        return True
+
+
+class AsyncStreamRequestHandler(object):
+    def __init__(self, protocol: AsyncStreamProtocol):
+        self.protocol = protocol
+
+    @property
+    def wfile(self):
+        return self.protocol.stream_writer
+
+    @property
+    def rfile(self):
+        return self.protocol.stream_reader
+
+    async def __call__(self, *args, **kwargs):
+        await self.setup()
+        try:
+            await self.handle()
+        except ConnectionResetError:
+            pass
+        finally:
+            await self.finish()
+
+    async def setup(self):
+        pass
+
+    async def handle(self):
+        pass
+
+    async def finish(self):
+        try:
+            await self.wfile.drain()
+        except asyncio.CancelledError:
+            raise
+        except:
+            pass
+        self.wfile.close()
+
+
+class AsyncPipeStreamRequestHandler(AsyncStreamRequestHandler):
+    def __init__(self, protocol: AsyncPipeStreamProtocol):
+        super().__init__(protocol)
+        self.protocol = protocol
+
+    @property
+    def pipe(self):
+        return self.protocol.pipe
+
+
+class AsyncTcpStreamRequestHandler(AsyncStreamRequestHandler):
+    def __init__(self, protocol: AsyncTcpStreamProtocol):
+        super().__init__(protocol)
+        self.protocol = protocol
+
+    @property
+    def socket(self):
+        return self.protocol.socket
+
+    @property
+    def sockname(self):
+        return self.protocol.sockname
+
+    @property
+    def peername(self):
+        return self.protocol.peername
+
+    client_address = peername

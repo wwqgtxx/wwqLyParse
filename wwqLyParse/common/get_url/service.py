@@ -36,15 +36,16 @@ class GetUrlService(object):
     def init(self):
         with self.init_lock:
             if not self.inited:
-                self.url_key_lock = AsyncKeyLockDict()
-                self.loop = asyncio_helper.new_running_async_loop("GetUrlLoop")
-                self.pool_get_url = AsyncPool(GET_URL_PARALLEL_LIMIT, thread_name_prefix="GetUrlPool", loop=self.loop)
                 configparser.RawConfigParser.OPTCRE = re.compile(
                     r'(?P<option>[^=\s][^=]*)\s*(?P<vi>[=])\s*(?P<value>.*)$')
                 config = configparser.ConfigParser()
                 config.read(get_real_path("./config.ini"))
                 self.http_proxy = config.get("get_url", "http_proxy", fallback=None)
                 self.ssl_verify = config.getboolean("get_url", "ssl_verify", fallback=True)
+                self.url_key_lock = AsyncKeyLockDict()
+                self.loop = asyncio_helper.new_running_async_loop("GetUrlLoop",
+                                                                  force_use_selector=bool(self.http_proxy))
+                self.pool_get_url = AsyncPool(GET_URL_PARALLEL_LIMIT, thread_name_prefix="GetUrlPool", loop=self.loop)
                 if self.impl is None:
                     try:
                         if asyncio_helper.PY37:

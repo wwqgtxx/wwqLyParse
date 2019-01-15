@@ -30,6 +30,10 @@ except Exception as e:
 
 asyncio_helper.patch_logging()
 
+if __name__ == "__main__":
+    # get_common_real_thread_pool()
+    add_remote_logging(FORMAT, DATA_FMT)
+
 try:
     from .lib.lib_wwqLyParse import *
 except Exception as e:
@@ -447,9 +451,6 @@ def arg_parser():
 
 def main(debugstr=None, parsers_name=None, types=None, label=None, pipe=None, force_start=False
          , timeout=PARSE_TIMEOUT, close_timeout=CLOSE_TIMEOUT):
-    if __name__ == "__main__":
-        # get_common_real_thread_pool()
-        add_remote_logging(FORMAT, DATA_FMT)
     global parser_class_map
     if parser_class_map is None:
         parser_class_map = import_by_module_name(module_names=get_all_filename_by_dir('./parsers'), prefix="parsers.",

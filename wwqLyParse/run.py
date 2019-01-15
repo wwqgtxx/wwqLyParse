@@ -17,9 +17,70 @@ try:
 except:
     _winapi = None
 
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s %(filename)s[line:%(lineno)d]<%(funcName)s> %(threadName)s %(levelname)s : %(message)s',
-                    datefmt='%H:%M:%S', stream=sys.stdout)
+LEVEL = logging.DEBUG
+FORMAT = '%(asctime)s{%(name)s}%(filename)s[line:%(lineno)d]<%(funcName)s> pid:%(process)d %(threadName)s %(levelname)s : %(message)s'
+DATA_FMT = '%H:%M:%S'
+logging.basicConfig(level=LEVEL, format=FORMAT, datefmt=DATA_FMT, stream=sys.stdout)
+
+ADDRESS_LOGGING = r'\\.\pipe\%s-%s' % ("wwqLyParse", 'logging')
+
+
+class RemoteStream(object):
+    def __init__(self, address):  # , loop):
+        self.address = address
+        # self.loop = loop
+        self.conn = None  # type: multiprocessing.connection.Connection
+        self.conn = None  # type: # AsyncPipeConnection
+
+    def write(self, data):
+        for _ in range(3):
+            try:
+                if self.conn is None:
+                    self.conn = multiprocessing.connection.Client(address=self.address)
+                if self.conn:
+                    self.conn.send_bytes(str(data).encode("utf-8"))
+                return
+            except FileNotFoundError:
+                self.conn = None
+                return
+            except BrokenPipeError:
+                self.conn = None
+            except OSError:
+                self.conn = None
+            except EOFError:
+                self.conn = None
+            except Exception:
+                print(traceback.format_exc())
+                self.conn = None
+
+    def close(self):
+        if self.conn is not None:
+            self.conn.close()
+
+
+class RemoteStreamHandler(logging.Handler):
+    def __init__(self, address, fmt=None, date_fmt=None, style='%'):
+        super(RemoteStreamHandler, self).__init__()
+        self.stream = RemoteStream(address)
+        fmt = logging.Formatter(fmt, date_fmt, style)
+        self.setFormatter(fmt)
+
+    def emit(self, record):
+        try:
+            msg = self.format(record)
+            stream = self.stream
+            stream.write(msg)
+        except Exception:
+            self.handleError(record)
+
+
+def add_remote_logging(fmt=None, date_fmt=None, style='%'):
+    logging.root.addHandler(RemoteStreamHandler(ADDRESS_LOGGING, fmt, date_fmt, style))
+
+
+add_remote_logging(FORMAT, DATA_FMT)
+
+logger = logging.getLogger("run.py")
 
 import os
 import socket
@@ -48,10 +109,10 @@ else:
         raise e
     except:
         pass
-    logging.info(get_real_path('./run.py'))
+    logger.info(get_real_path('./run.py'))
     if CONFIG["uuid"] in str(get_real_path('./run.py')).replace('_', '-'):
         need_close = False
-    logging.info(need_close)
+    logger.info(need_close)
 
 with open(get_real_path('./version.txt')) as f:
     ver = f.readline().strip()
@@ -89,19 +150,19 @@ get_systeminfo()
 
 def is_64bit():
     if "64bit" in systeminfo:
-        logging.info("x64")
+        logger.info("x64")
         return True
     elif "32bit" in systeminfo:
-        logging.info("x86")
+        logger.info("x86")
         return False
     else:
-        logging.info("UnKnow")
+        logger.info("UnKnow")
         return False
 
 
 def is_xp():
     if "Windows XP" in systeminfo:
-        logging.info("XP")
+        logger.info("XP")
         return True
     else:
         return False
@@ -109,7 +170,7 @@ def is_xp():
 
 def is_2003():
     if "Server 2003" in systeminfo:
-        logging.info("2003")
+        logger.info("2003")
         return True
     else:
         return False
@@ -141,7 +202,7 @@ class LibWwqParseCtypes(LibWwqLyParseBase):
                                    ctypes.POINTER(ctypes.c_int)]
         self.lib.get_uuid.restype = ctypes.c_char_p
         self.lib.get_name.restype = ctypes.c_char_p
-        logging.debug("successful load lib %s" % self.lib)
+        logger.debug("successful load lib %s" % self.lib)
         assert self.get_uuid().decode() == CONFIG["uuid"]
 
     def get_uuid(self) -> bytes:
@@ -176,7 +237,7 @@ def make_python():
         EMBED_PYTHON = "./lib/python-3.7.2-embed-amd64/wwqLyParse64.exe"
     else:
         EMBED_PYTHON = "./lib/python-3.7.2-embed-win32/wwqLyParse32.exe"
-    logging.info("set EMBED_PYTHON = " + EMBED_PYTHON)
+    logger.info("set EMBED_PYTHON = " + EMBED_PYTHON)
 
 
 make_python()
@@ -195,15 +256,15 @@ def check_embed_python():
         use_embed_python = False
         return
     args = [py_bin, y_bin]
-    logging.info(args)
+    logger.info(args)
     try:
         stdout = subprocess.check_output(args, stderr=subprocess.STDOUT)
         stdout = stdout.decode()
     except:
-        logging.exception("error")
+        logger.exception("error")
         use_embed_python = False
         return
-    logging.info(stdout)
+    logger.info(stdout)
     if "ok" not in stdout:
         use_embed_python = False
 
@@ -219,7 +280,7 @@ def is_open(addr):
         with multiprocessing.connection.Client(addr, authkey=get_uuid()) as conn:
             conn.send_bytes(b'')
             pass
-        logging.info(get_caller_info() + "'%s' is open" % addr)
+        logger.info(get_caller_info() + "'%s' is open" % addr)
         return True
     except multiprocessing.AuthenticationError:
         pass
@@ -227,24 +288,24 @@ def is_open(addr):
         pass
     except EOFError:
         pass
-    logging.info(get_caller_info() + "'%s' is close" % addr)
+    logger.info(get_caller_info() + "'%s' is close" % addr)
     return False
 
 
 def _run_main():
     y_bin = get_real_path('./main.py')
     if use_embed_python:
-        logging.info("use Embed Python")
+        logger.info("use Embed Python")
         py_bin = get_real_path(EMBED_PYTHON)
     else:
-        logging.info("don't use Embed Python")
+        logger.info("don't use Embed Python")
         py_bin = sys.executable
     if "PyRun.exe" in py_bin:
         args = [py_bin, '--normal', y_bin]
     else:
         args = [py_bin, y_bin]
     args += ['--pipe', CONFIG["pipe"]]
-    logging.info(args)
+    logger.info(args)
     p = subprocess.Popen(args, shell=False, cwd=get_real_root_path(), close_fds=True)
     globals()["p"] = p
 
@@ -272,7 +333,7 @@ def init():
 
 def process(url, data, will_refused=False, need_result=True) -> dict:
     req = {"type": "get", "url": url, "data": data}
-    logging.debug(req)
+    logger.debug(req)
     req = json.dumps(req)
     req = req.encode("utf-8")
     req = lib_parse(req)
@@ -301,7 +362,7 @@ def close_server():
     try:
         p = globals()["p"]
         p.kill()
-        logging.info("successfully kill %s" % (str(p)))
+        logger.info("successfully kill %s" % (str(p)))
     except:
         pass
     for n in range(2):
@@ -335,12 +396,12 @@ def get_version():
             assert results["uuid"] == CONFIG["uuid"]
             assert get_name().decode() in results["name"]
             version = results
-            logging.info(version)
+            logger.info(version)
             return version
         except AssertionError:
             raise
         except:
-            logging.exception("getVersion fail on '%s'" % address)
+            logger.exception("getVersion fail on '%s'" % address)
         if need_close:
             close_server()
 
@@ -373,7 +434,7 @@ def Parse(input_text, types=None, parsers_name=None, urlhandles_name=None):
             results = process(url, values)
             return results
         except Exception as e:
-            # logging.info(e)
+            # logger.info(e)
             import traceback
             traceback.print_exc()
             error = e
@@ -395,7 +456,7 @@ def ParseURL(input_text, label, min=None, max=None, urlhandles_name=None):
             results = process(url, values)
             return results
         except Exception as e:
-            # logging.info(e)
+            # logger.info(e)
             import traceback
             traceback.print_exc()
             error = e
@@ -410,7 +471,7 @@ def debug(input_str):
     info = "\n------------------------------------------------------------\n"
     info += (str(input_str)).encode('gbk', 'ignore').decode('gbk')
     info += "\n------------------------------------------------------------"
-    logging.debug(info)
+    logger.debug(info)
 
 
 def main():

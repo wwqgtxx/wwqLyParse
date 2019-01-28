@@ -3,7 +3,7 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 from .base import *
 from ..async_pool import AsyncPool
-from .. import asyncio_helper
+from .. import asyncio
 from ..for_path import get_real_path
 from ..lru_cache import LRUCache
 from ..key_lock import AsyncKeyLockDict, ASYNC_FUCK_KEY_LOCK
@@ -14,7 +14,6 @@ import json
 import logging
 import threading
 import functools
-import asyncio
 
 
 class GetUrlService(object):
@@ -43,12 +42,12 @@ class GetUrlService(object):
                 self.http_proxy = config.get("get_url", "http_proxy", fallback=None)
                 self.ssl_verify = config.getboolean("get_url", "ssl_verify", fallback=True)
                 self.url_key_lock = AsyncKeyLockDict()
-                self.loop = asyncio_helper.new_running_async_loop("GetUrlLoop",
-                                                                  force_use_selector=bool(self.http_proxy))
+                self.loop = asyncio.new_running_async_loop("GetUrlLoop",
+                                                           force_use_selector=bool(self.http_proxy))
                 self.pool_get_url = AsyncPool(GET_URL_PARALLEL_LIMIT, thread_name_prefix="GetUrlPool", loop=self.loop)
                 if self.impl is None:
                     try:
-                        if asyncio_helper.PY37:
+                        if asyncio.PY37:
                             from .aiohttp import AioHttpGetUrlImpl
                         else:
                             from .aiohttp352 import AioHttpGetUrlImpl
@@ -92,14 +91,14 @@ class GetUrlService(object):
         self.init()
         if callmethod is None:
             callmethod = get_caller_info(1)
-        return asyncio_helper.run_in_other_loop(
+        return asyncio.run_in_other_loop(
             self._force_flush_cache_async(response, callmethod=callmethod), loop=self.loop)
 
     async def force_flush_cache_async(self, response, callmethod=None):
         self.init()
         if callmethod is None:
             callmethod = get_caller_info(1)
-        return await asyncio_helper.async_run_in_loop(
+        return await asyncio.async_run_in_loop(
             self._force_flush_cache_async(response, callmethod=callmethod), loop=self.loop, cancel_connect=False)
 
     async def _force_flush_cache_async(self, response, callmethod=None):
@@ -117,7 +116,7 @@ class GetUrlService(object):
         self.init()
         if callmethod is None:
             callmethod = get_caller_info(1)
-        return asyncio_helper.run_in_other_loop(
+        return asyncio.run_in_other_loop(
             self._get_url_async(o_url, encoding=encoding, headers=headers, data=data, method=method,
                                 cookies=cookies, cookie_jar=cookie_jar, verify=verify,
                                 allow_cache=allow_cache, callmethod=callmethod, stream=stream), loop=self.loop)
@@ -127,7 +126,7 @@ class GetUrlService(object):
         self.init()
         if callmethod is None:
             callmethod = get_caller_info(1)
-        return await asyncio_helper.async_run_in_loop(
+        return await asyncio.async_run_in_loop(
             self._get_url_async(o_url, encoding=encoding, headers=headers, data=data, method=method,
                                 cookies=cookies, cookie_jar=cookie_jar, verify=verify,
                                 allow_cache=allow_cache, callmethod=callmethod, stream=stream),
@@ -187,9 +186,9 @@ class GetUrlService(object):
             for i in range(0, self.check_response_retry_num + 1):
                 if result is None:
                     result = await self.pool_get_url.apply(
-                        asyncio_helper.async_run_func_or_co(self.impl.get_url, url_json=url_json,
-                                                            url_json_dict=url_json_dict,
-                                                            callmethod=callmethod))
+                        asyncio.async_run_func_or_co(self.impl.get_url, url_json=url_json,
+                                                     url_json_dict=url_json_dict,
+                                                     callmethod=callmethod))
                     if result is None:
                         return None
                 cr = self._check_response(result)

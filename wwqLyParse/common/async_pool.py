@@ -1,15 +1,14 @@
 import itertools
-import asyncio
-from .asyncio_helper import get_running_loop, set_task_name
+from . import asyncio
 
 
 class AsyncPool(object):
     _counter = itertools.count().__next__
 
     def __init__(self, size=0, thread_name_prefix=None, loop=None):
-        self.loop = get_running_loop() if loop is None else loop
+        self.loop = asyncio.get_running_loop() if loop is None else loop
         self.size = size
-        self.semaphore = asyncio.locks.BoundedSemaphore(size, loop=self.loop)
+        self.semaphore = asyncio.BoundedSemaphore(size, loop=self.loop)
         self._thread_name_prefix = (thread_name_prefix or
                                     ("AsyncPool-%d" % self._counter()))
         self._thread_name_counter = itertools.count().__next__
@@ -37,7 +36,7 @@ class AsyncPool(object):
         else:
             task = self.loop.create_task(coco)
 
-        set_task_name(thread_name, task)
+        asyncio.set_task_name(thread_name, task)
         task.add_done_callback(self._remove_from_pool_tasks)
         self.pool_tasks.append(task)
         return task

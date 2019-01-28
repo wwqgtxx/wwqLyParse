@@ -9,7 +9,7 @@ def green_target(target_name, target_module, raw_module):
         target = getattr(target_module, target_name)
         if hasattr(raw_module, target_name):
             new_target = getattr(raw_module, target_name)
-            if isinstance(target, type):
+            if isinstance(target, type) and not issubclass(target, BaseException):
                 new_target = type(target_name, (target, new_target), {})
                 new_target.__module__ = target.__module__
                 new_target.__doc__ = target.__doc__

@@ -5,7 +5,6 @@ from .base import *
 import logging
 import weakref
 import aiohttp
-import asyncio
 
 
 class TCPConnector(aiohttp.TCPConnector):
@@ -29,14 +28,14 @@ class AioHttpGetUrlStreamReader(GetUrlStreamReaderAsync):
         self.resp = resp
 
     async def _read_async(self, size):
-        return await asyncio_helper.async_run_in_loop(self.resp.content.read(size), loop=self.loop)
+        return await asyncio.async_run_in_loop(self.resp.content.read(size), loop=self.loop)
 
     async def __aenter__(self):
-        await asyncio_helper.async_run_in_loop(self.resp.__aenter__(), loop=self.loop)
+        await asyncio.async_run_in_loop(self.resp.__aenter__(), loop=self.loop)
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
-        await asyncio_helper.async_run_in_loop(self.resp.__aexit__(exc_type, exc_val, exc_tb), loop=self.loop)
+        await asyncio.async_run_in_loop(self.resp.__aexit__(exc_type, exc_val, exc_tb), loop=self.loop)
 
 
 async def __close_connector(connector: TCPConnector):

@@ -33,11 +33,11 @@ class AnnieParser(Parser):
                 args = [annie_bin]
                 args += ['-x', "http://localhost:%s" % hps.port]
                 args += arg
-                return await async_run_subprocess(args, asyncio_helper.get_left_time() - 0.1, need_stderr)
+                return await async_run_subprocess(args, asyncio.get_left_time() - 0.1, need_stderr)
         else:
             args = [annie_bin]
             args += arg
-            return await async_run_subprocess(args, asyncio_helper.get_left_time() - 0.1, need_stderr)
+            return await async_run_subprocess(args, asyncio.get_left_time() - 0.1, need_stderr)
 
     def _make_arg(self, url, _format=None, use_info=False, *k, **kk):
         # arg = self._make_proxy_arg()

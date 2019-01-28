@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
 import multiprocessing.connection
-from . import asyncio_helper
-import asyncio
+from . import asyncio
 from .threadpool import *
 import collections
 import itertools
@@ -54,7 +53,7 @@ class MPConnectionSelector(object):
         self.c_send.send_bytes(b'ok')
 
     async def recv_bytes_async(self, conn: multiprocessing.connection.Connection, maxlength=None, parse_func=None):
-        loop = asyncio_helper.get_running_loop()
+        loop = asyncio.get_running_loop()
         future = loop.create_future()
 
         def _recv_cb():
@@ -87,7 +86,7 @@ class MPConnectionSelector(object):
                 data = buf
             conn.send_bytes(data)
 
-        return await asyncio_helper.async_run_func_or_co(_send)
+        return await asyncio.async_run_func_or_co(_send)
 
 
 _common_mp_connection_selector = None
@@ -122,8 +121,7 @@ class AsyncMPConnection(object):
 __all__ = ["MPConnectionSelector", "get_common_mp_connection_selector", "AsyncMPConnection"]
 
 """
-import asyncio
-from . import asyncio_helper
+from . import asyncio
 from .async_pool import AsyncPool
 import os
 import struct
@@ -132,16 +130,16 @@ import itertools
 
 
 class AsyncPipeConnection(object):
-    def __init__(self, handle: asyncio_helper.AsyncPipeStreamRequestHandler):
+    def __init__(self, handle: asyncio.AsyncPipeStreamRequestHandler):
         self.handle = handle
 
     @classmethod
     async def _create_pipe_connection_async(cls, address, family=None, authkey=None):
-        loop = asyncio_helper.get_running_loop()
+        loop = asyncio.get_running_loop()
         assert isinstance(loop, asyncio.ProactorEventLoop)
         handle_future = loop.create_future()
 
-        class _PipeHandle(asyncio_helper.AsyncPipeStreamRequestHandler):
+        class _PipeHandle(asyncio.AsyncPipeStreamRequestHandler):
             def __init__(self, *k, **kk):
                 super().__init__(*k, **kk)
 
@@ -149,7 +147,7 @@ class AsyncPipeConnection(object):
                 handle_future.set_result(cls(self))
 
         def factory():
-            return asyncio_helper.AsyncPipeStreamProtocol(_PipeHandle, None, loop)
+            return asyncio.AsyncPipeStreamProtocol(_PipeHandle, None, loop)
 
         trans, protocol = await loop.create_pipe_connection(factory, address)
         conn = await handle_future  # type:AsyncPipeConnection
@@ -164,14 +162,14 @@ class AsyncPipeConnection(object):
     @classmethod
     async def create_pipe_connection_async(cls, address, family=None, authkey=None, loop=None):
         if loop is None:
-            loop = asyncio_helper.get_running_loop()
-        conn = await asyncio_helper.async_run_in_loop(cls._create_pipe_connection_async(address, family, authkey),
+            loop = asyncio.get_running_loop()
+        conn = await asyncio.async_run_in_loop(cls._create_pipe_connection_async(address, family, authkey),
                                                       loop)  # type:AsyncPipeConnection
         return conn
 
     @classmethod
     def create_pipe_connection(cls, address, family=None, authkey=None, loop=None, timeout=None):
-        conn = asyncio_helper.run_in_other_loop(cls._create_pipe_connection_async(address, family, authkey),
+        conn = asyncio.run_in_other_loop(cls._create_pipe_connection_async(address, family, authkey),
                                                 loop, timeout=timeout)  # type:AsyncPipeConnection
         return conn
 
@@ -184,7 +182,7 @@ class AsyncPipeConnection(object):
     async def _recv_bytes_async(self, max_size=None):
         assert self.handle is not None
         if max_size is None:
-            max_size = asyncio_helper.PIPE_MAX_BYTES
+            max_size = asyncio.PIPE_MAX_BYTES
         b_data_head = await self.handle.rfile.readexactly(8)
         b_data_len = struct.unpack("!Q", b_data_head)[0]
         if b_data_len > max_size:
@@ -196,22 +194,22 @@ class AsyncPipeConnection(object):
         await self.handle.finish()
 
     async def recv_bytes_async(self):
-        return await asyncio_helper.async_run_in_loop(self._recv_bytes_async(), self.handle.protocol.loop)
+        return await asyncio.async_run_in_loop(self._recv_bytes_async(), self.handle.protocol.loop)
 
     async def send_bytes_async(self, b_data: bytes):
-        return await asyncio_helper.async_run_in_loop(self._send_bytes_async(b_data), self.handle.protocol.loop)
+        return await asyncio.async_run_in_loop(self._send_bytes_async(b_data), self.handle.protocol.loop)
 
     async def close_async(self):
-        return await asyncio_helper.async_run_in_loop(self._close_async(), self.handle.protocol.loop)
+        return await asyncio.async_run_in_loop(self._close_async(), self.handle.protocol.loop)
 
     def recv_bytes(self):
-        return asyncio_helper.async_run_in_loop(self._recv_bytes_async(), self.handle.protocol.loop)
+        return asyncio.async_run_in_loop(self._recv_bytes_async(), self.handle.protocol.loop)
 
     def send_bytes(self, b_data: bytes):
-        return asyncio_helper.run_in_other_loop(self._send_bytes_async(b_data), self.handle.protocol.loop)
+        return asyncio.run_in_other_loop(self._send_bytes_async(b_data), self.handle.protocol.loop)
 
     def close(self):
-        return asyncio_helper.run_in_other_loop(self._close_async(), self.handle.protocol.loop)
+        return asyncio.run_in_other_loop(self._close_async(), self.handle.protocol.loop)
 
     def __enter__(self):
         return self
@@ -272,17 +270,17 @@ class AsyncPipeServer(object):
         self.logger = logger
         self.loop = loop
         if self.loop is None:
-            self.loop = asyncio_helper.get_running_loop()
+            self.loop = asyncio.get_running_loop()
         self.server = None
 
     async def _run_async(self):
-        loop = asyncio_helper.get_running_loop()
+        loop = asyncio.get_running_loop()
         assert isinstance(loop, asyncio.ProactorEventLoop)
         pool = AsyncPool(thread_name_prefix="HandlePool-%d" % self.counter(), loop=loop)
         handle = self.handle
         authkey = self.authkey
 
-        class _PipeHandle(asyncio_helper.AsyncPipeStreamRequestHandler):
+        class _PipeHandle(asyncio.AsyncPipeStreamRequestHandler):
             def __init__(self, *k, **kk):
                 super().__init__(*k, **kk)
 
@@ -294,25 +292,25 @@ class AsyncPipeServer(object):
                 await handle(conn)
 
         def factory():
-            return asyncio_helper.AsyncPipeStreamProtocol(_PipeHandle, pool, loop)
+            return asyncio.AsyncPipeStreamProtocol(_PipeHandle, pool, loop)
 
         self.server = await loop.start_serving_pipe(factory, self.address)
 
     async def run_async(self):
-        return await asyncio_helper.async_run_in_loop(self._run_async(), self.loop)
+        return await asyncio.async_run_in_loop(self._run_async(), self.loop)
 
     def run(self):
-        return asyncio_helper.run_in_other_loop(self._run_async(), self.loop)
+        return asyncio.run_in_other_loop(self._run_async(), self.loop)
 
     async def _shutdown_async(self):
         if self.server is not None:
             self.server.close()
 
     async def shutdown_async(self):
-        return await asyncio_helper.async_run_in_loop(self._shutdown_async(), self.loop)
+        return await asyncio.async_run_in_loop(self._shutdown_async(), self.loop)
 
     def shutdown(self):
-        return asyncio_helper.run_in_other_loop(self._shutdown_async(), self.loop)
+        return asyncio.run_in_other_loop(self._shutdown_async(), self.loop)
 
 
 class AuthenticationError(Exception):
@@ -349,7 +347,7 @@ class AsyncConnectionServer(AsyncPipeServer):
                     if self.run_directly:
                         result = self.raw_handle(data)
                     else:
-                        result = await asyncio_helper.async_run_func_or_co(self.raw_handle, data)
+                        result = await asyncio.async_run_func_or_co(self.raw_handle, data)
                 except Exception:
                     self.logger.exception("handle error")
                 else:

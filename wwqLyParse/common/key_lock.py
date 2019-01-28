@@ -23,7 +23,7 @@ class KeyLockDict(dict):
 class AsyncKeyLockDict(dict):
     @staticmethod
     def _get_new_lock():
-        import asyncio
+        from . import asyncio
         return asyncio.Lock()
 
     def __missing__(self, key):

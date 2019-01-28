@@ -65,11 +65,11 @@ def run_subprocess(args, timeout=None, need_stderr=True, **kwargs):
     return stdout, stderr
 
 
-import asyncio
+from . import asyncio
 
 
 async def async_run_subprocess(args, timeout=None, need_stderr=True, **kwargs):
-    pipe = asyncio.subprocess.PIPE
+    pipe = subprocess.PIPE
     logging.debug(args)
     # args = subprocess.list2cmdline(args)
     p = await asyncio.create_subprocess_exec(*args, stdout=pipe, stderr=pipe if need_stderr else None, **kwargs)

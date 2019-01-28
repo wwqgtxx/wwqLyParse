@@ -35,10 +35,10 @@ async def test():
 
 
 def server():
-    asyncio_helper.run_in_main_async_loop(test()).result()
+    asyncio.run_in_main_async_loop(test()).result()
 
 
 if __name__ == "__main__":
     # with HttpProxyServer(host='localhost', port=1082) as hps:
     #     hps.join()
-    asyncio_helper.start_main_async_loop_in_main_thread(server)
+    asyncio.start_main_async_loop_in_main_thread(server)

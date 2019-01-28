@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.5
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
-from .. import asyncio_helper
+from .. import asyncio
 
 URL_CACHE_MAX = 10000
 URL_CACHE_TIMEOUT = 1 * 60 * 60
@@ -67,7 +67,7 @@ class GetUrlStreamReader(object):
             raise GetUrlStreamReadError() from e
 
     async def read_async(self, size=4096):
-        return await asyncio_helper.async_run_func_or_co(self._read, size)
+        return await asyncio.async_run_func_or_co(self._read, size)
 
     def _read(self, size):
         raise NotImplementedError
@@ -79,24 +79,24 @@ class GetUrlStreamReader(object):
         raise NotImplementedError
 
     async def __aenter__(self):
-        return await asyncio_helper.async_run_func_or_co(self.__enter__)
+        return await asyncio.async_run_func_or_co(self.__enter__)
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
-        return await asyncio_helper.async_run_func_or_co(self.__exit__, exc_type, exc_val, exc_tb)
+        return await asyncio.async_run_func_or_co(self.__exit__, exc_type, exc_val, exc_tb)
 
 
 class GetUrlStreamReaderAsync(GetUrlStreamReader):
-    def __init__(self, loop: asyncio_helper.AbstractEventLoop):
+    def __init__(self, loop: asyncio.AbstractEventLoop):
         self.loop = loop
 
     def _read(self, size=4096):
-        return asyncio_helper.run_in_other_loop(self._read_async(size), self.loop)
+        return asyncio.run_in_other_loop(self._read_async(size), self.loop)
 
     def __enter__(self):
-        return asyncio_helper.run_in_other_loop(self.__aenter__(), self.loop)
+        return asyncio.run_in_other_loop(self.__aenter__(), self.loop)
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        return asyncio_helper.run_in_other_loop(self.__aexit__(exc_type, exc_val, exc_tb), self.loop)
+        return asyncio.run_in_other_loop(self.__aexit__(exc_type, exc_val, exc_tb), self.loop)
 
     async def read_async(self, size=4096):
         try:

@@ -3,7 +3,7 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 from multiprocessing.connection import Client, Connection
 # from .async_connection import *
-# from . import asyncio_helper
+# from . import asyncio
 # import concurrent.futures
 import logging
 import traceback
@@ -32,7 +32,7 @@ class RemoteStream(object):
             # except AuthenticationError:
             #     self.conn = None
             #     return
-            # except asyncio_helper.InSameLoopError:
+            # except asyncio.InSameLoopError:
             #     self.conn = None
             #     return
             except FileNotFoundError:
@@ -71,6 +71,6 @@ class RemoteStreamHandler(logging.Handler):
 
 
 def add_remote_logging(fmt=None, date_fmt=None, style='%'):
-    # pc_loop = asyncio_helper.new_running_async_loop("RemoteLogging")
+    # pc_loop = asyncio.new_running_async_loop("RemoteLogging")
     logging.root.addHandler(RemoteStreamHandler(ADDRESS_LOGGING, fmt, date_fmt, style))
     # logging.root.addHandler(RemoteStreamHandler(ADDRESS_LOGGING, fmt, date_fmt, style, loop=pc_loop))

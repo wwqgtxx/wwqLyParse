@@ -201,7 +201,7 @@ class IQiYiParser(Parser):
                 # url_head = r1(r'https?://([^/]*)', down_url)
                 if down_url not in url_list:
                     url_list.append(down_url)
-            except asyncio_helper.CancelledError:
+            except asyncio.CancelledError:
                 if not in_pool:
                     raise
             except:

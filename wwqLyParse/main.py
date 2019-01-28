@@ -28,7 +28,7 @@ try:
 except Exception as e:
     from common import *
 
-asyncio_helper.patch_logging()
+asyncio.patch_logging()
 
 if __name__ == "__main__":
     # get_common_real_thread_pool()
@@ -109,7 +109,7 @@ async def _url_handle_parse(input_text, url_handles_name=None):
             if await url_handle_check_support(url_handle_obj, input_text):
                 try:
                     logging.debug(url_handle_obj)
-                    result = await asyncio_helper.async_run_func_or_co(url_handle_obj.url_handle, input_text)
+                    result = await asyncio.async_run_func_or_co(url_handle_obj.url_handle, input_text)
                     if (result is not None) and (result is not "") and result != input_text:
                         logging.debug('urlHandle:"' + input_text + '"-->"' + result + '"')
                         input_text = result
@@ -142,7 +142,7 @@ async def _init_version():
     name_tmp_list = [get_name().decode(), version['version'], "[Include "]
     for parser in parsers:
         try:
-            version_str = await asyncio_helper.async_run_func_or_co(parser.get_version)
+            version_str = await asyncio.async_run_func_or_co(parser.get_version)
             if version_str:
                 name_tmp_list.append(version_str)
                 name_tmp_list.append("&")
@@ -155,7 +155,7 @@ async def _init_version():
 
 
 def init_version():
-    return asyncio_helper.run_in_main_async_loop(_init_version()).result()
+    return asyncio.run_in_main_async_loop(_init_version()).result()
 
 
 async def _parse_password(input_text, kk):
@@ -183,7 +183,7 @@ async def _parse(input_text, types=None, parsers_name=None, url_handles_name=Non
         try:
             assert isinstance(queue, asyncio.Queue)
             logging.debug(parser)
-            result = await asyncio_helper.async_run_func_or_co(parser.parse, input_text, *k, **kk)
+            result = await asyncio.async_run_func_or_co(parser.parse, input_text, *k, **kk)
             if type(result) == dict:
                 if "error" in result:
                     logging.error(result["error"])
@@ -211,7 +211,7 @@ async def _parse(input_text, types=None, parsers_name=None, url_handles_name=Non
             # traceback.print_exc()
 
     if not _use_inside:
-        asyncio_helper.set_timeout(asyncio_helper.get_current_task(), PARSE_TIMEOUT + 1)
+        asyncio.set_timeout(asyncio.current_task(), PARSE_TIMEOUT + 1)
 
     input_text = await _parse_password(input_text, kk)
 
@@ -224,7 +224,7 @@ async def _parse(input_text, types=None, parsers_name=None, url_handles_name=Non
         for parser in parsers:
             if await parser_check_support(parser, input_text, types):
                 task = _inside_pool.spawn(run(_inside_queue, parser, input_text, _inside_pool, *k, **kk))
-                asyncio_helper.set_timeout(task, asyncio_helper.get_left_time() - 1)
+                asyncio.set_timeout(task, asyncio.get_left_time() - 1)
                 results.append(task)
         return results
     t_results = []
@@ -233,7 +233,7 @@ async def _parse(input_text, types=None, parsers_name=None, url_handles_name=Non
         for parser in parsers:
             if await parser_check_support(parser, input_text, types):
                 task = pool.spawn(run(q_results, parser, input_text, pool, *k, **kk))
-                asyncio_helper.set_timeout(task, asyncio_helper.get_left_time() - 1)
+                asyncio.set_timeout(task, asyncio.get_left_time() - 1)
         await pool.join()
     while not q_results.empty():
         result = await q_results.get()
@@ -264,16 +264,16 @@ async def _parse(input_text, types=None, parsers_name=None, url_handles_name=Non
 
 async def parse_async(input_text, types=None, parsers_name=None, url_handles_name=None):
     try:
-        return await asyncio_helper.async_run_in_loop(
+        return await asyncio.async_run_in_loop(
             _parse(input_text, types=types, parsers_name=parsers_name, url_handles_name=url_handles_name),
-            loop=asyncio_helper.get_main_async_loop())
+            loop=asyncio.get_main_async_loop())
     except asyncio.CancelledError:
         return []
 
 
 def parse(input_text, types=None, parsers_name=None, url_handles_name=None):
     try:
-        return asyncio_helper.run_in_main_async_loop(
+        return asyncio.run_in_main_async_loop(
             _parse(input_text, types=types, parsers_name=parsers_name, url_handles_name=url_handles_name)).result()
     except asyncio.CancelledError:
         return []
@@ -284,7 +284,7 @@ async def _parse_url(input_text, label, min=None, max=None, url_handles_name=Non
         try:
             assert isinstance(queue, asyncio.Queue)
             logging.debug(parser)
-            result = await asyncio_helper.async_run_func_or_co(parser.parse_url, input_text, label, min, max, *k, **kk)
+            result = await asyncio.async_run_func_or_co(parser.parse_url, input_text, label, min, max, *k, **kk)
             if (result is not None) and (result != []):
                 if "error" in result:
                     logging.error(result["error"])
@@ -303,7 +303,7 @@ async def _parse_url(input_text, label, min=None, max=None, url_handles_name=Non
     if not parsers:
         return None
 
-    asyncio_helper.set_timeout(asyncio_helper.get_current_task(), PARSE_TIMEOUT + 1)
+    asyncio.set_timeout(asyncio.current_task(), PARSE_TIMEOUT + 1)
 
     input_text = await _parse_password(input_text, kk)
 
@@ -314,7 +314,7 @@ async def _parse_url(input_text, label, min=None, max=None, url_handles_name=Non
     q_results = asyncio.Queue()
     async with AsyncPool() as pool:
         task = pool.spawn(run(q_results, parser, input_text, label, min, max, *k, **kk))
-        asyncio_helper.set_timeout(task, asyncio_helper.get_left_time() - 1)
+        asyncio.set_timeout(task, asyncio.get_left_time() - 1)
         await pool.join()
     if not q_results.empty():
         result = await q_results.get()
@@ -325,16 +325,16 @@ async def _parse_url(input_text, label, min=None, max=None, url_handles_name=Non
 
 async def parse_url_async(input_text, label, min=None, max=None, url_handles_name=None, *k, **kk):
     try:
-        return await asyncio_helper.async_run_in_loop(
+        return await asyncio.async_run_in_loop(
             _parse_url(input_text, label, min=min, max=max, url_handles_name=url_handles_name),
-            loop=asyncio_helper.get_main_async_loop())
+            loop=asyncio.get_main_async_loop())
     except asyncio.CancelledError:
         return []
 
 
 def parse_url(input_text, label, min=None, max=None, url_handles_name=None, *k, **kk):
     try:
-        return asyncio_helper.run_in_main_async_loop(
+        return asyncio.run_in_main_async_loop(
             _parse_url(input_text, label, min=min, max=max, url_handles_name=url_handles_name)).result()
     except asyncio.CancelledError:
         return []
@@ -429,7 +429,7 @@ def run(pipe, force_start=False):
     logging.info("listen address:'%s'" % address)
     for _ in range(3 if force_start else 1):
         try:
-            return ConnectionServer(address, _handle, asyncio_helper.get_main_async_loop(), get_uuid(),
+            return ConnectionServer(address, _handle, asyncio.get_main_async_loop(), get_uuid(),
                                     recv_parse_func=_pre, send_parse_func=_post).run()
         except PermissionError:
             if force_start:
@@ -514,7 +514,7 @@ def main(debugstr=None, parsers_name=None, types=None, label=None, pipe=None, fo
 
 if __name__ == '__main__':
     args = arg_parser()
-    asyncio_helper.start_main_async_loop_in_main_thread(main,
-                                                        args.debug, args.parser, args.types,
-                                                        args.label, args.pipe, args.force_start,
-                                                        args.timeout, args.close_timeout)
+    asyncio.start_main_async_loop_in_main_thread(main,
+                                                 args.debug, args.parser, args.types,
+                                                 args.label, args.pipe, args.force_start,
+                                                 args.timeout, args.close_timeout)

@@ -20,8 +20,7 @@ import email
 import html
 import ssl
 import itertools
-import asyncio
-from . import asyncio_helper
+from . import asyncio
 from .async_pool import *
 from .async_connection import *
 
@@ -37,7 +36,7 @@ class CertUtil(object):
         return get_real_path(CertUtil.ca_keyfile)
 
 
-get_hps_loop = asyncio_helper.get_main_async_loop
+get_hps_loop = asyncio.get_main_async_loop
 
 
 class AsyncHttpProxyServer(object):
@@ -65,26 +64,26 @@ class AsyncHttpProxyServer(object):
                 self._start(), loop=self.loop))
 
     def start(self):
-        return asyncio_helper.run_in_other_loop(self._start(), loop=self.loop)
+        return asyncio.run_in_other_loop(self._start(), loop=self.loop)
 
     async def shutdown_async(self):
-        return await asyncio_helper.async_run_in_loop(self._shutdown(), loop=self.loop)
+        return await asyncio.async_run_in_loop(self._shutdown(), loop=self.loop)
 
     def shutdown(self):
-        return asyncio_helper.run_in_other_loop(self._shutdown(), loop=self.loop)
+        return asyncio.run_in_other_loop(self._shutdown(), loop=self.loop)
 
     async def join_async(self):
-        return await asyncio_helper.async_run_in_loop(self._join(), loop=self.loop)
+        return await asyncio.async_run_in_loop(self._join(), loop=self.loop)
 
     def join(self):
-        return asyncio_helper.run_in_other_loop(self._join(), loop=self.loop)
+        return asyncio.run_in_other_loop(self._join(), loop=self.loop)
 
     async def _start(self):
-        loop = asyncio_helper.get_running_loop()
+        loop = asyncio.get_running_loop()
         pool = AsyncPool(thread_name_prefix="HPSPool-%d" % self._counter(), loop=loop)
 
         def factory():
-            return asyncio_helper.AsyncTcpStreamProtocol(AsyncProxyHandler, pool, loop)
+            return asyncio.AsyncTcpStreamProtocol(AsyncProxyHandler, pool, loop)
 
         self.server = await loop.create_server(factory, sock=self.socket, )
         logging.info("listen address:'http://%s:%s'" % self.server_address)
@@ -108,7 +107,7 @@ class AsyncHttpProxyServer(object):
         await self.shutdown_async()
 
 
-class AsyncBaseHttpRequestHandler(asyncio_helper.AsyncTcpStreamRequestHandler):
+class AsyncBaseHttpRequestHandler(asyncio.AsyncTcpStreamRequestHandler):
     protocol_version = "HTTP/0.9"
     default_request_version = "HTTP/0.9"
     error_message_format = http.server.DEFAULT_ERROR_MESSAGE
@@ -521,8 +520,8 @@ class AsyncProxyHandler(AsyncBaseHttpRequestHandler):
                 context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
                 # context = ssl.SSLContext(ssl.PROTOCOL_TLS)
                 context.load_cert_chain(certfile, certfile)
-                transport = await asyncio_helper.start_tls(self.protocol.loop, self.protocol.transport, self.protocol,
-                                                           sslcontext=context, server_side=True)
+                transport = await asyncio.start_tls(self.protocol.loop, self.protocol.transport, self.protocol,
+                                                    sslcontext=context, server_side=True)
                 self.protocol.transport = transport
                 self.protocol.rebuild()
                 await self.setup()

@@ -32,7 +32,7 @@ logging.basicConfig(level=LEVEL, format=FORMAT, datefmt=DATA_FMT, stream=sys.std
 
 from common import *
 
-asyncio_helper.patch_logging()
+asyncio.patch_logging()
 
 
 def _handle(data):
@@ -42,8 +42,8 @@ def _handle(data):
 def main():
     address_logging = ADDRESS_LOGGING
     logging.info("listen address:'%s'" % address_logging)
-    ConnectionServer(address_logging, _handle, asyncio_helper.get_main_async_loop()).run()
+    ConnectionServer(address_logging, _handle, asyncio.get_main_async_loop()).run()
 
 
 if __name__ == "__main__":
-    asyncio_helper.start_main_async_loop_in_main_thread(main)
+    asyncio.start_main_async_loop_in_main_thread(main)

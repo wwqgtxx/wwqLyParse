@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
 import multiprocessing.connection
-from . import asyncio_helper
-import asyncio
+from . import asyncio
 from .async_pool import *
 from .async_connection import *
 import itertools
@@ -41,7 +40,7 @@ class ConnectionServer(object):
                 self.logger.debug("parse conn %s" % conn)
                 # self.logger.debug(data)
                 try:
-                    result = await asyncio_helper.async_run_func_or_co(self.handle, data)
+                    result = await asyncio.async_run_func_or_co(self.handle, data)
                 except Exception:
                     self.logger.exception("handle error")
                 else:

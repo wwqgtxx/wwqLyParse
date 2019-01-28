@@ -2,42 +2,27 @@
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
 import asyncio
-# import asyncio.windows_utils
 import sys
 import logging
 import threading
 import functools
 import itertools
-import concurrent.futures
-from .concurrent_futures import ThreadPoolExecutor
+from . import concurrent_futures
 
+# import all from standard asyncio lib
+from asyncio import *
 PY37 = sys.version_info >= (3, 7)
-get_current_task = asyncio.current_task
-get_running_loop = asyncio.get_running_loop
-AbstractEventLoop = asyncio.AbstractEventLoop
-CancelledError = asyncio.CancelledError
-
-PIPE_MAX_BYTES = 32 * 1024 * 1024  # 32m
-
-
-# class IocpProactor(asyncio.IocpProactor):
-#     def recv(self, conn, nbytes, flags=0):
-#         if isinstance(conn, asyncio.windows_utils.PipeHandle):
-#             # patch default nNumberOfBytesToRead from 32k to 32m
-#             if nbytes == 32768:  # proactor_event.py line 274
-#                 nbytes = PIPE_MAX_BYTES
-#         return super().recv(conn, nbytes, flags)
 
 
 def new_raw_async_loop(force_use_selector=False):
     if not force_use_selector:
-        # loop = asyncio.ProactorEventLoop(IocpProactor())
         loop = asyncio.ProactorEventLoop()
     else:
         loop = asyncio.SelectorEventLoop()
-    executor = ThreadPoolExecutor()
+    executor = concurrent_futures.ThreadPoolExecutor()
     import concurrent.futures
     assert isinstance(executor, concurrent.futures.ThreadPoolExecutor)
+    assert concurrent_futures.TimeoutError is concurrent.futures.TimeoutError
     loop.set_default_executor(executor)
     logging.debug("set %s for %s" % (executor, loop))
     return loop
@@ -50,7 +35,7 @@ def _run_forever(loop):
 
 
 def new_running_async_loop(name="AsyncLoopThread", force_use_selector=False):
-    fu = concurrent.futures.Future()
+    fu = concurrent_futures.Future()
     loop = new_raw_async_loop(force_use_selector=force_use_selector)
 
     def _cb():
@@ -99,19 +84,19 @@ def start_main_async_loop_in_main_thread(callback, *args, **kwargs):
     threading.current_thread().name = "MainThread"
 
 
-_MODULE_TASK_NAME = "__asyncio_helper__.name"
+_MODULE_TASK_NAME = "__asyncio__.name"
 
 
 def set_task_name(name: str, task: asyncio.Task = None):
     if task is None:
-        task = get_current_task()
+        task = current_task()
     setattr(task, _MODULE_TASK_NAME, name)
 
 
 def get_task_name(task: asyncio.Task = None):
     try:
         if task is None:
-            task = get_current_task()
+            task = current_task()
         if task is not None:
             return getattr(task, _MODULE_TASK_NAME)
     except AttributeError:
@@ -176,14 +161,14 @@ def run_in_other_loop(co, loop, timeout=None, cancel_connect=False):
     fu = asyncio.run_coroutine_threadsafe(co, loop=loop)
     try:
         return fu.result(timeout=timeout)
-    except concurrent.futures.TimeoutError:
+    except concurrent_futures.TimeoutError:
         if cancel_connect:
             fu.cancel()
         raise
 
 
-_MODULE_TIMEOUT = "__asyncio_helper__.timeout"
-_MODULE_TIMEOUT_HANDLE = "__asyncio_helper__.timeout_handle"
+_MODULE_TIMEOUT = "__asyncio__.timeout"
+_MODULE_TIMEOUT_HANDLE = "__asyncio__.timeout_handle"
 
 
 def set_timeout(task: asyncio.Task, timeout: [float, int], loop: asyncio.AbstractEventLoop = None, timeout_cancel=True):
@@ -214,7 +199,7 @@ def get_left_time(task: asyncio.Task = None, loop: asyncio.AbstractEventLoop = N
     if loop is None:
         loop = get_running_loop()
     if task is None:
-        task = get_current_task()
+        task = current_task()
     out_time = getattr(task, _MODULE_TIMEOUT, None)
     if not out_time:
         return sys.maxsize

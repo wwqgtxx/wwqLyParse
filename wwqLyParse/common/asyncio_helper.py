@@ -149,7 +149,7 @@ async def async_run_func_or_co(func_or_co, *args, **kwargs):
         return await get_running_loop().run_in_executor(None, fn)
 
 
-async def async_run_in_other_loop(co, loop, cancel_connect=True):
+async def async_run_in_loop(co, loop, cancel_connect=True):
     our_loop = get_running_loop()
     if loop == our_loop:
         # shortcuts in same loop
@@ -192,17 +192,22 @@ def set_timeout(task: asyncio.Task, timeout: [float, int], loop: asyncio.Abstrac
         loop = get_running_loop()
     now_time = loop.time()
     out_time = now_time + timeout
-    setattr(task, _MODULE_TIMEOUT, out_time)
     if timeout_cancel:
         if timeout <= 0:
             task.cancel()
             return
-        handle = getattr(task, _MODULE_TIMEOUT_HANDLE, None)
-        if handle is not None:
-            assert isinstance(handle, asyncio.Handle)
-            handle.cancel()
+        unset_timeout(task)
         handle = loop.call_at(out_time, task.cancel)
         setattr(task, _MODULE_TIMEOUT_HANDLE, handle)
+    setattr(task, _MODULE_TIMEOUT, out_time)
+
+
+def unset_timeout(task: asyncio.Task):
+    handle = getattr(task, _MODULE_TIMEOUT_HANDLE, None)
+    if handle is not None:
+        assert isinstance(handle, asyncio.Handle)
+        handle.cancel()
+    setattr(task, _MODULE_TIMEOUT, None)
 
 
 def get_left_time(task: asyncio.Task = None, loop: asyncio.AbstractEventLoop = None):

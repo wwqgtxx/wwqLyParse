@@ -44,8 +44,8 @@ class AsyncPipeConnection(object):
     async def create_pipe_connection_async(cls, address, family=None, authkey=None, loop=None):
         if loop is None:
             loop = asyncio_helper.get_running_loop()
-        conn = await asyncio_helper.async_run_in_other_loop(cls._create_pipe_connection_async(address, family, authkey),
-                                                            loop)  # type:AsyncPipeConnection
+        conn = await asyncio_helper.async_run_in_loop(cls._create_pipe_connection_async(address, family, authkey),
+                                                      loop)  # type:AsyncPipeConnection
         return conn
 
     @classmethod
@@ -75,16 +75,16 @@ class AsyncPipeConnection(object):
         await self.handle.finish()
 
     async def recv_bytes_async(self):
-        return await asyncio_helper.async_run_in_other_loop(self._recv_bytes_async(), self.handle.protocol.loop)
+        return await asyncio_helper.async_run_in_loop(self._recv_bytes_async(), self.handle.protocol.loop)
 
     async def send_bytes_async(self, b_data: bytes):
-        return await asyncio_helper.async_run_in_other_loop(self._send_bytes_async(b_data), self.handle.protocol.loop)
+        return await asyncio_helper.async_run_in_loop(self._send_bytes_async(b_data), self.handle.protocol.loop)
 
     async def close_async(self):
-        return await asyncio_helper.async_run_in_other_loop(self._close_async(), self.handle.protocol.loop)
+        return await asyncio_helper.async_run_in_loop(self._close_async(), self.handle.protocol.loop)
 
     def recv_bytes(self):
-        return asyncio_helper.async_run_in_other_loop(self._recv_bytes_async(), self.handle.protocol.loop)
+        return asyncio_helper.async_run_in_loop(self._recv_bytes_async(), self.handle.protocol.loop)
 
     def send_bytes(self, b_data: bytes):
         return asyncio_helper.run_in_other_loop(self._send_bytes_async(b_data), self.handle.protocol.loop)
@@ -178,7 +178,7 @@ class AsyncPipeServer(object):
         self.server = await loop.start_serving_pipe(factory, self.address)
 
     async def run_async(self):
-        return await asyncio_helper.async_run_in_other_loop(self._run_async(), self.loop)
+        return await asyncio_helper.async_run_in_loop(self._run_async(), self.loop)
 
     def run(self):
         return asyncio_helper.run_in_other_loop(self._run_async(), self.loop)
@@ -188,7 +188,7 @@ class AsyncPipeServer(object):
             self.server.close()
 
     async def shutdown_async(self):
-        return await asyncio_helper.async_run_in_other_loop(self._shutdown_async(), self.loop)
+        return await asyncio_helper.async_run_in_loop(self._shutdown_async(), self.loop)
 
     def shutdown(self):
         return asyncio_helper.run_in_other_loop(self._shutdown_async(), self.loop)

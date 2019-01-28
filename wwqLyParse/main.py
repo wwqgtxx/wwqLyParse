@@ -263,7 +263,7 @@ async def _parse(input_text, types=None, parsers_name=None, url_handles_name=Non
 
 async def parse_async(input_text, types=None, parsers_name=None, url_handles_name=None):
     try:
-        return await asyncio_helper.async_run_in_other_loop(
+        return await asyncio_helper.async_run_in_loop(
             _parse(input_text, types=types, parsers_name=parsers_name, url_handles_name=url_handles_name),
             loop=asyncio_helper.get_main_async_loop())
     except asyncio.CancelledError:
@@ -324,7 +324,7 @@ async def _parse_url(input_text, label, min=None, max=None, url_handles_name=Non
 
 async def parse_url_async(input_text, label, min=None, max=None, url_handles_name=None, *k, **kk):
     try:
-        return await asyncio_helper.async_run_in_other_loop(
+        return await asyncio_helper.async_run_in_loop(
             _parse_url(input_text, label, min=min, max=max, url_handles_name=url_handles_name),
             loop=asyncio_helper.get_main_async_loop())
     except asyncio.CancelledError:

@@ -68,13 +68,13 @@ class AsyncHttpProxyServer(object):
         return asyncio_helper.run_in_other_loop(self._start(), loop=self.loop)
 
     async def shutdown_async(self):
-        return await asyncio_helper.async_run_in_other_loop(self._shutdown(), loop=self.loop)
+        return await asyncio_helper.async_run_in_loop(self._shutdown(), loop=self.loop)
 
     def shutdown(self):
         return asyncio_helper.run_in_other_loop(self._shutdown(), loop=self.loop)
 
     async def join_async(self):
-        return await asyncio_helper.async_run_in_other_loop(self._join(), loop=self.loop)
+        return await asyncio_helper.async_run_in_loop(self._join(), loop=self.loop)
 
     def join(self):
         return asyncio_helper.run_in_other_loop(self._join(), loop=self.loop)

@@ -99,7 +99,7 @@ class GetUrlService(object):
         self.init()
         if callmethod is None:
             callmethod = get_caller_info(1)
-        return await asyncio_helper.async_run_in_other_loop(
+        return await asyncio_helper.async_run_in_loop(
             self._force_flush_cache_async(response, callmethod=callmethod), loop=self.loop, cancel_connect=False)
 
     async def _force_flush_cache_async(self, response, callmethod=None):
@@ -127,7 +127,7 @@ class GetUrlService(object):
         self.init()
         if callmethod is None:
             callmethod = get_caller_info(1)
-        return await asyncio_helper.async_run_in_other_loop(
+        return await asyncio_helper.async_run_in_loop(
             self._get_url_async(o_url, encoding=encoding, headers=headers, data=data, method=method,
                                 cookies=cookies, cookie_jar=cookie_jar, verify=verify,
                                 allow_cache=allow_cache, callmethod=callmethod, stream=stream),

@@ -33,7 +33,7 @@ from main import *
 
 
 def test():
-    get_url_service.init()
+    # get_url_service.init()
     # run_in_common_async_loop(a_test()).result()
     # print(get_url("http://10.10.1.96"))
     # main(r"file:///E:\QQDownloads\11.m3u8")
@@ -114,4 +114,4 @@ def test():
 
 if __name__ == "__main__":
     asyncio_helper.start_main_async_loop_in_main_thread(test)
-    # os._exit(0)
+    os._exit(0)

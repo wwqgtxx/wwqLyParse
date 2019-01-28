@@ -31,26 +31,12 @@ DATA_FMT = '%H:%M:%S'
 logging.basicConfig(level=LEVEL, format=FORMAT, datefmt=DATA_FMT, stream=sys.stderr)
 
 from common import *
-import asyncio
 
 asyncio_helper.patch_logging()
 
 
 def _handle(data):
     print(data.decode("utf-8"))
-
-
-# async def test():
-#     address_logging = ADDRESS_LOGGING
-#     logging.info("listen address:'%s'" % address_logging)
-#     aps = AsyncConnectionServer(ADDRESS_LOGGING, _handle, run_directly=True)
-#     await aps.run_async()
-#
-#
-# def main():
-#     asyncio_helper.run_in_main_async_loop(test()).result()
-#
-#     threading.main_thread().join()
 
 
 def main():

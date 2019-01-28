@@ -8,10 +8,10 @@ import multiprocessing.connection
 
 import main
 
-main.init_version()
-address = r'\\.\pipe\%s@%s' % ('wwqLyParse', main.version["version"])
 
-if __name__ == '__main__':
+def test():
+    main.init()
+    address = r'\\.\pipe\%s@%s' % ('wwqLyParse', main.version["version"])
     with multiprocessing.connection.Client(address, authkey=main.get_uuid()) as conn:
         time.sleep(main.CONN_LRU_TIMEOUT)
         logging.debug(main.CONN_LRU_TIMEOUT)
@@ -23,3 +23,7 @@ if __name__ == '__main__':
             conn.recv_bytes()
         except EOFError:
             logging.debug("EOF")
+
+
+if __name__ == '__main__':
+    main.asyncio_helper.start_main_async_loop_in_main_thread(test)

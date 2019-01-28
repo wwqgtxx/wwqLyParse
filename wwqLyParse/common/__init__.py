@@ -5,6 +5,7 @@
 # must first!!!
 from .for_path import *
 
+from .async_connection import *
 from .async_pool import *
 from .base_types import *
 from .connection_server import *
@@ -26,4 +27,3 @@ from .threadpool import *
 
 from . import asyncio_helper
 from . import concurrent_futures
-from . import multiprocessing_connection

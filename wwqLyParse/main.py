@@ -40,6 +40,7 @@ except Exception as e:
     from lib.lib_wwqLyParse import *
 
 import re, threading, sys, json, os, time, logging, importlib
+import multiprocessing.connection
 from argparse import ArgumentParser
 from typing import Dict, Tuple, List
 
@@ -388,7 +389,7 @@ async def _handle(data):
                 j_json = req_data
                 logging.debug("load json:" + str(j_json))
                 result = await parse_async(j_json["input_text"], j_json["types"], j_json["parsers_name"],
-                               j_json["urlhandles_name"])
+                                           j_json["urlhandles_name"])
             else:
                 raise Exception("can't get input json")
         elif req_url == "ParseURL":
@@ -396,7 +397,7 @@ async def _handle(data):
                 j_json = req_data
                 logging.debug("load json:" + str(j_json))
                 result = await parse_url_async(j_json["input_text"], j_json["label"], j_json["min"], j_json["max"],
-                                   j_json["urlhandles_name"])
+                                               j_json["urlhandles_name"])
             else:
                 raise Exception("can't get input json")
     except Exception as e:
@@ -408,31 +409,33 @@ async def _handle(data):
     return result
 
 
+def _pre(data):
+    req_data = lib_parse(data)
+    req_data = req_data.decode()
+    logging.debug("input json:" + req_data)
+    data = json.loads(req_data)
+    return data
+
+
+def _post(data):
+    j_json = json.dumps(data)
+    byte_str = j_json.encode("utf-8")
+    byte_str = lib_parse(byte_str)
+    return byte_str
+
+
 def run(pipe, force_start=False):
-    def _pre(data):
-        req_data = lib_parse(data)
-        req_data = req_data.decode()
-        logging.debug("input json:" + req_data)
-        data = json.loads(req_data)
-        return data
-
-    def _post(data):
-        j_json = json.dumps(data)
-        byte_str = j_json.encode("utf-8")
-        byte_str = lib_parse(byte_str)
-        return byte_str
-
     address = r'\\.\pipe\%s@%s' % (pipe, version['version'])
     logging.info("listen address:'%s'" % address)
     for _ in range(3 if force_start else 1):
         try:
-            ConnectionServer(address, _handle, asyncio_helper.get_main_async_loop(), get_uuid(),
-                             recv_parse_func=_pre, send_parse_func=_post).run()
+            return ConnectionServer(address, _handle, asyncio_helper.get_main_async_loop(), get_uuid(),
+                                    recv_parse_func=_pre, send_parse_func=_post).run()
         except PermissionError:
             if force_start:
                 try:
                     for _ in range(3):
-                        with multiprocessing_connection.Client(address, authkey=get_uuid()) as conn:
+                        with multiprocessing.connection.Client(address, authkey=get_uuid()) as conn:
                             req = {"type": "get", "url": 'close', "data": {}}
                             req = json.dumps(req)
                             req = req.encode("utf-8")
@@ -474,8 +477,7 @@ def arg_parser():
     return args
 
 
-def main(debugstr=None, parsers_name=None, types=None, label=None, pipe=None, force_start=False
-         , timeout=PARSE_TIMEOUT, close_timeout=CLOSE_TIMEOUT):
+def init():
     global parser_class_map
     if parser_class_map is None:
         parser_class_map = import_by_module_name(module_names=get_all_filename_by_dir('./parsers'), prefix="parsers.",
@@ -487,8 +489,13 @@ def main(debugstr=None, parsers_name=None, types=None, label=None, pipe=None, fo
                                                     super_class=UrlHandle)
     init_version()
     get_url_service.init()
-    get_common_connection_loop()
+    get_common_mp_connection_selector()
     logging.debug("\n------------------------------------------------------------\n")
+
+
+def main(debugstr=None, parsers_name=None, types=None, label=None, pipe=None, force_start=False
+         , timeout=PARSE_TIMEOUT, close_timeout=CLOSE_TIMEOUT):
+    init()
     global PARSE_TIMEOUT
     PARSE_TIMEOUT = timeout
     global CLOSE_TIMEOUT

@@ -1,6 +1,127 @@
 #!/usr/bin/env python3.5
 # -*- coding: utf-8 -*-
 # author wwqgtxx <wwqgtxx@gmail.com>
+import multiprocessing.connection
+from . import asyncio_helper
+import asyncio
+from .threadpool import *
+import collections
+import itertools
+import logging
+
+
+class MPConnectionSelector(object):
+    _counter = itertools.count().__next__
+
+    def __init__(self, logger=logging.root):
+        self.logger = logger
+        self.c_recv, self.c_send = multiprocessing.connection.Pipe(False)
+        self.conn_lru_dict = collections.defaultdict(list)
+        self.pool = ThreadPool(thread_name_prefix="MPCSelectorPool-%d" % self._counter())
+        self.pool.spawn(self._select)
+
+    def _select(self):
+        self.logger.debug("start %s's select loop", self)
+        while True:
+            try:
+                conn_list_raw = list(self.conn_lru_dict.keys())
+                conn_list = list()
+                conn_list.append(self.c_recv)
+                for conn in conn_list_raw:
+                    if not conn.closed:
+                        conn_list.append(conn)
+                    else:
+                        self._call_cb(conn)
+                # logging.debug("select:%s", conn_list)
+                for conn in multiprocessing.connection.wait(conn_list):
+                    if conn == self.c_recv:
+                        self.c_recv.recv_bytes()
+                        continue
+                    self._call_cb(conn)
+            except OSError as e:
+                if getattr(e, "winerror", 0) == 6:
+                    continue
+                logging.exception("OSError")
+            except:
+                logging.exception("error")
+
+    def _call_cb(self, conn):
+        cb_list = self.conn_lru_dict.pop(conn)
+        for cb in cb_list:
+            self.pool.spawn(cb)
+
+    def _write_to_self(self):
+        self.c_send.send_bytes(b'ok')
+
+    async def recv_bytes_async(self, conn: multiprocessing.connection.Connection, maxlength=None, parse_func=None):
+        loop = asyncio_helper.get_running_loop()
+        future = loop.create_future()
+
+        def _recv_cb():
+            try:
+                data = conn.recv_bytes(maxlength=maxlength)
+                if not data:
+                    raise EOFError
+                if parse_func is not None:
+                    data = parse_func(data)
+            except BaseException as e:
+                loop.call_soon_threadsafe(future.set_exception, e)
+            else:
+                loop.call_soon_threadsafe(future.set_result, data)
+
+        self.conn_lru_dict[conn].append(_recv_cb)
+        self._write_to_self()
+        try:
+            return await future
+        finally:
+            try:
+                self.conn_lru_dict[conn].remove(_recv_cb)
+            except ValueError:
+                pass
+
+    async def send_bytes_async(self, conn: multiprocessing.connection.Connection, buf: bytes, parse_func=None):
+        def _send():
+            if parse_func is not None:
+                data = parse_func(buf)
+            else:
+                data = buf
+            conn.send_bytes(data)
+
+        return await asyncio_helper.async_run_func_or_co(_send)
+
+
+_common_mp_connection_selector = None
+
+
+def get_common_mp_connection_selector():
+    global _common_mp_connection_selector
+    if _common_mp_connection_selector is None:
+        _common_mp_connection_selector = MPConnectionSelector()
+    return _common_mp_connection_selector
+
+
+class AsyncMPConnection(object):
+    def __init__(self, conn: multiprocessing.connection.Connection, connection_selector: MPConnectionSelector):
+        self._conn = conn
+        self._connection_selector = connection_selector
+
+    async def recv_bytes_async(self, maxlength=None, parse_func=None):
+        return await self._connection_selector.recv_bytes_async(self._conn, maxlength=maxlength, parse_func=parse_func)
+
+    async def send_bytes_async(self, buf: bytes, parse_func=None):
+        return await self._connection_selector.send_bytes_async(self._conn, buf, parse_func=parse_func)
+
+    @property
+    def closed(self):
+        return self._conn.closed
+
+    def close(self):
+        return self._conn.close()
+
+
+__all__ = ["MPConnectionSelector", "get_common_mp_connection_selector", "AsyncMPConnection"]
+
+"""
 import asyncio
 from . import asyncio_helper
 from .async_pool import AsyncPool
@@ -242,3 +363,4 @@ class AsyncConnectionServer(AsyncPipeServer):
             self.logger.debug("conn %s was eof" % conn)
         except BrokenPipeError:
             self.logger.debug("conn %s was broken" % conn)
+"""

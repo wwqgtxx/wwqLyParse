@@ -21,10 +21,10 @@ def call_method_and_save_to_queue(queue, method, args=None, kwargs=None, allow_n
         raise
 
 
-class ThreadPool(object):
+class ThreadPool(ThreadPoolExecutor):
     def __init__(self, size=None, thread_name_prefix=''):
+        super().__init__(max_workers=size, thread_name_prefix=thread_name_prefix)
         self.pool_size = size
-        self.ex = ThreadPoolExecutor(size, thread_name_prefix=thread_name_prefix, class_name="ThreadPool")
         self.pool_threads = []
         # logging.debug("new pool %s" % self)
 
@@ -43,7 +43,7 @@ class ThreadPool(object):
 
     def spawn(self, call_method, *k, **kk):
         f = functools.partial(call_method, *k, **kk)
-        future = self.ex.submit(f)
+        future = self.submit(f)
         future.add_done_callback(self._remove_from_pool_threads)
         self.pool_threads.append(future)
         return future
@@ -58,7 +58,7 @@ class ThreadPool(object):
                 pass
 
     def kill(self, *k, block=False, **kk):
-        self.ex.shutdown(wait=block)
+        self.shutdown(wait=block)
 
     def __enter__(self):
         return self

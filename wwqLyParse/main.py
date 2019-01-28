@@ -261,6 +261,15 @@ async def _parse(input_text, types=None, parsers_name=None, url_handles_name=Non
     return results
 
 
+async def parse_async(input_text, types=None, parsers_name=None, url_handles_name=None):
+    try:
+        return await asyncio_helper.async_run_in_other_loop(
+            _parse(input_text, types=types, parsers_name=parsers_name, url_handles_name=url_handles_name),
+            loop=asyncio_helper.get_main_async_loop())
+    except asyncio.CancelledError:
+        return []
+
+
 def parse(input_text, types=None, parsers_name=None, url_handles_name=None):
     try:
         return asyncio_helper.run_in_main_async_loop(
@@ -313,6 +322,15 @@ async def _parse_url(input_text, label, min=None, max=None, url_handles_name=Non
     return result
 
 
+async def parse_url_async(input_text, label, min=None, max=None, url_handles_name=None, *k, **kk):
+    try:
+        return await asyncio_helper.async_run_in_other_loop(
+            _parse_url(input_text, label, min=min, max=max, url_handles_name=url_handles_name),
+            loop=asyncio_helper.get_main_async_loop())
+    except asyncio.CancelledError:
+        return []
+
+
 def parse_url(input_text, label, min=None, max=None, url_handles_name=None, *k, **kk):
     try:
         return asyncio_helper.run_in_main_async_loop(
@@ -356,11 +374,7 @@ def close():
             pool.join()
 
 
-def _handle(data):
-    req_data = lib_parse(data)
-    req_data = req_data.decode()
-    logging.debug("input json:" + req_data)
-    data = json.loads(req_data)
+async def _handle(data):
     req_url = data["url"]
     req_data = data["data"]
     try:
@@ -373,7 +387,7 @@ def _handle(data):
             if req_data is not None:
                 j_json = req_data
                 logging.debug("load json:" + str(j_json))
-                result = parse(j_json["input_text"], j_json["types"], j_json["parsers_name"],
+                result = await parse_async(j_json["input_text"], j_json["types"], j_json["parsers_name"],
                                j_json["urlhandles_name"])
             else:
                 raise Exception("can't get input json")
@@ -381,7 +395,7 @@ def _handle(data):
             if req_data is not None:
                 j_json = req_data
                 logging.debug("load json:" + str(j_json))
-                result = parse_url(j_json["input_text"], j_json["label"], j_json["min"], j_json["max"],
+                result = await parse_url_async(j_json["input_text"], j_json["label"], j_json["min"], j_json["max"],
                                    j_json["urlhandles_name"])
             else:
                 raise Exception("can't get input json")
@@ -391,18 +405,29 @@ def _handle(data):
         result = {"type": "error", "error": info}
     result = {"type": "result", "url": req_url, "data": result}
     debug(result)
-    j_json = json.dumps(result)
-    byte_str = j_json.encode("utf-8")
-    byte_str = lib_parse(byte_str)
-    return byte_str
+    return result
 
 
 def run(pipe, force_start=False):
+    def _pre(data):
+        req_data = lib_parse(data)
+        req_data = req_data.decode()
+        logging.debug("input json:" + req_data)
+        data = json.loads(req_data)
+        return data
+
+    def _post(data):
+        j_json = json.dumps(data)
+        byte_str = j_json.encode("utf-8")
+        byte_str = lib_parse(byte_str)
+        return byte_str
+
     address = r'\\.\pipe\%s@%s' % (pipe, version['version'])
     logging.info("listen address:'%s'" % address)
     for _ in range(3 if force_start else 1):
         try:
-            ConnectionServer(address, _handle, get_uuid()).run()
+            ConnectionServer(address, _handle, asyncio_helper.get_main_async_loop(), get_uuid(),
+                             recv_parse_func=_pre, send_parse_func=_post).run()
         except PermissionError:
             if force_start:
                 try:
@@ -462,6 +487,7 @@ def main(debugstr=None, parsers_name=None, types=None, label=None, pipe=None, fo
                                                     super_class=UrlHandle)
     init_version()
     get_url_service.init()
+    get_common_connection_loop()
     logging.debug("\n------------------------------------------------------------\n")
     global PARSE_TIMEOUT
     PARSE_TIMEOUT = timeout

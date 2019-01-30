@@ -7,319 +7,24 @@ from .threadpool import *
 import collections
 import itertools
 import logging
-
-
-class MPConnectionSelector(object):
-    _counter = itertools.count().__next__
-
-    def __init__(self, logger=logging.root):
-        self.logger = logger
-        self.c_recv, self.c_send = multiprocessing.connection.Pipe(False)
-        self.conn_lru_dict = collections.defaultdict(list)
-        self.pool = ThreadPool(thread_name_prefix="MPCSelectorPool-%d" % self._counter())
-        self.pool.spawn(self._select)
-
-    def _select(self):
-        self.logger.debug("start %s's select loop", self)
-        while True:
-            try:
-                conn_list_raw = list(self.conn_lru_dict.keys())
-                conn_list = list()
-                conn_list.append(self.c_recv)
-                for conn in conn_list_raw:
-                    if not conn.closed:
-                        conn_list.append(conn)
-                    else:
-                        self._call_cb(conn)
-                # logging.debug("select:%s", conn_list)
-                for conn in multiprocessing.connection.wait(conn_list):
-                    if conn == self.c_recv:
-                        self.c_recv.recv_bytes()
-                        continue
-                    self._call_cb(conn)
-            except OSError as e:
-                if getattr(e, "winerror", 0) == 6:
-                    continue
-                logging.exception("OSError")
-            except:
-                logging.exception("error")
-
-    def _call_cb(self, conn):
-        cb_list = self.conn_lru_dict.pop(conn)
-        for cb in cb_list:
-            self.pool.spawn(cb)
-
-    def _write_to_self(self):
-        self.c_send.send_bytes(b'ok')
-
-    async def recv_bytes_async(self, conn: multiprocessing.connection.Connection, maxlength=None, parse_func=None):
-        loop = asyncio.get_running_loop()
-        future = loop.create_future()
-
-        def _recv_cb():
-            try:
-                data = conn.recv_bytes(maxlength=maxlength)
-                if not data:
-                    raise EOFError
-                if parse_func is not None:
-                    data = parse_func(data)
-            except BaseException as e:
-                loop.call_soon_threadsafe(future.set_exception, e)
-            else:
-                loop.call_soon_threadsafe(future.set_result, data)
-
-        self.conn_lru_dict[conn].append(_recv_cb)
-        self._write_to_self()
-        try:
-            return await future
-        finally:
-            try:
-                self.conn_lru_dict[conn].remove(_recv_cb)
-            except ValueError:
-                pass
-
-    async def send_bytes_async(self, conn: multiprocessing.connection.Connection, buf: bytes, parse_func=None):
-        def _send():
-            if parse_func is not None:
-                data = parse_func(buf)
-            else:
-                data = buf
-            conn.send_bytes(data)
-
-        return await asyncio.async_run_func_or_co(_send)
-
-
-_common_mp_connection_selector = None
-
-
-def get_common_mp_connection_selector():
-    global _common_mp_connection_selector
-    if _common_mp_connection_selector is None:
-        _common_mp_connection_selector = MPConnectionSelector()
-    return _common_mp_connection_selector
-
-
-class AsyncMPConnection(object):
-    def __init__(self, conn: multiprocessing.connection.Connection, connection_selector: MPConnectionSelector):
-        self._conn = conn
-        self._connection_selector = connection_selector
-
-    async def recv_bytes_async(self, maxlength=None, parse_func=None):
-        return await self._connection_selector.recv_bytes_async(self._conn, maxlength=maxlength, parse_func=parse_func)
-
-    async def send_bytes_async(self, buf: bytes, parse_func=None):
-        return await self._connection_selector.send_bytes_async(self._conn, buf, parse_func=parse_func)
-
-    @property
-    def closed(self):
-        return self._conn.closed
-
-    def close(self):
-        return self._conn.close()
-
-
-__all__ = ["MPConnectionSelector", "get_common_mp_connection_selector", "AsyncMPConnection"]
-
-"""
-from . import asyncio
-from .async_pool import AsyncPool
+import sys
 import os
-import struct
-import logging
-import itertools
+import pickle
+import copyreg
+import io
 
+try:
+    import _winapi
+    from _winapi import WAIT_OBJECT_0, WAIT_ABANDONED_0, WAIT_TIMEOUT, INFINITE
+except ImportError:
+    if sys.platform == 'win32':
+        raise
+    _winapi = None
 
-class AsyncPipeConnection(object):
-    def __init__(self, handle: asyncio.AsyncPipeStreamRequestHandler):
-        self.handle = handle
+from multiprocessing import AuthenticationError, BufferTooShort
+import multiprocessing.util
 
-    @classmethod
-    async def _create_pipe_connection_async(cls, address, family=None, authkey=None):
-        loop = asyncio.get_running_loop()
-        assert isinstance(loop, asyncio.ProactorEventLoop)
-        handle_future = loop.create_future()
-
-        class _PipeHandle(asyncio.AsyncPipeStreamRequestHandler):
-            def __init__(self, *k, **kk):
-                super().__init__(*k, **kk)
-
-            async def __call__(self, *args, **kwargs):
-                handle_future.set_result(cls(self))
-
-        def factory():
-            return asyncio.AsyncPipeStreamProtocol(_PipeHandle, None, loop)
-
-        trans, protocol = await loop.create_pipe_connection(factory, address)
-        conn = await handle_future  # type:AsyncPipeConnection
-        try:
-            if authkey is not None:
-                await conn._answer_challenge_async(authkey)
-                await conn._deliver_challenge_async(authkey)
-        except AuthenticationError:
-            await conn._close_async()
-        return conn
-
-    @classmethod
-    async def create_pipe_connection_async(cls, address, family=None, authkey=None, loop=None):
-        if loop is None:
-            loop = asyncio.get_running_loop()
-        conn = await asyncio.async_run_in_loop(cls._create_pipe_connection_async(address, family, authkey),
-                                                      loop)  # type:AsyncPipeConnection
-        return conn
-
-    @classmethod
-    def create_pipe_connection(cls, address, family=None, authkey=None, loop=None, timeout=None):
-        conn = asyncio.run_in_other_loop(cls._create_pipe_connection_async(address, family, authkey),
-                                                loop, timeout=timeout)  # type:AsyncPipeConnection
-        return conn
-
-    async def _send_bytes_async(self, b_data: bytes):
-        assert self.handle is not None
-        b_data_head = struct.pack("!Q", len(b_data))
-        self.handle.wfile.write(b_data_head + b_data)
-        await self.handle.wfile.drain()
-
-    async def _recv_bytes_async(self, max_size=None):
-        assert self.handle is not None
-        if max_size is None:
-            max_size = asyncio.PIPE_MAX_BYTES
-        b_data_head = await self.handle.rfile.readexactly(8)
-        b_data_len = struct.unpack("!Q", b_data_head)[0]
-        if b_data_len > max_size:
-            raise asyncio.LimitOverrunError("data too big", b_data_len)
-        return await self.handle.rfile.readexactly(b_data_len)
-
-    async def _close_async(self):
-        assert self.handle is not None
-        await self.handle.finish()
-
-    async def recv_bytes_async(self):
-        return await asyncio.async_run_in_loop(self._recv_bytes_async(), self.handle.protocol.loop)
-
-    async def send_bytes_async(self, b_data: bytes):
-        return await asyncio.async_run_in_loop(self._send_bytes_async(b_data), self.handle.protocol.loop)
-
-    async def close_async(self):
-        return await asyncio.async_run_in_loop(self._close_async(), self.handle.protocol.loop)
-
-    def recv_bytes(self):
-        return asyncio.async_run_in_loop(self._recv_bytes_async(), self.handle.protocol.loop)
-
-    def send_bytes(self, b_data: bytes):
-        return asyncio.run_in_other_loop(self._send_bytes_async(b_data), self.handle.protocol.loop)
-
-    def close(self):
-        return asyncio.run_in_other_loop(self._close_async(), self.handle.protocol.loop)
-
-    def __enter__(self):
-        return self
-
-    async def __aenter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.close()
-
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
-        await self.close_async()
-
-    async def _deliver_challenge_async(self, authkey: bytes):
-        import hmac
-        if not isinstance(authkey, bytes):
-            raise ValueError(
-                "Authkey must be bytes, not {0!s}".format(type(authkey)))
-        try:
-            message = os.urandom(MESSAGE_LENGTH)
-            await self._send_bytes_async(CHALLENGE + message)
-            digest = hmac.new(authkey, message, 'md5').digest()
-            response = await self._recv_bytes_async(256)  # reject large message
-            if response == digest:
-                await self._send_bytes_async(WELCOME)
-            else:
-                await self._send_bytes_async(FAILURE)
-                raise AuthenticationError('digest received was wrong')
-        except asyncio.LimitOverrunError as e:
-            await self._send_bytes_async(FAILURE)
-            raise AuthenticationError(e)
-
-    async def _answer_challenge_async(self, authkey: bytes):
-        import hmac
-        if not isinstance(authkey, bytes):
-            raise ValueError(
-                "Authkey must be bytes, not {0!s}".format(type(authkey)))
-        try:
-            message = await self._recv_bytes_async(256)  # reject large message
-            assert message[:len(CHALLENGE)] == CHALLENGE, 'message = %r' % message
-            message = message[len(CHALLENGE):]
-            digest = hmac.new(authkey, message, 'md5').digest()
-            await self._send_bytes_async(digest)
-            response = await self._recv_bytes_async(256)  # reject large message
-            if response != WELCOME:
-                raise AuthenticationError('digest sent was rejected')
-        except asyncio.LimitOverrunError as e:
-            raise AuthenticationError(e)
-
-
-class AsyncPipeServer(object):
-    counter = itertools.count().__next__
-
-    def __init__(self, address, handle, authkey=None, logger=logging.root, loop=None):
-        self.address = address
-        self.handle = handle
-        self.authkey = authkey
-        self.logger = logger
-        self.loop = loop
-        if self.loop is None:
-            self.loop = asyncio.get_running_loop()
-        self.server = None
-
-    async def _run_async(self):
-        loop = asyncio.get_running_loop()
-        assert isinstance(loop, asyncio.ProactorEventLoop)
-        pool = AsyncPool(thread_name_prefix="HandlePool-%d" % self.counter(), loop=loop)
-        handle = self.handle
-        authkey = self.authkey
-
-        class _PipeHandle(asyncio.AsyncPipeStreamRequestHandler):
-            def __init__(self, *k, **kk):
-                super().__init__(*k, **kk)
-
-            async def handle(self):
-                conn = AsyncPipeConnection(self)
-                if authkey is not None:
-                    await conn._deliver_challenge_async(authkey)
-                    await conn._answer_challenge_async(authkey)
-                await handle(conn)
-
-        def factory():
-            return asyncio.AsyncPipeStreamProtocol(_PipeHandle, pool, loop)
-
-        self.server = await loop.start_serving_pipe(factory, self.address)
-
-    async def run_async(self):
-        return await asyncio.async_run_in_loop(self._run_async(), self.loop)
-
-    def run(self):
-        return asyncio.run_in_other_loop(self._run_async(), self.loop)
-
-    async def _shutdown_async(self):
-        if self.server is not None:
-            self.server.close()
-
-    async def shutdown_async(self):
-        return await asyncio.async_run_in_loop(self._shutdown_async(), self.loop)
-
-    def shutdown(self):
-        return asyncio.run_in_other_loop(self._shutdown_async(), self.loop)
-
-
-class AuthenticationError(Exception):
-    pass
-
-
-#
-# Authentication stuff
-#
+BUFSIZE = 8192
 
 MESSAGE_LENGTH = 20
 
@@ -328,37 +33,402 @@ WELCOME = b'#WELCOME#'
 FAILURE = b'#FAILURE#'
 
 
-class AsyncConnectionServer(AsyncPipeServer):
-    def __init__(self, address, handle, authkey=None, logger=logging.root, loop=None, run_directly=False):
-        super().__init__(address, handle, authkey, logger, loop)
-        self.raw_handle = handle
-        self.handle = self._handle
-        self.run_directly = run_directly
+class _ForkingPickler(pickle.Pickler):
+    '''Pickler subclass used by multiprocessing.'''
+    _extra_reducers = {}
+    _copyreg_dispatch_table = copyreg.dispatch_table
 
-    async def _handle(self, conn: AsyncPipeConnection):
+    def __init__(self, *args):
+        super().__init__(*args)
+        self.dispatch_table = self._copyreg_dispatch_table.copy()
+        self.dispatch_table.update(self._extra_reducers)
+
+    @classmethod
+    def register(cls, type, reduce):
+        '''Register a reduce function for a type.'''
+        cls._extra_reducers[type] = reduce
+
+    @classmethod
+    def dumps(cls, obj, protocol=None):
+        buf = io.BytesIO()
+        cls(buf, protocol).dump(obj)
+        return buf.getbuffer()
+
+    loads = pickle.loads
+
+
+class _AsyncConnectionBase:
+    _handle = None
+
+    def __init__(self, handle, readable=True, writable=True, server_side=False):
+        handle = handle.__index__()
+        if handle < 0:
+            raise ValueError("invalid handle")
+        if not readable and not writable:
+            raise ValueError(
+                "at least one of `readable` and `writable` must be True")
+        self._handle = handle
+        self._readable = readable
+        self._writable = writable
+        self._server_side = server_side
+
+    # XXX should we use util.Finalize instead of a __del__?
+
+    def __del__(self):
+        if self._handle is not None:
+            self._close()
+
+    def _check_closed(self):
+        if self._handle is None:
+            raise OSError("handle is closed")
+
+    def _check_readable(self):
+        if not self._readable:
+            raise OSError("connection is write-only")
+
+    def _check_writable(self):
+        if not self._writable:
+            raise OSError("connection is read-only")
+
+    def _bad_message_length(self):
+        if self._writable:
+            self._readable = False
+        else:
+            self.close()
+        raise OSError("bad message length")
+
+    @property
+    def closed(self):
+        """True if the connection is closed"""
+        return self._handle is None
+
+    @property
+    def readable(self):
+        """True if the connection is readable"""
+        return self._readable
+
+    @property
+    def writable(self):
+        """True if the connection is writable"""
+        return self._writable
+
+    def fileno(self):
+        """File descriptor or handle of the connection"""
+        self._check_closed()
+        return self._handle
+
+    def close(self):
+        """Close the connection"""
+        if self._handle is not None:
+            try:
+                self._close()
+            finally:
+                self._handle = None
+
+    async def send_bytes(self, buf, offset=0, size=None):
+        """Send the bytes data from a bytes-like object"""
+        self._check_closed()
+        self._check_writable()
+        m = memoryview(buf)
+        # HACK for byte-indexing of non-bytewise buffers (e.g. array.array)
+        if m.itemsize > 1:
+            m = memoryview(bytes(m))
+        n = len(m)
+        if offset < 0:
+            raise ValueError("offset is negative")
+        if n < offset:
+            raise ValueError("buffer length < offset")
+        if size is None:
+            size = n - offset
+        elif size < 0:
+            raise ValueError("size is negative")
+        elif offset + size > n:
+            raise ValueError("buffer length < offset + size")
+        await self._send_bytes(m[offset:offset + size])
+
+    async def send(self, obj):
+        """Send a (picklable) object"""
+        self._check_closed()
+        self._check_writable()
+        await self._send_bytes(_ForkingPickler.dumps(obj))
+
+    async def recv_bytes(self, maxlength=None):
+        """
+        Receive bytes data as a bytes object.
+        """
+        self._check_closed()
+        self._check_readable()
+        if maxlength is not None and maxlength < 0:
+            raise ValueError("negative maxlength")
+        buf = await self._recv_bytes(maxlength)
+        if buf is None:
+            self._bad_message_length()
+        return buf.getvalue()
+
+    async def recv_bytes_into(self, buf, offset=0):
+        """
+        Receive bytes data into a writeable bytes-like object.
+        Return the number of bytes read.
+        """
+        self._check_closed()
+        self._check_readable()
+        with memoryview(buf) as m:
+            # Get bytesize of arbitrary buffer
+            itemsize = m.itemsize
+            bytesize = itemsize * len(m)
+            if offset < 0:
+                raise ValueError("negative offset")
+            elif offset > bytesize:
+                raise ValueError("offset too large")
+            result = await self._recv_bytes()
+            size = result.tell()
+            if bytesize < offset + size:
+                raise BufferTooShort(result.getvalue())
+            # Message can fit in dest
+            result.seek(0)
+            result.readinto(m[offset // itemsize:
+                              (offset + size) // itemsize])
+            return size
+
+    async def recv(self):
+        """Receive a (picklable) object"""
+        self._check_closed()
+        self._check_readable()
+        buf = await self._recv_bytes()
+        return _ForkingPickler.loads(buf.getbuffer())
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, exc_type, exc_value, exc_tb):
+        self.close()
+
+    async def deliver_challenge(self, authkey: bytes):
+        import hmac
+        if not isinstance(authkey, bytes):
+            raise ValueError(
+                "Authkey must be bytes, not {0!s}".format(type(authkey)))
+        message = os.urandom(MESSAGE_LENGTH)
+        await self.send_bytes(CHALLENGE + message)
+        digest = hmac.new(authkey, message, 'md5').digest()
+        response = await self.recv_bytes(256)  # reject large message
+        if response == digest:
+            await self.send_bytes(WELCOME)
+        else:
+            await self.send_bytes(FAILURE)
+            raise AuthenticationError('digest received was wrong')
+
+    async def answer_challenge(self, authkey: bytes):
+        import hmac
+        if not isinstance(authkey, bytes):
+            raise ValueError(
+                "Authkey must be bytes, not {0!s}".format(type(authkey)))
         try:
-            while True:
-                data = await conn.recv_bytes()
-                if not data:
-                    raise EOFError
-                self.logger.debug("parse conn %s" % conn)
-                # self.logger.debug(data)
-                try:
-                    if self.run_directly:
-                        result = self.raw_handle(data)
-                    else:
-                        result = await asyncio.async_run_func_or_co(self.raw_handle, data)
-                except Exception:
-                    self.logger.exception("handle error")
-                else:
-                    if result is not None:
-                        await conn.send_bytes_async(result)
-        except asyncio.IncompleteReadError:
-            self.logger.debug("conn %s was IncompleteRead" % conn)
-        except OSError:
-            self.logger.debug("conn %s was closed" % conn)
-        except EOFError:
-            self.logger.debug("conn %s was eof" % conn)
-        except BrokenPipeError:
-            self.logger.debug("conn %s was broken" % conn)
-"""
+            message = await self.recv_bytes(256)  # reject large message
+            assert message[:len(CHALLENGE)] == CHALLENGE, 'message = %r' % message
+            message = message[len(CHALLENGE):]
+            digest = hmac.new(authkey, message, 'md5').digest()
+            await self.send_bytes(digest)
+            response = await self.recv_bytes(256)  # reject large message
+            if response != WELCOME:
+                raise AuthenticationError('digest sent was rejected')
+        except asyncio.LimitOverrunError as e:
+            raise AuthenticationError(e)
+
+    async def do_auth(self, authkey: bytes):
+        if self._server_side:
+            await self.answer_challenge(authkey)
+            await self.deliver_challenge(authkey)
+        else:
+            await self.deliver_challenge(authkey)
+            await self.answer_challenge(authkey)
+
+    async def _send_bytes(self, buf):
+        raise NotImplemented
+
+    async def _recv_bytes(self, maxsize=None):
+        raise NotImplemented
+
+
+def _get_proactor():
+    loop = asyncio.get_running_loop()
+    assert isinstance(loop, asyncio.ProactorEventLoop)
+    proactor = loop._proactor
+    return proactor
+
+
+async def _wait_for_ov(ov):
+    proactor = _get_proactor()
+    return await proactor.wait_for_handle(ov.event)
+
+
+class AsyncPipeConnection(_AsyncConnectionBase):
+    """
+    Connection class based on a Windows named pipe.
+    Overlapped I/O is used, so the handles must have been created
+    with FILE_FLAG_OVERLAPPED.
+    """
+
+    def _close(self, _CloseHandle=_winapi.CloseHandle):
+        _CloseHandle(self._handle)
+
+    async def _send_bytes(self, buf):
+        ov, err = _winapi.WriteFile(self._handle, buf, overlapped=True)
+        try:
+            if err == _winapi.ERROR_IO_PENDING:
+                # waitres = _winapi.WaitForMultipleObjects(
+                #                 # [ov.event], False, INFINITE)
+                # assert waitres == WAIT_OBJECT_0
+                await _wait_for_ov(ov)
+        except:
+            ov.cancel()
+            raise
+        finally:
+            nwritten, err = ov.GetOverlappedResult(True)
+        assert err == 0
+        assert nwritten == len(buf)
+
+    async def _recv_bytes(self, maxsize=None):
+        bsize = 128 if maxsize is None else min(maxsize, 128)
+        try:
+            ov, err = _winapi.ReadFile(self._handle, bsize,
+                                       overlapped=True)
+            try:
+                if err == _winapi.ERROR_IO_PENDING:
+                    # waitres = _winapi.WaitForMultipleObjects(
+                    #     [ov.event], False, INFINITE)
+                    # assert waitres == WAIT_OBJECT_0
+                    await _wait_for_ov(ov)
+            except:
+                ov.cancel()
+                raise
+            finally:
+                nread, err = ov.GetOverlappedResult(True)
+                if err == 0:
+                    f = io.BytesIO()
+                    f.write(ov.getbuffer())
+                    return f
+                elif err == _winapi.ERROR_MORE_DATA:
+                    return self._get_more_data(ov, maxsize)
+        except OSError as e:
+            if e.winerror == _winapi.ERROR_BROKEN_PIPE:
+                raise EOFError
+            else:
+                raise
+        raise RuntimeError("shouldn't get here; expected KeyboardInterrupt")
+
+    def _get_more_data(self, ov, maxsize):
+        buf = ov.getbuffer()
+        f = io.BytesIO()
+        f.write(buf)
+        left = _winapi.PeekNamedPipe(self._handle)[1]
+        assert left > 0
+        if maxsize is not None and len(buf) + left > maxsize:
+            self._bad_message_length()
+        ov, err = _winapi.ReadFile(self._handle, left, overlapped=True)
+        rbytes, err = ov.GetOverlappedResult(True)
+        assert err == 0
+        assert rbytes == left
+        f.write(ov.getbuffer())
+        return f
+
+
+class AsyncPipeListener(object):
+    '''
+    Representation of a named pipe
+    '''
+
+    def __init__(self, address, backlog=None):
+        self._address = address
+        self._handle_queue = [self._new_handle(first=True)]
+
+        self._last_accepted = None
+        self.close = multiprocessing.util.Finalize(
+            self, AsyncPipeListener._finalize_pipe_listener,
+            args=(self._handle_queue, self._address), exitpriority=0
+        )
+
+    def _new_handle(self, first=False):
+        flags = _winapi.PIPE_ACCESS_DUPLEX | _winapi.FILE_FLAG_OVERLAPPED
+        if first:
+            flags |= _winapi.FILE_FLAG_FIRST_PIPE_INSTANCE
+        return _winapi.CreateNamedPipe(
+            self._address, flags,
+            _winapi.PIPE_TYPE_MESSAGE | _winapi.PIPE_READMODE_MESSAGE |
+            _winapi.PIPE_WAIT,
+            _winapi.PIPE_UNLIMITED_INSTANCES, BUFSIZE, BUFSIZE,
+            _winapi.NMPWAIT_WAIT_FOREVER, _winapi.NULL
+        )
+
+    async def accept(self):
+        self._handle_queue.append(self._new_handle())
+        handle = self._handle_queue.pop(0)
+        try:
+            ov = _winapi.ConnectNamedPipe(handle, overlapped=True)
+        except OSError as e:
+            if e.winerror != _winapi.ERROR_NO_DATA:
+                raise
+            # ERROR_NO_DATA can occur if a client has already connected,
+            # written data and then disconnected -- see Issue 14725.
+        else:
+            try:
+                await _wait_for_ov(ov)
+            except:
+                ov.cancel()
+                _winapi.CloseHandle(handle)
+                raise
+            finally:
+                _, err = ov.GetOverlappedResult(True)
+                assert err == 0
+        return AsyncPipeConnection(handle)
+
+    @staticmethod
+    def _finalize_pipe_listener(queue, address):
+        for handle in queue:
+            _winapi.CloseHandle(handle)
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, exc_type, exc_value, exc_tb):
+        self.close()
+
+
+# Initial delay in seconds for connect_pipe() before retrying to connect
+CONNECT_PIPE_INIT_DELAY = 0.001
+
+# Maximum delay in seconds for connect_pipe() before retrying to connect
+CONNECT_PIPE_MAX_DELAY = 0.100
+
+
+async def async_connect_pipe(address):
+    '''
+    Return a connection object connected to the pipe given by `address`
+    '''
+    delay = CONNECT_PIPE_INIT_DELAY
+    while True:
+        # Unfortunately there is no way to do an overlapped connect to
+        # a pipe.  Call CreateFile() in a loop until it doesn't fail with
+        # ERROR_PIPE_BUSY.
+        try:
+            h = _winapi.CreateFile(
+                address, _winapi.GENERIC_READ | _winapi.GENERIC_WRITE,
+                0, _winapi.NULL, _winapi.OPEN_EXISTING,
+                _winapi.FILE_FLAG_OVERLAPPED, _winapi.NULL
+            )
+            break
+        except OSError as e:
+            if e.winerror not in (_winapi.ERROR_SEM_TIMEOUT,
+                                  _winapi.ERROR_PIPE_BUSY):
+                raise
+
+        # ConnectPipe() failed with ERROR_PIPE_BUSY: retry later
+        delay = min(delay * 2, CONNECT_PIPE_MAX_DELAY)
+        await asyncio.sleep(delay)
+    _winapi.SetNamedPipeHandleState(
+        h, _winapi.PIPE_READMODE_MESSAGE, None, None
+    )
+    return AsyncPipeConnection(h, server_side=True)
+
+
+__all__ = ["AsyncPipeConnection", "AsyncPipeListener", "async_connect_pipe"]

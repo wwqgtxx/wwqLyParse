@@ -489,7 +489,6 @@ def init():
                                                     super_class=UrlHandle)
     init_version()
     get_url_service.init()
-    get_common_mp_connection_selector()
     logging.debug("\n------------------------------------------------------------\n")
 
 

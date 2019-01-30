@@ -30,13 +30,18 @@ class ConnectionServer(object):
         self.logger = logger
         self.recv_parse_func = recv_parse_func
         self.send_parse_func = send_parse_func
-        self.connection_selector = get_common_mp_connection_selector()
         self.handle_pool = AsyncPool(thread_name_prefix="HandlePool-%d" % self._counter(), loop=self.loop)
 
-    async def _handle(self, conn: AsyncMPConnection):
+    async def _handle(self, conn: AsyncPipeConnection):
         try:
+            if self.authkey:
+                await conn.do_auth(self.authkey)
             while True:
-                data = await asyncio.wait_for(conn.recv_bytes_async(parse_func=self.recv_parse_func), CONN_LRU_TIMEOUT)
+                data = await asyncio.wait_for(conn.recv_bytes(), CONN_LRU_TIMEOUT)
+                if not data:
+                    raise EOFError
+                if self.recv_parse_func is not None:
+                    data = self.recv_parse_func(data)
                 self.logger.debug("parse conn %s" % conn)
                 # self.logger.debug(data)
                 try:
@@ -45,8 +50,9 @@ class ConnectionServer(object):
                     self.logger.exception("handle error")
                 else:
                     if result is not None:
-                        await asyncio.wait_for(conn.send_bytes_async(result, parse_func=self.send_parse_func),
-                                               CONN_LRU_TIMEOUT)
+                        if self.send_parse_func is not None:
+                            result = self.send_parse_func(result)
+                        await asyncio.wait_for(conn.send_bytes(result), CONN_LRU_TIMEOUT)
         except asyncio.TimeoutError:
             self.logger.debug("conn %s was timeout" % conn)
             conn.close()
@@ -60,16 +66,18 @@ class ConnectionServer(object):
             self.logger.debug("conn %s was broken" % conn)
             conn.close()
 
-    def run(self):
-        with multiprocessing.connection.Listener(self.address, authkey=self.authkey) as listener:
+    async def _run(self):
+        async with AsyncPipeListener(self.address) as listener:
             while True:
                 try:
-                    conn = listener.accept()
+                    conn = await listener.accept()
                     self.logger.debug("get a new conn %s" % conn)
-                    self.loop.call_soon_threadsafe(self.handle_pool.spawn,
-                                                   self._handle(AsyncMPConnection(conn, self.connection_selector)))
+                    self.handle_pool.spawn(self._handle(conn))
                 except:
                     self.logger.exception("error")
+
+    def run(self):
+        asyncio.run_in_other_loop(self._run(), self.loop)
 
 
 __all__ = ["ConnectionServer", "CONN_LRU_TIMEOUT"]

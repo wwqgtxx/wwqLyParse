@@ -22,7 +22,6 @@ import ssl
 import itertools
 from . import asyncio
 from .async_pool import *
-from .async_connection import *
 
 NetWorkIOError = (socket.error, ssl.SSLError, OSError)
 

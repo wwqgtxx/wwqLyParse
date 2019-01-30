@@ -40,7 +40,6 @@ except Exception as e:
     from lib.lib_wwqLyParse import *
 
 import re, threading, sys, json, os, time, logging, importlib
-import multiprocessing.connection
 from argparse import ArgumentParser
 from typing import Dict, Tuple, List
 
@@ -376,6 +375,10 @@ def close():
 
 
 async def _handle(data):
+    req_data = await lib_parse_async(data)
+    req_data = req_data.decode()
+    logging.debug("input json:" + req_data)
+    data = json.loads(req_data)
     req_url = data["url"]
     req_data = data["data"]
     try:
@@ -406,41 +409,31 @@ async def _handle(data):
         result = {"type": "error", "error": info}
     result = {"type": "result", "url": req_url, "data": result}
     debug(result)
-    return result
-
-
-def _pre(data):
-    req_data = lib_parse(data)
-    req_data = req_data.decode()
-    logging.debug("input json:" + req_data)
-    data = json.loads(req_data)
-    return data
-
-
-def _post(data):
-    j_json = json.dumps(data)
+    j_json = json.dumps(result)
     byte_str = j_json.encode("utf-8")
-    byte_str = lib_parse(byte_str)
+    byte_str = await lib_parse_async(byte_str)
     return byte_str
 
 
-def run(pipe, force_start=False):
+async def _run(pipe, force_start=False):
     address = r'\\.\pipe\%s@%s' % (pipe, version['version'])
     logging.info("listen address:'%s'" % address)
     for _ in range(3 if force_start else 1):
         try:
-            return ConnectionServer(address, _handle, asyncio.get_main_async_loop(), get_uuid(),
-                                    recv_parse_func=_pre, send_parse_func=_post).run()
+            return await ConnectionServer(address, _handle, get_uuid()).run()
         except PermissionError:
             if force_start:
                 try:
                     for _ in range(3):
-                        with multiprocessing.connection.Client(address, authkey=get_uuid()) as conn:
+                        conn = await async_connect_pipe(address)
+                        async with conn:
+                            await conn.do_auth(get_uuid())
                             req = {"type": "get", "url": 'close', "data": {}}
                             req = json.dumps(req)
                             req = req.encode("utf-8")
                             req = lib_parse(req)
-                            conn.send_bytes(req)
+                            await conn.send_bytes(req)
+                            await asyncio.sleep(0.1)
                             time.sleep(0.1)
                 except FileNotFoundError:
                     pass
@@ -449,6 +442,10 @@ def run(pipe, force_start=False):
                 time.sleep(0.1)
             else:
                 raise
+
+
+def run(pipe, force_start=False):
+    asyncio.run_in_main_async_loop(_run(pipe, force_start)).result()
 
 
 def arg_parser():

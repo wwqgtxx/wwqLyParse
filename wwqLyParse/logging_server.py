@@ -42,7 +42,7 @@ def _handle(data):
 def main():
     address_logging = ADDRESS_LOGGING
     logging.info("listen address:'%s'" % address_logging)
-    ConnectionServer(address_logging, _handle, asyncio.get_main_async_loop()).run()
+    asyncio.run_in_main_async_loop(ConnectionServer(address_logging, _handle).run()).result()
 
 
 if __name__ == "__main__":

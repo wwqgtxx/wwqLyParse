@@ -97,6 +97,10 @@ get_uuid = lib_wwqLyParse.get_uuid
 get_name = lib_wwqLyParse.get_name
 lib_parse = lib_wwqLyParse.lib_parse
 
+
+async def lib_parse_async(byte_str: bytes) -> bytes:
+    return await asyncio.async_run_func_or_co(lib_parse, byte_str)
+
 # if POOL_TYPE == "geventpool":
 #     def lib_parse(byte_str: bytes):
 #         return get_common_real_thread_pool().apply(lib_wwqLyParse.lib_parse, args=(byte_str,))

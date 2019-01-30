@@ -5,7 +5,7 @@
 # must first!!!
 from .for_path import *
 
-from .async_connection import *
+from .async_pipe_connection import *
 from .async_pool import *
 from .base_types import *
 from .connection_server import *

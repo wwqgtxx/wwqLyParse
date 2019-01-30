@@ -11,6 +11,7 @@ CONFIG = {
 import json, sys, subprocess, time, logging, traceback, ctypes, sysconfig
 import multiprocessing
 import multiprocessing.connection
+import concurrent.futures
 
 try:
     import _winapi
@@ -30,9 +31,9 @@ class RemoteStream(object):
         self.address = address
         # self.loop = loop
         self.conn = None  # type: multiprocessing.connection.Connection
-        self.conn = None  # type: # AsyncPipeConnection
+        self.pool = concurrent.futures.ThreadPoolExecutor(1)
 
-    def write(self, data):
+    def _write(self, data):
         for _ in range(3):
             try:
                 if self.conn is None:
@@ -52,6 +53,9 @@ class RemoteStream(object):
             except Exception:
                 print(traceback.format_exc())
                 self.conn = None
+
+    def write(self, data):
+        self.pool.submit(self._write, data)
 
     def close(self):
         if self.conn is not None:

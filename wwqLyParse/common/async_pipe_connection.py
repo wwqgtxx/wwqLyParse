@@ -3,10 +3,6 @@
 # author wwqgtxx <wwqgtxx@gmail.com>
 import multiprocessing.connection
 from . import asyncio
-from .threadpool import *
-import collections
-import itertools
-import logging
 import sys
 import os
 import pickle

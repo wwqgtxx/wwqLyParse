@@ -156,12 +156,14 @@ class IQiYiAListParser(Parser):
             else:
                 logging.debug("%s ignore by cid: %s" % (str(self), cid))
                 return False
-        elif  self.TAKE_CARE_CID_TYPE == "EXCLUDE":
+        elif self.TAKE_CARE_CID_TYPE == "EXCLUDE":
             if cid is None or cid != self.TAKE_CARE_CID:
                 return True
             else:
                 logging.debug("%s ignore by cid: %s" % (str(self), cid))
                 return False
+        else:
+            return True
 
     async def parse(self, input_text, *k, **kk):
         if not await self._check_support(input_text):
@@ -245,8 +247,8 @@ class IQiYiAListParser3(IQiYiAListParser):
 
     # https://pcw-api.iqiyi.com/albums/album/avlistinfo?aid=202340701&size=50&page=2
     URL_JS_API_PORT = "https://pcw-api.iqiyi.com/albums/album/avlistinfo?aid={}&size=50&page={}"
-    TAKE_CARE_CID = '2'
-    TAKE_CARE_CID_TYPE = "INCLUDE"
+    # TAKE_CARE_CID = '2'
+    TAKE_CARE_CID_TYPE = "ALL"
 
     # parse one page json
     def _parse_one_page_json(self, info):
@@ -258,7 +260,7 @@ class IQiYiAListParser3(IQiYiAListParser):
 
             one['no'] = v['order']
             one['title'] = v['name']
-            one['subtitle'] = v['subtitle']
+            one['subtitle'] = v.get('subtitle', '')
             one['url'] = v['playUrl']
 
             out.append(one)
@@ -267,7 +269,7 @@ class IQiYiAListParser3(IQiYiAListParser):
 
 
 class IQiYiAListParser4(IQiYiAListParser):
-    replace_if_exists = ["IQiYiAListParser2"]
+    replace_if_exists = ["IQiYiAListParser2", "IQiYiAListParser3"]
 
     # https://pcw-api.iqiyi.com/album/source/svlistinfo?cid=6&sourceid=203342201&timelist=2016
     URL_JS_API_PORT = "https://pcw-api.iqiyi.com/album/source/svlistinfo?cid={}&sourceid={}&timelist=" + \

@@ -69,3 +69,6 @@ class ThreadPool(ThreadPoolExecutor):
     @staticmethod
     def wait(wait_list, timeout=None):
         return wait(wait_list, timeout=timeout)
+
+
+__all__ = ["ThreadPool"]

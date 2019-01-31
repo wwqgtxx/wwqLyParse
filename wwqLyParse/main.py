@@ -425,8 +425,7 @@ async def _run(pipe, force_start=False):
             if force_start:
                 try:
                     for _ in range(3):
-                        conn = await async_connect_pipe(address)
-                        async with conn:
+                        async with AsyncPipeClient(address) as conn:
                             await conn.do_auth(get_uuid())
                             req = {"type": "get", "url": 'close', "data": {}}
                             req = json.dumps(req)

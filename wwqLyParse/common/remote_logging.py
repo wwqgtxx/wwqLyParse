@@ -23,7 +23,7 @@ class RemoteStream(object):
         for _ in range(3):
             try:
                 if self.conn is None:
-                    self.conn = await async_connect_pipe(self.address)
+                    self.conn = await AsyncPipeClient(self.address)
                 if self.conn:
                     await self.conn.send_bytes(data)
                 return

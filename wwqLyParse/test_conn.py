@@ -13,8 +13,7 @@ from common import *
 
 async def log():
     address = ADDRESS_LOGGING
-    conn = await async_connect_pipe(address)
-    async with conn:
+    async with AsyncPipeClient(address) as conn:
         for i in range(sys.maxsize):
             await conn.send_bytes(("%d" % i).encode())
             await asyncio.sleep(1)

@@ -193,6 +193,12 @@ class _AsyncConnectionBase:
         buf = await self._recv_bytes()
         return _ForkingPickler.loads(buf.getbuffer())
 
+    async def poll(self):
+        """Whether there is any input available to be read"""
+        self._check_closed()
+        self._check_readable()
+        return await self._poll()
+
     async def __aenter__(self):
         return self
 
@@ -245,6 +251,9 @@ class _AsyncConnectionBase:
     async def _recv_bytes(self, maxsize=None):
         raise NotImplemented
 
+    async def _poll(self):
+        raise NotImplemented
+
 
 def _get_proactor():
     loop = asyncio.get_running_loop()
@@ -258,12 +267,16 @@ async def _wait_for_ov(ov):
     return await proactor.wait_for_handle(ov.event)
 
 
+_ready_errors = {_winapi.ERROR_BROKEN_PIPE, _winapi.ERROR_NETNAME_DELETED}
+
+
 class AsyncPipeConnection(_AsyncConnectionBase):
     """
     Connection class based on a Windows named pipe.
     Overlapped I/O is used, so the handles must have been created
     with FILE_FLAG_OVERLAPPED.
     """
+    _got_empty_message = False
 
     def _close(self, _CloseHandle=_winapi.CloseHandle):
         _CloseHandle(self._handle)
@@ -285,33 +298,84 @@ class AsyncPipeConnection(_AsyncConnectionBase):
         assert nwritten == len(buf)
 
     async def _recv_bytes(self, maxsize=None):
-        bsize = 128 if maxsize is None else min(maxsize, 128)
-        try:
-            ov, err = _winapi.ReadFile(self._handle, bsize,
-                                       overlapped=True)
+        if self._got_empty_message:
+            self._got_empty_message = False
+            return io.BytesIO()
+        else:
+            bsize = 128 if maxsize is None else min(maxsize, 128)
             try:
-                if err == _winapi.ERROR_IO_PENDING:
-                    # waitres = _winapi.WaitForMultipleObjects(
-                    #     [ov.event], False, INFINITE)
-                    # assert waitres == WAIT_OBJECT_0
-                    await _wait_for_ov(ov)
-            except:
-                ov.cancel()
-                raise
-            finally:
-                nread, err = ov.GetOverlappedResult(True)
-                if err == 0:
-                    f = io.BytesIO()
-                    f.write(ov.getbuffer())
-                    return f
-                elif err == _winapi.ERROR_MORE_DATA:
-                    return self._get_more_data(ov, maxsize)
-        except OSError as e:
-            if e.winerror == _winapi.ERROR_BROKEN_PIPE:
-                raise EOFError
-            else:
-                raise
+                ov, err = _winapi.ReadFile(self._handle, bsize,
+                                           overlapped=True)
+                try:
+                    if err == _winapi.ERROR_IO_PENDING:
+                        # waitres = _winapi.WaitForMultipleObjects(
+                        #     [ov.event], False, INFINITE)
+                        # assert waitres == WAIT_OBJECT_0
+                        await _wait_for_ov(ov)
+                except:
+                    ov.cancel()
+                    raise
+                finally:
+                    nread, err = ov.GetOverlappedResult(True)
+                    if err == 0:
+                        f = io.BytesIO()
+                        f.write(ov.getbuffer())
+                        return f
+                    elif err == _winapi.ERROR_MORE_DATA:
+                        return self._get_more_data(ov, maxsize)
+            except OSError as e:
+                if e.winerror == _winapi.ERROR_BROKEN_PIPE:
+                    raise EOFError
+                else:
+                    raise
         raise RuntimeError("shouldn't get here; expected KeyboardInterrupt")
+
+    async def _poll(self):
+        if (self._got_empty_message or
+                _winapi.PeekNamedPipe(self._handle)[0] != 0):
+            return True
+        ov = None
+        try:
+            try:
+                ov, err = _winapi.ReadFile(self._handle, 0, True)
+            except OSError as e:
+                ov, err = None, e.winerror
+                if err not in _ready_errors:
+                    raise
+            if err == _winapi.ERROR_IO_PENDING:
+                # ov_list.append(ov)
+                # waithandle_to_obj[ov.event] = o
+                await _wait_for_ov(ov)
+            else:
+                # If o.fileno() is an overlapped pipe handle and
+                # err == 0 then there is a zero length message
+                # in the pipe, but it HAS NOT been consumed...
+                if ov and sys.getwindowsversion()[:2] >= (6, 2):
+                    # ... except on Windows 8 and later, where
+                    # the message HAS been consumed.
+                    try:
+                        _, err = ov.GetOverlappedResult(False)
+                    except OSError as e:
+                        err = e.winerror
+                    if not err:
+                        self._got_empty_message = True
+        finally:
+            if ov is not None:
+                ov.cancel()
+                try:
+                    _, err = ov.GetOverlappedResult(True)
+                except OSError as e:
+                    err = e.winerror
+                    if err not in _ready_errors:
+                        raise
+                if err != _winapi.ERROR_OPERATION_ABORTED:
+                    # o = waithandle_to_obj[ov.event]
+                    # ready_objects.add(o)
+                    if err == 0:
+                        # If o.fileno() is an overlapped pipe handle then
+                        # a zero length message HAS been consumed.
+                        self._got_empty_message = True
+        return True
 
     def _get_more_data(self, ov, maxsize):
         buf = ov.getbuffer()
@@ -368,6 +432,8 @@ class AsyncPipeListener(object):
             # written data and then disconnected -- see Issue 14725.
         else:
             try:
+                # res = _winapi.WaitForMultipleObjects(
+                #     [ov.event], False, INFINITE)
                 await _wait_for_ov(ov)
             except:
                 ov.cancel()
@@ -397,34 +463,54 @@ CONNECT_PIPE_INIT_DELAY = 0.001
 CONNECT_PIPE_MAX_DELAY = 0.100
 
 
-async def async_connect_pipe(address):
-    '''
-    Return a connection object connected to the pipe given by `address`
-    '''
-    delay = CONNECT_PIPE_INIT_DELAY
-    while True:
-        # Unfortunately there is no way to do an overlapped connect to
-        # a pipe.  Call CreateFile() in a loop until it doesn't fail with
-        # ERROR_PIPE_BUSY.
-        try:
-            h = _winapi.CreateFile(
-                address, _winapi.GENERIC_READ | _winapi.GENERIC_WRITE,
-                0, _winapi.NULL, _winapi.OPEN_EXISTING,
-                _winapi.FILE_FLAG_OVERLAPPED, _winapi.NULL
+class AsyncPipeClient(object):
+    def __init__(self, address):
+        self._address = address
+        self._conn = None  # type:AsyncPipeConnection
+
+    async def connect(self):
+        '''
+        Return a connection object connected to the pipe given by `address`
+        '''
+        if self._conn is None:
+            delay = CONNECT_PIPE_INIT_DELAY
+            while True:
+                # Unfortunately there is no way to do an overlapped connect to
+                # a pipe.  Call CreateFile() in a loop until it doesn't fail with
+                # ERROR_PIPE_BUSY.
+                try:
+                    h = _winapi.CreateFile(
+                        self._address, _winapi.GENERIC_READ | _winapi.GENERIC_WRITE,
+                        0, _winapi.NULL, _winapi.OPEN_EXISTING,
+                        _winapi.FILE_FLAG_OVERLAPPED, _winapi.NULL
+                    )
+                    break
+                except OSError as e:
+                    if e.winerror not in (_winapi.ERROR_SEM_TIMEOUT,
+                                          _winapi.ERROR_PIPE_BUSY):
+                        raise
+
+                # ConnectPipe() failed with ERROR_PIPE_BUSY: retry later
+                delay = min(delay * 2, CONNECT_PIPE_MAX_DELAY)
+                await asyncio.sleep(delay)
+            _winapi.SetNamedPipeHandleState(
+                h, _winapi.PIPE_READMODE_MESSAGE, None, None
             )
-            break
-        except OSError as e:
-            if e.winerror not in (_winapi.ERROR_SEM_TIMEOUT,
-                                  _winapi.ERROR_PIPE_BUSY):
-                raise
+            self._conn = AsyncPipeConnection(h, server_side=True)
+        return self._conn
 
-        # ConnectPipe() failed with ERROR_PIPE_BUSY: retry later
-        delay = min(delay * 2, CONNECT_PIPE_MAX_DELAY)
-        await asyncio.sleep(delay)
-    _winapi.SetNamedPipeHandleState(
-        h, _winapi.PIPE_READMODE_MESSAGE, None, None
-    )
-    return AsyncPipeConnection(h, server_side=True)
+    async def close(self):
+        if self._conn is not None:
+            self._conn.close()
+
+    def __await__(self):
+        return self.connect().__await__()
+
+    async def __aenter__(self):
+        return await self.connect()
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await self.close()
 
 
-__all__ = ["AsyncPipeConnection", "AsyncPipeListener", "async_connect_pipe"]
+__all__ = ["AsyncPipeConnection", "AsyncPipeListener", "AsyncPipeClient"]

@@ -8,6 +8,7 @@ import os
 import pickle
 import copyreg
 import io
+import struct
 import ssl
 import contextlib
 
@@ -397,6 +398,8 @@ class AsyncPipeConnection(_AsyncConnectionBase):
 
 class AsyncSslPipeConnection(AsyncPipeConnection):
     max_size = 256 * 1024  # Buffer size passed to read()
+    head_type = '<Q'
+    head_length = 8
 
     def __init__(self, handle, readable=True, writable=True, server_side=False):
         super().__init__(handle, readable=readable, writable=writable, server_side=server_side)
@@ -416,10 +419,10 @@ class AsyncSslPipeConnection(AsyncPipeConnection):
                 return
             while True:
                 try:
-                    print("do_handshake")
+                    # print("do_handshake")
                     async with self.__must_read():
                         self._ssl_obj.do_handshake()
-                    print("finish_handshake")
+                    # print("finish_handshake")
                     break
                 except ssl.SSLWantReadError as e:
                     # print(e)
@@ -448,6 +451,8 @@ class AsyncSslPipeConnection(AsyncPipeConnection):
         if not self.finish_handshake:
             await self.do_handshake()
         offset = 0
+        head = struct.pack(self.head_type, len(buf))
+        buf = head + buf
         view = memoryview(buf)
         while offset < len(view):
             try:
@@ -460,11 +465,32 @@ class AsyncSslPipeConnection(AsyncPipeConnection):
     async def _recv_bytes(self, maxsize=None):
         if not self.finish_handshake:
             await self.do_handshake()
+        length = self.head_length
+        bio = io.BytesIO()
+        while length > 0:
+            data = await self.__recv_bytes(length)
+            if not data:
+                break
+            bio.write(data)
+            length -= len(data)
+        length = struct.unpack_from(self.head_type, bio.getbuffer())[0]
+        if maxsize < length:
+            return None
+        bio = io.BytesIO()
+        while length > 0:
+            data = await self.__recv_bytes(length)
+            if not data:
+                break
+            bio.write(data)
+            length -= len(data)
+        return bio
+
+    async def __recv_bytes(self, maxsize=None):
+        maxsize = min(self.max_size, maxsize)
         while True:
             try:
                 async with self.__must_read():
-                    data = self._ssl_obj.read(self.max_size)
-                    return io.BytesIO(data)
+                    return self._ssl_obj.read(maxsize)
             except ssl.SSLWantReadError as e:
                 # print(e)
                 await self.__read_from_pipe()

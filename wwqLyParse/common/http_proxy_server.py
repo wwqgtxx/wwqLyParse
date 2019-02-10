@@ -34,6 +34,14 @@ class CertUtil(object):
     def get_cert(commonname, sans=()):
         return get_real_path(CertUtil.ca_keyfile)
 
+    @staticmethod
+    def get_context(host=''):
+        certfile = CertUtil.get_cert(host)
+        context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+        # context = ssl.SSLContext(ssl.PROTOCOL_TLS)
+        context.load_cert_chain(certfile, certfile)
+        return context
+
 
 get_hps_loop = asyncio.get_main_async_loop
 
@@ -507,7 +515,6 @@ class AsyncProxyHandler(AsyncBaseHttpRequestHandler):
 
     async def do_strip(self, do_ssl_handshake=True):
         """strip connect"""
-        certfile = CertUtil.get_cert(self.host)
         logging.info('%s "STRIP %s %s:%d %s" - -', self.address_string(), self.command, self.host, self.port,
                      self.protocol_version)
 
@@ -515,10 +522,7 @@ class AsyncProxyHandler(AsyncBaseHttpRequestHandler):
         await self.end_headers()
         if do_ssl_handshake:
             try:
-
-                context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
-                # context = ssl.SSLContext(ssl.PROTOCOL_TLS)
-                context.load_cert_chain(certfile, certfile)
+                context = CertUtil.get_context(self.host)
                 transport = await asyncio.start_tls(self.protocol.loop, self.protocol.transport, self.protocol,
                                                     sslcontext=context, server_side=True)
                 self.protocol.transport = transport

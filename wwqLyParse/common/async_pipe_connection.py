@@ -8,6 +8,8 @@ import os
 import pickle
 import copyreg
 import io
+import ssl
+import contextlib
 
 try:
     import _winapi
@@ -239,11 +241,11 @@ class _AsyncConnectionBase:
 
     async def do_auth(self, authkey: bytes):
         if self._server_side:
-            await self.answer_challenge(authkey)
             await self.deliver_challenge(authkey)
+            await self.answer_challenge(authkey)
         else:
-            await self.deliver_challenge(authkey)
             await self.answer_challenge(authkey)
+            await self.deliver_challenge(authkey)
 
     async def _send_bytes(self, buf):
         raise NotImplemented
@@ -393,13 +395,89 @@ class AsyncPipeConnection(_AsyncConnectionBase):
         return f
 
 
+class AsyncSslPipeConnection(AsyncPipeConnection):
+    max_size = 256 * 1024  # Buffer size passed to read()
+
+    def __init__(self, handle, readable=True, writable=True, server_side=False):
+        super().__init__(handle, readable=readable, writable=writable, server_side=server_side)
+        self.finish_handshake = False
+        from .http_proxy_server import CertUtil
+        self._context = CertUtil.get_context()
+        self._incoming = ssl.MemoryBIO()
+        self._outgoing = ssl.MemoryBIO()
+        self._handshake_lock = asyncio.Lock()
+        self._ssl_obj = self._context.wrap_bio(self._incoming, self._outgoing, self._server_side)
+        # print(self._ssl_obj)
+        # print(self._ssl_obj.server_side)
+
+    async def do_handshake(self):
+        async with self._handshake_lock:
+            if self.finish_handshake:
+                return
+            while True:
+                try:
+                    print("do_handshake")
+                    async with self.__must_read():
+                        self._ssl_obj.do_handshake()
+                    print("finish_handshake")
+                    break
+                except ssl.SSLWantReadError as e:
+                    # print(e)
+                    await self.__read_from_pipe()
+            self.finish_handshake = True
+
+    @contextlib.asynccontextmanager
+    async def __must_read(self):
+        await self.__write_to_pipe()
+        try:
+            yield
+        finally:
+            await self.__write_to_pipe()
+
+    async def __write_to_pipe(self):
+        data = self._outgoing.read()
+        if data:
+            await super()._send_bytes(data)
+
+    async def __read_from_pipe(self):
+        data = await super()._recv_bytes()
+        buf = data.getvalue()
+        self._incoming.write(buf)
+
+    async def _send_bytes(self, buf):
+        if not self.finish_handshake:
+            await self.do_handshake()
+        offset = 0
+        view = memoryview(buf)
+        while offset < len(view):
+            try:
+                async with self.__must_read():
+                    offset += self._ssl_obj.write(view[offset:])
+            except ssl.SSLWantReadError as e:
+                # print(e)
+                await self.__read_from_pipe()
+
+    async def _recv_bytes(self, maxsize=None):
+        if not self.finish_handshake:
+            await self.do_handshake()
+        while True:
+            try:
+                async with self.__must_read():
+                    data = self._ssl_obj.read(self.max_size)
+                    return io.BytesIO(data)
+            except ssl.SSLWantReadError as e:
+                # print(e)
+                await self.__read_from_pipe()
+
+
 class AsyncPipeListener(object):
     '''
     Representation of a named pipe
     '''
 
-    def __init__(self, address, backlog=None):
+    def __init__(self, address, backlog=None, wrap_ssl=False):
         self._address = address
+        self._wrap_ssl = wrap_ssl
         self._handle_queue = [self._new_handle(first=True)]
 
         self._last_accepted = None
@@ -442,7 +520,10 @@ class AsyncPipeListener(object):
             finally:
                 _, err = ov.GetOverlappedResult(True)
                 assert err == 0
-        return AsyncPipeConnection(handle)
+        if self._wrap_ssl:
+            return AsyncSslPipeConnection(handle, server_side=True)
+        else:
+            return AsyncPipeConnection(handle, server_side=True)
 
     @staticmethod
     def _finalize_pipe_listener(queue, address):
@@ -464,8 +545,9 @@ CONNECT_PIPE_MAX_DELAY = 0.100
 
 
 class AsyncPipeClient(object):
-    def __init__(self, address):
+    def __init__(self, address, wrap_ssl=False):
         self._address = address
+        self._wrap_ssl = wrap_ssl
         self._conn = None  # type:AsyncPipeConnection
 
     async def connect(self):
@@ -496,7 +578,10 @@ class AsyncPipeClient(object):
             _winapi.SetNamedPipeHandleState(
                 h, _winapi.PIPE_READMODE_MESSAGE, None, None
             )
-            self._conn = AsyncPipeConnection(h, server_side=True)
+            if self._wrap_ssl:
+                self._conn = AsyncSslPipeConnection(h)
+            else:
+                self._conn = AsyncPipeConnection(h)
         return self._conn
 
     async def close(self):

@@ -19,10 +19,12 @@ class ConnectionServer(object):
                  address: str,
                  handle,
                  authkey: bytes = None,
+                 wrap_ssl=False,
                  logger=logging.root):
         self.address = address
         self.handle = handle
         self.authkey = authkey
+        self.wrap_ssl = wrap_ssl
         self.logger = logger
 
     async def _handle(self, conn: AsyncPipeConnection):
@@ -57,7 +59,7 @@ class ConnectionServer(object):
 
     async def run(self):
         handle_pool = AsyncPool(thread_name_prefix="HandlePool-%d" % self._counter())
-        async with AsyncPipeListener(self.address) as listener:
+        async with AsyncPipeListener(self.address, wrap_ssl=self.wrap_ssl) as listener:
             while True:
                 try:
                     conn = await listener.accept()

@@ -10,7 +10,6 @@ import copyreg
 import io
 import struct
 import ssl
-import contextlib
 
 try:
     import _winapi
@@ -401,6 +400,17 @@ class AsyncSslPipeConnection(AsyncPipeConnection):
     head_type = '<Q'
     head_length = 8
 
+    class _MustDo(object):
+        def __init__(self, co_func):
+            self._co_func = co_func
+
+        async def __aenter__(self):
+            await self._co_func()
+            return self
+
+        async def __aexit__(self, exc_type, exc_val, exc_tb):
+            await self._co_func()
+
     def __init__(self, handle, readable=True, writable=True, server_side=False):
         super().__init__(handle, readable=readable, writable=writable, server_side=server_side)
         self.finish_handshake = False
@@ -410,6 +420,7 @@ class AsyncSslPipeConnection(AsyncPipeConnection):
         self._outgoing = ssl.MemoryBIO()
         self._handshake_lock = asyncio.Lock()
         self._ssl_obj = self._context.wrap_bio(self._incoming, self._outgoing, self._server_side)
+        self.__must_write = lambda: self._MustDo(self.__write_to_pipe())
         # print(self._ssl_obj)
         # print(self._ssl_obj.server_side)
 
@@ -420,7 +431,7 @@ class AsyncSslPipeConnection(AsyncPipeConnection):
             while True:
                 try:
                     # print("do_handshake")
-                    async with self.__must_read():
+                    async with self.__must_write():
                         self._ssl_obj.do_handshake()
                     # print("finish_handshake")
                     break
@@ -428,14 +439,6 @@ class AsyncSslPipeConnection(AsyncPipeConnection):
                     # print(e)
                     await self.__read_from_pipe()
             self.finish_handshake = True
-
-    @contextlib.asynccontextmanager
-    async def __must_read(self):
-        await self.__write_to_pipe()
-        try:
-            yield
-        finally:
-            await self.__write_to_pipe()
 
     async def __write_to_pipe(self):
         data = self._outgoing.read()
@@ -456,7 +459,7 @@ class AsyncSslPipeConnection(AsyncPipeConnection):
         view = memoryview(buf)
         while offset < len(view):
             try:
-                async with self.__must_read():
+                async with self.__must_write():
                     offset += self._ssl_obj.write(view[offset:])
             except ssl.SSLWantReadError as e:
                 # print(e)
@@ -489,7 +492,7 @@ class AsyncSslPipeConnection(AsyncPipeConnection):
         maxsize = min(self.max_size, maxsize)
         while True:
             try:
-                async with self.__must_read():
+                async with self.__must_write():
                     return self._ssl_obj.read(maxsize)
             except ssl.SSLWantReadError as e:
                 # print(e)

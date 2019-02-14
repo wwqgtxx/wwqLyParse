@@ -509,7 +509,7 @@ def main(debugstr=None, parsers_name=None, types=None, label=None, pipe=None, fo
 
 if __name__ == '__main__':
     args = arg_parser()
-    asyncio.start_main_async_loop_in_main_thread(main,
-                                                 args.debug, args.parser, args.types,
-                                                 args.label, args.pipe, args.force_start,
-                                                 args.timeout, args.close_timeout)
+    asyncio.start_main_async_loop_in_other_thread()
+    main(args.debug, args.parser, args.types,
+         args.label, args.pipe, args.force_start,
+         args.timeout, args.close_timeout)

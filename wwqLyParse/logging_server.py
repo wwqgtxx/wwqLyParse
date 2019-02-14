@@ -46,4 +46,5 @@ def main():
 
 
 if __name__ == "__main__":
-    asyncio.start_main_async_loop_in_main_thread(main)
+    asyncio.start_main_async_loop_in_other_thread()
+    main()

@@ -41,4 +41,5 @@ def server():
 if __name__ == "__main__":
     # with HttpProxyServer(host='localhost', port=1082) as hps:
     #     hps.join()
-    asyncio.start_main_async_loop_in_main_thread(server)
+    asyncio.start_main_async_loop_in_other_thread()
+    server()

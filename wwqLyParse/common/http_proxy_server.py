@@ -66,9 +66,7 @@ class AsyncHttpProxyServer(object):
         return self.server_address[1]
 
     async def start_async(self):
-        return await asyncio.wrap_future(
-            asyncio.run_coroutine_threadsafe(
-                self._start(), loop=self.loop))
+        return await asyncio.async_run_in_loop(self._start(), loop=self.loop)
 
     def start(self):
         return asyncio.run_in_other_loop(self._start(), loop=self.loop)

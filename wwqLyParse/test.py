@@ -113,5 +113,6 @@ def test():
 
 
 if __name__ == "__main__":
-    asyncio.start_main_async_loop_in_main_thread(test)
+    asyncio.start_main_async_loop_in_other_thread()
+    test()
     # os._exit(0)

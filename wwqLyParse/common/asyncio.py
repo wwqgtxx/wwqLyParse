@@ -11,6 +11,7 @@ from . import concurrent_futures
 
 # import all from standard asyncio lib
 from asyncio import *
+
 PY37 = sys.version_info >= (3, 7)
 
 
@@ -54,6 +55,15 @@ _main_async_loop = None  # type: asyncio.AbstractEventLoop
 def get_main_async_loop():
     assert _main_async_loop is not None
     return _main_async_loop
+
+
+def start_main_async_loop_in_other_thread(callback=None, *args, **kwargs):
+    global _main_async_loop
+    assert _main_async_loop is None
+    if _main_async_loop is None:
+        _main_async_loop = new_running_async_loop("MainLoop")
+    if callback is not None:
+        callback(*args, **kwargs)
 
 
 def start_main_async_loop_in_main_thread(callback, *args, **kwargs):

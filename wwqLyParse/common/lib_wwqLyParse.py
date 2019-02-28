@@ -1,13 +1,9 @@
 import ctypes, sysconfig, logging, weakref
 
-try:
-    from ..common import *
-except Exception as e:
-    from common import *
-
 
 class LibWwqLyParseBase(object):
     def __init__(self):
+        from .for_path import get_real_path
         if sysconfig.get_platform() == "win-amd64":
             self.lib_path = get_real_path("./wwqLyParse64.dll")
         else:
@@ -34,6 +30,11 @@ class LibWwqParseCFFI(LibWwqLyParseBase):
     char * get_name();
     int parse(char * c,int length,char **result,int *result_length);
     int free_str(char * c);
+    void* atomic_int64_init();
+    int atomic_int64_destroy(void* ptr);
+    int64_t atomic_int64_get(void* ptr);
+    int64_t atomic_int64_set(void* ptr, int64_t val);
+    int64_t atomic_int64_add(void* ptr, int64_t val);
         """)
         self.lib.__class__.__repr__ = lambda s: "<%s object at 0x%016X>" % (s.__class__.__name__, id(s))
         logging.debug("successful load lib %s" % self.lib)
@@ -67,6 +68,15 @@ class LibWwqParseCtypes(LibWwqLyParseBase):
                                    ctypes.POINTER(ctypes.c_int)]
         self.lib.get_uuid.restype = ctypes.c_char_p
         self.lib.get_name.restype = ctypes.c_char_p
+        self.lib.atomic_int64_init.restype = ctypes.c_void_p
+        self.lib.atomic_int64_destroy.argtypes = [ctypes.c_void_p]
+        self.lib.atomic_int64_get.argtypes = [ctypes.c_void_p]
+        self.lib.atomic_int64_get.restype = ctypes.c_int64
+        self.lib.atomic_int64_set.argtypes = [ctypes.c_void_p, ctypes.c_int64]
+        self.lib.atomic_int64_set.restype = ctypes.c_int64
+        self.lib.atomic_int64_add.argtypes = [ctypes.c_void_p, ctypes.c_int64]
+        self.lib.atomic_int64_add.restype = ctypes.c_int64
+
         logging.debug("successful load lib %s" % self.lib)
 
     def get_uuid(self) -> bytes:
@@ -98,7 +108,27 @@ get_name = lib_wwqLyParse.get_name
 lib_parse = lib_wwqLyParse.lib_parse
 
 
+class AtomicInt64(object):
+    def __init__(self):
+        self.lib = lib_wwqLyParse.lib
+        self.handle = self.lib.atomic_int64_init()
+
+    def __del__(self):
+        self.lib.atomic_int64_destroy(self.handle)
+
+    def get(self):
+        return self.lib.atomic_int64_get(self.handle)
+
+    def set(self, val: int):
+        return self.lib.atomic_int64_set(self.handle, val)
+
+    def __iadd__(self, other: int):
+        self.lib.atomic_int64_add(self.handle, other)
+        return self
+
+
 async def lib_parse_async(byte_str: bytes) -> bytes:
+    from . import asyncio
     return await asyncio.async_run_func_or_co(lib_parse, byte_str)
 
 # if POOL_TYPE == "geventpool":

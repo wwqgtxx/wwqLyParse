@@ -34,11 +34,6 @@ if __name__ == "__main__":
     # get_common_real_thread_pool()
     add_remote_logging(FORMAT, DATA_FMT)
 
-try:
-    from .lib.lib_wwqLyParse import *
-except Exception as e:
-    from lib.lib_wwqLyParse import *
-
 import re, threading, sys, json, os, time, logging, importlib
 from argparse import ArgumentParser
 from typing import Dict, Tuple, List

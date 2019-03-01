@@ -35,6 +35,10 @@ class LibWwqParseCFFI(LibWwqLyParseBase):
     int64_t atomic_int64_get(void* ptr);
     int64_t atomic_int64_set(void* ptr, int64_t val);
     int64_t atomic_int64_add(void* ptr, int64_t val);
+    int64_t atomic_int64_sub(void* ptr, int64_t val);
+    int64_t atomic_int64_and(void* ptr, int64_t val);
+    int64_t atomic_int64_or(void* ptr, int64_t val);
+    int64_t atomic_int64_xor(void* ptr, int64_t val);
         """)
         self.lib.__class__.__repr__ = lambda s: "<%s object at 0x%016X>" % (s.__class__.__name__, id(s))
         logging.debug("successful load lib %s" % self.lib)
@@ -76,6 +80,14 @@ class LibWwqParseCtypes(LibWwqLyParseBase):
         self.lib.atomic_int64_set.restype = ctypes.c_int64
         self.lib.atomic_int64_add.argtypes = [ctypes.c_void_p, ctypes.c_int64]
         self.lib.atomic_int64_add.restype = ctypes.c_int64
+        self.lib.atomic_int64_sub.argtypes = [ctypes.c_void_p, ctypes.c_int64]
+        self.lib.atomic_int64_sub.restype = ctypes.c_int64
+        self.lib.atomic_int64_and.argtypes = [ctypes.c_void_p, ctypes.c_int64]
+        self.lib.atomic_int64_and.restype = ctypes.c_int64
+        self.lib.atomic_int64_or.argtypes = [ctypes.c_void_p, ctypes.c_int64]
+        self.lib.atomic_int64_or.restype = ctypes.c_int64
+        self.lib.atomic_int64_xor.argtypes = [ctypes.c_void_p, ctypes.c_int64]
+        self.lib.atomic_int64_xor.restype = ctypes.c_int64
 
         logging.debug("successful load lib %s" % self.lib)
 
@@ -109,21 +121,36 @@ lib_parse = lib_wwqLyParse.lib_parse
 
 
 class AtomicInt64(object):
+    __slots__ = ["handle", "__weakref__"]
+
     def __init__(self):
-        self.lib = lib_wwqLyParse.lib
-        self.handle = self.lib.atomic_int64_init()
+        self.handle = lib_wwqLyParse.lib.atomic_int64_init()
+        weakref.finalize(self, lib_wwqLyParse.lib.atomic_int64_destroy, self.handle)
 
-    def __del__(self):
-        self.lib.atomic_int64_destroy(self.handle)
+    def get(self) -> int:
+        return lib_wwqLyParse.lib.atomic_int64_get(self.handle)
 
-    def get(self):
-        return self.lib.atomic_int64_get(self.handle)
-
-    def set(self, val: int):
-        return self.lib.atomic_int64_set(self.handle, val)
+    def set(self, val: int) -> int:
+        return lib_wwqLyParse.lib.atomic_int64_set(self.handle, val)
 
     def __iadd__(self, other: int):
-        self.lib.atomic_int64_add(self.handle, other)
+        lib_wwqLyParse.lib.atomic_int64_add(self.handle, other)
+        return self
+
+    def __isub__(self, other: int):
+        lib_wwqLyParse.lib.atomic_int64_sub(self.handle, other)
+        return self
+
+    def __iand__(self, other: int):
+        lib_wwqLyParse.lib.atomic_int64_and(self.handle, other)
+        return self
+
+    def __ior__(self, other: int):
+        lib_wwqLyParse.lib.atomic_int64_or(self.handle, other)
+        return self
+
+    def __ixor__(self, other: int):
+        lib_wwqLyParse.lib.atomic_int64_xor(self.handle, other)
         return self
 
 

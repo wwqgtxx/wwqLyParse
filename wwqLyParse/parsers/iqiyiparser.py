@@ -222,24 +222,25 @@ class IQiYiParser(Parser):
         vps_data = await self.get_vps_data(tvid, videoid)
         vs_array = await self.get_vs_array(vps_data)
         for vs in vs_array:
-            if 'fs' in vs:
-                bid = vs['bid']
-                stream_type = self.get_stream_type(bid)
-                info = {
-                    "label": '-'.join([stream_type['video_profile'], stream_type['container']]),
-                    "code": stream_type['id'],
-                    "ext": stream_type['container'],
-                    "size": byte2size(vs['vsize']),
-                    # "type" : "",
-                    # "download": []
-                }
+            if 'fs' not in vs:
+                continue
+            bid = vs['bid']
+            stream_type = self.get_stream_type(bid)
+            info = {
+                "label": '-'.join([stream_type['video_profile'], stream_type['container']]),
+                "code": stream_type['id'],
+                "ext": stream_type['container'],
+                "size": byte2size(vs['vsize']),
+                # "type" : "",
+                # "download": []
+            }
 
-                info1 = info.copy()
-                data["data"].append(info1)
-                info2 = info.copy()
-                info2["label"] = '-'.join([info["label"], "单线程"])
-                info2["code"] = '-'.join([str(info["code"]), "S"])
-                data["data"].append(info2)
+            info1 = info.copy()
+            data["data"].append(info1)
+            info2 = info.copy()
+            info2["label"] = '-'.join([info["label"], "单线程"])
+            info2["code"] = '-'.join([str(info["code"]), "S"])
+            data["data"].append(info2)
         return data
 
     async def parse_url(self, input_text, label, min=None, max=None, *k, **kk):
@@ -273,6 +274,8 @@ class IQiYiParser(Parser):
         vs_array = await self.get_vs_array(vps_data)
         url_prefix = await self.get_url_prefix(vps_data)
         for vs in vs_array:
+            if 'fs' not in vs:
+                continue
             bid = vs['bid']
             fs_array = vs['fs']
             stream_type = self.get_stream_type(bid)

@@ -16,11 +16,17 @@ __all__ = ["YouGetParser"]
 class YouGetParser(Parser):
     filters = ['^(http|https)://.+']
     types = ["formats"]
-    un_supports = ["www.iqiyi.com", "www.iqiyi.com/a_", 'www.iqiyi.com/lib/m', 'list.iqiyi.com', 'list.youku.com',
-                   'www.le.com', 'www.mgtv.com', 'yinyuetai.com', 'pptv.com',
-                   r'^(http|https)://cache.',
-                   r'^(http|https)://defaultts.tc.qq.com.',
-                   r'^(http|https)://\d+\.\d+\.\d+\.\d+']
+    un_supports = [
+        "www.iqiyi.com", "www.iqiyi.com/a_", 'www.iqiyi.com/lib/m', 'list.iqiyi.com',
+        'list.youku.com',
+        'www.le.com',
+        'www.mgtv.com',
+        'yinyuetai.com',
+        'pptv.com',
+        r'^(http|https)://cache.',
+        r'^(http|https)://defaultts.tc.qq.com.',
+        r'^(http|https)://\d+\.\d+\.\d+\.\d+'
+    ]
     bin = './you-get/you-get'
     name = "you-get解析"
 

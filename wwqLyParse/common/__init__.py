@@ -15,6 +15,7 @@ from .green_target import *
 from .http_proxy_server import *
 from .ignore_case_dict import *
 from .import_class import *
+from .js_engine import *
 from .key_lock import *
 from .lib_wwqLyParse import *
 from .lru_cache import *

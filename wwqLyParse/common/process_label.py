@@ -6,6 +6,8 @@ from .get_size import byte2size
 
 def make_label(_format, _id, quality, size=0):
     quality = quality.replace(' ', '')
+    if not size:
+        size = 0
     size_str = byte2size(size, False)
     size = byte2size(size, True)
     _format = str(_format).replace("_", "!")

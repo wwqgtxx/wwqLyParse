@@ -36,6 +36,7 @@ interpreter = [get_real_path('./lib/node_lib/node.exe')]
 
 # Inject to the script to let it return jsonlized value to python
 injected_script = r'''
+exports = undefined;
 function print(data) {
     console.log(data);
 }
@@ -70,7 +71,7 @@ function(program) {
 class JSEngine:
     def __init__(self, source=''):
         self._source = source
-        self._last_code = ''
+        # self._last_code = ''
 
     async def call(self, identifier, *args):
         args = json.dumps(args)
@@ -81,9 +82,9 @@ class JSEngine:
         # TODO: may need a thread lock, if running multithreading
         if not code.strip():
             return None
-        if self._last_code:
-            self._source += '\n' + self._last_code
-        self._last_code = code
+        # if self._last_code:
+        #     self._source += '\n' + self._last_code
+        # self._last_code = code
         data = json.dumps(code, ensure_ascii=True)
         code = 'return eval({data});'.format(data=data)
         return await self._exec(code)
@@ -92,6 +93,7 @@ class JSEngine:
         if self._source:
             code = self._source + '\n' + code
         code = self._inject_script(code)
+        # print(code)
         output = await self._run_interpreter_with_tempfile(code)
         output = output.replace('\r\n', '\n').replace('\r', '\n')
         last_line = output.split('\n')[-2]

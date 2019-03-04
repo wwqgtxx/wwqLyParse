@@ -32,7 +32,7 @@ class ProgramError(Exception):
     pass
 
 
-interpreter = [get_real_path('./lib/node.exe')]
+interpreter = [get_real_path('./lib/node_lib/node.exe')]
 
 # Inject to the script to let it return jsonlized value to python
 injected_script = r'''

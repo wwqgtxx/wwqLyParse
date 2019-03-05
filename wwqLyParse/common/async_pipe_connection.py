@@ -256,6 +256,9 @@ class _AsyncConnectionBase:
     async def _poll(self):
         raise NotImplemented
 
+    def _close(self):
+        raise NotImplemented
+
 
 def _get_proactor():
     loop = asyncio.get_running_loop()

@@ -4,7 +4,7 @@
 from .base import *
 from ..async_pool import AsyncPool
 from .. import asyncio
-from ..for_path import get_real_path
+from ..for_path import get_real_path, PY35
 from ..lru_cache import LRUCache
 from ..key_lock import AsyncKeyLockDict, ASYNC_FUCK_KEY_LOCK
 from ..utils import get_caller_info
@@ -47,10 +47,11 @@ class GetUrlService(object):
                 self.pool_get_url = AsyncPool(GET_URL_PARALLEL_LIMIT, thread_name_prefix="GetUrlPool", loop=self.loop)
                 if self.impl is None:
                     try:
-                        if asyncio.PY37:
+                        if not PY35:
                             from .aiohttp import AioHttpGetUrlImpl
                         else:
                             from .aiohttp352 import AioHttpGetUrlImpl
+                            self.ssl_verify = False
                         self.impl = AioHttpGetUrlImpl(self)
                     except:
                         pass

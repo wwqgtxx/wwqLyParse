@@ -11,6 +11,11 @@ from os import path, environ
 NODE_EXECUTABLE = path.join(path.dirname(__file__), "node")
 VM_SERVER = path.join(path.dirname(__file__), "vm-server")
 
+PY35 = 0x03050000 <= sys.hexversion < 0x03060000
+if PY35:
+    NODE_EXECUTABLE = path.join(path.dirname(__file__), "node_xp")
+    VM_SERVER = path.join(path.dirname(__file__), "vm-server_xp")
+
 
 def eval(code, **options):
     """A shortcut to eval JavaScript.
@@ -372,7 +377,7 @@ class VMServer:
         self.close()
 
     def start(self):
-        """Spawn a Node.js subprocess and run vm-server.
+        """Spawn a Node.js subprocess and run vm-server.F
 
         vm-server is a REPL server, which allows us to connect to it with
         stdios. You can find the script at ``node_vm2/vm-server`` (`Github
@@ -396,7 +401,7 @@ class VMServer:
         if self.closed:
             raise VMError("The VM is closed")
 
-        args = [self.command, VM_SERVER]
+        args = [self.command, "--harmony", VM_SERVER]
         self.process = Popen(args, bufsize=0, stdin=PIPE, stdout=PIPE)
 
         def reader():

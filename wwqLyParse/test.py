@@ -44,7 +44,7 @@ var vdwdae325w_64we = "220120190304";function re7357c2c3(p9a5d7d1939eb3fe0,p9a5d
 
 
 def test():
-    # asyncio.run_in_main_async_loop(js_test()).result()
+    asyncio.run_in_main_async_loop(js_test()).result()
     # get_url_service.init()
     # run_in_common_async_loop(a_test()).result()
     # print(get_url("http://10.10.1.96"))
@@ -125,7 +125,7 @@ def test():
     # main("https://tv.sohu.com/20180710/n600566416.shtml", parsers_name=["YouGetParser"])
     # main("https://tv.sohu.com/20180710/n600566416.shtml", label="default@YouGetParser")
     # main("https://www.baidu.com/link?url=ZdvE9tDwn2XcnK2WeirXnIdEk8oW6YSA_ImTNJsIe718e6qrmAtoJtqGskeQvfhi&wd=&eqid=dc1039da00010c72000000065b61cc1b")
-    main("https://www.douyu.com/452628", parsers_name=["YKDLParser"])
+    # main("https://www.douyu.com/452628", parsers_name=["YKDLParser"])
     # close()
     # init_version()
     # print(version)

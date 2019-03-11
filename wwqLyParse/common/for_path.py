@@ -15,10 +15,12 @@ def get_real_path(abstract_path):
     return os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(COMMON_PATH)), abstract_path))
 
 
-PY37 = sys.version_info >= (3, 7)
+PY35 = 0x03050000 <= sys.hexversion < 0x03060000
+PY36 = 0x03060000 <= sys.hexversion < 0x03070000
+PY37 = 0x03070000 <= sys.hexversion < 0x03080000
 
 # sys.path.insert(0, get_real_path('./lib/flask_lib'))
-if PY37:
+if not PY35:
     sys.path.insert(0, get_real_path('./lib/aiohttp_lib'))
 else:
     sys.path.insert(0, get_real_path('./lib/fallback_lib_py352'))

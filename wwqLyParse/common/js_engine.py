@@ -11,11 +11,14 @@ import json
 import sys
 from subprocess import PIPE
 
-from .for_path import get_real_path
+from .for_path import get_real_path, PY35
 from . import asyncio
 
 NODE_EXECUTABLE = get_real_path('./lib/node_lib/node.exe')
 VM_SERVER = get_real_path('./lib/node_lib/vm-server')
+if PY35:
+    NODE_EXECUTABLE = get_real_path('./lib/node_lib/node_xp.exe')
+    VM_SERVER = get_real_path('./lib/node_lib/vm-server_xp')
 
 
 async def js_eval(code, **options):
@@ -438,7 +441,7 @@ class VMServer:
         if self.closed:
             raise VMError("The VM is closed")
 
-        args = [self.command, VM_SERVER]
+        args = [self.command, "--harmony", VM_SERVER]
         self.process = await asyncio.create_subprocess_exec(*args, bufsize=0, stdin=PIPE, stdout=PIPE)
 
         _ = asyncio.create_task(self._reader())

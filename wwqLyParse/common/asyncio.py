@@ -12,8 +12,6 @@ from . import concurrent_futures
 # import all from standard asyncio lib
 from asyncio import *
 
-PY37 = sys.version_info >= (3, 7)
-
 
 def new_raw_async_loop(force_use_selector=False):
     if not force_use_selector:

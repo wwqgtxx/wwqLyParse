@@ -81,7 +81,7 @@ def test():
     # main("http://www.iqiyi.com/v_19rrez6nc4.html", label="720P-H264-DASH@IQiYiDashParser")
     # main("http://www.iqiyi.com/v_19rrez6nc4.html", parsers_name=["IQiYiParser"])
     # main("http://www.iqiyi.com/v_19rrez6nc4.html", label="4K-H264-S@IQiYiParser")
-    main("http://www.iqiyi.com/v_19rrez6nc4.html", label="4K-H264@IQiYiParser")
+    main("https://www.iqiyi.com/v_19rrez6nc4.html", label="4K-H264@IQiYiParser")
     # main("http://www.iqiyi.com/v_19rqpl2i8w.html")
     # time.sleep(10)
     # main("http://www.iqiyi.com/v_19rrl8pmn8.html", types="list")

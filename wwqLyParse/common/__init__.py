@@ -5,6 +5,8 @@
 # must first!!!
 from .for_path import *
 
+from .lib_wwqLyParse import *
+
 from .async_pipe_connection import *
 from .async_pool import *
 from .base_types import *
@@ -16,7 +18,6 @@ from .http_proxy_server import *
 from .ignore_case_dict import *
 from .import_class import *
 from .key_lock import *
-from .lib_wwqLyParse import *
 from .lru_cache import *
 from .process_label import *
 from .re import *

@@ -217,34 +217,54 @@ if hasattr(lib_wwqLyParse.lib, "epoll_create1"):
         def fileno(self):
             return self.handle
 
+        if lib_wwqLyParse.ffi is None:
+            def _new_ev(self):
+                ev = lib_wwqLyParse.c_epoll_event()
+                evp = ctypes.pointer(ev)
+                return ev, evp
+
+            def _ignore_closed(self, result):
+                if ctypes.get_errno() == WEPoll.EBADF:
+                    # /* fd already closed */
+                    ctypes.set_errno(0)
+                    result = 0
+                return result
+
+            def _new_evs(self, maxevents):
+                return (lib_wwqLyParse.c_epoll_event * maxevents)()
+
+            def _raise_error(self):
+                raise ctypes.WinError()
+        else:
+            def _new_ev(self):
+                evp = lib_wwqLyParse.ffi.new("epoll_event*")
+                ev = evp[0]
+                return ev, evp
+
+            def _ignore_closed(self, result):
+                if lib_wwqLyParse.ffi.errno == WEPoll.EBADF:
+                    # /* fd already closed */
+                    lib_wwqLyParse.ffi.errno = 0
+                    result = 0
+                return result
+
+            def _new_evs(self, maxevents):
+                return lib_wwqLyParse.ffi.new("epoll_event[]", maxevents)
+
+            def _raise_error(self):
+                raise WindowsError(*lib_wwqLyParse.ffi.getwinerror())
+
         def ctl(self, op, fd, events):
-            if lib_wwqLyParse.ffi is None:
-                _ev = lib_wwqLyParse.c_epoll_event()
-                ev = ctypes.pointer(_ev)
-            else:
-                ev = lib_wwqLyParse.ffi.new("epoll_event*")
-                _ev = ev[0]
-            _ev.events = events
-            _ev.data.fd = fd
-            fd = _ev.data.sock
-            result = lib_wwqLyParse.lib.epoll_ctl(self.handle, op, fd, ev)
+            ev, evp = self._new_ev()
+            ev.events = events
+            ev.data.fd = fd
+            fd = ev.data.sock
+            result = lib_wwqLyParse.lib.epoll_ctl(self.handle, op, fd, evp)
             if op == WEPoll.EPOLL_CTL_DEL:
-                if lib_wwqLyParse.ffi is None:
-                    if ctypes.get_errno() == WEPoll.EBADF:
-                        # /* fd already closed */
-                        ctypes.set_errno(0)
-                        result = 0
-                else:
-                    if lib_wwqLyParse.ffi.errno == WEPoll.EBADF:
-                        # /* fd already closed */
-                        lib_wwqLyParse.ffi.errno = 0
-                        result = 0
+                result = self._ignore_closed(result)
             if result < 0:
-                if lib_wwqLyParse.ffi is None:
-                    raise ctypes.WinError()
-                else:
-                    raise WindowsError(*lib_wwqLyParse.ffi.getwinerror())
-            _ = (_ev, ev)  # ensure not gc before here!!!
+                self._raise_error()
+            _ = (ev, evp)  # ensure not gc before here!!!
             return result
 
         def register(self, fd, eventmask=EPOLLIN | EPOLLPRI | EPOLLOUT):
@@ -267,16 +287,10 @@ if hasattr(lib_wwqLyParse.lib, "epoll_create1"):
                 maxevents = WEPoll.FD_SETSIZE - 1
             elif maxevents < 1:
                 raise ValueError("maxevents must be greater than 0, got %d" % maxevents)
-            if lib_wwqLyParse.ffi is None:
-                evs = (lib_wwqLyParse.c_epoll_event * maxevents)()
-            else:
-                evs = lib_wwqLyParse.ffi.new("epoll_event[]", maxevents)
+            evs = self._new_evs(maxevents)
             nfds = lib_wwqLyParse.lib.epoll_wait(self.handle, evs, maxevents, timeout)
             if nfds < 0:
-                if lib_wwqLyParse.ffi is None:
-                    raise ctypes.WinError()
-                else:
-                    raise WindowsError(*lib_wwqLyParse.ffi.getwinerror())
+                self._raise_error()
             elist = list()
             for i in range(nfds):
                 etuple = evs[i].data.fd, evs[i].events
@@ -333,6 +347,9 @@ if hasattr(lib_wwqLyParse.lib, "epoll_create1"):
         def close(self):
             self._selector.close()
             super().close()
+
+
+    selectors.DefaultSelector = WEPollSelector
 
 
 class AtomicInt64(object):

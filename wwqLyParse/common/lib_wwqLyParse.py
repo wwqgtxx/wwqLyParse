@@ -8,6 +8,7 @@ class LibWwqLyParseBase(object):
             self.lib_path = get_real_path("./wwqLyParse64.dll")
         else:
             self.lib_path = get_real_path("./wwqLyParse32.dll")
+        self.ffi = None
 
     def get_uuid(self) -> bytes:
         raise NotImplementedError
@@ -39,6 +40,26 @@ class LibWwqParseCFFI(LibWwqLyParseBase):
     int64_t atomic_int64_and(void* ptr, int64_t val);
     int64_t atomic_int64_or(void* ptr, int64_t val);
     int64_t atomic_int64_xor(void* ptr, int64_t val);
+    
+    typedef union epoll_data {
+      void* ptr;
+      int fd;
+      uint32_t u32;
+      uint64_t u64;
+      uintptr_t sock; /* Windows specific */
+      void* hnd;  /* Windows specific */
+    } epoll_data_t;
+    
+    typedef struct {
+      uint32_t events;   /* Epoll events and flags */
+      epoll_data_t data; /* User data variable */
+    } epoll_event ;
+    
+    void* epoll_create(int size);
+    void* epoll_create1(int flags);
+    int epoll_close(void* ephnd);
+    int epoll_ctl(void* ephnd, int op, uintptr_t sock, epoll_event* event);
+    int epoll_wait(void* ephnd, epoll_event* events, int maxevents, int timeout);
         """)
         self.lib.__class__.__repr__ = lambda s: "<%s object at 0x%016X>" % (s.__class__.__name__, id(s))
         logging.debug("successful load lib %s" % self.lib)
@@ -88,6 +109,43 @@ class LibWwqParseCtypes(LibWwqLyParseBase):
         self.lib.atomic_int64_or.restype = ctypes.c_int64
         self.lib.atomic_int64_xor.argtypes = [ctypes.c_void_p, ctypes.c_int64]
         self.lib.atomic_int64_xor.restype = ctypes.c_int64
+        try:
+            self.lib.epoll_create.argtypes = [ctypes.c_int]
+            self.lib.epoll_create.restype = ctypes.c_void_p
+            self.lib.epoll_create1.argtypes = [ctypes.c_int]
+            self.lib.epoll_create1.restype = ctypes.c_void_p
+            self.lib.epoll_close.argtypes = [ctypes.c_void_p]
+            self.lib.epoll_close.restype = ctypes.c_int
+
+            self.c_uint_p = ctypes.POINTER(ctypes.c_uint)
+
+            class c_epoll_data(ctypes.Union):
+                _fields_ = [
+                    ("ptr", ctypes.c_void_p),
+                    ("fd", ctypes.c_int),
+                    ("u32", ctypes.c_uint32),
+                    ("u64", ctypes.c_uint64),
+                    ("sock", self.c_uint_p),
+                    ("hnd", ctypes.c_void_p),
+                ]
+
+            self.c_epoll_data = c_epoll_data
+
+            class c_epoll_event(ctypes.Structure):
+                _fields_ = [
+                    ("events", ctypes.c_uint32),
+                    ("data", self.c_epoll_data),
+                ]
+
+            self.c_epoll_event = c_epoll_event
+            self.c_epoll_event_p = ctypes.POINTER(c_epoll_event)
+
+            self.lib.epoll_ctl.argtypes = [ctypes.c_void_p, ctypes.c_int, self.c_uint_p, self.c_epoll_event_p]
+            self.lib.epoll_ctl.restype = ctypes.c_int
+            self.lib.epoll_wait.argtypes = [ctypes.c_void_p, self.c_epoll_event_p, ctypes.c_int, ctypes.c_int]
+            self.lib.epoll_wait.restype = ctypes.c_int
+        except AttributeError:
+            pass
 
         logging.debug("successful load lib %s" % self.lib)
 
@@ -118,6 +176,163 @@ except:
 get_uuid = lib_wwqLyParse.get_uuid
 get_name = lib_wwqLyParse.get_name
 lib_parse = lib_wwqLyParse.lib_parse
+
+if hasattr(lib_wwqLyParse.lib, "epoll_create1"):
+    class WEPoll(object):
+        EPOLLIN = (1 << 0)
+        EPOLLPRI = (1 << 1)
+        EPOLLOUT = (1 << 2)
+        EPOLLERR = (1 << 3)
+        EPOLLHUP = (1 << 4)
+        EPOLLRDNORM = (1 << 6)
+        EPOLLRDBAND = (1 << 7)
+        EPOLLWRNORM = (1 << 8)
+        EPOLLWRBAND = (1 << 9)
+        EPOLLMSG = (1 << 10)  # /* Never reported. */
+        EPOLLRDHUP = (1 << 13)
+        EPOLLONESHOT = (1 << 31)
+
+        EPOLL_CTL_ADD = 1
+        EPOLL_CTL_MOD = 2
+        EPOLL_CTL_DEL = 3
+
+        EPOLL_CLOEXEC = 0
+        INT_MAX = 2147483647
+        FD_SETSIZE = 512
+        EBADF = 6
+
+        def __init__(self):
+            self.handle = lib_wwqLyParse.lib.epoll_create1(WEPoll.EPOLL_CLOEXEC)
+            self.finalize = weakref.finalize(self, lib_wwqLyParse.lib.epoll_close, self.handle).detach()
+
+        def close(self):
+            self.finalize()
+            self.handle = None
+
+        @property
+        def closed(self):
+            return self.handle is None
+
+        @property
+        def fileno(self):
+            return self.handle
+
+        def ctl(self, op, fd, events):
+            if lib_wwqLyParse.ffi is None:
+                _ev = lib_wwqLyParse.c_epoll_event()
+                ev = ctypes.pointer(_ev)
+            else:
+                ev = lib_wwqLyParse.ffi.new("epoll_event*")
+                _ev = ev[0]
+            _ev.events = events
+            _ev.data.fd = fd
+            fd = _ev.data.sock
+            result = lib_wwqLyParse.lib.epoll_ctl(self.handle, op, fd, ev)
+            if op == WEPoll.EPOLL_CTL_DEL:
+                if lib_wwqLyParse.ffi is None:
+                    if ctypes.get_errno() == WEPoll.EBADF:
+                        # /* fd already closed */
+                        ctypes.set_errno(0)
+                        result = 0
+                else:
+                    if lib_wwqLyParse.ffi.errno == WEPoll.EBADF:
+                        # /* fd already closed */
+                        lib_wwqLyParse.ffi.errno = 0
+                        result = 0
+            if result < 0:
+                if lib_wwqLyParse.ffi is None:
+                    raise ctypes.WinError()
+                else:
+                    raise WindowsError(*lib_wwqLyParse.ffi.getwinerror())
+            _ = (_ev, ev)  # ensure not gc before here!!!
+            return result
+
+        def register(self, fd, eventmask=EPOLLIN | EPOLLPRI | EPOLLOUT):
+            return self.ctl(WEPoll.EPOLL_CTL_ADD, fd, eventmask)
+
+        def modify(self, fd, eventmask):
+            return self.ctl(WEPoll.EPOLL_CTL_MOD, fd, eventmask)
+
+        def unregister(self, fd):
+            return self.ctl(WEPoll.EPOLL_CTL_DEL, fd, 0)
+
+        def poll(self, timeout=-1, maxevents=-1):
+            if timeout > 0:
+                timeout = round(timeout * 1000)
+            if timeout > WEPoll.INT_MAX:
+                raise OverflowError("timeout is too large")
+            if timeout < 0:
+                timeout = -1
+            if maxevents == -1:
+                maxevents = WEPoll.FD_SETSIZE - 1
+            elif maxevents < 1:
+                raise ValueError("maxevents must be greater than 0, got %d" % maxevents)
+            if lib_wwqLyParse.ffi is None:
+                evs = (lib_wwqLyParse.c_epoll_event * maxevents)()
+            else:
+                evs = lib_wwqLyParse.ffi.new("epoll_event[]", maxevents)
+            nfds = lib_wwqLyParse.lib.epoll_wait(self.handle, evs, maxevents, timeout)
+            if nfds < 0:
+                if lib_wwqLyParse.ffi is None:
+                    raise ctypes.WinError()
+                else:
+                    raise WindowsError(*lib_wwqLyParse.ffi.getwinerror())
+            elist = list()
+            for i in range(nfds):
+                etuple = evs[i].data.fd, evs[i].events
+                elist.append(etuple)
+            _ = evs  # ensure not gc before here!!!
+            return elist
+
+
+    import selectors
+    import math
+
+
+    class WEPollSelector(selectors._PollLikeSelector):
+        """Epoll-based selector."""
+        _selector_cls = WEPoll
+        _EVENT_READ = WEPoll.EPOLLIN
+        _EVENT_WRITE = WEPoll.EPOLLOUT
+
+        def fileno(self):
+            return self._selector.fileno()
+
+        def select(self, timeout=None):
+            if timeout is None:
+                timeout = -1
+            elif timeout <= 0:
+                timeout = 0
+            else:
+                # epoll_wait() has a resolution of 1 millisecond, round away
+                # from zero to wait *at least* timeout seconds.
+                timeout = math.ceil(timeout * 1e3) * 1e-3
+
+            # epoll_wait() expects `maxevents` to be greater than zero;
+            # we want to make sure that `select()` can be called when no
+            # FD is registered.
+            max_ev = max(len(self._fd_to_key), 1)
+
+            ready = []
+            try:
+                fd_event_list = self._selector.poll(timeout, max_ev)
+            except InterruptedError:
+                return ready
+            for fd, event in fd_event_list:
+                events = 0
+                if event & ~WEPoll.EPOLLIN:
+                    events |= selectors.EVENT_WRITE
+                if event & ~WEPoll.EPOLLOUT:
+                    events |= selectors.EVENT_READ
+
+                key = self._key_from_fd(fd)
+                if key:
+                    ready.append((key, events & key.events))
+            return ready
+
+        def close(self):
+            self._selector.close()
+            super().close()
 
 
 class AtomicInt64(object):

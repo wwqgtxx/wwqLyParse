@@ -17,7 +17,11 @@ def new_raw_async_loop(force_use_selector=False):
     if not force_use_selector:
         loop = asyncio.ProactorEventLoop()
     else:
-        loop = asyncio.SelectorEventLoop()
+        try:
+            from .lib_wwqLyParse import WEPollSelector as Selector
+        except:
+            from selectors import DefaultSelector as Selector
+        loop = asyncio.SelectorEventLoop(Selector())
     executor = concurrent_futures.ThreadPoolExecutor()
     import concurrent.futures
     assert isinstance(executor, concurrent.futures.ThreadPoolExecutor)

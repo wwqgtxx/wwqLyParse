@@ -9,4 +9,5 @@ set ConEmu=lib\ConEmu\ConEmu64.exe
 set PYTHON="C:\Program Files (x86)\LieYing\Plugin\PyRun.exe" --normal
 )
 start %ConEmu% -NoSingle -noupdate -run %PYTHON% test.py
+pause
 exit
